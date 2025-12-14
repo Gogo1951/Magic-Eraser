@@ -13,10 +13,10 @@ local BAG_UPDATE_DELAY = 0.25
 local MAX_CACHE_ITEMS = 100
 
 -- Colors & Branding
-local HEX_NAME = "82B1FF"
-local HEX_SEPARATOR = "2962FF"
+local HEX_NAME = "00BBFF"
+local HEX_SEPARATOR = "AAAAAA"
 local HEX_TEXT = "FFFFFF"
-local HEX_SUCCESS = "33FF33"
+local HEX_SUCCESS = "00FF00"
 local COLOR_PREFIX = "|cff"
 
 local BRAND_PREFIX =
