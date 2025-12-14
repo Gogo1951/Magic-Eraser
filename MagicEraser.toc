@@ -6,6 +6,13 @@
 ## Interface: 11508
 ## Version: @project-version@
 ## X-Curse-Project-ID: 1146812
+## SavedVariables: MagicEraserDB
+
+# Includes
+Includes\LibStub\LibStub.lua
+Includes\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Includes\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Includes\LibDBIcon-1.0\LibDBIcon-1.0.lua
 
 # Magic Eraser
 Database/AllowedDeleteQuestItems.lua
