@@ -4,9 +4,6 @@ local version = select(4, GetBuildInfo())
 local isTBCorHigher = (version >= 20000)
 
 local vanillaItems = {
-    -- Food & Drinks Sold by Vendors (& No Buffs)
-    -- https://www.wowhead.com/classic/items/consumables/food-and-drinks?filter=82:2:92;4:2:1;11400:0:0#0+1+20
-
     [8932] = true, -- Alterac Swiss
     [16166] = true, -- Bean Soup
     [18635] = true, -- Bellara's Nutterbar
@@ -58,7 +55,6 @@ local vanillaItems = {
     [1645] = true, -- Moonberry Juice
     [18632] = true, -- Moonbrook Riot Taffy
     [21721] = true, -- Moonglow
-    -- [8766] = true, -- Morning Glory Dew
     [4544] = true, -- Mulgore Spice Bread
     [3770] = true, -- Mutton Chop
     [19305] = true, -- Pickled Kodo Foot
@@ -68,7 +64,6 @@ local vanillaItems = {
     [4605] = true, -- Red-speckled Mushroom
     [159] = true, -- Refreshing Spring Water
     [2894] = true, -- Rhapsody Malt
-    -- [8952] = true, -- Roasted Quail
     [4594] = true, -- Rockscale Cod
     [4536] = true, -- Shiny Red Apple
     [2596] = true, -- Skin of Dwarven Stout
@@ -97,10 +92,6 @@ local vanillaItems = {
     [3771] = true, -- Wild Hog Shank
     [16169] = true, -- Wild Ricecake
     [22324] = true, -- Winter Kimchi
-    
-    -- Food & Drinks NOT Sold by Vendors (& No Buffs)
-    -- https://www.wowhead.com/classic/items/consumables/food-and-drinks/min-req-level:0?filter=82:92:22:123:21;4:2:5:5:5;11400:0:1:1:1#50
-
     [1072] = true, -- Full Moonshine
     [10841] = true, -- Goldthorn Tea
     [1119] = true, -- Bottled Spirits
@@ -157,11 +148,6 @@ local vanillaItems = {
     [9451] = true, -- Bubbling Water
     [961] = true, -- Healing Herb
     [9681] = true, -- Grilled King Crawler Legs
-    
-    -- Scrolls
-    -- https://www.wowhead.com/classic/items/consumables/type:4#0-4-3+19
-    -- Scrolls that don't give Agility, Strength, or Protection
-
     [10306] = true, -- Scroll of Spirit IV
     [10307] = true, -- Scroll of Stamina IV
     [10308] = true, -- Scroll of Intellect IV
@@ -174,61 +160,110 @@ local vanillaItems = {
     [4422] = true, -- Scroll of Stamina III
     [4424] = true, -- Scroll of Spirit III
     [955] = true, -- Scroll of Intellect
-
-    -- -- Conjured Items
-    -- -- Still needs some work...
-    -- -- https://www.wowhead.com/classic/items/consumables?filter=9:82:161;1:4:1;0:11400:0#0+1+19
-    -- 
-    -- [1199] = true, -- Charged Soulstone
-    -- [1113] = true, -- Conjured Bread
-    -- [22895] = true, -- Conjured Cinnamon Roll
-    -- [8079] = true, -- Conjured Crystal Water
-    -- [2288] = true, -- Conjured Fresh Water
-    -- [8077] = true, -- Conjured Mineral Water
-    -- [5349] = true, -- Conjured Muffin
-    -- [1487] = true, -- Conjured Pumpernickel
-    -- [2136] = true, -- Conjured Purified Water
-    -- [1114] = true, -- Conjured Rye
-    -- [8075] = true, -- Conjured Sourdough
-    -- [8078] = true, -- Conjured Sparkling Water
-    -- [3772] = true, -- Conjured Spring Water
-    -- [8076] = true, -- Conjured Sweet Roll
-    -- [5350] = true, -- Conjured Water
-    -- [5229] = true, -- Empty Greater Bloodstone
-    -- [5223] = true, -- Empty Mana Gem
-    -- [5227] = true, -- Empty Mana Jewel
-    -- [5406] = true, -- Empty Minor Bloodstone
-    -- [5510] = true, -- Greater Healthstone
-    -- [19010] = true, -- Greater Healthstone
-    -- [19011] = true, -- Greater Healthstone
-    -- [16895] = true, -- Greater Soulstone
-    -- [19696] = true, -- Harvest Bread
-    -- [19008] = true, -- Healthstone
-    -- [5509] = true, -- Healthstone
-    -- [19009] = true, -- Healthstone
-    -- [5511] = true, -- Lesser Healthstone
-    -- [19007] = true, -- Lesser Healthstone
-    -- [19006] = true, -- Lesser Healthstone
-    -- [16892] = true, -- Lesser Soulstone
-    -- [14894] = true, -- Lily Root
-    -- [19013] = true, -- Major Healthstone
-    -- [9421] = true, -- Major Healthstone
-    -- [19012] = true, -- Major Healthstone
-    -- [16896] = true, -- Major Soulstone
-    -- [8007] = true, -- Mana Citrine
-    -- [5513] = true, -- Mana Jade
-    -- [8008] = true, -- Mana Ruby
-    -- [5512] = true, -- Minor Healthstone
-    -- [19005] = true, -- Minor Healthstone
-    -- [19004] = true, -- Minor Healthstone
-    -- [5232] = true, -- Minor Soulstone
-    -- [16893] = true, -- Soulstone
-    -- [21236] = true, -- Winter Veil Loaf    
 }
 
 local tbcItems = {
-    -- The Burning Crusade Items
+    -- Once you are in TBC we don't need to save these
+    [8766] = true, -- Morning Glory Dew
+    [8952] = true, -- Roasted Quail
 
+    -- The Burning Crusade Items
+    [32667] = true, -- Bash Ale
+    -- [27636] = true, -- Bat Bites
+    [33042] = true, -- Black Coffee
+    -- [27657] = true, -- Blackened Basilisk
+    -- [27663] = true, -- Blackened Sporefish
+    [27661] = true, -- Blackened Trout
+    [38431] = true, -- Blackrock Fortified Water
+    [38430] = true, -- Blackrock Mineral Water
+    [38429] = true, -- Blackrock Spring Water
+    [29449] = true, -- Bladespire Bagel
+    -- [29293] = true, -- Bonestripper Buzzard Hotwings
+    -- [33867] = true, -- Broiled Bloodfin
+    -- [27651] = true, -- Buzzard Bites
+    -- [34832] = true, -- Captain Rumsey's Lager
+    [29112] = true, -- Cenarion Spirits
+    -- [35563] = true, -- Charred Bear Kabobs
+    -- [30155] = true, -- Clam Bar
+    -- [33004] = true, -- Clamlette Surprise
+    [29451] = true, -- Clefthoof Ribs
+    -- [23756] = true, -- Cookie's Jumbo Gumbo
+    -- [31673] = true, -- Crunchy Serpent
+    -- [22645] = true, -- Crunchy Spider Surprise
+    [35710] = true, -- Delicious Baked Ham
+    -- [33924] = true, -- Delicious Chocolate Cake
+    [29393] = true, -- Diamond Berries
+    [28284] = true, -- Don Carlos Tequila
+    [32668] = true, -- Dos Ogris
+    [32722] = true, -- Enriched Terocone Juice
+    [29395] = true, -- Ethermead
+    [23704] = true, -- Eversong Port
+    -- [27662] = true, -- Feltail Delight
+    [28399] = true, -- Filtered Draenic Water
+    -- [33052] = true, -- Fisherman's Feast
+    [27857] = true, -- Garadar Sharp
+    [30457] = true, -- Gilneas Sparkling Water
+    -- [27666] = true, -- Golden Fish Sticks
+    -- [27664] = true, -- Grilled Mudfish
+    [30355] = true, -- Grilled Shadowmoon Tuber
+    -- [29292] = true, -- Helboar Bacon
+    [24338] = true, -- Hellfire Spineleaf
+    [20857] = true, -- Honey Bread
+    -- [34411] = true, -- Hot Apple Cider
+    [33053] = true, -- Hot Buttered Trout
+    [29412] = true, -- Jessen's Special Slop
+    -- [35565] = true, -- Juicy Bear Burger
+    -- [33874] = true, -- Kibler's Bits
+    -- [35720] = true, -- Lord of Frost's Private Label
+    -- [27635] = true, -- Lynx Steak
+    [29394] = true, -- Lyribread
+    [27855] = true, -- Mag'har Grainbread
+    [29448] = true, -- Mag'har Mild Cheese
+    [24539] = true, -- Marsh Lichen
+    [32686] = true, -- Mingo's Fortune Giblets
+    -- [31672] = true, -- Mok'Nathal Shortribs
+    [28486] = true, -- Moser's Magnificent Muffin
+    [23848] = true, -- Nethergarde Bitter
+    [32685] = true, -- Ogri'la Chicken Fingers
+    [38427] = true, -- Pickled Egg
+    [38432] = true, -- Plugger's Blackrock Ale
+    -- [27665] = true, -- Poached Bluefish
+    [27860] = true, -- Purified Draenic Water
+    -- [27655] = true, -- Ravager Dog
+    -- [28501] = true, -- Ravager Egg Omelet
+    -- [27658] = true, -- Roasted Clefthoof
+    -- [24105] = true, -- Roasted Moongraze Tenderloin
+    [38428] = true, -- Rock-Salted Pretzel
+    [24072] = true, -- Sand Pear Pie
+    -- [27498] = true, -- Scroll of Agility V
+    [27499] = true, -- Scroll of Intellect V
+    -- [27500] = true, -- Scroll of Protection V
+    [27501] = true, -- Scroll of Spirit V
+    [27502] = true, -- Scroll of Stamina V
+    -- [27503] = true, -- Scroll of Strength V
+    [29454] = true, -- Silverwine
+    [27856] = true, -- Skethyl Berries
+    -- [33825] = true, -- Skullfish Soup
+    [30610] = true, -- Smoked Black Bear Meat
+    [27854] = true, -- Smoked Talbuk Venison
+    [29401] = true, -- Sparkling Southshore Cider
+    [30816] = true, -- Spice Bread
+    -- [27667] = true, -- Spicy Crawdad
+    -- [33872] = true, -- Spicy Hot Talbuk
+    [29453] = true, -- Sporeggar Mushroom
+    -- [27656] = true, -- Sporeling Snack
+    [32455] = true, -- Star's Lament
+    [32453] = true, -- Star's Tears
+    [33048] = true, -- Stewed Trout
+    -- [33866] = true, -- Stormchops
+    -- [30458] = true, -- Stromgarde Muenster
+    [38466] = true, -- Sulfuron Slammer
+    [27858] = true, -- Sunspring Carp
+    -- [27660] = true, -- Talbuk Steak
+    [29450] = true, -- Telaari Grapes
+    -- [27659] = true, -- Warp Burger
+    [27859] = true, -- Zangar Caps
+    [29452] = true, -- Zangar Trout
 }
 
 ME.AllowedDeleteConsumables = vanillaItems
