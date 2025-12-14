@@ -1,126 +1,71 @@
-local MagicEraser = {}
+-------------------------------------------------------------------------
+-- 1. Header & Namespace
+-------------------------------------------------------------------------
+local addonName, ME = ...
+_G["MagicEraser"] = ME
 
-----------------------------------------------------------------------
--- Constants & Configuration
-----------------------------------------------------------------------
-local ADDON_NAME = "Magic Eraser"
-local DEFAULT_ICON = "Interface\\Icons\\inv_misc_bag_07_green"
+-------------------------------------------------------------------------
+-- 2. Constants & Branding
+-------------------------------------------------------------------------
+local ADDON_TITLE = "Magic Eraser"
+local ICON_DEFAULT = "Interface\\Icons\\inv_misc_bag_07_green"
+local UPDATE_THROTTLE = 0.1
 
--- Timing & Throttles
-local UPDATE_THROTTLE = 0.25
-local DATA_REQUEST_THROTTLE = 0.25
-local BAG_UPDATE_DELAY = 0.25
-local MAX_CACHE_ITEMS = 100
-
--- Colors & Branding
-local HEX_NAME = "00BBFF"
+local HEX_BLUE      = "00BBFF"
+local HEX_GOLD      = "FFD100"
 local HEX_SEPARATOR = "AAAAAA"
-local HEX_TEXT = "FFFFFF"
-local HEX_SUCCESS = "00FF00"
-local COLOR_PREFIX = "|cff"
+local HEX_TEXT      = "FFFFFF"
+local HEX_SUCCESS   = "00FF00"
+local HEX_WARNING   = "FF0000"
+local COLOR_PREFIX  = "|cff"
 
-local BRAND_PREFIX =
-    COLOR_PREFIX ..
-    HEX_NAME .. ADDON_NAME .. "|r " .. COLOR_PREFIX .. HEX_SEPARATOR .. "//|r" .. COLOR_PREFIX .. HEX_TEXT .. " "
+ME.COLORS = {
+    NAME      = COLOR_PREFIX .. HEX_BLUE,
+    TITLE     = COLOR_PREFIX .. HEX_GOLD,
+    SEPARATOR = COLOR_PREFIX .. HEX_SEPARATOR,
+    TEXT      = COLOR_PREFIX .. HEX_TEXT,
+    SUCCESS   = COLOR_PREFIX .. HEX_SUCCESS,
+    WARNING   = COLOR_PREFIX .. HEX_WARNING
+}
 
--- Saved Variables / External Tables
-MagicEraser.AllowedDeleteQuestItems = MagicEraser_AllowedDeleteQuestItems or {}
-MagicEraser.AllowedDeleteConsumables = MagicEraser_AllowedDeleteConsumables or {}
-MagicEraser.AllowedDeleteEquipment = MagicEraser_AllowedDeleteEquipment or {}
-MagicEraser.DB = MagicEraserDB or {}
-MagicEraser.ItemCache = {}
-MagicEraser.ItemCacheCount = 0
+ME.BRAND_PREFIX = string.format("%s%s|r %s//|r ", 
+    ME.COLORS.NAME,
+    ADDON_TITLE, 
+    ME.COLORS.SEPARATOR
+)
 
-----------------------------------------------------------------------
--- Local API References (Upvalues)
-----------------------------------------------------------------------
-local _G = _G
-local floor = math.floor
-local insert = table.insert
-local format = string.format
-local C_Timer_After = C_Timer.After
-
-local GetTime = GetTime
-local UnitLevel = UnitLevel
-local InCombatLockdown = InCombatLockdown
-local CursorHasItem = CursorHasItem
-local ClearCursor = ClearCursor
-local GetItemInfo = GetItemInfo
-local DeleteCursorItem = DeleteCursorItem
-
--- Container API Compatibility
-local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
-local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
-local GetContainerItemID = C_Container and C_Container.GetContainerItemID or GetContainerItemID
-
--- Libraries
+-------------------------------------------------------------------------
+-- 3. Library Loading
+-------------------------------------------------------------------------
+local LibStub = _G.LibStub
 local LDB = LibStub and LibStub("LibDataBroker-1.1", true)
 local LDBIcon = LibStub and LibStub("LibDBIcon-1.0", true)
 
-----------------------------------------------------------------------
--- Frame Initialization
-----------------------------------------------------------------------
-MagicEraser.TooltipFrame = CreateFrame("GameTooltip", "MagicEraserTooltip", UIParent, "GameTooltipTemplate")
-MagicEraser.MinimapTooltipFrame =
-    CreateFrame("GameTooltip", "MagicEraserMinimapTooltip", UIParent, "GameTooltipTemplate")
+-------------------------------------------------------------------------
+-- 4. Initialization & Variables
+-------------------------------------------------------------------------
+local GetTime, UnitLevel, InCombatLockdown = GetTime, UnitLevel, InCombatLockdown
+local CursorHasItem, ClearCursor, DeleteCursorItem = CursorHasItem, ClearCursor, DeleteCursorItem
+local GetItemInfo, C_Timer, C_QuestLog, C_Item = GetItemInfo, C_Timer, C_QuestLog, C_Item
+local format, insert, floor, ipairs = string.format, table.insert, math.floor, ipairs
 
-local HiddenScanTooltip = CreateFrame("GameTooltip", "MagicEraserScanTooltip", UIParent, "GameTooltipTemplate")
-HiddenScanTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
+local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
+local PickupContainerItem = C_Container and C_Container.PickupContainerItem or PickupContainerItem
 
-----------------------------------------------------------------------
--- Utility Functions
-----------------------------------------------------------------------
-local function Throttled(throttle)
-    local nextTime = 0
-    return function()
-        local now = GetTime()
-        if now >= nextTime then
-            nextTime = now + throttle
-            return true
-        end
-    end
-end
-
-local CanRequestItemData = Throttled(DATA_REQUEST_THROTTLE)
-local CanRefreshMinimap = Throttled(DATA_REQUEST_THROTTLE)
-
-local function CachePut(id, info)
-    if not MagicEraser.ItemCache[id] then
-        MagicEraser.ItemCacheCount = MagicEraser.ItemCacheCount + 1
-    end
-
-    MagicEraser.ItemCache[id] = info
-
-    if MagicEraser.ItemCacheCount > MAX_CACHE_ITEMS then
-        local toRemove = floor(MAX_CACHE_ITEMS / 2)
-        local removed = 0
-
-        for k in pairs(MagicEraser.ItemCache) do
-            MagicEraser.ItemCache[k] = nil
-            removed = removed + 1
-            if removed >= toRemove then
-                break
-            end
-        end
-        MagicEraser.ItemCacheCount = MagicEraser.ItemCacheCount - removed
-    end
-end
-
+-------------------------------------------------------------------------
+-- 5. Helper Functions
+-------------------------------------------------------------------------
 local function FormatCurrency(value)
+    if value == 0 then return "" end
     local g = floor(value / 10000)
     local s = floor((value % 10000) / 100)
     local c = value % 100
     local parts = {}
 
-    if g > 0 then
-        insert(parts, format("%d|cffffd700g|r", g))
-    end
-    if s > 0 then
-        insert(parts, format("%d|cffc7c7cfs|r", s))
-    end
-    if c > 0 or #parts == 0 then
-        insert(parts, format("%d|cffeda55fc|r", c))
-    end
+    if g > 0 then insert(parts, format("|cffffffff%d|r|cffffd700g|r", g)) end
+    if s > 0 then insert(parts, format("|cffffffff%d|r|cffc7c7cfs|r", s)) end
+    if c > 0 or #parts == 0 then insert(parts, format("|cffffffff%d|r|cffeda55fc|r", c)) end
 
     return table.concat(parts, " ")
 end
@@ -132,72 +77,54 @@ local function IsQuestCompleted(questID)
     return false
 end
 
-local function GetPlayerLevel()
-    return UnitLevel("player")
+function ME:Print(msg)
+    DEFAULT_CHAT_FRAME:AddMessage(self.BRAND_PREFIX .. msg)
 end
 
-----------------------------------------------------------------------
--- Core Logic
-----------------------------------------------------------------------
-function MagicEraser:GetNextErasableItem()
+-------------------------------------------------------------------------
+-- 6. Core Logic
+-------------------------------------------------------------------------
+function ME:FindItemToDelete()
     local lowestValue, lowestItem = nil, nil
-    local playerLevel = GetPlayerLevel()
+    local playerLevel = UnitLevel("player")
+    local dataMissing = false
 
-    if not GetContainerNumSlots or not GetContainerItemInfo then
-        return nil
-    end
+    local questDB = ME.AllowedDeleteQuestItems or {}
+    local consumDB = ME.AllowedDeleteConsumables or {}
+    local equipDB = ME.AllowedDeleteEquipment or {}
 
     for bag = 0, 4 do
         local numSlots = GetContainerNumSlots(bag) or 0
         for slot = 1, numSlots do
             local itemInfo = GetContainerItemInfo(bag, slot)
-
+            
             if itemInfo and itemInfo.hyperlink then
                 local itemID = itemInfo.itemID
-                local name, _, rarity, itemLevel, requiredLevel, _, _, _, _, icon, sellPrice =
-                    GetItemInfo(itemInfo.hyperlink)
+                local name, _, rarity, _, requiredLevel, _, _, _, _, icon, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
-                CachePut(itemID, itemInfo)
-
-                if not name or not rarity or not sellPrice or not itemLevel or not requiredLevel then
-                    -- Item data not loaded, request it
+                if not name then
+                    dataMissing = true
                     if C_Item and C_Item.RequestLoadItemDataByID then
                         C_Item.RequestLoadItemDataByID(itemID)
-                        if CanRequestItemData() then
-                            C_Timer_After(
-                                DATA_REQUEST_THROTTLE,
-                                function()
-                                    if MagicEraser.UpdateMinimapIconAndTooltip then
-                                        MagicEraser:UpdateMinimapIconAndTooltip()
-                                    end
-                                end
-                            )
-                        end
                     end
                 else
-                    -- Item data is valid, check logic
                     local count = itemInfo.stackCount or 1
                     local totalValue = (sellPrice or 0) * count
-                    local canDeleteQuestItem = false
+                    local isDeletable = false
 
-                    local questMap = self.AllowedDeleteQuestItems[itemID]
-                    if questMap then
-                        for _, qid in ipairs(questMap) do
-                            if IsQuestCompleted(qid) then
-                                canDeleteQuestItem = true
-                                break
-                            end
+                    if questDB[itemID] then
+                        for _, qid in ipairs(questDB[itemID]) do
+                            if IsQuestCompleted(qid) then isDeletable = true; break end
                         end
+                    elseif consumDB[itemID] then
+                        if (playerLevel - (requiredLevel or 1)) >= 10 then isDeletable = true end
+                    elseif equipDB[itemID] then
+                        isDeletable = true
+                    elseif rarity == 0 and (sellPrice or 0) > 0 then
+                        isDeletable = true
                     end
 
-                    local isConsumable = self.AllowedDeleteConsumables[itemID] or false
-                    local requiredLevelValue = requiredLevel or 1
-                    local isLowLevelConsumable = isConsumable and ((playerLevel - requiredLevelValue) >= 10)
-
-                    if
-                        canDeleteQuestItem or isLowLevelConsumable or self.AllowedDeleteEquipment[itemID] or
-                            (rarity == 0 and (sellPrice or 0) > 0)
-                     then
+                    if isDeletable then
                         if not lowestValue or totalValue < lowestValue then
                             lowestValue = totalValue
                             lowestItem = {
@@ -215,261 +142,144 @@ function MagicEraser:GetNextErasableItem()
         end
     end
 
+    if dataMissing then
+        C_Timer.After(1.0, function() ME:UpdateLDB() end)
+    end
+
     return lowestItem
 end
 
-local function CheckForNewDeletableQuestItems()
-    local notifiedItems = {}
-
-    for bag = 0, 4 do
-        local numSlots = GetContainerNumSlots(bag) or 0
-        for slot = 1, numSlots do
-            local itemID = GetContainerItemID(bag, slot)
-
-            if itemID and MagicEraser.AllowedDeleteQuestItems[itemID] then
-                local isDeletable = false
-                local questMap = MagicEraser.AllowedDeleteQuestItems[itemID]
-
-                if questMap then
-                    for _, qid in ipairs(questMap) do
-                        if IsQuestCompleted(qid) then
-                            isDeletable = true
-                            break
-                        end
-                    end
-                end
-
-                if isDeletable then
-                    local itemLink = select(2, GetItemInfo(itemID))
-                    if itemLink and not notifiedItems[itemLink] then
-                        print(format(BRAND_PREFIX .. "%s can be safely deleted!|r", itemLink))
-                        notifiedItems[itemLink] = true
-                    end
-                end
-            end
-        end
-    end
-end
-
-function MagicEraser:RunEraser()
+function ME:RunEraser()
     if InCombatLockdown() then
-        print(BRAND_PREFIX .. "Cannot erase items while in combat.|r")
+        self:Print(ME.COLORS.WARNING .. "Cannot erase items while in combat.|r")
         return
     end
 
-    local info = self:GetNextErasableItem()
+    local item = self:FindItemToDelete()
 
-    if info then
-        if CursorHasItem() then
-            ClearCursor()
-        end
-
-        C_Container.PickupContainerItem(info.bag, info.slot)
+    if item then
+        if CursorHasItem() then ClearCursor() end
+        PickupContainerItem(item.bag, item.slot)
         DeleteCursorItem()
 
-        local stackStr = (info.count > 1) and format(" x%d", info.count) or ""
-
-        if info.value == 0 then
-            print(
-                format(
-                    BRAND_PREFIX .. "Erased %s%s, this item was associated with a quest you have completed.|r",
-                    info.link,
-                    stackStr
-                )
-            )
-        else
-            print(format(BRAND_PREFIX .. "Erased %s%s, worth %s.|r", info.link, stackStr, FormatCurrency(info.value)))
-        end
+        local stackStr = (item.count > 1) and format(" x%d", item.count) or ""
+        local valStr = (item.value > 0) and format(", worth %s", FormatCurrency(item.value)) or " (Quest Item)"
+        
+        self:Print(ME.COLORS.TEXT .. format("Erased %s%s%s.|r", item.link, stackStr, valStr))
     else
-        if not self.lastNoItemMessageTime or (GetTime() - self.lastNoItemMessageTime >= 10) then
-            print(
-                BRAND_PREFIX ..
-                    "Congratulations, your bags are full of good stuff! You'll have to manually erase something if you need to free up more space.|r"
-            )
-            self.lastNoItemMessageTime = GetTime()
-        end
+        self:Print(ME.COLORS.TEXT .. "You'll have to manually erase something if you need to free up more space.|r")
     end
 
-    self:UpdateMinimapIconAndTooltip()
+    self:UpdateLDB()
 end
 
-----------------------------------------------------------------------
--- UI & DataBroker
-----------------------------------------------------------------------
-function MagicEraser:RefreshMinimapTooltip()
-    local tooltip = self.MinimapTooltipFrame
-    local info = self:GetNextErasableItem()
+-------------------------------------------------------------------------
+-- 7. UI & Tooltip
+-------------------------------------------------------------------------
+local OnEnter 
 
+function ME:UpdateLDB()
+    if not self.LDBObj then return end
+    local item = self:FindItemToDelete()
+    
+    if item and item.icon then
+        self.LDBObj.icon = item.icon
+    else
+        self.LDBObj.icon = ICON_DEFAULT
+    end
+
+    if LDBIcon then
+        local button = LDBIcon:GetMinimapButton(addonName)
+        if button and GameTooltip:GetOwner() == button then
+            OnEnter(button)
+        end
+    end
+end
+
+OnEnter = function(anchor)
+    local tooltip = GameTooltip
+    tooltip:SetOwner(anchor, "ANCHOR_BOTTOMLEFT")
     tooltip:ClearLines()
 
-    local version = "@project-version@"
-    if version:find("project-version", 1, true) then
-        version = "Dev"
-    end
-
-    tooltip:AddDoubleLine(ADDON_NAME, "|cFFAAAAAA" .. version .. "|r", 1, 0.82, 0, 1, 1, 1)
+    local version = C_AddOns and C_AddOns.GetAddOnMetadata(addonName, "Version") or "Dev"
+    if version:find("@") then version = "Dev" end
+    
+    tooltip:AddDoubleLine(
+        ME.COLORS.TITLE .. ADDON_TITLE .. "|r", 
+        ME.COLORS.SEPARATOR .. version .. "|r"
+    )
     tooltip:AddLine(" ")
 
-    if info then
-        local amount = info.value or 0
-        local gold = floor(amount / 10000)
-        local silver = floor((amount % 10000) / 100)
-        local copper = amount % 100
-        local valueString = ""
+    local item = ME:FindItemToDelete()
 
-        if gold > 0 then
-            valueString = valueString .. format("|cFFFFFFFF%d|r|cffffd700g|r ", gold)
-        end
-        if silver > 0 then
-            valueString = valueString .. format("|cFFFFFFFF%d|r|cffc7c7cfs|r ", silver)
-        end
-        if copper > 0 or valueString == "" then
-            valueString = valueString .. format("|cFFFFFFFF%d|r|cffeda55fc|r", copper)
-        end
-
-        valueString = strtrim(valueString)
-        local stackString = (info.count > 1) and format(" x%d", info.count) or ""
-
-        tooltip:AddDoubleLine(format("%s%s", info.link, stackString), valueString)
+    if item then
+        local stackStr = (item.count > 1) and format("%s x%d|r", ME.COLORS.TITLE, item.count) or ""
+        
+        tooltip:AddDoubleLine(
+            item.link .. stackStr, 
+            FormatCurrency(item.value)
+        )
         tooltip:AddLine(" ")
-        tooltip:AddDoubleLine("|cFF66BBFFLeft-Click|r", "|cFFFFFFFFErase Lowest Value Item|r")
+        
+        tooltip:AddDoubleLine(
+            ME.COLORS.NAME .. "Left-Click|r", 
+            ME.COLORS.TEXT .. "Erase Lowest Value Item|r"
+        )
     else
-        tooltip:AddLine("|cFF00FF00Congratulations, your bags are full of good stuff!|r", nil, nil, nil, true)
+        tooltip:AddLine(
+            ME.COLORS.SUCCESS .. "Congratulations, your bags are full of good stuff!|r", 
+            1, 1, 1, true
+        )
         tooltip:AddLine(" ")
         tooltip:AddLine(
-            "|cFFaaaaaaYou'll have to manually erase something if you need to free up more space.|r",
-            nil,
-            nil,
-            nil,
-            true
+            ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you need to free up more space.|r", 
+            1, 1, 1, true
         )
     end
-
     tooltip:Show()
 end
 
-function MagicEraser:UpdateMinimapIconAndTooltip()
-    if not self.MagicEraserLDB then
-        return
-    end
-
-    local info = self:GetNextErasableItem()
-    if info and info.icon then
-        self.MagicEraserLDB.icon = info.icon
-    else
-        self.MagicEraserLDB.icon = DEFAULT_ICON
-    end
-
-    if LDBIcon and LDBIcon.Refresh then
-        LDBIcon:Refresh("MagicEraser", MagicEraser.DB)
-    end
-
-    self:RefreshMinimapTooltip()
-end
-
+-------------------------------------------------------------------------
+-- 8. Event Registration
+-------------------------------------------------------------------------
 if LDB then
-    MagicEraser.MagicEraserLDB =
-        LDB:NewDataObject(
-        "MagicEraser",
-        {
-            type = "data source",
-            text = ADDON_NAME,
-            icon = DEFAULT_ICON,
-            OnClick = function(_, button)
-                if button == "LeftButton" then
-                    MagicEraser:RunEraser()
-                end
-            end,
-            OnEnter = function(iconFrame)
-                if not iconFrame or not iconFrame:IsObjectType("Frame") then
-                    return
-                end
-                MagicEraser.MinimapTooltipFrame:SetOwner(iconFrame, "ANCHOR_BOTTOMLEFT")
-                MagicEraser:RefreshMinimapTooltip()
-            end,
-            OnLeave = function()
-                MagicEraser.MinimapTooltipFrame:Hide()
-            end
-        }
-    )
-
-    if MagicEraser.MagicEraserLDB and LDBIcon and LDBIcon.Register then
-        LDBIcon:Register("MagicEraser", MagicEraser.MagicEraserLDB, MagicEraser.DB)
-    end
+    ME.LDBObj = LDB:NewDataObject(addonName, {
+        type = "data source",
+        text = ADDON_TITLE,
+        icon = ICON_DEFAULT,
+        OnClick = function(_, button)
+            if button == "LeftButton" then ME:RunEraser() end
+        end,
+        OnEnter = function(self) OnEnter(self) end,
+        OnLeave = function() GameTooltip:Hide() end,
+    })
 end
 
-----------------------------------------------------------------------
--- Event Handling
-----------------------------------------------------------------------
-local frame = CreateFrame("Frame")
-local lastUpdateTime, bagUpdateScheduled = 0, false
-local bagUpdateEvents = {
-    BAG_UPDATE = true,
-    ITEM_PUSH = true,
-    ITEM_LOCK_CHANGED = true,
-    BAG_UPDATE_DELAYED = true
-}
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
+eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")
+eventFrame:RegisterEvent("LOOT_READY")
+eventFrame:RegisterEvent("QUEST_TURNED_IN")
 
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:RegisterEvent("BAG_UPDATE")
-frame:RegisterEvent("BAG_UPDATE_DELAYED")
-frame:RegisterEvent("ITEM_PUSH")
-frame:RegisterEvent("ITEM_LOCK_CHANGED")
-frame:RegisterEvent("LOOT_READY")
-frame:RegisterEvent("LOOT_OPENED")
-frame:RegisterEvent("QUEST_TURNED_IN")
+local updateScheduled = false
+eventFrame:SetScript("OnEvent", function(self, event)
+    if event == "PLAYER_LOGIN" then
+        MagicEraserDB = MagicEraserDB or {}
+        MagicEraserDB.minimap = MagicEraserDB.minimap or {}
+        
+        ME.DB = MagicEraserDB
 
-local function HandleBagUpdateDelayed(fromQuestCompletion)
-    local now = GetTime()
-    if now - lastUpdateTime < UPDATE_THROTTLE then
-        return
-    end
-
-    lastUpdateTime = now
-
-    if fromQuestCompletion then
-        CheckForNewDeletableQuestItems()
-    end
-
-    if CanRefreshMinimap() then
-        MagicEraser:UpdateMinimapIconAndTooltip()
-    end
-end
-
-frame:SetScript(
-    "OnEvent",
-    function(_, event)
-        if bagUpdateEvents[event] then
-            if not bagUpdateScheduled then
-                bagUpdateScheduled = true
-                C_Timer_After(
-                    BAG_UPDATE_DELAY,
-                    function()
-                        HandleBagUpdateDelayed(false)
-                        bagUpdateScheduled = false
-                    end
-                )
-            end
-        elseif event == "LOOT_READY" or event == "LOOT_OPENED" then
-            HandleBagUpdateDelayed(false)
-        elseif event == "QUEST_TURNED_IN" then
-            if not bagUpdateScheduled then
-                bagUpdateScheduled = true
-                C_Timer_After(
-                    BAG_UPDATE_DELAY,
-                    function()
-                        HandleBagUpdateDelayed(true)
-                        bagUpdateScheduled = false
-                    end
-                )
-            end
-        elseif event == "PLAYER_LOGIN" then
-            if MagicEraser.UpdateMinimapIconAndTooltip then
-                MagicEraser:UpdateMinimapIconAndTooltip()
-            end
-            if LDBIcon and LDBIcon.Show then
-                LDBIcon:Show("MagicEraser")
-            end
+        if LDBIcon and ME.LDBObj then 
+            LDBIcon:Register(addonName, ME.LDBObj, MagicEraserDB.minimap) 
+        end
+        ME:UpdateLDB()
+    elseif event ~= "PLAYER_LOGIN" then
+        if not updateScheduled then
+            updateScheduled = true
+            C_Timer.After(UPDATE_THROTTLE, function()
+                ME:UpdateLDB()
+                updateScheduled = false
+            end)
         end
     end
-)
+end)
