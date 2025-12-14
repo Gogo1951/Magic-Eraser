@@ -1,6 +1,10 @@
-MagicEraser_AllowedDeleteQuestItems = {
-    -- [ItemID] = {QuestID1, QuestID2, ...}, -- Item Name
-    
+local ADDON_NAME, ME = ...
+
+local version = select(4, GetBuildInfo())
+local isTBCorHigher = (version >= 20000)
+
+local vanillaItems = {
+    -- Vanilla WoW Quest Items
     [1358] = {138}, -- A Clue to Sander's Treasure
     [4843] = {717}, -- Amethyst Runestone
     [17757] = {7067}, -- Amulet of Spirits
@@ -140,9 +144,16 @@ MagicEraser_AllowedDeleteQuestItems = {
     -- [6948] = {99999999}, -- Hearthstone, Test to Delete Item if Quest is Incomplete
 }
 
--- Useful Google Search to find safe to delete items
--- https://www.google.com/search?q=site%3Awww.wowhead.com%2Fclassic%2Fitem+%22delete%22+OR+%22trash%22+OR+%22junk%22+OR+%22destroy%22+OR+%22safe+to%22+-%22Added+in+SoD%22&hl=en
+local tbcItems = {
+    -- The Burning Crusade Items
+}
 
--- TODO
--- Check for items like [Owatanka's Tailspike] that are not available to your current race, and erase if found.
--- Check for items like [Henrig Lonebrow's Journal] that are lootable even after you completed the non-repeatable quest that they start, and erase if found.
+ME.AllowedDeleteQuestItems = vanillaItems
+
+if isTBCorHigher then
+    for id, questList in pairs(tbcItems) do
+        ME.AllowedDeleteQuestItems[id] = questList
+    end
+end
+
+MagicEraser_AllowedDeleteQuestItems = ME.AllowedDeleteQuestItems
