@@ -187,7 +187,7 @@ function ME:RunEraser()
 
             local valStr =
                 (item.value > 0) and format(", worth %s", FormatCurrency(item.value)) or
-                ", associated with a quest you have completed"
+                ", this item was associated with a quest you have completed"
 
             self:Print(ME.COLORS.TEXT .. format("Erased %s%s%s.|r", item.link, stackStr, valStr))
         else
