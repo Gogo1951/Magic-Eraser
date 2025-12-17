@@ -146,6 +146,11 @@ local vanillaItems = {
 
 local tbcItems = {
     -- The Burning Crusade Items
+    [30425] = {10538}, -- Bleeding Hollow Blood
+    [28513] = {10144, 10208}, -- Demonic Rune Stone
+    [23248] = {9361}, -- Purified Helboar Meat
+    [23270] = {9361}, -- Tainted Helboar Meat
+    [23355] = {9361}, -- Toxic Helboar Meat
 }
 
 ME.AllowedDeleteQuestItems = vanillaItems
