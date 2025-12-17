@@ -184,7 +184,10 @@ function ME:RunEraser()
             DeleteCursorItem()
 
             local stackStr = (item.count > 1) and format(" x%d", item.count) or ""
-            local valStr = (item.value > 0) and format(", worth %s", FormatCurrency(item.value)) or " (Quest Item)"
+
+            local valStr =
+                (item.value > 0) and format(", worth %s", FormatCurrency(item.value)) or
+                ", associated with a quest you have completed."
 
             self:Print(ME.COLORS.TEXT .. format("Erased %s%s%s.|r", item.link, stackStr, valStr))
         else
@@ -192,7 +195,7 @@ function ME:RunEraser()
             ClearCursor()
         end
     else
-        self:Print(ME.COLORS.TEXT .. "You'll have to manually erase something if you need to free up more space.|r")
+        self:Print(ME.COLORS.TEXT .. "You'll have to manually erase something if you want to free up more space.|r")
     end
 
     self:UpdateLDB()
@@ -241,7 +244,9 @@ OnEnter = function(anchor)
     if item then
         local stackStr = (item.count > 1) and format("%s x%d|r", ME.COLORS.TITLE, item.count) or ""
 
-        tooltip:AddDoubleLine(item.link .. stackStr, FormatCurrency(item.value))
+        local valueText = (item.value > 0) and FormatCurrency(item.value) or "|cffAAAAAANo Value|r"
+
+        tooltip:AddDoubleLine(item.link .. stackStr, valueText)
         tooltip:AddLine(" ")
 
         tooltip:AddDoubleLine(ME.COLORS.NAME .. "Left-Click|r", ME.COLORS.TEXT .. "Erase Lowest Value Item|r")
@@ -249,7 +254,7 @@ OnEnter = function(anchor)
         tooltip:AddLine(ME.COLORS.SUCCESS .. "Congratulations, your bags are full of good stuff!|r", 1, 1, 1, true)
         tooltip:AddLine(" ")
         tooltip:AddLine(
-            ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you need to free up more space.|r",
+            ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you want to free up more space.|r",
             1,
             1,
             1,
@@ -294,7 +299,30 @@ eventFrame:RegisterEvent("QUEST_TURNED_IN")
 local updateScheduled = false
 eventFrame:SetScript(
     "OnEvent",
-    function(self, event)
+    function(self, event, ...)
+        if event == "QUEST_TURNED_IN" then
+            local questID = ...
+            local questDB = ME.AllowedDeleteQuestItems or {}
+
+            for bag = 0, 4 do
+                local numSlots = GetContainerNumSlots(bag) or 0
+                for slot = 1, numSlots do
+                    local itemInfo = GetContainerItemInfo(bag, slot)
+                    if itemInfo then
+                        local itemID = itemInfo.itemID
+                        if questDB[itemID] then
+                            for _, qid in ipairs(questDB[itemID]) do
+                                if qid == questID then
+                                    ME:Print(ME.COLORS.TEXT .. format("%s can be safely erased!|r", itemInfo.hyperlink))
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
         if event == "PLAYER_LOGIN" then
             MagicEraserDB = MagicEraserDB or {}
             MagicEraserDB.minimap = MagicEraserDB.minimap or {}
