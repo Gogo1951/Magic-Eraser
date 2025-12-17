@@ -30,15 +30,11 @@ https://www.curseforge.com/wow/addons/magic-eraser
 
 ## Testing Status
 
-🟢 World of Warcraft Classic : Classic Era
+🟢 World of Warcraft Classic : Vanilla (Era, Anniversary, Hardcore, Anniversary Hardcore)
 
-🟢 World of Warcraft Classic : Hardcore
+🔴 World of Warcraft Classic : Season of Discovery
 
-🟡 World of Warcraft Classic : Season of Discovery
-
-🟢 World of Warcraft Classic : Anniversary Realms
-
-🟢 World of Warcraft Classic : Hardcore Anniversary Realms
+🟢 World of Warcraft Classic : The Burning Crusade (Anniversary)
 
 🔴 Mists of Pandaria Classic
 
