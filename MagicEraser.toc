@@ -1,11 +1,15 @@
 ## Title: Magic Eraser
 ## Notes: A simple add-on that automatically discards the lowest-value item in your bags, including completed quest items, gray items, and vendor-quality white items.
 ## Author: Gogo1951
-## X-License: MIT
+
+## IconTexture: Interface\AddOns\MagicEraser\Magic-Eraser.tga
+## Category-enUS: Bag & Inventory
 
 ## Interface: 11508
 ## Version: @project-version@
 ## X-Curse-Project-ID: 1146812
+## X-License: MIT
+
 ## SavedVariables: MagicEraserDB
 
 # Includes
