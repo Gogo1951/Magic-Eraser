@@ -160,5 +160,3 @@ if isTBCorHigher then
         ME.AllowedDeleteQuestItems[id] = questList
     end
 end
-
-MagicEraser_AllowedDeleteQuestItems = ME.AllowedDeleteQuestItems
