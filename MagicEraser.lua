@@ -11,6 +11,7 @@ local ADDON_TITLE = "Magic Eraser"
 local ICON_DEFAULT = "Interface\\Icons\\inv_misc_bag_07_green"
 local UPDATE_THROTTLE = 0.1
 
+-- Branding Colors
 local HEX_BLUE = "00BBFF"
 local HEX_GOLD = "FFD100"
 local HEX_SEPARATOR = "AAAAAA"
@@ -18,6 +19,11 @@ local HEX_TEXT = "FFFFFF"
 local HEX_SUCCESS = "00FF00"
 local HEX_WARNING = "FF0000"
 local COLOR_PREFIX = "|cff"
+
+-- Currency Colors
+local HEX_CURRENCY_GOLD = "FFD700"
+local HEX_CURRENCY_SILVER = "C7C7CF"
+local HEX_CURRENCY_COPPER = "EDA55F"
 
 ME.COLORS = {
     NAME = COLOR_PREFIX .. HEX_BLUE,
@@ -53,23 +59,39 @@ local PickupContainerItem = C_Container and C_Container.PickupContainerItem or P
 -------------------------------------------------------------------------
 -- 5. Helper Functions
 -------------------------------------------------------------------------
+local function FormatCommaNumber(n)
+    return tostring(n):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+end
+
 local function FormatCurrency(value)
-    if value == 0 then
-        return ""
+    local val = value or 0
+    if val < 0 then
+        val = 0
     end
-    local g = floor(value / 10000)
-    local s = floor((value % 10000) / 100)
-    local c = value % 100
+
+    local gold = floor(val / 10000)
+    local silver = floor((val % 10000) / 100)
+    local copper = val % 100
+
     local parts = {}
 
-    if g > 0 then
-        insert(parts, format("|cffffffff%d|r|cffffd700g|r", g))
+    -- Logic: Gold
+    if gold > 0 then
+        insert(parts, format("|cffffffff%s|r|cff%sg|r", FormatCommaNumber(gold), HEX_CURRENCY_GOLD))
     end
-    if s > 0 then
-        insert(parts, format("|cffffffff%d|r|cffc7c7cfs|r", s))
+
+    -- Logic: Silver
+    if gold > 0 then
+        insert(parts, format("|cffffffff%02d|r|cff%ss|r", silver, HEX_CURRENCY_SILVER))
+    elseif silver > 0 then
+        insert(parts, format("|cffffffff%d|r|cff%ss|r", silver, HEX_CURRENCY_SILVER))
     end
-    if c > 0 or #parts == 0 then
-        insert(parts, format("|cffffffff%d|r|cffeda55fc|r", c))
+
+    -- Logic: Copper
+    if gold > 0 or silver > 0 then
+        insert(parts, format("|cffffffff%02d|r|cff%sc|r", copper, HEX_CURRENCY_COPPER))
+    else
+        insert(parts, format("|cffffffff%d|r|cff%sc|r", copper, HEX_CURRENCY_COPPER))
     end
 
     return table.concat(parts, " ")
@@ -167,7 +189,7 @@ end
 
 function ME:RunEraser()
     if InCombatLockdown() then
-        self:Print(ME.COLORS.WARNING .. "Cannot erase items while in combat.|r")
+        self:Print(ME.COLORS.TEXT .. "Cannot erase items while in combat.|r")
         return
     end
 
@@ -191,11 +213,14 @@ function ME:RunEraser()
 
             self:Print(ME.COLORS.TEXT .. format("Erased %s%s%s.|r", item.link, stackStr, valStr))
         else
-            self:Print(ME.COLORS.WARNING .. "Safety Abort: Cursor item did not match target. Item returned to bag.|r")
+            self:Print(ME.COLORS.TEXT .. "Slow down! You are clicking faster than the game can erase items.|r")
             ClearCursor()
         end
     else
-        self:Print(ME.COLORS.TEXT .. "You'll have to manually erase something if you want to free up more space.|r")
+        self:Print(
+            ME.COLORS.TEXT ..
+                "Congratulations, your bags are full of good stuff! You'll have to manually erase something if you want to free up more space.|r"
+        )
     end
 
     self:UpdateLDB()
