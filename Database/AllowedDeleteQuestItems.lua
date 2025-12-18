@@ -146,11 +146,35 @@ local vanillaItems = {
 
 local tbcItems = {
     -- The Burning Crusade Items
+    [22796] = {9275}, -- Apothecary's Poison
+    [32454] = {11001}, -- Arthorn's Research
     [30425] = {10538}, -- Bleeding Hollow Blood
+    [25817] = {10021}, -- Blessed Vial
+    [24223] = {9692}, -- Bloodvalor's Notes
+    [30808] = {10649}, -- Book of Fel Names
+    [29429] = {10221}, -- Boom's Doom
+    [31702] = {10876}, -- Challenge from the Horde
+    [25766] = {10009}, -- Creatures That Owe Sal'salabim Golds
     [28513] = {10144, 10208}, -- Demonic Rune Stone
+    [24278] = {9711}, -- Flare Gun
+    [33106] = {11164}, -- Forest Troll Tusk
+    [24475] = {9821}, -- Gordawg's Imprint
+    [32823] = {11089}, -- Illidari Lord Balthas' Instructions
+    [24277] = {9723, 64141}, -- Items for Magister Astalor Bloodsworn
+    [31678] = {10857}, -- Mental Interference Rod
+    [31387] = {10812}, -- Mystery Mask
+    [23847] = {9561}, -- Nolkai's Band
+    [25745] = {9993, 9992}, -- Olemba Seed
+    [29778] = {10438}, -- Phase Disruptor
     [23248] = {9361}, -- Purified Helboar Meat
+    [23358] = {9370}, -- Signaling Gem
+    [29796] = {10507}, -- Socrethar's Teleportation Stone
     [23270] = {9361}, -- Tainted Helboar Meat
+    [32888] = {10098}, -- The Relics of Terokk
     [23355] = {9361}, -- Toxic Helboar Meat
+    [31360] = {10782}, -- Unfinished Headpiece
+    [29161] = {10294}, -- Void Ridge Soul Shard
+    [24502] = {9853}, -- Warmaul Skull
 }
 
 ME.AllowedDeleteQuestItems = vanillaItems
