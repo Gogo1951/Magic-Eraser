@@ -884,5 +884,3 @@ if isTBCorHigher then
         ME.AllowedDeleteEquipment[id] = value
     end
 end
-
-MagicEraser_AllowedDeleteEquipment = ME.AllowedDeleteEquipment
