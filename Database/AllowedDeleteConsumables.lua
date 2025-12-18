@@ -273,5 +273,3 @@ if isTBCorHigher then
         ME.AllowedDeleteConsumables[id] = value
     end
 end
-
-MagicEraser_AllowedDeleteConsumables = ME.AllowedDeleteConsumables
