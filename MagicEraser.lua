@@ -278,13 +278,7 @@ OnEnter = function(anchor)
     else
         tooltip:AddLine(ME.COLORS.SUCCESS .. "Congratulations, your bags are full of good stuff!|r", 1, 1, 1, true)
         tooltip:AddLine(" ")
-        tooltip:AddLine(
-            ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you want to free up more space.|r",
-            1,
-            1,
-            1,
-            true
-        )
+        tooltip:AddLine(ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you want to free up more space.|r", 1, 1, 1, true)
     end
     tooltip:Show()
 end
