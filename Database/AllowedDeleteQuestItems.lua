@@ -173,6 +173,7 @@ local tbcItems = {
     [28664] = {10252}, -- Nitrin's Instructions
     [23847] = {9561}, -- Nolkai's Band
     [25745] = {9993, 9992}, -- Olemba Seed
+    [30858] = {10238}, -- Peon Sleep Potion
     [29778] = {10438}, -- Phase Disruptor
     [23248] = {9361}, -- Purified Helboar Meat
     [30704] = {10567}, -- Ruuan'ok Claw
