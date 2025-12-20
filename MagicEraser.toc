@@ -3,7 +3,7 @@
 ## Author: Gogo1951
 
 ## IconTexture: Interface\AddOns\MagicEraser\Magic-Eraser.tga
-## Category-enUS: Bag & Inventory
+## Category-enUS: Bags & Inventory
 
 ## Interface: 11508, 20505
 ## Version: @project-version@
