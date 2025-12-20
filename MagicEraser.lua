@@ -205,6 +205,8 @@ function ME:RunEraser()
         if infoType == "item" and infoID == item.itemID then
             DeleteCursorItem()
 
+            PlaySound(5156)
+
             local stackStr = (item.count > 1) and format(" x%d", item.count) or ""
 
             local valStr =
@@ -332,7 +334,10 @@ eventFrame:SetScript(
                         if questDB[itemID] then
                             for _, qid in ipairs(questDB[itemID]) do
                                 if qid == questID then
-                                    ME:Print(ME.COLORS.TEXT .. format("%s can be now be safely erased!|r", itemInfo.hyperlink))
+                                    ME:Print(
+                                        ME.COLORS.TEXT ..
+                                            format("%s can be now be safely erased!|r", itemInfo.hyperlink)
+                                    )
                                     break
                                 end
                             end
