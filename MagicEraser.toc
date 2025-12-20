@@ -4,11 +4,11 @@
 
 ## IconTexture: Interface\AddOns\MagicEraser\Magic-Eraser.tga
 ## Category-enUS: Bags & Inventory
-
-## Interface: 11508, 20505
-## Version: @project-version@
-## X-Curse-Project-ID: 1146812
 ## X-License: MIT
+
+## Version: @project-version@
+## Interface: 11508, 20505
+## X-Curse-Project-ID: 1146812
 
 ## SavedVariables: MagicEraserDB
 
