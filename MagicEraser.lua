@@ -15,9 +15,9 @@ local UPDATE_THROTTLE = 0.1
 local HEX_BLUE = "00BBFF"
 local HEX_GOLD = "FFD100"
 local HEX_SEPARATOR = "AAAAAA"
-local HEX_TEXT = "FFFFFF"
-local HEX_SUCCESS = "00FF00"
-local HEX_WARNING = "FF0000"
+local HEX_TEXT = "CCCCCC"
+local HEX_SUCCESS = "33CC33"
+local HEX_WARNING = "CC3333"
 local COLOR_PREFIX = "|cff"
 
 -- Currency Colors
