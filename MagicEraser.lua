@@ -11,13 +11,15 @@ local ADDON_TITLE = "Magic Eraser"
 local ICON_DEFAULT = "Interface\\Icons\\inv_misc_bag_07_green"
 local UPDATE_THROTTLE = 0.1
 
--- Branding Colors
-local HEX_BLUE = "00BBFF"
-local HEX_GOLD = "FFD100"
-local HEX_SEPARATOR = "AAAAAA"
-local HEX_TEXT = "CCCCCC"
-local HEX_SUCCESS = "33CC33"
-local HEX_WARNING = "CC3333"
+-- BRANDING & COLORS
+local C_TITLE    = "FFD100" -- Gold: Titles, Headers
+local C_INFO     = "00BBFF" -- Blue: Interactions, Toggles, Links
+local C_BODY     = "CCCCCC" -- Silver: Descriptions
+local C_TEXT     = "FFFFFF" -- White: Messages
+local C_SUCCESS  = "33CC33" -- Green: On
+local C_DISABLED = "CC3333" -- Red: Off
+local C_SEP      = "AAAAAA" -- Gray: Separators
+local C_MUTED    = "808080" -- Dark Gray: Meta-data
 local COLOR_PREFIX = "|cff"
 
 -- Currency Colors
@@ -26,15 +28,17 @@ local HEX_CURRENCY_SILVER = "C7C7CF"
 local HEX_CURRENCY_COPPER = "EDA55F"
 
 ME.COLORS = {
-    NAME = COLOR_PREFIX .. HEX_BLUE,
-    TITLE = COLOR_PREFIX .. HEX_GOLD,
-    SEPARATOR = COLOR_PREFIX .. HEX_SEPARATOR,
-    TEXT = COLOR_PREFIX .. HEX_TEXT,
-    SUCCESS = COLOR_PREFIX .. HEX_SUCCESS,
-    WARNING = COLOR_PREFIX .. HEX_WARNING
+    TITLE    = COLOR_PREFIX .. C_TITLE,
+    INFO     = COLOR_PREFIX .. C_INFO,
+    DESC     = COLOR_PREFIX .. C_BODY,
+    TEXT     = COLOR_PREFIX .. C_TEXT,
+    SUCCESS  = COLOR_PREFIX .. C_SUCCESS,
+    DISABLED = COLOR_PREFIX .. C_DISABLED,
+    SEP      = COLOR_PREFIX .. C_SEP,
+    MUTED    = COLOR_PREFIX .. C_MUTED
 }
 
-ME.BRAND_PREFIX = string.format("%s%s|r %s//|r ", ME.COLORS.NAME, ADDON_TITLE, ME.COLORS.SEPARATOR)
+ME.BRAND_PREFIX = string.format("%s%s|r %s//|r ", ME.COLORS.INFO, ADDON_TITLE, ME.COLORS.SEP)
 
 -------------------------------------------------------------------------
 -- 3. Library Loading
@@ -213,6 +217,7 @@ function ME:RunEraser()
                 (item.value > 0) and format(", worth %s", FormatCurrency(item.value)) or
                 ", this item was associated with a quest you have completed"
 
+            -- Chat message follows pattern: Prefix + [C_TEXT]Message Content
             self:Print(ME.COLORS.TEXT .. format("Erased %s%s%s.|r", item.link, stackStr, valStr))
         else
             self:Print(ME.COLORS.TEXT .. "Slow down! You are clicking faster than the game can erase items.|r")
@@ -263,24 +268,22 @@ OnEnter = function(anchor)
         version = "Dev"
     end
 
-    tooltip:AddDoubleLine(ME.COLORS.TITLE .. ADDON_TITLE .. "|r", ME.COLORS.SEPARATOR .. version .. "|r")
+    tooltip:AddDoubleLine(ME.COLORS.TITLE .. ADDON_TITLE .. "|r", ME.COLORS.MUTED .. version .. "|r")
     tooltip:AddLine(" ")
-
+    tooltip:AddLine(" ")
     local item = ME:FindItemToDelete()
 
     if item then
-        local stackStr = (item.count > 1) and format("%s x%d|r", ME.COLORS.TITLE, item.count) or ""
-
-        local valueText = (item.value > 0) and FormatCurrency(item.value) or "|cffAAAAAANo Value|r"
-
-        tooltip:AddDoubleLine(item.link .. stackStr, valueText)
+        local stackStr = (item.count > 1) and format("%s x%d|r", ME.COLORS.DESC, item.count) or ""
+        local valueText = (item.value > 0) and FormatCurrency(item.value) or (ME.COLORS.MUTED .. "No Value|r")
+        local iconStr = format("|T%s:0|t ", item.icon)
+        tooltip:AddDoubleLine(iconStr .. item.link .. stackStr, valueText)
         tooltip:AddLine(" ")
-
-        tooltip:AddDoubleLine(ME.COLORS.NAME .. "Left-Click|r", ME.COLORS.TEXT .. "Erase Lowest Value Item|r")
+        tooltip:AddDoubleLine(ME.COLORS.INFO .. "Left-Click|r", ME.COLORS.INFO .. "Erase|r")
     else
         tooltip:AddLine(ME.COLORS.SUCCESS .. "Congratulations, your bags are full of good stuff!|r", 1, 1, 1, true)
         tooltip:AddLine(" ")
-        tooltip:AddLine(ME.COLORS.SEPARATOR .. "You'll have to manually erase something if you want to free up more space.|r", 1, 1, 1, true)
+        tooltip:AddLine(ME.COLORS.DESC .. "You'll have to manually erase something if you want to free up more space.|r", 1, 1, 1, true)
     end
     tooltip:Show()
 end
