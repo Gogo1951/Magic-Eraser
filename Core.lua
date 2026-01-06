@@ -226,26 +226,32 @@ eventFrame:RegisterEvent("QUEST_TURNED_IN")
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "QUEST_TURNED_IN" then
         local questID = ...
-        local questDB = ME.AllowedDeleteQuestItems or {}
+        
+        C_Timer.After(1.0, function()
+            local questDB = ME.AllowedDeleteQuestItems or {}
+            local alertedItems = {}
 
-        for bag = 0, 4 do
-            local numSlots = GetContainerNumSlots(bag) or 0
-            for slot = 1, numSlots do
-                local itemInfo = GetContainerItemInfo(bag, slot)
-                if itemInfo then
-                    local itemID = itemInfo.itemID
-                    if questDB[itemID] then
-                        for _, qid in ipairs(questDB[itemID]) do
-                            if qid == questID then
-                                ME:Print(ME.COLORS.TEXT .. format("%s can be now be safely erased!|r", itemInfo.hyperlink))
-                                break
+            for bag = 0, 4 do
+                local numSlots = GetContainerNumSlots(bag) or 0
+                for slot = 1, numSlots do
+                    local itemInfo = GetContainerItemInfo(bag, slot)
+                    if itemInfo then
+                        local itemID = itemInfo.itemID
+                        
+                        if questDB[itemID] and not alertedItems[itemID] then
+                            for _, qid in ipairs(questDB[itemID]) do
+                                if qid == questID then
+                                    ME:Print(ME.COLORS.TEXT .. format("%s can be now be safely erased!|r", itemInfo.hyperlink))
+                                    alertedItems[itemID] = true
+                                    break
+                                end
                             end
                         end
                     end
                 end
             end
-        end
-        ME:UpdateLDB()
+            ME:UpdateLDB()
+        end)
 
     elseif event == "PLAYER_LOGIN" then
         MagicEraserDB = MagicEraserDB or {}
