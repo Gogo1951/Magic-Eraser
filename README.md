@@ -8,7 +8,7 @@ An example mimi-map icon & tool tip when there is an item to delete.
 
 Magic Eraser now has an ignore list feature!
 
-<img width="365" height="395" alt="image" src="https://github.com/user-attachments/assets/6a26bdf5-5414-483b-8076-94ea5b0f519a" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/6a26bdf5-5414-483b-8076-94ea5b0f519a" />
 
 An example mimi-map icon & tool tip when your bags are clean!
 
