@@ -56,8 +56,6 @@ UpdateTooltip = function(anchor)
         tooltip:AddLine(" ")
         
         tooltip:AddLine(C.TITLE.."Lowest Value Item|r")
-        tooltip:AddLine(" ")
-        
         local iconStr = format("|T%s:14:14|t", item.icon)
         local countStr = (item.count > 1) and format("%sx%d|r", C.TEXT, item.count) or ""
         
@@ -65,11 +63,7 @@ UpdateTooltip = function(anchor)
         local rightText = (item.value > 0) and ME:FormatCurrency(item.value) or (C.MUTED .. "No Value|r")
         
         tooltip:AddDoubleLine(leftText, rightText)
-        
-        tooltip:AddLine(" ")
         tooltip:AddDoubleLine(C.INFO.."Left-Click|r", C.INFO.."Erase|r")
-        
-        tooltip:AddLine(" ")
         tooltip:AddDoubleLine(C.INFO.."Right-Click|r", C.INFO.."Ignore|r")
     else
         tooltip:AddLine(" ")
@@ -83,8 +77,6 @@ UpdateTooltip = function(anchor)
     if hasIgnored then
         tooltip:AddLine(" ")
         tooltip:AddLine(C.TITLE.."Ignore List|r")
-        tooltip:AddLine(" ")
-        
         local sortedItems = {}
         local loadingItems = {}
         
@@ -115,7 +107,6 @@ UpdateTooltip = function(anchor)
              tooltip:AddLine(C.MUTED.."Loading ID: "..id.."|r")
         end
         
-        tooltip:AddLine(" ")
         tooltip:AddDoubleLine(C.INFO.."Middle-Click|r", C.INFO.."Clear Ignore List|r")
     end
 
