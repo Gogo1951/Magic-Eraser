@@ -1,10 +1,9 @@
 local ADDON_NAME, ME = ...
 
-local version = select(4, GetBuildInfo())
-local isTBCorHigher = (version >= 20000)
+ME.AllowedDeleteQuestItems = {
 
-local vanillaItems = {
-    -- Vanilla WoW Quest Items
+    -- World of Warcraft
+    
     [1358] = {138}, -- A Clue to Sander's Treasure
     [4843] = {717}, -- Amethyst Runestone
     [17757] = {7067}, -- Amulet of Spirits
@@ -139,13 +138,8 @@ local vanillaItems = {
     [13158] = {5083}, -- Words of the High Chief
     [9280] = {2930}, -- Yellow Punch Card
 
-    -- For Testing
-    -- [6948] = {783, 170, 456, 4641, 757, 364, 363}, -- Hearthstone, Test to Delete Item if Quest is Complete
-    -- [6948] = {99999999}, -- Hearthstone, Test to Delete Item if Quest is Incomplete
-}
+    -- World of Warcraft: The Burning Crusade
 
-local tbcItems = {
-    -- The Burning Crusade Items
     [22796] = {9275}, -- Apothecary's Poison
     [32454] = {11001}, -- Arthorn's Research
     [30425] = {10538}, -- Bleeding Hollow Blood
@@ -192,11 +186,3 @@ local tbcItems = {
     [31310] = {10776}, -- Wildhammer Flare Gun
     [31664] = {10866, 10872}, -- Zuluhed's Key
 }
-
-ME.AllowedDeleteQuestItems = vanillaItems
-
-if isTBCorHigher then
-    for id, questList in pairs(tbcItems) do
-        ME.AllowedDeleteQuestItems[id] = questList
-    end
-end
