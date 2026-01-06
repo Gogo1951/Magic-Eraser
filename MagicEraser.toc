@@ -11,6 +11,7 @@
 ## X-Curse-Project-ID: 1146812
 
 ## SavedVariables: MagicEraserDB
+## SavedVariablesPerCharacter: MagicEraserCharDB
 
 # Includes
 Includes\LibStub\LibStub.lua
@@ -22,7 +23,8 @@ Includes\LibDBIcon-1.0\LibDBIcon-1.0.lua
 Database/AllowedDeleteQuestItems.lua
 Database/AllowedDeleteConsumables.lua
 Database/AllowedDeleteEquipment.lua
-MagicEraser.lua
+Core.lua
+Minimap.lua
 
 # Feedback Welcome! (=
 # Magic Eraser on CurseForge // https://www.curseforge.com/wow/addons/magic-eraser
