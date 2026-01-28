@@ -110,6 +110,7 @@ end
 function ME:FindItemToDelete()
     local lowestValue, lowestItem = nil, nil
     local playerLevel = UnitLevel("player")
+    local _, playerClass = UnitClass("player") -- GET PLAYER CLASS
     local dataMissing = false
 
     local questDB = ME.AllowedDeleteQuestItems or {}
@@ -124,7 +125,9 @@ function ME:FindItemToDelete()
             if itemInfo and itemInfo.hyperlink then
                 local itemID = itemInfo.itemID
                 
-                if not ME:IsIgnored(itemID) then 
+                local isShamanReagent = (playerClass == "SHAMAN") and (itemID == 17057 or itemID == 17058)
+
+                if not ME:IsIgnored(itemID) and not isShamanReagent then 
                     local name, _, rarity, _, requiredLevel, _, _, _, _, icon, sellPrice = GetItemInfo(itemInfo.hyperlink)
                     
                     if not name then
