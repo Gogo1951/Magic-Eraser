@@ -20,11 +20,12 @@ Includes\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Includes\LibDBIcon-1.0\LibDBIcon-1.0.lua
 
 # Magic Eraser
-Database/AllowedDeleteQuestItems.lua
-Database/AllowedDeleteConsumables.lua
-Database/AllowedDeleteEquipment.lua
+Database/General.lua
+Database/Quest-Items.lua
+Database/Consumables.lua
+Database/Equipment.lua
 Core.lua
-Minimap.lua
+Minimap-Menu.lua
 
 # Feedback Welcome! (=
 # Magic Eraser on CurseForge // https://www.curseforge.com/wow/addons/magic-eraser
