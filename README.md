@@ -1,6 +1,6 @@
 # Magic Eraser
 
-A simple add-on that discards the lowest-value item in your bags -- including completed quest items, vendor-quality white items, low-level consumables, and gray-quality "trash" items -- when you click the mini-map button.
+Keep your bags clean by erasing items from completed quests, low-level consumables, and other trash.
 
 An example mimi-map icon & tool tip when there is an item to delete.
 
