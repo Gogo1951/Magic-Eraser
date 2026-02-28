@@ -311,7 +311,6 @@ Addon.AllowedDeleteQuestItems = {
     [2154] = {227}, -- The Story of Morgan Ladimore
     [20415] = {8303}, -- The War of the Shifting Sands
     [17684] = {7028}, -- Theradric Crystal Carving
-    [5060] = {2019, 2282, 9491}, -- Thieves' Tools
     [11286] = {4122}, -- Thorium Shackles
     [7587] = {1838}, -- Thun'grim's Instructions
     [5415] = {758}, -- Thunderhorn Cleansing Totem
@@ -886,3 +885,4 @@ Addon.AllowedDeleteQuestItems = {
     [36775] = {12076}, -- Zort's Scraper
 
 }
+
