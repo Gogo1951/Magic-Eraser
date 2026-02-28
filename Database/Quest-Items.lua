@@ -90,6 +90,7 @@ Addon.AllowedDeleteQuestItems = {
     [12368] = {4771}, -- Dawn's Gambit
     [20741] = {8470}, -- Deadwood Ritual Totem
     [5570] = {1069}, -- Deepmoss Egg
+    [5397] = {166, 373}, -- Defias Gunpowder
     [7269] = {1944}, -- Deino's Flask
     [14523] = {5381}, -- Demon Pick
     [4854] = {7067}, -- Demon Scarred Cloak
@@ -105,6 +106,7 @@ Addon.AllowedDeleteQuestItems = {
     [5068] = {877}, -- Dried Seeds
     [3467] = {498}, -- Dull Iron Key
     [6635] = {1517, 1520}, -- Earth Sapta
+    [8432] = {2609}, -- Eau de Mixilpixil
     [13289] = {5282}, -- Egan's Blaster
     [10465] = {3528}, -- Egg of Hakkar
     [12144] = {4735}, -- Eggscilloscope
@@ -883,6 +885,4 @@ Addon.AllowedDeleteQuestItems = {
     [36734] = {12050, 12052}, -- Xink's Shredder Control Device
     [37933] = {12478}, -- Zelig's Scrying Orb
     [36775] = {12076}, -- Zort's Scraper
-
 }
-
