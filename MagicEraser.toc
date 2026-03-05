@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: A simple add-on that automatically discards the lowest-value item in your bags, including completed quest items, gray items, and vendor-quality white items.
+## Notes: A simple add-on that discards the lowest-value item in your bags -- including completed quest items, vendor-quality white items, low-level consumables, and gray-quality "trash" items -- when you click the mini-map button.
 ## Author: Gogo1951
 
 ## IconTexture: Interface\AddOns\MagicEraser\Magic-Eraser.tga
@@ -33,3 +33,4 @@ Minimap-Menu.lua
 # Magic Eraser on GitHub // https://github.com/Gogo1951/Magic-Eraser
 
 # Magic Eraser on Discord // https://discord.gg/eh8hKq992Q
+
