@@ -25,9 +25,11 @@ Database/Quest-Items.lua
 Database/Consumables.lua
 Database/Equipment.lua
 Core.lua
+Auto-Vend.lua
 Minimap-Menu.lua
 
 # Feedback Welcome! (=
 # Magic Eraser on CurseForge // https://www.curseforge.com/wow/addons/magic-eraser
 # Magic Eraser on GitHub // https://github.com/Gogo1951/Magic-Eraser
+
 # Magic Eraser on Discord // https://discord.gg/eh8hKq992Q
