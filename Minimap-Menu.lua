@@ -22,10 +22,11 @@ local function RefreshTooltip(anchor)
     tooltip:AddLine(" ")
     tooltip:AddLine(" ")
 
+    -- Lowest Value Item Block
     local item = Addon:FindItemToDelete()
 
     if item then
-        -- Lowest Value Item Block
+
         tooltip:AddLine(Colors.TITLE .. "Lowest Value Item|r")
 
         local iconString = format("|T%s:14:14|t", item.icon)
@@ -36,7 +37,6 @@ local function RefreshTooltip(anchor)
 
         tooltip:AddDoubleLine(leftText, rightText)
 
-        -- Contextual instructions only show when there is an item to erase/ignore
         tooltip:AddDoubleLine(Colors.INFO .. "Left-Click|r", Colors.INFO .. "Erase|r")
         tooltip:AddDoubleLine(Colors.INFO .. "Right-Click|r", Colors.INFO .. "Ignore|r")
     else
