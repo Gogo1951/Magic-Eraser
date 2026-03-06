@@ -4,16 +4,13 @@ Keep your bags clean by erasing items from completed quests, low-level consumabl
 
 An example mimi-map icon & tool tip when there is an item to delete.
 
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/24f40056-1b83-446d-ba3d-b80d6bafd617" />
+Shows lowest quality item, allows you to erase it or ignore it.
 
-Magic Eraser now has an ignore list feature!
+<img width="390" height="309" alt="image" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/6a26bdf5-5414-483b-8076-94ea5b0f519a" />
+Now with Auto-Vend, will sell low quality items when you open a merchant window.
 
-An example mimi-map icon & tool tip when your bags are clean!
-
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/3f91883c-6566-48bb-9bdb-d15c3ad19107" />
-
+<img width="384" height="328" alt="image" src="https://github.com/user-attachments/assets/96d18796-d9d4-4285-a8ae-9476dee46ca6" />
 
 ## How It Works
 
