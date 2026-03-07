@@ -26,7 +26,6 @@ local function RefreshTooltip(anchor)
     local item = Addon:FindItemToDelete()
 
     if item then
-
         tooltip:AddLine(Colors.TITLE .. "Lowest Value Item|r")
 
         local iconString = format("|T%s:14:14|t", item.icon)
@@ -54,8 +53,9 @@ local function RefreshTooltip(anchor)
 
     -- Auto-Vend Block
     tooltip:AddLine(" ")
+    -- Changed to MagicEraserDB for account-wide setting
     local autoVendStatus =
-        (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled) and (Colors.SUCCESS .. "Enabled|r") or
+        (MagicEraserDB and MagicEraserDB.autoVendEnabled) and (Colors.SUCCESS .. "Enabled|r") or
         (Colors.DISABLED .. "Disabled|r")
     tooltip:AddDoubleLine("Auto-Vend", autoVendStatus)
     tooltip:AddLine(Colors.DESCRIPTION .. "Automatically sell items flagged as junk by Magic Eraser.|r", 1, 1, 1, true)
@@ -152,7 +152,8 @@ if LibDataBroker then
             OnClick = function(self, button)
                 -- Shift + Right-Click Block
                 if IsShiftKeyDown() and button == "RightButton" then
-                    MagicEraserCharDB.autoVendEnabled = not MagicEraserCharDB.autoVendEnabled
+                    -- Changed to MagicEraserDB for account-wide setting
+                    MagicEraserDB.autoVendEnabled = not MagicEraserDB.autoVendEnabled
                     RefreshTooltip(self)
                     return
                 end

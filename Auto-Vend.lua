@@ -34,11 +34,17 @@ local function ProcessSellQueue()
 
     if currentItemInfo and currentItemInfo.itemID == item.itemId and not Addon:IsIgnored(item.itemId) then
         UseContainerItem(item.bag, item.slot)
-        Addon:Print(item.link .. Addon.Colors.TEXT .. " sold for " .. Addon:FormatCurrency(item.value) .. ".|r")
+
+        local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
+
+        Addon:Print(
+            Addon.Colors.TEXT ..
+                string.format("Sold %s%s, worth %s.|r", item.link, stackString, Addon:FormatCurrency(item.value))
+        )
     end
 
-    -- Process the next item in the queue matching the AutoSellGrey 0.2s standard
-    C_Timer.After(0.2, ProcessSellQueue)
+    -- Process the next item in the queue matching the AutoSellGrey 0.25s standard
+    C_Timer.After(0.25, ProcessSellQueue)
 end
 
 -------------------------------------------------------------------------
@@ -77,10 +83,17 @@ local function ScanAndVend()
                         if deleteReason then
                             local count = itemInfo.stackCount or 1
                             local totalValue = sellPrice * count
-                            -- Store the itemId so we can verify it hasn't shifted before selling
+                            -- Store the itemId and count so we can verify and print it accurately
                             table.insert(
                                 sellQueue,
-                                {bag = bag, slot = slot, itemId = itemId, value = totalValue, link = itemInfo.hyperlink}
+                                {
+                                    bag = bag,
+                                    slot = slot,
+                                    itemId = itemId,
+                                    count = count,
+                                    value = totalValue,
+                                    link = itemInfo.hyperlink
+                                }
                             )
                         end
                     end
@@ -110,7 +123,7 @@ eventFrame:SetScript(
     "OnEvent",
     function(self, event)
         if event == "MERCHANT_SHOW" then
-            if MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled then
+            if MagicEraserDB and MagicEraserDB.autoVendEnabled then
                 isSelling = true
                 sellIndex = 0
                 ScanAndVend()
