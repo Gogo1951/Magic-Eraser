@@ -304,6 +304,7 @@ eventFrame:SetScript(
             )
         elseif event == "PLAYER_LOGIN" then
             MagicEraserDB = MagicEraserDB or {}
+            MagicEraserDB.minimap = MagicEraserDB.minimap or {}
             MagicEraserCharDB = MagicEraserCharDB or {}
             MagicEraserCharDB.ignoreList = MagicEraserCharDB.ignoreList or {}
 
