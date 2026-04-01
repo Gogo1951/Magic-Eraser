@@ -1,4 +1,6 @@
 local addonName, Addon = ...
+local L = Addon.L
+local Colors = Addon.Colors
 
 local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
 local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
@@ -8,9 +10,10 @@ local sellQueue = {}
 local isSelling = false
 local sellIndex = 0
 
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Queue Processor
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 local function ProcessSellQueue()
     -- Stop if we are done or if the merchant window was closed
     if not isSelling then
@@ -29,7 +32,7 @@ local function ProcessSellQueue()
 
     local item = sellQueue[sellIndex]
 
-    -- Double-check the slot before selling to ensure items haven't shifted
+    -- Double-check the slot before selling to ensure items have not shifted
     local currentItemInfo = GetContainerItemInfo(item.bag, item.slot)
 
     if currentItemInfo and currentItemInfo.itemID == item.itemId and not Addon:IsIgnored(item.itemId) then
@@ -38,18 +41,19 @@ local function ProcessSellQueue()
         local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
 
         Addon:Print(
-            Addon.Colors.TEXT ..
-                string.format("Sold %s%s, worth %s.|r", item.link, stackString, Addon:FormatCurrency(item.value))
+            Colors.TEXT ..
+            string.format(L["SOLD_ITEM"], item.link, stackString, Addon:FormatCurrency(item.value)) ..
+            "|r"
         )
     end
 
-    -- Process the next item in the queue matching the AutoSellGrey 0.25s standard
     C_Timer.After(0.25, ProcessSellQueue)
 end
 
--------------------------------------------------------------------------
--- Scanner Logic
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Scanner
+--------------------------------------------------------------------------------
+
 local function ScanAndVend()
     if not isSelling then
         return
@@ -83,18 +87,14 @@ local function ScanAndVend()
                         if deleteReason then
                             local count = itemInfo.stackCount or 1
                             local totalValue = sellPrice * count
-                            -- Store the itemId and count so we can verify and print it accurately
-                            table.insert(
-                                sellQueue,
-                                {
-                                    bag = bag,
-                                    slot = slot,
-                                    itemId = itemId,
-                                    count = count,
-                                    value = totalValue,
-                                    link = itemInfo.hyperlink
-                                }
-                            )
+                            table.insert(sellQueue, {
+                                bag = bag,
+                                slot = slot,
+                                itemId = itemId,
+                                count = count,
+                                value = totalValue,
+                                link = itemInfo.hyperlink,
+                            })
                         end
                     end
                 end
@@ -103,7 +103,6 @@ local function ScanAndVend()
     end
 
     if isDataMissing then
-        -- Wait a moment for server item data to load, then try again
         C_Timer.After(0.5, ScanAndVend)
     elseif #sellQueue > 0 then
         ProcessSellQueue()
@@ -112,25 +111,23 @@ local function ScanAndVend()
     end
 end
 
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Events
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("MERCHANT_SHOW")
 eventFrame:RegisterEvent("MERCHANT_CLOSED")
 
-eventFrame:SetScript(
-    "OnEvent",
-    function(self, event)
-        if event == "MERCHANT_SHOW" then
-            if MagicEraserDB and MagicEraserDB.autoVendEnabled then
-                isSelling = true
-                sellIndex = 0
-                ScanAndVend()
-            end
-        elseif event == "MERCHANT_CLOSED" then
-            isSelling = false
-            wipe(sellQueue)
+eventFrame:SetScript("OnEvent", function(self, event)
+    if event == "MERCHANT_SHOW" then
+        if MagicEraserDB and MagicEraserDB.autoVendEnabled then
+            isSelling = true
+            sellIndex = 0
+            ScanAndVend()
         end
+    elseif event == "MERCHANT_CLOSED" then
+        isSelling = false
+        wipe(sellQueue)
     end
-)
+end)
