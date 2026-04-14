@@ -16,7 +16,7 @@ Keep your bags clean. Magic Eraser identifies the lowest-value junk in your inve
 
 ⚡ **Decisive** : No "Are you sure?" dialogs. One click, one erase. Every item comes from a manually curated, multiple-human-reviewed trash list.
 
-🗺️ **Localized** : Works with all Classic WoW Locales (enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW).
+🗺️ Localized : Works with all Classic WoW Locales (enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW).
 
 ## Setup
 
