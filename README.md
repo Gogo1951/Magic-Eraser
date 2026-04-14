@@ -4,8 +4,6 @@ Keep your bags clean. Magic Eraser identifies the lowest-value junk in your inve
 
 <img width="360" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
-<img width="360" src="https://github.com/user-attachments/assets/96d18796-d9d4-4285-a8ae-9476dee46ca6" />
-
 ## Features
 
 🗑️ **Smart Scanning** : Finds the lowest-value item across completed quest items, low-level consumables (10+ levels below you), vendor-quality white equipment, and gray vendor trash.
