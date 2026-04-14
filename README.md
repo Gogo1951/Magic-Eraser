@@ -1,38 +1,36 @@
 # Magic Eraser
 
-Keep your bags clean by erasing items from completed quests, low-level consumables, and other trash.
+Keep your bags clean. Magic Eraser identifies the lowest-value junk in your inventory and erases it with a single click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash — gone. When you visit a merchant, Auto-Vend sells the rest for you automatically.
 
-An example mimi-map icon & tool tip when there is an item to delete.
+<img width="360" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
-Shows lowest quality item, allows you to erase it or ignore it.
+<img width="360" src="https://github.com/user-attachments/assets/96d18796-d9d4-4285-a8ae-9476dee46ca6" />
 
-<img width="390" height="309" alt="image" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
+## Features
 
-Now with Auto-Vend, will sell low quality items when you open a merchant window.
+🗑️ **Smart Scanning** : Finds the lowest-value item across completed quest items, low-level consumables (10+ levels below you), vendor-quality white equipment, and gray vendor trash.
 
-<img width="384" height="328" alt="image" src="https://github.com/user-attachments/assets/96d18796-d9d4-4285-a8ae-9476dee46ca6" />
+🏪 **Auto-Vend** : Automatically sells all flagged junk when you open a merchant window. Toggle it on or off from the minimap tooltip.
 
-## How It Works
+🦺 **Ignore List** : Right-click the minimap button to protect an item from being erased. Per-character, so your alts stay independent.
 
-⚠️ **Magic Eraser** acts decisively -- there is no "Are you sure?" step. 
+🔔 **Quest Alerts** : When you turn in a quest, Magic Eraser lets you know if any leftover quest items in your bags can now be safely erased.
 
-* Everything erased comes from a manually curated, multiple-human-reviewed, approved trash list.
-* From there, Magic Eraser scans all items in your bags and identifies the lowest-value item to erase.
-* It looks at the following:
-  * Completed Quest Items and "Provided For" Items that linger in your bag indefinitely.
-  * Generic consumable items with a use level at least 10 levels lower than your character.
-  * Vendor-quality white items, from an approved list.
-  * Gray vendor items.
+⚡ **Decisive** : No "Are you sure?" dialogs. One click, one erase. Every item comes from a manually curated, multiple-human-reviewed trash list.
 
-## Download
+🗺️ **Localized** : Works with all Classic WoW Locales (enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW).
 
-You can find this on Curseforge.
+## Setup
 
-https://www.curseforge.com/wow/addons/magic-eraser
+1. Install the addon.
+2. Log in.
+3. Click the minimap button to erase the lowest-value item in your bags.
+4. Right-click to ignore an item. Shift+Right-click to toggle Auto-Vend.
+5. Done — your bags stay clean on their own. (=
 
 ## Testing Status
 
-🟢 World of Warcraft Classic (🟡 Season of Discover)
+🟢 World of Warcraft Classic (🟡 Season of Discovery)
 
 🟢 Burning Crusade Anniversary
 
@@ -42,8 +40,8 @@ https://www.curseforge.com/wow/addons/magic-eraser
 
 Please reach out if you would like to be involved with testing!
 
-## Report Issues & Get Involved
+## Links
 
-You can find this project on GitHub // https://github.com/Gogo1951/MagicEraser
-
-😈 Gogo1951 on Discord // https://discord.gg/eh8hKq992Q
+* [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser)
+* [GitHub](https://github.com/Gogo1951/Magic-Eraser)
+* [Discord](https://discord.gg/eh8hKq992Q)
