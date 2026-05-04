@@ -4,7 +4,7 @@ This document combines architecture notes and contribution guidance for develope
 
 ## File Map
 
-```
+```text
 Magic-Eraser/
 ├── .github/
 │   └── workflows/
@@ -117,7 +117,7 @@ Initialization happens at `PLAYER_LOGIN` in `Core.lua`. The pattern is `if db.fi
 
 ### Migration Chain
 
-- **`autoVendEnabled` legacy cleanup** (current release) — earlier versions stored `autoVendEnabled` on `MagicEraserDB` (account-wide). On `PLAYER_LOGIN`, if the legacy field is non-nil it is set to `nil` to clear the account-wide value. The per-character field is then seeded from the default. The cleanup block can be removed in a future release after users have had time to update.
+- **`autoVendEnabled` legacy cleanup** (current release) — earlier versions stored `autoVendEnabled` on `MagicEraserDB` (account-wide). On `PLAYER_LOGIN`, the per-character field inherits the legacy value when the per-character field is nil; the legacy field is then cleared. Only the first character to log in after the upgrade inherits the account-wide preference — subsequent characters fall back to the default. The cleanup block can be removed in a future release after users have had time to update.
 
 `EnsureDefaults`-style initialization runs *after* the migration and only fills nil fields; explicit user values are never overridden.
 
