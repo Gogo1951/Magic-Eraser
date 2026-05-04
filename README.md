@@ -2,7 +2,7 @@
 
 Keep your bags clean — one click on the minimap button erases the lowest-value junk in your inventory.
 
-<img width="360" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
+<img width="360" alt="Magic Eraser minimap button and tooltip" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
 ## What It Does
 
