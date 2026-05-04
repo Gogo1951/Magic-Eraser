@@ -1,12 +1,12 @@
-local addonName, Addon = ...
-local L = Addon.L
+local addonName, ns = ...
+local L = ns.L
 
 --------------------------------------------------------------------------------
 -- Helpers
 --------------------------------------------------------------------------------
 
 local function GetColor(key)
-    return Addon:GetColor(key)
+    return ns:GetColor(key)
 end
 
 local function Header(text, order)
@@ -25,12 +25,12 @@ end
 -- Open Options
 --------------------------------------------------------------------------------
 
-function Addon:OpenOptions()
+function ns:OpenOptions()
     if Settings and Settings.OpenToCategory then
-        Settings.OpenToCategory(Addon.AddonTitle)
+        Settings.OpenToCategory(ns.AddonTitle)
     elseif InterfaceOptionsFrame_OpenToCategory then
-        InterfaceOptionsFrame_OpenToCategory(Addon.AddonTitle)
-        InterfaceOptionsFrame_OpenToCategory(Addon.AddonTitle)
+        InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
+        InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
     end
 end
 
@@ -40,11 +40,25 @@ end
 
 local options = {
     type = "group",
-    name = Addon.AddonTitle,
+    name = ns.AddonTitle,
     args = {
         spacerIntro0 = Spacer(1),
-        headerIntro = Header(Addon.AddonTitle, 2),
+        headerIntro = Header(ns.AddonTitle, 2),
         descIntro = Desc(L["OPTIONS_DESC"], 3),
+        spacerIntro1 = Spacer(4),
+        toggleWelcome = {
+            type = "toggle",
+            name = L["OPTIONS_WELCOME"],
+            width = "full",
+            order = 5,
+            get = function()
+                return MagicEraserDB and MagicEraserDB.showWelcome
+            end,
+            set = function(_, value)
+                MagicEraserDB.showWelcome = value
+            end,
+        },
+        spacerWelcome1 = Spacer(6),
 
         spacerAutoVend0 = Spacer(10),
         headerAutoVend = Header(L["AUTO_VEND"], 11),
@@ -56,10 +70,10 @@ local options = {
             width = "full",
             order = 14,
             get = function()
-                return MagicEraserDB and MagicEraserDB.autoVendEnabled
+                return MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled
             end,
             set = function(_, value)
-                MagicEraserDB.autoVendEnabled = value
+                MagicEraserCharDB.autoVendEnabled = value
             end,
         },
 
@@ -73,18 +87,19 @@ local options = {
             confirm = true,
             confirmText = L["OPTIONS_RESET_IGNORE_CONFIRM"],
             func = function()
-                Addon:ClearIgnoreList()
+                ns:ClearIgnoreList()
             end,
         },
         resetAll = {
             type = "execute",
             name = L["OPTIONS_RESET_ALL"],
+            width = "double",
             order = 54,
             confirm = true,
             confirmText = L["OPTIONS_RESET_ALL_CONFIRM"],
             func = function()
-                MagicEraserDB.autoVendEnabled = false
-                Addon:ClearIgnoreList()
+                MagicEraserCharDB.autoVendEnabled = false
+                ns:ClearIgnoreList()
             end,
         },
 
@@ -96,7 +111,7 @@ local options = {
             name = L["OPTIONS_CURSEFORGE"],
             width = "double",
             order = 93,
-            get = function() return Addon.Links.CURSEFORGE end,
+            get = function() return ns.Links.CURSEFORGE end,
             set = function() end,
         },
         linkGitHub = {
@@ -104,7 +119,7 @@ local options = {
             name = L["OPTIONS_GITHUB"],
             width = "double",
             order = 94,
-            get = function() return Addon.Links.GITHUB end,
+            get = function() return ns.Links.GITHUB end,
             set = function() end,
         },
         linkDiscord = {
@@ -112,8 +127,15 @@ local options = {
             name = L["OPTIONS_DISCORD"],
             width = "double",
             order = 95,
-            get = function() return Addon.Links.DISCORD end,
+            get = function() return ns.Links.DISCORD end,
             set = function() end,
+        },
+
+        versionLine = {
+            type = "description",
+            name = GetColor("MUTED") .. "Version " .. ns.Version .. "|r",
+            fontSize = "medium",
+            order = 999,
         },
     },
 }
@@ -123,4 +145,4 @@ local options = {
 --------------------------------------------------------------------------------
 
 LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options)
-LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, Addon.AddonTitle)
+LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, ns.AddonTitle)

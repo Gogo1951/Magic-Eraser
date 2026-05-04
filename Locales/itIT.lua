@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "Versione @project-version@. Le impostazioni si trovano in Opzioni > AddOn > Magic Eraser, inclusa la disattivazione di questo messaggio. Ti piace Magic Eraser? Dillo a un amico! (="
 L["COMBAT_LOCKOUT"] = "Non puoi eliminare oggetti durante il combattimento."
 L["ERASED_ITEM"] = "%s%s%s eliminato."
 L["ERASED_QUEST_SUFFIX"] = ", questo oggetto era associato a una missione completata"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "Svuota lista ignorati"
 L["BAGS_CLEAN_SHORT"] = "Congratulazioni, le tue borse sono piene di cose utili!"
 L["BAGS_CLEAN_HINT"] = "Dovrai eliminare qualcosa manualmente se vuoi liberare spazio."
 L["LOADING_ITEM"] = "Caricamento ID: %d"
-L["TOOLTIP_HINT"] = "Impostazioni aggiuntive in Opzioni > AddOn > Magic Eraser"
+L["TOOLTIP_HINT"] = "Impostazioni aggiuntive in Opzioni > AddOn > Magic Eraser."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "Lista ignorati"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Elimina l'oggetto di minor valore nelle tue borse cliccando sul pulsante della minimappa."
+L["OPTIONS_DESC"] = "Risolvi il disordine nell'inventario con Magic Eraser. Elimina automaticamente gli oggetti di basso valore, le cianfrusaglie grigie e i vecchi oggetti di missione. Include la vendita automatica, una lista ignorati facile da configurare e una scansione intelligente per mantenere in ordine le tue borse."
+L["OPTIONS_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
 L["OPTIONS_RESET"] = "Ripristina"
 L["OPTIONS_RESET_IGNORE"] = "Ripristina lista ignorati"

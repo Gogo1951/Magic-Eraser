@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "버전 @project-version@. 설정은 옵션 > 애드온 > Magic Eraser에서 찾을 수 있으며, 이 메시지를 끄는 것도 포함됩니다. Magic Eraser가 마음에 드시나요? 친구에게 알려주세요! (="
 L["COMBAT_LOCKOUT"] = "전투 중에는 아이템을 삭제할 수 없습니다."
 L["ERASED_ITEM"] = "%s%s%s 삭제됨."
 L["ERASED_QUEST_SUFFIX"] = ", 이 아이템은 완료된 퀘스트와 관련되어 있었습니다"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "무시 목록 초기화"
 L["BAGS_CLEAN_SHORT"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
 L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
 L["LOADING_ITEM"] = "불러오는 중 ID: %d"
-L["TOOLTIP_HINT"] = "추가 설정은 옵션 > 애드온 > Magic Eraser에서 확인하세요"
+L["TOOLTIP_HINT"] = "추가 설정은 옵션 > 애드온 > Magic Eraser에서 확인하세요."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "무시 목록"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "미니맵 버튼을 클릭하면 가방에서 가장 낮은 가치의 아이템을 삭제합니다."
+L["OPTIONS_DESC"] = "Magic Eraser로 인벤토리 공간 부족을 해결하세요. 가치가 낮은 아이템, 회색 잡동사니, 오래된 퀘스트 아이템을 자동으로 삭제합니다. 자동 판매, 설정하기 쉬운 무시 목록, 스마트 스캔 기능을 제공하여 가방을 깔끔하게 유지합니다."
+L["OPTIONS_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_AUTO_VEND_DESC"] = "상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["OPTIONS_RESET"] = "초기화"
 L["OPTIONS_RESET_IGNORE"] = "무시 목록 초기화"

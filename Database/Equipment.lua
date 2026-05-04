@@ -1,6 +1,6 @@
-local _, Addon = ...
+local _, ns = ...
 
-Addon.AllowedDeleteEquipment = {
+ns.AllowedDeleteEquipment = {
     [14115] = true, -- Aboriginal Bands
     [14116] = true, -- Aboriginal Cape
     [14169] = true, -- Aboriginal Shoulder Pads

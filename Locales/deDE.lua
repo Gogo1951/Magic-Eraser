@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "Version @project-version@. Einstellungen findest du unter Optionen > AddOns > Magic Eraser, einschließlich des Deaktivierens dieser Nachricht. Gefällt dir Magic Eraser? Erzähle einem Freund davon! (="
 L["COMBAT_LOCKOUT"] = "Gegenstände können im Kampf nicht gelöscht werden."
 L["ERASED_ITEM"] = "%s%s%s gelöscht."
 L["ERASED_QUEST_SUFFIX"] = ", dieser Gegenstand gehörte zu einer abgeschlossenen Quest"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "Ignorierliste leeren"
 L["BAGS_CLEAN_SHORT"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
 L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, um Platz zu schaffen."
 L["LOADING_ITEM"] = "Lade ID: %d"
-L["TOOLTIP_HINT"] = "Weitere Einstellungen unter Optionen > AddOns > Magic Eraser"
+L["TOOLTIP_HINT"] = "Weitere Einstellungen unter Optionen > AddOns > Magic Eraser."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "Ignorierliste"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Löscht den Gegenstand mit dem geringsten Wert in deinen Taschen per Klick auf den Minikartenknopf."
+L["OPTIONS_DESC"] = "Schluss mit dem Chaos im Inventar dank Magic Eraser. Löscht automatisch Gegenstände mit geringem Wert, grauen Ramsch und alte Questgegenstände. Bietet Auto-Verkauf, eine einfach zu konfigurierende Ignorierliste und intelligentes Scannen, um deine Taschen sauber zu halten."
+L["OPTIONS_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_AUTO_VEND_DESC"] = "Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["OPTIONS_RESET"] = "Zurücksetzen"
 L["OPTIONS_RESET_IGNORE"] = "Ignorierliste zurücksetzen"

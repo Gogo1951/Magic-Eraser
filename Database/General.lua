@@ -1,17 +1,12 @@
-local addonName, Addon = ...
-
---------------------------------------------------------------------------------
--- Localization
---------------------------------------------------------------------------------
-
-Addon.L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local addonName, ns = ...
+ns.L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 --------------------------------------------------------------------------------
 -- Identity
 --------------------------------------------------------------------------------
 
-Addon.AddonTitle = "Magic Eraser"
-Addon.DefaultIcon = "Interface/Icons/inv_misc_bag_07_green"
+ns.AddonTitle = "Magic Eraser"
+ns.DefaultIcon = "Interface/Icons/inv_misc_bag_07_green"
 
 --------------------------------------------------------------------------------
 -- Version
@@ -26,13 +21,13 @@ local function GetVersion()
     return version
 end
 
-Addon.Version = GetVersion()
+ns.Version = GetVersion()
 
 --------------------------------------------------------------------------------
 -- Links
 --------------------------------------------------------------------------------
 
-Addon.Links = {
+ns.Links = {
     CURSEFORGE = "https://www.curseforge.com/wow/addons/magic-eraser",
     GITHUB     = "https://github.com/Gogo1951/Magic-Eraser",
     DISCORD    = "https://discord.gg/eh8hKq992Q",
@@ -53,7 +48,7 @@ local C_MUTED    = "808080" -- Dark Gray: Meta-data, Version Numbers
 
 local COLOR_PREFIX = "|cff"
 
-Addon.Colors = {
+ns.Colors = {
     TITLE    = COLOR_PREFIX .. C_TITLE,
     INFO     = COLOR_PREFIX .. C_INFO,
     DESC     = COLOR_PREFIX .. C_BODY,
@@ -64,28 +59,28 @@ Addon.Colors = {
     MUTED    = COLOR_PREFIX .. C_MUTED,
 }
 
-function Addon:GetColor(key)
+function ns:GetColor(key)
     return self.Colors[key] or (COLOR_PREFIX .. C_TEXT)
 end
 
-Addon.CurrencyColors = {
+ns.CurrencyColors = {
     GOLD   = "FFD700",
     SILVER = "C7C7CF",
     COPPER = "EDA55F",
 }
 
-Addon.BrandPrefix = string.format(
+ns.BrandPrefix = string.format(
     "%s%s|r %s//|r ",
-    Addon.Colors.INFO,
-    Addon.AddonTitle,
-    Addon.Colors.SEP
+    ns.Colors.INFO,
+    ns.AddonTitle,
+    ns.Colors.SEP
 )
 
 --------------------------------------------------------------------------------
 -- Class Reagent Exclusions
 --------------------------------------------------------------------------------
 
-Addon.ClassReagentExclusions = {
+ns.ClassReagentExclusions = {
     SHAMAN = {
         [17057] = true, -- Shiny Fish Scales
         [17058] = true, -- Fish Oil
@@ -96,7 +91,7 @@ Addon.ClassReagentExclusions = {
 -- Deletion Priority
 --------------------------------------------------------------------------------
 
-Addon.DeletePriority = {
+ns.DeletePriority = {
     quest      = 1,
     gray       = 2,
     consumable = 3,

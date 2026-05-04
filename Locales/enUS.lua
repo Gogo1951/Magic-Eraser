@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "Version @project-version@. Settings (including the option to disable this message) can be found under Options > AddOns > Magic Eraser. Enjoying the addon? Tell a friend about it! (="
 L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
 L["ERASED_ITEM"] = "Erased %s%s%s."
 L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "Clear Ignore List"
 L["BAGS_CLEAN_SHORT"] = "Congratulations, your bags are full of good stuff!"
 L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
 L["LOADING_ITEM"] = "Loading ID: %d"
-L["TOOLTIP_HINT"] = "Additional settings can be found under Options > AddOns > Magic Eraser"
+L["TOOLTIP_HINT"] = "Additional settings can be found under Options > AddOns > Magic Eraser."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "Ignore List"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Discards the lowest-value item in your bags when you click the minimap button."
+L["OPTIONS_DESC"] = "Stop inventory clutter with Magic Eraser. Automatically deletes low-value items, gray trash, and old quest items. Features auto-vend, an easy-to-configure ignore list, and smart scanning to keep your bags clean."
+L["OPTIONS_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
 L["OPTIONS_RESET"] = "Reset"
 L["OPTIONS_RESET_IGNORE"] = "Reset Ignore List"
