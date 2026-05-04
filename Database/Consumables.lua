@@ -1,6 +1,6 @@
-local _, Addon = ...
+local _, ns = ...
 
-Addon.AllowedDeleteConsumables = {
+ns.AllowedDeleteConsumables = {
     [19301] = true, -- Alterac Manna Biscuit
     [8932] = true, -- Alterac Swiss
     [13935] = true, -- Baked Salmon

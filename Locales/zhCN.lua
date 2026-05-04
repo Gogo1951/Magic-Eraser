@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "版本 @project-version@。设置可以在 选项 > 插件 > Magic Eraser 中找到，包括关闭此消息。喜欢 Magic Eraser 吗？告诉朋友吧！(="
 L["COMBAT_LOCKOUT"] = "战斗中无法删除物品。"
 L["ERASED_ITEM"] = "已删除 %s%s%s。"
 L["ERASED_QUEST_SUFFIX"] = "，该物品关联的任务已完成"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "清空忽略列表"
 L["BAGS_CLEAN_SHORT"] = "恭喜，你的背包里都是好东西！"
 L["BAGS_CLEAN_HINT"] = "如果需要更多空间，你需要手动删除一些物品。"
 L["LOADING_ITEM"] = "加载中 ID: %d"
-L["TOOLTIP_HINT"] = "更多设置请前往 选项 > 插件 > Magic Eraser"
+L["TOOLTIP_HINT"] = "更多设置请前往 选项 > 插件 > Magic Eraser."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "忽略列表"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "点击小地图按钮时删除背包中价值最低的物品。"
+L["OPTIONS_DESC"] = "使用 Magic Eraser 解决背包杂乱问题。自动删除低价值物品、灰色垃圾和旧任务物品。功能包括自动售卖、易于配置的忽略列表以及保持背包整洁的智能扫描。"
+L["OPTIONS_WELCOME"] = "启用欢迎消息"
 L["OPTIONS_AUTO_VEND_DESC"] = "打开商人窗口时自动出售被 Magic Eraser 标记为垃圾的物品。"
 L["OPTIONS_RESET"] = "重置"
 L["OPTIONS_RESET_IGNORE"] = "重置忽略列表"

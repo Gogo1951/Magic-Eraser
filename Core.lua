@@ -1,22 +1,24 @@
-local addonName, Addon = ...
+local addonName, ns = ...
+local L = ns.L
 
--------------------------------------------------------------------------
--- 1. Helpers
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Helpers
+--------------------------------------------------------------------------------
+
 local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
 local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
 local PickupContainerItem = C_Container and C_Container.PickupContainerItem or PickupContainerItem
 local format, insert, floor, ipairs = string.format, table.insert, math.floor, ipairs
 
-function Addon:Print(message)
-    DEFAULT_CHAT_FRAME:AddMessage(self.BrandPrefix .. message)
+function ns:Print(message)
+    DEFAULT_CHAT_FRAME:AddMessage(self.BrandPrefix .. ns.Colors.TEXT .. message .. "|r")
 end
 
-function Addon:FormatCommaNumber(number)
+function ns:FormatCommaNumber(number)
     return tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
 end
 
-function Addon:FormatCurrency(rawValue)
+function ns:FormatCurrency(rawValue)
     local value = math.max(rawValue or 0, 0)
 
     local gold = floor(value / 10000)
@@ -24,44 +26,45 @@ function Addon:FormatCurrency(rawValue)
     local copper = value % 100
     local parts = {}
 
-    local goldColor = Addon.CurrencyColors.GOLD
-    local silverColor = Addon.CurrencyColors.SILVER
-    local copperColor = Addon.CurrencyColors.COPPER
+    local goldColor = ns.CurrencyColors.GOLD
+    local silverColor = ns.CurrencyColors.SILVER
+    local copperColor = ns.CurrencyColors.COPPER
 
     if gold > 0 then
-        insert(parts, format("|cffffffff%s|r|cff%sg|r", Addon:FormatCommaNumber(gold), goldColor))
+        insert(parts, format(ns.Colors.TEXT .. "%s|r|cff%sg|r", ns:FormatCommaNumber(gold), goldColor))
     end
 
     if gold > 0 then
-        insert(parts, format("|cffffffff%02d|r|cff%ss|r", silver, silverColor))
+        insert(parts, format(ns.Colors.TEXT .. "%02d|r|cff%ss|r", silver, silverColor))
     elseif silver > 0 then
-        insert(parts, format("|cffffffff%d|r|cff%ss|r", silver, silverColor))
+        insert(parts, format(ns.Colors.TEXT .. "%d|r|cff%ss|r", silver, silverColor))
     end
 
     if gold > 0 or silver > 0 then
-        insert(parts, format("|cffffffff%02d|r|cff%sc|r", copper, copperColor))
+        insert(parts, format(ns.Colors.TEXT .. "%02d|r|cff%sc|r", copper, copperColor))
     else
-        insert(parts, format("|cffffffff%d|r|cff%sc|r", copper, copperColor))
+        insert(parts, format(ns.Colors.TEXT .. "%d|r|cff%sc|r", copper, copperColor))
     end
 
     return table.concat(parts, " ")
 end
 
-function Addon:IsQuestCompleted(questId)
+function ns:IsQuestCompleted(questId)
     if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
         return C_QuestLog.IsQuestFlaggedCompleted(questId)
     end
     return false
 end
 
--------------------------------------------------------------------------
--- 2. Ignore List
--------------------------------------------------------------------------
-function Addon:IsIgnored(itemId)
+--------------------------------------------------------------------------------
+-- Ignore List
+--------------------------------------------------------------------------------
+
+function ns:IsIgnored(itemId)
     return MagicEraserCharDB and MagicEraserCharDB.ignoreList and MagicEraserCharDB.ignoreList[itemId]
 end
 
-function Addon:ToggleIgnore(itemId)
+function ns:ToggleIgnore(itemId)
     if not itemId then
         return
     end
@@ -70,35 +73,37 @@ function Addon:ToggleIgnore(itemId)
     else
         MagicEraserCharDB.ignoreList[itemId] = true
     end
-    Addon:InvalidateCache()
-    Addon:RefreshDisplay()
+    ns:InvalidateCache()
+    ns:RefreshDisplay()
 end
 
-function Addon:ClearIgnoreList()
+function ns:ClearIgnoreList()
     wipe(MagicEraserCharDB.ignoreList)
-    Addon:InvalidateCache()
-    Addon:RefreshDisplay()
+    ns:InvalidateCache()
+    ns:RefreshDisplay()
 end
 
--------------------------------------------------------------------------
--- 3. Scan Cache
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Scan Cache
+--------------------------------------------------------------------------------
+
 local cachedItem = nil
 local isCacheValid = false
 
-function Addon:InvalidateCache()
+function ns:InvalidateCache()
     isCacheValid = false
     cachedItem = nil
 end
 
--------------------------------------------------------------------------
--- 4. Scanning & Evaluation Logic
--------------------------------------------------------------------------
-function Addon:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
+--------------------------------------------------------------------------------
+-- Scanning & Evaluation
+--------------------------------------------------------------------------------
+
+function ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
     local playerLevel = UnitLevel("player")
-    local questItemDatabase = Addon.AllowedDeleteQuestItems or {}
-    local consumableDatabase = Addon.AllowedDeleteConsumables or {}
-    local equipmentDatabase = Addon.AllowedDeleteEquipment or {}
+    local questItemDatabase = ns.AllowedDeleteQuestItems or {}
+    local consumableDatabase = ns.AllowedDeleteConsumables or {}
+    local equipmentDatabase = ns.AllowedDeleteEquipment or {}
 
     if questItemDatabase[itemId] then
         for _, questId in ipairs(questItemDatabase[itemId]) do
@@ -124,12 +129,12 @@ local function isBetterDeletionCandidate(candidate, current)
         return true
     end
     if candidate.value == current.value then
-        return Addon.DeletePriority[candidate.deleteReason] < Addon.DeletePriority[current.deleteReason]
+        return ns.DeletePriority[candidate.deleteReason] < ns.DeletePriority[current.deleteReason]
     end
     return false
 end
 
-function Addon:FindItemToDelete()
+function ns:FindItemToDelete()
     if isCacheValid then
         return cachedItem
     end
@@ -137,7 +142,7 @@ function Addon:FindItemToDelete()
     local best = nil
     local _, playerClass = UnitClass("player")
     local isDataMissing = false
-    local classReagentExclusions = (Addon.ClassReagentExclusions and Addon.ClassReagentExclusions[playerClass]) or {}
+    local classReagentExclusions = (ns.ClassReagentExclusions and ns.ClassReagentExclusions[playerClass]) or {}
 
     for bag = 0, 4 do
         local slotCount = GetContainerNumSlots(bag) or 0
@@ -147,7 +152,7 @@ function Addon:FindItemToDelete()
             if itemInfo and itemInfo.hyperlink then
                 local itemId = itemInfo.itemID
 
-                if not Addon:IsIgnored(itemId) and not classReagentExclusions[itemId] then
+                if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
                     local name, _, rarity, _, requiredLevel, _, _, _, _, icon, sellPrice =
                         GetItemInfo(itemInfo.hyperlink)
 
@@ -186,7 +191,7 @@ function Addon:FindItemToDelete()
         C_Timer.After(
             1.0,
             function()
-                Addon:RefreshDisplay()
+                ns:RefreshDisplay()
             end
         )
     end
@@ -196,12 +201,13 @@ function Addon:FindItemToDelete()
     return best
 end
 
--------------------------------------------------------------------------
--- 5. Deletion
--------------------------------------------------------------------------
-function Addon:RunEraser()
+--------------------------------------------------------------------------------
+-- Deletion
+--------------------------------------------------------------------------------
+
+function ns:RunEraser()
     if InCombatLockdown() then
-        self:Print(Addon.Colors.TEXT .. "Cannot erase items while in combat.|r")
+        self:Print(L["COMBAT_LOCKOUT"])
         return
     end
 
@@ -222,40 +228,38 @@ function Addon:RunEraser()
 
             local valueString
             if item.deleteReason == "quest" then
-                valueString = ", this item was associated with a quest you have completed"
+                valueString = L["ERASED_QUEST_SUFFIX"]
             elseif item.value > 0 then
-                valueString = format(", worth %s", Addon:FormatCurrency(item.value))
+                valueString = format(L["ERASED_VALUE_SUFFIX"], ns:FormatCurrency(item.value))
             else
                 valueString = ""
             end
 
-            self:Print(Addon.Colors.TEXT .. format("Erased %s%s%s.|r", item.link, stackString, valueString))
+            self:Print(format(L["ERASED_ITEM"], item.link, stackString, valueString))
 
-            Addon:InvalidateCache()
+            ns:InvalidateCache()
             C_Timer.After(
                 0.2,
                 function()
-                    Addon:RefreshDisplay()
+                    ns:RefreshDisplay()
                 end
             )
             return
         else
-            self:Print(Addon.Colors.TEXT .. "Slow down! You are clicking faster than the game can erase items.|r")
+            self:Print(L["CURSOR_TOO_FAST"])
             ClearCursor()
         end
     else
-        self:Print(
-            Addon.Colors.TEXT ..
-                "Congratulations, your bags are full of good stuff! You'll have to manually erase something if you want to free up more space.|r"
-        )
+        self:Print(L["BAGS_CLEAN"])
     end
 
-    Addon:RefreshDisplay()
+    ns:RefreshDisplay()
 end
 
--------------------------------------------------------------------------
--- 6. Events
--------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Events
+--------------------------------------------------------------------------------
+
 local updatePending = false
 
 local eventFrame = CreateFrame("Frame")
@@ -272,7 +276,7 @@ eventFrame:SetScript(
             C_Timer.After(
                 1.0,
                 function()
-                    local questItemDatabase = Addon.AllowedDeleteQuestItems or {}
+                    local questItemDatabase = ns.AllowedDeleteQuestItems or {}
                     local alertedItems = {}
 
                     for bag = 0, 4 do
@@ -285,10 +289,7 @@ eventFrame:SetScript(
                                 if questItemDatabase[itemId] and not alertedItems[itemId] then
                                     for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
                                         if trackedQuestId == questId then
-                                            Addon:Print(
-                                                Addon.Colors.TEXT ..
-                                                    format("%s can now be safely erased!|r", itemInfo.hyperlink)
-                                            )
+                                            ns:Print(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
                                             alertedItems[itemId] = true
                                             break
                                         end
@@ -298,29 +299,40 @@ eventFrame:SetScript(
                         end
                     end
 
-                    Addon:InvalidateCache()
-                    Addon:RefreshDisplay()
+                    ns:InvalidateCache()
+                    ns:RefreshDisplay()
                 end
             )
         elseif event == "PLAYER_LOGIN" then
             MagicEraserDB = MagicEraserDB or {}
             MagicEraserDB.minimap = MagicEraserDB.minimap or {}
+            if MagicEraserDB.showWelcome == nil then MagicEraserDB.showWelcome = true end
+            if MagicEraserDB.autoVendEnabled ~= nil then
+                MagicEraserDB.autoVendEnabled = nil
+            end
+
             MagicEraserCharDB = MagicEraserCharDB or {}
             MagicEraserCharDB.ignoreList = MagicEraserCharDB.ignoreList or {}
+            if MagicEraserCharDB.autoVendEnabled == nil then MagicEraserCharDB.autoVendEnabled = false end
 
-            local LibDBIcon = LibStub("LibDBIcon-1.0", true)
-            if LibDBIcon and Addon.LDBObject then
-                LibDBIcon:Register(addonName, Addon.LDBObject, MagicEraserDB.minimap)
+            local LibDBIcon = LibStub("LibDBIcon-1.0")
+            if LibDBIcon and ns.LDBObject then
+                LibDBIcon:Register(addonName, ns.LDBObject, MagicEraserDB.minimap)
             end
-            Addon:RefreshDisplay()
+
+            if MagicEraserDB.showWelcome then
+                ns:Print(L["CHAT_LOADED"])
+            end
+
+            ns:RefreshDisplay()
         else
             if not updatePending then
                 updatePending = true
                 C_Timer.After(
                     0.1,
                     function()
-                        Addon:InvalidateCache()
-                        Addon:RefreshDisplay()
+                        ns:InvalidateCache()
+                        ns:RefreshDisplay()
                         updatePending = false
                     end
                 )

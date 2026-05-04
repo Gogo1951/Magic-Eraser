@@ -1,6 +1,6 @@
-local _, Addon = ...
+local _, ns = ...
 
-Addon.AllowedDeleteQuestItems = {
+ns.AllowedDeleteQuestItems = {
 
 -----------------------------------------------------------------
 -- 01. World of Warcraft

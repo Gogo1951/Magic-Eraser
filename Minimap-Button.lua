@@ -1,6 +1,6 @@
-local addonName, Addon = ...
-local L = Addon.L
-local Colors = Addon.Colors
+local addonName, ns = ...
+local L = ns.L
+local Colors = ns.Colors
 
 local format = string.format
 local insert = table.insert
@@ -19,13 +19,13 @@ local function RefreshTooltip(anchor)
     tooltip:ClearLines()
 
     tooltip:AddDoubleLine(
-        Colors.TITLE .. Addon.AddonTitle .. "|r",
-        Colors.MUTED .. Addon.Version .. "|r"
+        Colors.TITLE .. ns.AddonTitle .. "|r",
+        Colors.MUTED .. ns.Version .. "|r"
     )
     tooltip:AddLine(" ")
     tooltip:AddLine(" ")
 
-    local item = Addon:FindItemToDelete()
+    local item = ns:FindItemToDelete()
 
     if item then
         -- Lowest Value Item
@@ -36,7 +36,7 @@ local function RefreshTooltip(anchor)
 
         local leftText = iconString .. " " .. item.link .. " " .. countString
         local rightText = (item.value > 0)
-            and Addon:FormatCurrency(item.value)
+            and ns:FormatCurrency(item.value)
             or (Colors.MUTED .. L["NO_VALUE"] .. "|r")
 
         tooltip:AddDoubleLine(leftText, rightText)
@@ -52,7 +52,7 @@ local function RefreshTooltip(anchor)
 
     -- Auto-Vend
     tooltip:AddLine(" ")
-    local autoVendStatus = (MagicEraserDB and MagicEraserDB.autoVendEnabled)
+    local autoVendStatus = (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled)
         and (Colors.SUCCESS .. L["ENABLED"] .. "|r")
         or (Colors.DISABLED .. L["DISABLED"] .. "|r")
     tooltip:AddDoubleLine(L["AUTO_VEND"], autoVendStatus)
@@ -116,25 +116,25 @@ end
 -- Display Refresh
 --------------------------------------------------------------------------------
 
-function Addon:RefreshDisplay()
-    if not Addon.LDBObject then
+function ns:RefreshDisplay()
+    if not ns.LDBObject then
         return
     end
 
-    Addon:InvalidateCache()
-    local item = Addon:FindItemToDelete()
+    ns:InvalidateCache()
+    local item = ns:FindItemToDelete()
 
     if item and item.icon then
-        Addon.LDBObject.icon = item.icon
+        ns.LDBObject.icon = item.icon
     else
-        Addon.LDBObject.icon = Addon.DefaultIcon
+        ns.LDBObject.icon = ns.DefaultIcon
     end
 
     if LibDBIcon then
         local button = LibDBIcon:GetMinimapButton(addonName)
         if button then
             if button.icon then
-                button.icon:SetTexture(Addon.LDBObject.icon)
+                button.icon:SetTexture(ns.LDBObject.icon)
             end
 
             if GameTooltip:GetOwner() == button then
@@ -149,27 +149,27 @@ end
 --------------------------------------------------------------------------------
 
 if LibDataBroker then
-    Addon.LDBObject = LibDataBroker:NewDataObject(addonName, {
+    ns.LDBObject = LibDataBroker:NewDataObject(addonName, {
         type = "data source",
-        text = Addon.AddonTitle,
-        icon = Addon.DefaultIcon,
+        text = ns.AddonTitle,
+        icon = ns.DefaultIcon,
 
         OnClick = function(self, button)
             if IsShiftKeyDown() and button == "RightButton" then
-                MagicEraserDB.autoVendEnabled = not MagicEraserDB.autoVendEnabled
+                MagicEraserCharDB.autoVendEnabled = not MagicEraserCharDB.autoVendEnabled
                 RefreshTooltip(self)
                 return
             end
 
             if button == "LeftButton" then
-                Addon:RunEraser()
+                ns:RunEraser()
             elseif button == "RightButton" then
-                local item = Addon:FindItemToDelete()
+                local item = ns:FindItemToDelete()
                 if item then
-                    Addon:ToggleIgnore(item.itemId)
+                    ns:ToggleIgnore(item.itemId)
                 end
             elseif button == "MiddleButton" then
-                Addon:ClearIgnoreList()
+                ns:ClearIgnoreList()
             end
         end,
 

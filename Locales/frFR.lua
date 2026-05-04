@@ -5,6 +5,7 @@ if not L then return end
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+L["CHAT_LOADED"] = "Version @project-version@. Les paramètres se trouvent dans Options > Extensions > Magic Eraser, y compris pour désactiver ce message. Vous appréciez Magic Eraser ? Parlez-en à un ami ! (="
 L["COMBAT_LOCKOUT"] = "Impossible de supprimer des objets en combat."
 L["ERASED_ITEM"] = "%s%s%s supprimé."
 L["ERASED_QUEST_SUFFIX"] = ", cet objet était associé à une quête terminée"
@@ -31,7 +32,7 @@ L["ACTION_CLEAR_IGNORE"] = "Vider la liste d'ignorés"
 L["BAGS_CLEAN_SHORT"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
 L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer de l'espace."
 L["LOADING_ITEM"] = "Chargement ID : %d"
-L["TOOLTIP_HINT"] = "Paramètres supplémentaires dans Options > Extensions > Magic Eraser"
+L["TOOLTIP_HINT"] = "Paramètres supplémentaires dans Options > Extensions > Magic Eraser."
 
 --------------------------------------------------------------------------------
 -- Auto-Vend
@@ -52,7 +53,8 @@ L["IGNORE_LIST"] = "Liste d'ignorés"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Supprime l'objet de plus faible valeur dans vos sacs en cliquant sur le bouton de la minicarte."
+L["OPTIONS_DESC"] = "Éliminez l'encombrement de l'inventaire avec Magic Eraser. Supprime automatiquement les objets de faible valeur, la camelote grise et les anciens objets de quête. Propose la vente automatique, une liste d'ignorés facile à configurer et une analyse intelligente pour garder vos sacs bien rangés."
+L["OPTIONS_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
 L["OPTIONS_RESET"] = "Réinitialiser"
 L["OPTIONS_RESET_IGNORE"] = "Réinitialiser la liste d'ignorés"
