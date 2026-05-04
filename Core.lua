@@ -307,13 +307,21 @@ eventFrame:SetScript(
             MagicEraserDB = MagicEraserDB or {}
             MagicEraserDB.minimap = MagicEraserDB.minimap or {}
             if MagicEraserDB.showWelcome == nil then MagicEraserDB.showWelcome = true end
-            if MagicEraserDB.autoVendEnabled ~= nil then
-                MagicEraserDB.autoVendEnabled = nil
-            end
 
             MagicEraserCharDB = MagicEraserCharDB or {}
             MagicEraserCharDB.ignoreList = MagicEraserCharDB.ignoreList or {}
-            if MagicEraserCharDB.autoVendEnabled == nil then MagicEraserCharDB.autoVendEnabled = false end
+
+            -- The first character to log in after upgrade inherits the
+            -- legacy account-wide autoVendEnabled; the legacy field is then cleared.
+            if MagicEraserCharDB.autoVendEnabled == nil and MagicEraserDB.autoVendEnabled ~= nil then
+                MagicEraserCharDB.autoVendEnabled = MagicEraserDB.autoVendEnabled
+            end
+            if MagicEraserDB.autoVendEnabled ~= nil then
+                MagicEraserDB.autoVendEnabled = nil
+            end
+            if MagicEraserCharDB.autoVendEnabled == nil then
+                MagicEraserCharDB.autoVendEnabled = false
+            end
 
             local LibDBIcon = LibStub("LibDBIcon-1.0")
             if LibDBIcon and ns.LDBObject then
