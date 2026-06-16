@@ -9,6 +9,10 @@ local sellQueue = {}
 local isSelling = false
 local sellIndex = 0
 
+-- Set when a vend pass is deferred because we are in combat (UseContainerItem
+-- is protected). OnCombatEnded resumes it once PLAYER_REGEN_ENABLED fires.
+local vendPending = false
+
 -- Bounded retry for cold item-data misses; reset on each MERCHANT_SHOW.
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
@@ -21,6 +25,19 @@ local function ProcessSellQueue()
     -- Stop if we are done or if the merchant window was closed
     if not isSelling then
         wipe(sellQueue)
+        return
+    end
+
+    -- UseContainerItem below is protected and forbidden in combat. If we
+    -- entered combat mid-queue, stop now; OnCombatEnded re-scans and resumes
+    -- from scratch once PLAYER_REGEN_ENABLED fires (slots may have shifted).
+    if InCombatLockdown() then
+        isSelling = false
+        wipe(sellQueue)
+        if not vendPending then
+            vendPending = true
+            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+        end
         return
     end
 
@@ -111,6 +128,13 @@ local function ScanAndVend()
     end
 end
 
+local function StartVending()
+    isSelling = true
+    sellIndex = 0
+    scanRetries = 0
+    ScanAndVend()
+end
+
 --------------------------------------------------------------------------------
 -- Event Handlers
 --------------------------------------------------------------------------------
@@ -123,15 +147,44 @@ end
 ]]
 
 function ns:OnMerchantShow()
-    if MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled then
-        isSelling = true
-        sellIndex = 0
-        scanRetries = 0
-        ScanAndVend()
+    if not (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled) then
+        return
     end
+
+    -- Vendoring relies on UseContainerItem, a protected call the client blocks
+    -- in combat. If the merchant opened during combat, defer the whole pass
+    -- until combat ends rather than tripping ADDON_ACTION_FORBIDDEN.
+    if InCombatLockdown() then
+        if not vendPending then
+            vendPending = true
+            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+        end
+        return
+    end
+
+    StartVending()
 end
 
 function ns:OnMerchantClosed()
     isSelling = false
+    vendPending = false
     wipe(sellQueue)
+end
+
+--[[
+    PLAYER_REGEN_ENABLED. Selling is deferred while in combat (UseContainerItem
+    is protected), so once combat ends we resume the deferred pass -- but only if
+    the merchant window is still open. Fires on every combat end, so the
+    vendPending guard keeps it free when nothing is waiting.
+]]
+function ns:OnCombatEnded()
+    if not vendPending then
+        return
+    end
+    vendPending = false
+
+    if MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled
+        and MerchantFrame and MerchantFrame:IsShown() then
+        StartVending()
+    end
 end

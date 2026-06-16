@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Impostazioni aggiuntive in Opzioni > AddOn > Magic Eraser."
 
 L["AUTO_VEND"] = "Vendita automatica"
 L["AUTO_VEND_DESC"] = "Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "La vendita automatica avverrà al termine del combattimento."
 L["ON"] = "Attivato"
 L["OFF"] = "Disattivato"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "Lista ignorati"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Risolvi il disordine nell'inventario con Magic Eraser. Elimina automaticamente gli oggetti di basso valore, le cianfrusaglie grigie e i vecchi oggetti di missione. Include la vendita automatica, una lista ignorati facile da configurare e una scansione intelligente per mantenere in ordine le tue borse."
+L["OPTIONS_DESC"] = "Magic Eraser identifica le cianfrusaglie di minor valore nel tuo inventario e le elimina con un solo clic sul pulsante della minimappa. Oggetti di missioni completate, consumabili di basso livello, oggetti bianchi di qualità dal mercante e spazzatura grigia: spariti. Quando visiti un mercante, la Vendita automatica vende il resto per te."
 L["OPTIONS_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
 L["OPTIONS_RESET"] = "Ripristina"

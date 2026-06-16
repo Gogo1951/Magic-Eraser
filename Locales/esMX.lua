@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Ajustes adicionales en Opciones > AddOns > Magic Eraser."
 
 L["AUTO_VEND"] = "Auto-venta"
 L["AUTO_VEND_DESC"] = "Vende automáticamente los objetos marcados como basura por Magic Eraser."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-venta venderá los objetos al terminar el combate."
 L["ON"] = "Activado"
 L["OFF"] = "Desactivado"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "Lista de ignorados"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Pon fin al desorden del inventario con Magic Eraser. Elimina automáticamente objetos de bajo valor, basura gris y objetos de misiones antiguas. Cuenta con auto-venta, una lista de ignorados fácil de configurar y escaneo inteligente para mantener tus bolsas limpias."
+L["OPTIONS_DESC"] = "Magic Eraser identifica la basura de menor valor en tu inventario y la elimina con un solo clic en el botón del minimapa. Objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris... desaparecidos. Cuando visitas a un comerciante, Auto-venta vende el resto por ti automáticamente."
 L["OPTIONS_WELCOME"] = "Habilitar mensaje de bienvenida"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
 L["OPTIONS_RESET"] = "Restablecer"

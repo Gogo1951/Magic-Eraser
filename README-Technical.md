@@ -56,6 +56,7 @@ Every event routes through a single frame in `Core.lua`. `ns.EVENT_NAMES` is the
 | `BAG_UPDATE_DELAYED` | `ns:OnBagUpdateDelayed` | Re-scan + refresh the minimap candidate. |
 | `QUEST_TURNED_IN` | `ns:OnQuestTurnedIn` | Quest-item-ready chat alert. |
 | `MERCHANT_SHOW` / `MERCHANT_CLOSED` | `ns:OnMerchantShow` / `ns:OnMerchantClosed` | Start/stop Auto-Vend. |
+| `PLAYER_REGEN_ENABLED` | `ns:OnCombatEnded` | Resume a vend pass that was deferred because it began in combat. |
 
 `BAG_UPDATE_DELAYED` is debounced with a 0.1s `C_Timer.After` behind the `updatePending` flag, so a burst of updates from looting or a vendor turn-in coalesces into one rescan. `QUEST_TURNED_IN` work is delayed 1.0s to give the server time to flag the quest complete before `IsQuestFlaggedCompleted` is read.
 
@@ -63,7 +64,9 @@ The dispatcher taps the diagnostics event log *before* calling the handler, behi
 
 ### Combat Lockdown
 
-`RunEraser` checks `InCombatLockdown()` at entry and bails with `L["COMBAT_LOCKOUT"]`. There is no deferred replay — the player clicks again after combat. Auto-Vend never runs in combat because merchant frames cannot open in combat.
+`RunEraser` checks `InCombatLockdown()` at entry and bails with `L["COMBAT_LOCKOUT"]`. There is no deferred replay — the player clicks again after combat.
+
+Auto-Vend *does* face combat: a merchant frame can be open while in combat (combat starting with the window already open, or lingering combat tags), and `UseContainerItem` is protected, so calling it under lockdown throws `ADDON_ACTION_FORBIDDEN`. Auto-Vend therefore guards in two places — `ns:OnMerchantShow` (opened in combat) and each `ProcessSellQueue` tick (combat started mid-queue) — and on either it stops, sets `vendPending`, and prints `L["AUTO_VEND_COMBAT_DEFERRED"]` once. `ns:OnCombatEnded` (`PLAYER_REGEN_ENABLED`) then re-scans from scratch and resumes if the merchant is still open, since slots may have shifted during combat. `MERCHANT_CLOSED` clears `vendPending`.
 
 ### Scan → Evaluate → Rank → Erase
 

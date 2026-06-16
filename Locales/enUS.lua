@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Additional settings can be found under Options > AddOns > M
 
 L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 L["ON"] = "Enabled"
 L["OFF"] = "Disabled"
 
