@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Configurações adicionais em Opções > AddOns > Magic Era
 
 L["AUTO_VEND"] = "Venda automática"
 L["AUTO_VEND_DESC"] = "Vende automaticamente itens marcados como lixo pelo Magic Eraser."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "A venda automática ocorrerá assim que o combate terminar."
 L["ON"] = "Ativado"
 L["OFF"] = "Desativado"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "Lista de ignorados"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Acabe com a desordem no inventário com o Magic Eraser. Exclui automaticamente itens de baixo valor, lixo cinza e itens de missões antigas. Apresenta venda automática, uma lista de ignorados fácil de configurar e varredura inteligente para manter suas bolsas organizadas."
+L["OPTIONS_DESC"] = "O Magic Eraser identifica o lixo de menor valor em seu inventário e o exclui com um único clique no botão do minimapa. Itens de missões concluídas, consumíveis de baixo nível, itens brancos de qualidade de vendedor e lixo cinza — sumiram. Quando você visita um mercante, a Venda automática vende o resto para você."
 L["OPTIONS_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vende automaticamente itens marcados como lixo pelo Magic Eraser ao abrir uma janela de mercador."
 L["OPTIONS_RESET"] = "Redefinir"

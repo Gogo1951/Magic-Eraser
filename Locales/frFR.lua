@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Paramètres supplémentaires dans Options > Extensions > Ma
 
 L["AUTO_VEND"] = "Vente auto"
 L["AUTO_VEND_DESC"] = "Vend automatiquement les objets signalés comme rebut par Magic Eraser."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "La vente automatique s'effectuera à la fin du combat."
 L["ON"] = "Activé"
 L["OFF"] = "Désactivé"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "Liste d'ignorés"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Éliminez l'encombrement de l'inventaire avec Magic Eraser. Supprime automatiquement les objets de faible valeur, la camelote grise et les anciens objets de quête. Propose la vente automatique, une liste d'ignorés facile à configurer et une analyse intelligente pour garder vos sacs bien rangés."
+L["OPTIONS_DESC"] = "Magic Eraser identifie les déchets de la plus faible valeur dans votre inventaire et les supprime d'un simple clic sur le bouton de la minicarte. Objets de quête terminés, consommables de bas niveau, objets blancs de qualité vendeur et camelote grise : tout disparaît. Lorsque vous visitez un marchand, la Vente auto vend automatiquement le reste pour vous."
 L["OPTIONS_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_AUTO_VEND_DESC"] = "Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
 L["OPTIONS_RESET"] = "Réinitialiser"

@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "Weitere Einstellungen unter Optionen > AddOns > Magic Erase
 
 L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESC"] = "Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 L["ON"] = "Aktiviert"
 L["OFF"] = "Deaktiviert"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "Ignorierliste"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Schluss mit dem Chaos im Inventar dank Magic Eraser. Löscht automatisch Gegenstände mit geringem Wert, grauen Ramsch und alte Questgegenstände. Bietet Auto-Verkauf, eine einfach zu konfigurierende Ignorierliste und intelligentes Scannen, um deine Taschen sauber zu halten."
+L["OPTIONS_DESC"] = "Magic Eraser identifiziert den wertlosesten Ramsch in deinem Inventar und löscht ihn mit einem einzigen Klick auf die Minikarten-Schaltfläche. Abgeschlossene Questgegenstände, niedrigstufige Verbrauchsgüter, weiße Gegenstände in Händlerqualität und grauer Müll — weg. Wenn du einen Händler besuchst, verkauft Auto-Verkauf den Rest automatisch für dich."
 L["OPTIONS_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_AUTO_VEND_DESC"] = "Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["OPTIONS_RESET"] = "Zurücksetzen"

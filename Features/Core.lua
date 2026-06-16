@@ -279,7 +279,8 @@ ns.EVENT_NAMES = {
     "BAG_UPDATE_DELAYED",
     "QUEST_TURNED_IN",
     "MERCHANT_SHOW",
-    "MERCHANT_CLOSED"
+    "MERCHANT_CLOSED",
+    "PLAYER_REGEN_ENABLED"
 }
 
 local EVENT_HANDLERS = {
@@ -288,7 +289,8 @@ local EVENT_HANDLERS = {
     BAG_UPDATE_DELAYED = "OnBagUpdateDelayed",
     QUEST_TURNED_IN = "OnQuestTurnedIn",
     MERCHANT_SHOW = "OnMerchantShow",
-    MERCHANT_CLOSED = "OnMerchantClosed"
+    MERCHANT_CLOSED = "OnMerchantClosed",
+    PLAYER_REGEN_ENABLED = "OnCombatEnded"
 }
 
 local updatePending = false

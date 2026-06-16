@@ -46,6 +46,7 @@ L["TOOLTIP_HINT"] = "更多设置请前往 选项 > 插件 > Magic Eraser."
 
 L["AUTO_VEND"] = "自动售卖"
 L["AUTO_VEND_DESC"] = "自动出售被 Magic Eraser 标记为垃圾的物品。"
+L["AUTO_VEND_COMBAT_DEFERRED"] = "战斗结束后将执行自动售卖。"
 L["ON"] = "已启用"
 L["OFF"] = "已禁用"
 
@@ -59,7 +60,7 @@ L["IGNORE_LIST"] = "忽略列表"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "使用 Magic Eraser 解决背包杂乱问题。自动删除低价值物品、灰色垃圾和旧任务物品。功能包括自动售卖、易于配置的忽略列表以及保持背包整洁的智能扫描。"
+L["OPTIONS_DESC"] = "Magic Eraser 可以识别你背包中价值最低的垃圾，只需点击小地图按钮即可将其删除。已完成的任务物品、低级消耗品、可售卖给商人的白色物品以及灰色垃圾——通通清理掉。当你拜访商人时，自动售卖会自动为你出售剩下的物品。"
 L["OPTIONS_WELCOME"] = "启用欢迎消息"
 L["OPTIONS_AUTO_VEND_DESC"] = "打开商人窗口时自动出售被 Magic Eraser 标记为垃圾的物品。"
 L["OPTIONS_RESET"] = "重置"
