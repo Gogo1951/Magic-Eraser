@@ -59,7 +59,7 @@ L["IGNORE_LIST"] = "Ignore List"
 -- Options
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESC"] = "Stop inventory clutter with Magic Eraser. Automatically deletes low-value items, gray trash, and old quest items. Features auto-vend, an easy-to-configure ignore list, and smart scanning to keep your bags clean."
+L["OPTIONS_DESC"] = "Magic Eraser identifies the lowest-value junk in your inventory and erases it with a single click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash — gone. When you visit a merchant, Auto-Vend sells the rest for you automatically."
 L["OPTIONS_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
 L["OPTIONS_RESET"] = "Reset"
