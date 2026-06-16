@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Keep your bags clean — one click on the minimap button erases the lowest-value junk in your inventory.
+Magic Eraser identifies the lowest-value junk in your inventory and erases it with a single click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash — gone. When you visit a merchant, Auto-Vend sells the rest for you automatically. 
 
 <img width="360" alt="Magic Eraser minimap button and tooltip" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
