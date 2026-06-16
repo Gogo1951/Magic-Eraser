@@ -1,13 +1,17 @@
 local addonName, ns = ...
 local L = ns.L
 
-local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
-local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
-local UseContainerItem = C_Container and C_Container.UseContainerItem or UseContainerItem
+local GetContainerNumSlots = C_Container.GetContainerNumSlots
+local GetContainerItemInfo = C_Container.GetContainerItemInfo
+local UseContainerItem = C_Container.UseContainerItem
 
 local sellQueue = {}
 local isSelling = false
 local sellIndex = 0
+
+-- Bounded retry for cold item-data misses; reset on each MERCHANT_SHOW.
+local MAX_SCAN_RETRIES = 5
+local scanRetries = 0
 
 --------------------------------------------------------------------------------
 -- Queue Processor
@@ -39,7 +43,7 @@ local function ProcessSellQueue()
 
         local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
 
-        ns:Print(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+        ns:PrintMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
     end
 
     C_Timer.After(0.25, ProcessSellQueue)
@@ -97,7 +101,8 @@ local function ScanAndVend()
         end
     end
 
-    if isDataMissing then
+    if isDataMissing and scanRetries < MAX_SCAN_RETRIES then
+        scanRetries = scanRetries + 1
         C_Timer.After(0.5, ScanAndVend)
     elseif #sellQueue > 0 then
         ProcessSellQueue()
@@ -107,22 +112,26 @@ local function ScanAndVend()
 end
 
 --------------------------------------------------------------------------------
--- Events
+-- Event Handlers
 --------------------------------------------------------------------------------
 
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("MERCHANT_SHOW")
-eventFrame:RegisterEvent("MERCHANT_CLOSED")
+--[[
+    Registered and dispatched by Core's central event frame (see ns.EVENT_NAMES
+    in Core.lua). This file owns the merchant handlers and has no event frame of
+    its own, so the diagnostics event log -- which taps the one dispatcher --
+    captures MERCHANT_SHOW and MERCHANT_CLOSED too.
+]]
 
-eventFrame:SetScript("OnEvent", function(self, event)
-    if event == "MERCHANT_SHOW" then
-        if MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled then
-            isSelling = true
-            sellIndex = 0
-            ScanAndVend()
-        end
-    elseif event == "MERCHANT_CLOSED" then
-        isSelling = false
-        wipe(sellQueue)
+function ns:OnMerchantShow()
+    if MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled then
+        isSelling = true
+        sellIndex = 0
+        scanRetries = 0
+        ScanAndVend()
     end
-end)
+end
+
+function ns:OnMerchantClosed()
+    isSelling = false
+    wipe(sellQueue)
+end

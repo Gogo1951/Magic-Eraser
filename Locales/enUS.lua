@@ -2,10 +2,16 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MagicEraser", "enUS", true)
 if not L then return end
 
 --------------------------------------------------------------------------------
+-- Identity
+--------------------------------------------------------------------------------
+
+L["ADDON_TITLE"] = "Magic Eraser"
+
+--------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
 
-L["CHAT_LOADED"] = "Version @project-version@. Settings (including the option to disable this message) can be found under Options > AddOns > Magic Eraser. Enjoying the addon? Tell a friend about it! (="
+L["CHAT_LOADED"] = "Version %s. Settings (including the option to disable this message) can be found under Options > AddOns > Magic Eraser. Enjoying the add-on? Tell a friend about it! (="
 L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
 L["ERASED_ITEM"] = "Erased %s%s%s."
 L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
@@ -40,8 +46,8 @@ L["TOOLTIP_HINT"] = "Additional settings can be found under Options > AddOns > M
 
 L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser."
-L["ENABLED"] = "Enabled"
-L["DISABLED"] = "Disabled"
+L["ON"] = "Enabled"
+L["OFF"] = "Disabled"
 
 --------------------------------------------------------------------------------
 -- Ignore List

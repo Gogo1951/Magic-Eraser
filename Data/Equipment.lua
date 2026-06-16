@@ -1,5 +1,7 @@
 local _, ns = ...
 
+-- TODO: Add SQL Query
+-- [itemId] = true -- name
 ns.AllowedDeleteEquipment = {
     [14115] = true, -- Aboriginal Bands
     [14116] = true, -- Aboriginal Cape
@@ -236,7 +238,6 @@ ns.AllowedDeleteEquipment = {
     [3276] = true, -- Deathguard Buckler
     [3455] = true, -- Deathstalker Shortsword
     [6579] = true, -- Defender Spaulders
-    [4854] = true, -- Demon Scarred Cloak
     [1166] = true, -- Dented Buckler
     [17183] = true, -- Dented Buckler
     [2139] = true, -- Dirk

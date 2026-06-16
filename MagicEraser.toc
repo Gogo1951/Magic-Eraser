@@ -2,7 +2,7 @@
 ## Notes: Discards the lowest-value item in your bags when you click the minimap button.
 ## Author: Gogo1951
 
-## IconTexture: Interface/AddOns/MagicEraser/Magic-Eraser.tga
+## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
 ## Category-enUS: Bags & Inventory
 ## X-License: MIT
 
@@ -14,20 +14,22 @@
 ## SavedVariablesPerCharacter: MagicEraserCharDB
 
 # Includes
-Includes/LibStub/LibStub.lua
-Includes/CallbackHandler-1.0/CallbackHandler-1.0.lua
-Includes/AceLocale-3.0/AceLocale-3.0.lua
-Includes/AceGUI-3.0/AceGUI-3.0.xml
-Includes/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
-Includes/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
-Includes/AceConfig-3.0/AceConfig-3.0.lua
-Includes/LibDataBroker-1.1/LibDataBroker-1.1.lua
-Includes/LibDBIcon-1.0/LibDBIcon-1.0.lua
+Includes/Libraries/LibStub/LibStub.lua
+Includes/Libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
+Includes/Libraries/AceLocale-3.0/AceLocale-3.0.lua
+Includes/Libraries/AceGUI-3.0/AceGUI-3.0.xml
+Includes/Libraries/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
+Includes/Libraries/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.lua
+Includes/Libraries/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua
+Includes/Libraries/AceConfig-3.0/AceConfig-3.0.lua
+Includes/Libraries/LibDataBroker-1.1/LibDataBroker-1.1.lua
+Includes/Libraries/LibDBIcon-1.0/LibDBIcon-1.0.lua
 
 # Localization
 Locales/enUS.lua
 Locales/deDE.lua
 Locales/esES.lua
+Locales/esMX.lua
 Locales/frFR.lua
 Locales/itIT.lua
 Locales/koKR.lua
@@ -37,16 +39,23 @@ Locales/zhCN.lua
 Locales/zhTW.lua
 
 # Data
-Database/General.lua
-Database/Quest-Items.lua
-Database/Consumables.lua
-Database/Equipment.lua
+Data/Data.lua
+Data/Default-Settings.lua
+Data/Quest-Items.lua
+Data/Consumables.lua
+Data/Equipment.lua
 
 # Magic Eraser
-Core.lua
-Auto-Vend.lua
-Minimap-Button.lua
-Options.lua
+Features/Core.lua
+Features/Utilities.lua
+Features/Announcements.lua
+Features/Auto-Vend.lua
+Features/Diagnostics.lua
+Features/Minimap-Button.lua
+Options/Options-Utilities.lua
+Options/Options-General.lua
+Options/Options-Diagnostics.lua
+Options/Options.lua
 
 # Feedback Welcome! (=
 # Magic Eraser on CurseForge // https://www.curseforge.com/wow/addons/magic-eraser

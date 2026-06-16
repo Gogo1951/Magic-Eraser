@@ -2,10 +2,16 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MagicEraser", "zhCN")
 if not L then return end
 
 --------------------------------------------------------------------------------
+-- Identity
+--------------------------------------------------------------------------------
+
+L["ADDON_TITLE"] = "Magic Eraser"
+
+--------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
 
-L["CHAT_LOADED"] = "版本 @project-version@。设置可以在 选项 > 插件 > Magic Eraser 中找到，包括关闭此消息。喜欢 Magic Eraser 吗？告诉朋友吧！(="
+L["CHAT_LOADED"] = "版本 %s。设置（包括关闭此消息的选项）可以在 选项 > 插件 > Magic Eraser 中找到。喜欢这个插件吗？告诉朋友吧！(="
 L["COMBAT_LOCKOUT"] = "战斗中无法删除物品。"
 L["ERASED_ITEM"] = "已删除 %s%s%s。"
 L["ERASED_QUEST_SUFFIX"] = "，该物品关联的任务已完成"
@@ -40,8 +46,8 @@ L["TOOLTIP_HINT"] = "更多设置请前往 选项 > 插件 > Magic Eraser."
 
 L["AUTO_VEND"] = "自动售卖"
 L["AUTO_VEND_DESC"] = "自动出售被 Magic Eraser 标记为垃圾的物品。"
-L["ENABLED"] = "已启用"
-L["DISABLED"] = "已禁用"
+L["ON"] = "已启用"
+L["OFF"] = "已禁用"
 
 --------------------------------------------------------------------------------
 -- Ignore List

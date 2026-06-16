@@ -1,5 +1,7 @@
 local _, ns = ...
 
+-- TODO: Add SQL Query
+-- [itemId] = true -- name
 ns.AllowedDeleteConsumables = {
     [19301] = true, -- Alterac Manna Biscuit
     [8932] = true, -- Alterac Swiss
