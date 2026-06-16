@@ -77,19 +77,35 @@ Please reach out if you would like to be involved!
 ## Related Add-ons
 
 🟢 Pairs With // Adirelle's [AdiBags](https://www.curseforge.com/wow/addons/adibags)
+
 🟢 Pairs With // Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
+
 🟢 Pairs With // plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
+
 🟢 Pairs With // Tuller's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
+
 🟢 Pairs With // syndenbock's [MinimapButtonButton](https://www.curseforge.com/wow/addons/minimapbuttonbutton)
+
 🔴 Direct Alternative // IceDNicco's [Auto Sell Grey](https://www.curseforge.com/wow/addons/auto-sell-grey)
+
 🔴 Direct Alternative // Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
+
 🔴 Direct Alternative // olafskiii's [AutoVendor](https://www.curseforge.com/wow/addons/autovendor)
+
 🔴 Direct Alternative // pitripan's [AutoVendor Extended](https://www.curseforge.com/wow/addons/autovendor-extended)
+
 🔴 Direct Alternative // moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
+
 🔴 Direct Alternative // CriitzLeFleur's [Delete Cheapest Item](https://www.curseforge.com/wow/addons/delete-cheapest-item)
+
 🔴 Direct Alternative // Kemayo's [DropTheCheapestThing](https://www.curseforge.com/wow/addons/dropthecheapestthing)
+
 🔴 Direct Alternative // Harubex's [GrayAway](https://github.com/Harubex/GrayAway)
+
 🔴 Direct Alternative // Sanjo's [Grays Seller](https://www.curseforge.com/wow/addons/sell)
+
 🔴 Direct Alternative // Jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
+
 🔴 Direct Alternative // cbenneh's [SellJunk](https://www.curseforge.com/wow/addons/sell-junk)
+
 🔴 Direct Alternative // typicalzergling's [Vendor](https://www.curseforge.com/wow/addons/vendor)
