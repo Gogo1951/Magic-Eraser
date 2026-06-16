@@ -1,59 +1,35 @@
 # Magic Eraser
 
-Magic Eraser identifies junk in your inventory and erases it with click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash. When you visit a merchant, Auto-Vend sells the rest for you.
+Free up bag space the easy way. Magic Eraser finds and deletes the lowest-value junk in your inventory: old quest items, outgrown food, vendor whites, and gray trash. Then it auto-sells the rest at any merchant. One click, cleaner bags.
 
 <img width="360" alt="Magic Eraser minimap button and tooltip" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
-## What It Does
+## Features
 
-Bag space is a chronic problem in Classic WoW. Old quest items hang around. Low-level food piles up. Vendor-trash whites and gray junk fill every empty slot. Magic Eraser deletes the lowest-value of those — and only those — with a single click.
+🧹 **One-Click Cleanup** // The minimap button always shows your lowest-value junk — left-click and it's gone, with no "Are you sure?" dialog to slow you down.
 
-The trash list is hand-curated. Every entry has been reviewed by humans before it ships. No heuristics, no name matching, no surprise deletions of items that look like junk but aren't.
+💰 **Auto-Vend** // Walk up to any merchant and everything else flagged sells itself, with every sale logged to chat.
 
-When you visit a merchant, Auto-Vend sells the rest for you automatically.
+🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase.
 
-## Quick Start
+🦺 **Safety First** // The trash list is hand-curated and human-reviewed — no name-matching, no heuristics, no surprise deletions. Class reagents and anything on your Ignore List are always protected.
 
-1. Install from [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [GitHub](https://github.com/Gogo1951/Magic-Eraser).
+## Setup
+
+1. **Install** from [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [GitHub](https://github.com/Gogo1951/Magic-Eraser).
 2. Log in. The minimap button shows the icon of the lowest-value junk currently in your bags.
-3. Left-click to erase it. Right-click to ignore it instead. Shift+Right-click to toggle Auto-Vend.
-4. Done — your bags stay clean on their own. (=
+3. Left-click to erase it, right-click to spare it, or Shift+Right-click to flip Auto-Vend on.
+4. Done — your bags now keep themselves clean. *"Cleanest bags on the server!"*
 
-## Smart Scanning
+## How It Works
 
-Magic Eraser scans your bags and finds the lowest-value match from four categories:
+### Smart Scanning
 
-- **Completed quest items** that are no longer needed.
-- **Outgrown consumables** — food and drink with a required level at least ten below your own.
-- **Vendor-quality white equipment** from the curated trash list.
-- **Gray trash** with a sell price.
+Magic Eraser watches your bags and picks out the lowest-value match from four categories: completed quest items you no longer need, outgrown food and drink (anything with a required level at least ten below your own), vendor-quality white gear from the curated list, and gray trash with a sell price. The minimap icon updates live to show what's next on the chopping block.
 
-The minimap icon updates live to show what would be erased next.
+When two items are worth the same, category priority breaks the tie — completed quest items first, then gray trash, then consumables and equipment. Anything on your Ignore List or flagged as a class-specific reagent is skipped, so Shamans never lose their Fish Oil or Shiny Fish Scales.
 
-**Shamans** never lose Fish Oil or Shiny Fish Scales — class-specific reagents are always excluded.
-
-## Auto-Vend
-
-When you open a merchant with Auto-Vend enabled, every flagged item in your bags is sold automatically. Each sale prints to chat with the item link and price. Toggle Auto-Vend with Shift+Right-click on the minimap button or from the options panel.
-
-## Ignore List
-
-Right-click the minimap button to protect the currently-flagged item from being erased. The list is per-character, so your alts each manage their own. Middle-click the minimap button to clear the entire list.
-
-## Quest Alerts
-
-When you turn in a quest, Magic Eraser checks your bags and prints a chat alert for any quest item that's now safe to erase.
-
-## Settings
-
-The options panel lives at **Options > AddOns > Magic Eraser**.
-
-- **Enable Welcome Message** — toggles the login chat message. On by default.
-- **Auto-Vend** — toggles automatic vending at merchants. Off by default.
-- **Reset Ignore List** — clears the per-character Ignore List.
-- **Reset All Magic Eraser Settings** — clears the Ignore List and disables Auto-Vend.
-
-## Minimap Button
+### Minimap Button
 
 | Action            | Effect                                      |
 | ----------------- | ------------------------------------------- |
@@ -62,38 +38,58 @@ The options panel lives at **Options > AddOns > Magic Eraser**.
 | Middle-click      | Clear the entire Ignore List.               |
 | Shift+Right-click | Toggle Auto-Vend on or off.                 |
 
-The button's icon updates to show the next candidate for erasure.
+### Auto-Vend
 
-## How It Works
+Turn it on and every flagged item sells automatically the moment you open a merchant, with each sale printed to chat alongside its item link and price. Toggle it with Shift+Right-click on the minimap button or from the options panel. It's off by default.
 
-After every bag update, Magic Eraser walks each slot and ranks every flagged item by sell value. When two items tie on value, category priority breaks the tie:
+### Ignore List
 
-1. Completed quest items
-2. Gray trash
-3. Consumables and equipment
+Right-click the minimap button to protect whatever item is currently flagged. The list is per-character, so every alt keeps its own. Middle-click the button to wipe the list and start over.
 
-The lowest-value, highest-priority match becomes the next candidate. Items on the Ignore List and class-specific reagents are skipped. No "Are you sure?" dialogs — one click, one erase.
+### Quest Alerts
 
-Localized for enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, and zhTW.
+Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert for any quest item that's now safe to erase.
 
-## Saved Variables
+### Options
 
-Magic Eraser persists state in two SavedVariables. `MagicEraserDB` is account-wide and stores the minimap button position and the welcome-message toggle. `MagicEraserCharDB` is per-character and holds the Ignore List and the Auto-Vend toggle.
+Find the panel at **Options > AddOns > Magic Eraser**. From there you can toggle the welcome message, switch Auto-Vend on or off, reset the Ignore List, or reset every Magic Eraser setting at once.
 
-## Testing Status
+## Testing & Localization Status
 
-🟢 World of Warcraft Classic Era
+🟢 World of Warcraft Classic (🟡 Season of Discovery) // WoW 1.15.8
 
-🟢 Burning Crusade Classic Anniversary
+🟢 Burning Crusade Anniversary // WoW 2.5.5
 
-🔴 Mists of Pandaria Classic
+🔴 Mists of Pandaria Classic // WoW 5.5.3
 
-🔴 Retail
+🔴 World of Warcraft // WoW 12.0.5
 
-Please reach out if you would like to be involved with testing!
+**Localization Status** // Works with all Classic WoW Locales (enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW).
+
+Please reach out if you would like to be involved!
 
 ## Links
 
-* [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser)
-* [GitHub](https://github.com/Gogo1951/Magic-Eraser)
-* [Discord](https://discord.gg/eh8hKq992Q)
+- [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser)
+- [GitHub](https://github.com/Gogo1951/Magic-Eraser)
+- [Discord](https://discord.gg/eh8hKq992Q)
+
+## Related Add-ons
+
+* 🟢 Pairs With // Adirelle's [AdiBags](https://www.curseforge.com/wow/addons/adibags)
+* 🟢 Pairs With // Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
+* 🟢 Pairs With // plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
+* 🟢 Pairs With // Tuller's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
+* 🟢 Pairs With // syndenbock's [MinimapButtonButton](https://www.curseforge.com/wow/addons/minimapbuttonbutton)
+* 🔴 Direct Alternative // IceDNicco's [Auto Sell Grey](https://www.curseforge.com/wow/addons/auto-sell-grey)
+* 🔴 Direct Alternative // Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
+* 🔴 Direct Alternative // olafskiii's [AutoVendor](https://www.curseforge.com/wow/addons/autovendor)
+* 🔴 Direct Alternative // pitripan's [AutoVendor Extended](https://www.curseforge.com/wow/addons/autovendor-extended)
+* 🔴 Direct Alternative // moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
+* 🔴 Direct Alternative // CriitzLeFleur's [Delete Cheapest Item](https://www.curseforge.com/wow/addons/delete-cheapest-item)
+* 🔴 Direct Alternative // Kemayo's [DropTheCheapestThing](https://www.curseforge.com/wow/addons/dropthecheapestthing)
+* 🔴 Direct Alternative // Harubex's [GrayAway](https://github.com/Harubex/GrayAway)
+* 🔴 Direct Alternative // Sanjo's [Grays Seller](https://www.curseforge.com/wow/addons/sell)
+* 🔴 Direct Alternative // Jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
+* 🔴 Direct Alternative // cbenneh's [SellJunk](https://www.curseforge.com/wow/addons/sell-junk)
+* 🔴 Direct Alternative // typicalzergling's [Vendor](https://www.curseforge.com/wow/addons/vendor)
