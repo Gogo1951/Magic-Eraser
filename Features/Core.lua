@@ -2,58 +2,35 @@ local addonName, ns = ...
 local L = ns.L
 
 --------------------------------------------------------------------------------
--- Helpers
+-- Locals
 --------------------------------------------------------------------------------
 
-local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
-local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
-local PickupContainerItem = C_Container and C_Container.PickupContainerItem or PickupContainerItem
-local format, insert, floor, ipairs = string.format, table.insert, math.floor, ipairs
+local GetContainerNumSlots = C_Container.GetContainerNumSlots
+local GetContainerItemInfo = C_Container.GetContainerItemInfo
+local PickupContainerItem = C_Container.PickupContainerItem
+local format, ipairs = string.format, ipairs
 
-function ns:Print(message)
-    DEFAULT_CHAT_FRAME:AddMessage(self.BrandPrefix .. ns.Colors.TEXT .. message .. "|r")
-end
+--------------------------------------------------------------------------------
+-- Saved Variables
+--------------------------------------------------------------------------------
 
-function ns:FormatCommaNumber(number)
-    return tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
-end
-
-function ns:FormatCurrency(rawValue)
-    local value = math.max(rawValue or 0, 0)
-
-    local gold = floor(value / 10000)
-    local silver = floor((value % 10000) / 100)
-    local copper = value % 100
-    local parts = {}
-
-    local goldColor = ns.CurrencyColors.GOLD
-    local silverColor = ns.CurrencyColors.SILVER
-    local copperColor = ns.CurrencyColors.COPPER
-
-    if gold > 0 then
-        insert(parts, format(ns.Colors.TEXT .. "%s|r|cff%sg|r", ns:FormatCommaNumber(gold), goldColor))
+--[[
+    Additive defaults merge: fill only nil fields from ns.DEFAULT_CONFIGURATION,
+    never overwrite an explicit user value. Table-valued defaults (minimap,
+    ignoreList) seed a fresh empty table per scope rather than aliasing the
+    shared default.
+]]
+local function ApplyDefaults(target, defaults)
+    for key, value in pairs(defaults) do
+        if type(value) == "table" then
+            if type(target[key]) ~= "table" then
+                target[key] = {}
+            end
+            ApplyDefaults(target[key], value)
+        elseif target[key] == nil then
+            target[key] = value
+        end
     end
-
-    if gold > 0 then
-        insert(parts, format(ns.Colors.TEXT .. "%02d|r|cff%ss|r", silver, silverColor))
-    elseif silver > 0 then
-        insert(parts, format(ns.Colors.TEXT .. "%d|r|cff%ss|r", silver, silverColor))
-    end
-
-    if gold > 0 or silver > 0 then
-        insert(parts, format(ns.Colors.TEXT .. "%02d|r|cff%sc|r", copper, copperColor))
-    else
-        insert(parts, format(ns.Colors.TEXT .. "%d|r|cff%sc|r", copper, copperColor))
-    end
-
-    return table.concat(parts, " ")
-end
-
-function ns:IsQuestCompleted(questId)
-    if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
-        return C_QuestLog.IsQuestFlaggedCompleted(questId)
-    end
-    return false
 end
 
 --------------------------------------------------------------------------------
@@ -90,9 +67,41 @@ end
 local cachedItem = nil
 local isCacheValid = false
 
+--[[
+    Cold item-data misses reschedule a rescan. Without a cap, an item whose
+    GetItemInfo never resolves would reschedule forever; without a pending
+    guard, concurrent cold-cache triggers would stack timers. So: cap the
+    reschedules, allow only one pending retry, and reset the counter on every
+    fresh scan trigger -- any InvalidateCache that is not itself a retry.
+]]
+local MAX_SCAN_RETRIES = 5
+local scanRetries = 0
+local retryPending = false
+local inScanRetry = false
+
 function ns:InvalidateCache()
     isCacheValid = false
     cachedItem = nil
+    if not inScanRetry then
+        scanRetries = 0
+    end
+end
+
+local function ScheduleScanRetry()
+    if retryPending or scanRetries >= MAX_SCAN_RETRIES then
+        return
+    end
+    retryPending = true
+    scanRetries = scanRetries + 1
+    C_Timer.After(
+        1.0,
+        function()
+            retryPending = false
+            inScanRetry = true
+            ns:RefreshDisplay()
+            inScanRetry = false
+        end
+    )
 end
 
 --------------------------------------------------------------------------------
@@ -188,12 +197,7 @@ function ns:FindItemToDelete()
     end
 
     if isDataMissing then
-        C_Timer.After(
-            1.0,
-            function()
-                ns:RefreshDisplay()
-            end
-        )
+        ScheduleScanRetry()
     end
 
     cachedItem = best
@@ -207,7 +211,7 @@ end
 
 function ns:RunEraser()
     if InCombatLockdown() then
-        self:Print(L["COMBAT_LOCKOUT"])
+        self:PrintMessage(L["COMBAT_LOCKOUT"])
         return
     end
 
@@ -235,7 +239,7 @@ function ns:RunEraser()
                 valueString = ""
             end
 
-            self:Print(format(L["ERASED_ITEM"], item.link, stackString, valueString))
+            self:PrintMessage(format(L["ERASED_ITEM"], item.link, stackString, valueString))
 
             ns:InvalidateCache()
             C_Timer.After(
@@ -246,11 +250,11 @@ function ns:RunEraser()
             )
             return
         else
-            self:Print(L["CURSOR_TOO_FAST"])
+            self:PrintMessage(L["CURSOR_TOO_FAST"])
             ClearCursor()
         end
     else
-        self:Print(L["BAGS_CLEAN"])
+        self:PrintMessage(L["BAGS_CLEAN"])
     end
 
     ns:RefreshDisplay()
@@ -260,91 +264,149 @@ end
 -- Events
 --------------------------------------------------------------------------------
 
+--[[
+    The add-on's complete event surface and the single source the dispatcher
+    registers from -- add an event here and it is registered, dispatched, and
+    covered by the Diagnostic Tools panel automatically, with no second list to
+    keep in sync. Feature files own their handlers (Auto-Vend.lua defines
+    ns:OnMerchantShow / ns:OnMerchantClosed); the dispatcher routes each event to
+    its handler so every event passes through one point, which is what makes the
+    diagnostics event log complete.
+]]
+ns.EVENT_NAMES = {
+    "PLAYER_LOGIN",
+    "PLAYER_LEVEL_UP",
+    "BAG_UPDATE_DELAYED",
+    "QUEST_TURNED_IN",
+    "MERCHANT_SHOW",
+    "MERCHANT_CLOSED"
+}
+
+local EVENT_HANDLERS = {
+    PLAYER_LOGIN = "OnPlayerLogin",
+    PLAYER_LEVEL_UP = "OnPlayerLevelUp",
+    BAG_UPDATE_DELAYED = "OnBagUpdateDelayed",
+    QUEST_TURNED_IN = "OnQuestTurnedIn",
+    MERCHANT_SHOW = "OnMerchantShow",
+    MERCHANT_CLOSED = "OnMerchantClosed"
+}
+
 local updatePending = false
 
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")
-eventFrame:RegisterEvent("QUEST_TURNED_IN")
+function ns:OnPlayerLogin()
+    MagicEraserDB = MagicEraserDB or {}
+    MagicEraserCharDB = MagicEraserCharDB or {}
 
-eventFrame:SetScript(
-    "OnEvent",
-    function(self, event, ...)
-        if event == "QUEST_TURNED_IN" then
-            local questId = ...
+    --[[
+        Run the legacy migration before the merge: the first character to log in
+        after upgrade inherits the legacy account-wide autoVendEnabled, then the
+        legacy field is cleared. The merge below fills the per-character default
+        (false) only when no legacy value was inherited.
+    ]]
+    if MagicEraserCharDB.autoVendEnabled == nil and MagicEraserDB.autoVendEnabled ~= nil then
+        MagicEraserCharDB.autoVendEnabled = MagicEraserDB.autoVendEnabled
+    end
+    if MagicEraserDB.autoVendEnabled ~= nil then
+        MagicEraserDB.autoVendEnabled = nil
+    end
 
-            C_Timer.After(
-                1.0,
-                function()
-                    local questItemDatabase = ns.AllowedDeleteQuestItems or {}
-                    local alertedItems = {}
+    ApplyDefaults(MagicEraserDB, ns.DEFAULT_CONFIGURATION.account)
+    ApplyDefaults(MagicEraserCharDB, ns.DEFAULT_CONFIGURATION.character)
 
-                    for bag = 0, 4 do
-                        local slotCount = GetContainerNumSlots(bag) or 0
-                        for slot = 1, slotCount do
-                            local itemInfo = GetContainerItemInfo(bag, slot)
-                            if itemInfo then
-                                local itemId = itemInfo.itemID
+    local LibDBIcon = LibStub("LibDBIcon-1.0")
+    if LibDBIcon and ns.LDBObject then
+        LibDBIcon:Register(addonName, ns.LDBObject, MagicEraserDB.minimap)
+    end
 
-                                if questItemDatabase[itemId] and not alertedItems[itemId] then
-                                    for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
-                                        if trackedQuestId == questId then
-                                            ns:Print(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
-                                            alertedItems[itemId] = true
-                                            break
-                                        end
-                                    end
+    if MagicEraserDB.showWelcome then
+        ns:PrintMessage(L["CHAT_LOADED"]:format(ns.Version))
+    end
+
+    ns:RefreshDisplay()
+end
+
+--[[
+    Consumable eligibility is gated on the player's level
+    (playerLevel - requiredLevel >= 10 in GetItemDeleteReason), so leveling up
+    can newly qualify outgrown food. Re-scan on level-up so the candidate
+    reflects the new level immediately instead of waiting for the next bag
+    update or quest turn-in to happen to fire.
+]]
+function ns:OnPlayerLevelUp()
+    ns:InvalidateCache()
+    ns:RefreshDisplay()
+end
+
+function ns:OnBagUpdateDelayed()
+    if not updatePending then
+        updatePending = true
+        C_Timer.After(
+            0.1,
+            function()
+                ns:InvalidateCache()
+                ns:RefreshDisplay()
+                updatePending = false
+            end
+        )
+    end
+end
+
+function ns:OnQuestTurnedIn(questId)
+    C_Timer.After(
+        1.0,
+        function()
+            local questItemDatabase = ns.AllowedDeleteQuestItems or {}
+            local alertedItems = {}
+
+            for bag = 0, 4 do
+                local slotCount = GetContainerNumSlots(bag) or 0
+                for slot = 1, slotCount do
+                    local itemInfo = GetContainerItemInfo(bag, slot)
+                    if itemInfo then
+                        local itemId = itemInfo.itemID
+
+                        if questItemDatabase[itemId] and not alertedItems[itemId] then
+                            for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
+                                if trackedQuestId == questId then
+                                    ns:PrintMessage(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
+                                    alertedItems[itemId] = true
+                                    break
                                 end
                             end
                         end
                     end
-
-                    ns:InvalidateCache()
-                    ns:RefreshDisplay()
                 end
-            )
-        elseif event == "PLAYER_LOGIN" then
-            MagicEraserDB = MagicEraserDB or {}
-            MagicEraserDB.minimap = MagicEraserDB.minimap or {}
-            if MagicEraserDB.showWelcome == nil then MagicEraserDB.showWelcome = true end
-
-            MagicEraserCharDB = MagicEraserCharDB or {}
-            MagicEraserCharDB.ignoreList = MagicEraserCharDB.ignoreList or {}
-
-            -- The first character to log in after upgrade inherits the
-            -- legacy account-wide autoVendEnabled; the legacy field is then cleared.
-            if MagicEraserCharDB.autoVendEnabled == nil and MagicEraserDB.autoVendEnabled ~= nil then
-                MagicEraserCharDB.autoVendEnabled = MagicEraserDB.autoVendEnabled
-            end
-            if MagicEraserDB.autoVendEnabled ~= nil then
-                MagicEraserDB.autoVendEnabled = nil
-            end
-            if MagicEraserCharDB.autoVendEnabled == nil then
-                MagicEraserCharDB.autoVendEnabled = false
             end
 
-            local LibDBIcon = LibStub("LibDBIcon-1.0")
-            if LibDBIcon and ns.LDBObject then
-                LibDBIcon:Register(addonName, ns.LDBObject, MagicEraserDB.minimap)
-            end
-
-            if MagicEraserDB.showWelcome then
-                ns:Print(L["CHAT_LOADED"])
-            end
-
+            ns:InvalidateCache()
             ns:RefreshDisplay()
-        else
-            if not updatePending then
-                updatePending = true
-                C_Timer.After(
-                    0.1,
-                    function()
-                        ns:InvalidateCache()
-                        ns:RefreshDisplay()
-                        updatePending = false
-                    end
-                )
-            end
+        end
+    )
+end
+
+--[[
+    Central dispatcher. Every registered event routes through here: it taps the
+    diagnostics event log first (a single boolean check when logging is off, so
+    it costs nothing) and then calls the event's handler, resolved by name at
+    fire time so feature files loaded after Core can supply their own.
+]]
+local eventFrame = CreateFrame("Frame")
+
+eventFrame:SetScript(
+    "OnEvent",
+    function(self, event, ...)
+        if ns.diagnostics and ns.diagnostics.logging then
+            ns:LogEvent(event, ...)
+        end
+
+        local handlerName = EVENT_HANDLERS[event]
+        local handler = handlerName and ns[handlerName]
+        if handler then
+            handler(ns, ...)
         end
     end
 )
+
+for _, event in ipairs(ns.EVENT_NAMES) do
+    eventFrame:RegisterEvent(event)
+end

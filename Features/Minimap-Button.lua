@@ -1,6 +1,6 @@
 local addonName, ns = ...
 local L = ns.L
-local Colors = ns.Colors
+local GetColor = ns.GetColor
 
 local format = string.format
 local insert = table.insert
@@ -19,8 +19,8 @@ local function RefreshTooltip(anchor)
     tooltip:ClearLines()
 
     tooltip:AddDoubleLine(
-        Colors.TITLE .. ns.AddonTitle .. "|r",
-        Colors.MUTED .. ns.Version .. "|r"
+        GetColor("TITLE") .. ns.AddonTitle .. "|r",
+        GetColor("MUTED") .. ns.Version .. "|r"
     )
     tooltip:AddLine(" ")
     tooltip:AddLine(" ")
@@ -29,38 +29,38 @@ local function RefreshTooltip(anchor)
 
     if item then
         -- Lowest Value Item
-        tooltip:AddLine(Colors.TITLE .. L["LOWEST_VALUE_ITEM"] .. "|r")
+        tooltip:AddLine(GetColor("TITLE") .. L["LOWEST_VALUE_ITEM"] .. "|r")
 
         local iconString = format("|T%s:14:14|t", item.icon)
-        local countString = (item.count > 1) and format("%sx%d|r", Colors.TEXT, item.count) or ""
+        local countString = (item.count > 1) and format("%sx%d|r", GetColor("TEXT"), item.count) or ""
 
         local leftText = iconString .. " " .. item.link .. " " .. countString
         local rightText = (item.value > 0)
             and ns:FormatCurrency(item.value)
-            or (Colors.MUTED .. L["NO_VALUE"] .. "|r")
+            or (GetColor("MUTED") .. L["NO_VALUE"] .. "|r")
 
         tooltip:AddDoubleLine(leftText, rightText)
 
-        tooltip:AddDoubleLine(Colors.INFO .. L["LEFT_CLICK"] .. "|r", Colors.INFO .. L["ACTION_ERASE"] .. "|r")
-        tooltip:AddDoubleLine(Colors.INFO .. L["RIGHT_CLICK"] .. "|r", Colors.INFO .. L["ACTION_IGNORE"] .. "|r")
+        tooltip:AddDoubleLine(GetColor("INFO") .. L["LEFT_CLICK"] .. "|r", GetColor("INFO") .. L["ACTION_ERASE"] .. "|r")
+        tooltip:AddDoubleLine(GetColor("INFO") .. L["RIGHT_CLICK"] .. "|r", GetColor("INFO") .. L["ACTION_IGNORE"] .. "|r")
     else
         -- Clean Bags
-        tooltip:AddLine(Colors.SUCCESS .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
+        tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
         tooltip:AddLine(" ")
-        tooltip:AddLine(Colors.DESC .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
+        tooltip:AddLine(GetColor("BODY") .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
     end
 
     -- Auto-Vend
     tooltip:AddLine(" ")
     local autoVendStatus = (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled)
-        and (Colors.SUCCESS .. L["ENABLED"] .. "|r")
-        or (Colors.DISABLED .. L["DISABLED"] .. "|r")
+        and (GetColor("ON") .. L["ON"] .. "|r")
+        or (GetColor("OFF") .. L["OFF"] .. "|r")
     tooltip:AddDoubleLine(L["AUTO_VEND"], autoVendStatus)
-    tooltip:AddLine(Colors.DESC .. L["AUTO_VEND_DESC"] .. "|r", 1, 1, 1, true)
+    tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESC"] .. "|r", 1, 1, 1, true)
 
     tooltip:AddDoubleLine(
-        Colors.INFO .. L["SHIFT_RIGHT_CLICK"] .. "|r",
-        Colors.INFO .. L["ACTION_TOGGLE"] .. "|r"
+        GetColor("INFO") .. L["SHIFT_RIGHT_CLICK"] .. "|r",
+        GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
     )
 
     -- Ignore List
@@ -69,7 +69,7 @@ local function RefreshTooltip(anchor)
 
     if hasIgnoredItems then
         tooltip:AddLine(" ")
-        tooltip:AddLine(Colors.TITLE .. L["IGNORE_LIST"] .. "|r")
+        tooltip:AddLine(GetColor("TITLE") .. L["IGNORE_LIST"] .. "|r")
 
         local sortedItems = {}
         local loadingItems = {}
@@ -96,18 +96,18 @@ local function RefreshTooltip(anchor)
         end
 
         for _, itemId in ipairs(loadingItems) do
-            tooltip:AddLine(Colors.MUTED .. format(L["LOADING_ITEM"], itemId) .. "|r")
+            tooltip:AddLine(GetColor("MUTED") .. format(L["LOADING_ITEM"], itemId) .. "|r")
         end
 
         tooltip:AddDoubleLine(
-            Colors.INFO .. L["MIDDLE_CLICK"] .. "|r",
-            Colors.INFO .. L["ACTION_CLEAR_IGNORE"] .. "|r"
+            GetColor("INFO") .. L["MIDDLE_CLICK"] .. "|r",
+            GetColor("INFO") .. L["ACTION_CLEAR_IGNORE"] .. "|r"
         )
     end
 
     -- Hint
     tooltip:AddLine(" ")
-    tooltip:AddLine(Colors.DESC .. L["TOOLTIP_HINT"] .. "|r", 1, 1, 1, true)
+    tooltip:AddLine(GetColor("BODY") .. L["TOOLTIP_HINT"] .. "|r", 1, 1, 1, true)
 
     tooltip:Show()
 end

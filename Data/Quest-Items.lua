@@ -1,5 +1,7 @@
 local _, ns = ...
 
+-- TODO: Add SQL Query
+-- { [itemId] = { questId, ... } }
 ns.AllowedDeleteQuestItems = {
 
 -----------------------------------------------------------------
