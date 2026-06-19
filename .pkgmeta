@@ -18,11 +18,11 @@ externals:
     url: https://repos.curseforge.com/wow/libdbicon-1-0/trunk/LibDBIcon-1.0/
 
 ignore:
+  - .DS_Store
   - .git
   - .github
   - .gitignore
   - .idea
   - .pkgmeta
   - .vscode
-  - .DS_Store
   - LICENSE
