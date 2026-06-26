@@ -62,7 +62,7 @@ function ns.BuildGeneralOptions()
             },
 
             spacerCommands0 = ns.OptionsSpacer(20),
-            headerCommands = ns.OptionsHeader("/Commands", 21),
+            headerCommands = ns.OptionsHeader(L["OPTIONS_COMMANDS_HEADER"], 21),
             spacerCommands1 = ns.OptionsSpacer(22),
             descCommands = ns.OptionsDesc(
                 GetColor("INFO") .. L["OPTIONS_CMD_ERASER"] .. "|r" .. "  " .. L["OPTIONS_CMD_ERASER_DESCRIPTION"],

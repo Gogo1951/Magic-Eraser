@@ -17,6 +17,14 @@ local vendPending = false
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
 
+-- Single guard for all Auto-Vend chat output. Disabling Auto-Vend messages
+-- silences the deferred-combat notice and the per-item sale lines alike.
+local function PrintVendMessage(message)
+    if MagicEraserCharDB and MagicEraserCharDB.autoVendMessagesEnabled then
+        ns:PrintMessage(message)
+    end
+end
+
 --------------------------------------------------------------------------------
 -- Queue Processor
 --------------------------------------------------------------------------------
@@ -36,7 +44,7 @@ local function ProcessSellQueue()
         wipe(sellQueue)
         if not vendPending then
             vendPending = true
-            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+            PrintVendMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
         end
         return
     end
@@ -58,10 +66,8 @@ local function ProcessSellQueue()
     if currentItemInfo and currentItemInfo.itemID == item.itemId and not ns:IsIgnored(item.itemId) then
         UseContainerItem(item.bag, item.slot)
 
-        if MagicEraserCharDB and MagicEraserCharDB.autoVendMessagesEnabled then
-            local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
-            ns:PrintMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
-        end
+        local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
+        PrintVendMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
     end
 
     C_Timer.After(0.1, ProcessSellQueue)
@@ -159,7 +165,7 @@ function ns:OnMerchantShow()
     if InCombatLockdown() then
         if not vendPending then
             vendPending = true
-            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+            PrintVendMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
         end
         return
     end

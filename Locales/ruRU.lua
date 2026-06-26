@@ -66,6 +66,7 @@ L["OPTIONS_WELCOME"] = "Включить приветственное сообщ
 L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "Автоматически продаёт предметы, отмеченные Magic Eraser как мусор, при открытии окна торговца."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить автопродажу"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
+L["OPTIONS_COMMANDS_HEADER"] = "/Команды"
 L["OPTIONS_CMD_ERASER"] = "/eraser"
 L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Открывает интерфейс настроек Magic Eraser."
 L["OPTIONS_RESET"] = "Сброс"
