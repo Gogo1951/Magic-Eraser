@@ -18,6 +18,7 @@ ns.DEFAULT_CONFIGURATION = {
     },
     character = {
         autoVendEnabled = false,
+        autoVendMessagesEnabled = true,
         ignoreList = {}
     }
 }

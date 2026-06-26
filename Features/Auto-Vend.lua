@@ -58,12 +58,13 @@ local function ProcessSellQueue()
     if currentItemInfo and currentItemInfo.itemID == item.itemId and not ns:IsIgnored(item.itemId) then
         UseContainerItem(item.bag, item.slot)
 
-        local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
-
-        ns:PrintMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+        if MagicEraserCharDB and MagicEraserCharDB.autoVendMessagesEnabled then
+            local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
+            ns:PrintMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+        end
     end
 
-    C_Timer.After(0.25, ProcessSellQueue)
+    C_Timer.After(0.1, ProcessSellQueue)
 end
 
 --------------------------------------------------------------------------------
@@ -122,6 +123,7 @@ local function ScanAndVend()
         scanRetries = scanRetries + 1
         C_Timer.After(0.5, ScanAndVend)
     elseif #sellQueue > 0 then
+        table.sort(sellQueue, function(a, b) return a.value < b.value end)
         ProcessSellQueue()
     else
         isSelling = false

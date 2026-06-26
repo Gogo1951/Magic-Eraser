@@ -20,3 +20,26 @@ AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
 
 AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Diagnostics, ns.BuildDiagnosticsOptions())
 AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Diagnostics, D.TAB, ns.AddonTitle)
+
+--------------------------------------------------------------------------------
+-- Slash Commands
+--------------------------------------------------------------------------------
+
+local function OpenOptions()
+    if Settings and Settings.GetCategory then
+        local category = Settings.GetCategory(ns.AddonTitle)
+        if category then
+            Settings.OpenToCategory(category.ID)
+            return
+        end
+    end
+    if InterfaceOptionsFrame_OpenToCategory then
+        InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
+        InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
+        return
+    end
+    AceConfigDialog:Open(ns.OPTIONS_REGISTRY.General)
+end
+
+SLASH_MAGICERASER1 = "/eraser"
+SlashCmdList.MAGICERASER = OpenOptions

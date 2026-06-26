@@ -2,7 +2,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MagicEraser", "enUS", true)
 if not L then return end
 
 --------------------------------------------------------------------------------
--- Identity
+-- Add-on Identity
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
@@ -11,18 +11,25 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- Chat Messages
 --------------------------------------------------------------------------------
 
+-- System
 L["CHAT_LOADED"] = "Version %s. Settings (including the option to disable this message) can be found under Options > AddOns > Magic Eraser. Enjoying the add-on? Tell a friend about it! (="
+L["MESSAGE_RESET"] = "All settings have been reset to defaults."
+
+-- Eraser
 L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
-L["ERASED_ITEM"] = "Erased %s%s%s."
-L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
-L["ERASED_VALUE_SUFFIX"] = ", worth %s"
-L["SOLD_ITEM"] = "Sold %s%s, worth %s."
 L["CURSOR_TOO_FAST"] = "Slow down! You are clicking faster than the game can erase items."
+L["ERASED_ITEM"] = "Erased %s%s%s."
+L["ERASED_VALUE_SUFFIX"] = ", worth %s"
+L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
 L["BAGS_CLEAN"] = "Congratulations, your bags are full of good stuff! You'll have to manually erase something if you want to free up more space."
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
 
+-- Auto-Vend
+L["SOLD_ITEM"] = "Sold %s%s, worth %s."
+L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
+
 --------------------------------------------------------------------------------
--- Tooltip
+-- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Lowest Value Item"
@@ -41,29 +48,28 @@ L["LOADING_ITEM"] = "Loading ID: %d"
 L["TOOLTIP_HINT"] = "Additional settings can be found under Options > AddOns > Magic Eraser."
 
 --------------------------------------------------------------------------------
--- Auto-Vend
+-- Shared Labels
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "Auto-Vend"
-L["AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser."
-L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
+L["AUTO_VEND_DESCRIPTION"] = "Automatically sell items flagged as junk by Magic Eraser."
+L["IGNORE_LIST"] = "Ignore List"
 L["ON"] = "Enabled"
 L["OFF"] = "Disabled"
 
 --------------------------------------------------------------------------------
--- Ignore List
+-- Options: Main Panel
 --------------------------------------------------------------------------------
 
-L["IGNORE_LIST"] = "Ignore List"
-
---------------------------------------------------------------------------------
--- Options
---------------------------------------------------------------------------------
-
-L["OPTIONS_DESC"] = "Magic Eraser identifies the lowest-value junk in your inventory and erases it with a single click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash — gone. When you visit a merchant, Auto-Vend sells the rest for you automatically."
+L["OPTIONS_DESCRIPTION"] = "Magic Eraser identifies the lowest-value junk in your inventory and erases it with a single click on the minimap button. Completed quest items, low-level consumables, vendor-quality whites, and gray trash — gone. When you visit a merchant, Auto-Vend sells the rest for you automatically."
 L["OPTIONS_WELCOME"] = "Enable Welcome Message"
-L["OPTIONS_AUTO_VEND_DESC"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
+L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
+L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
+L["OPTIONS_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
+L["OPTIONS_CMD_ERASER"] = "/eraser"
+L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options interface."
 L["OPTIONS_RESET"] = "Reset"
+L["OPTIONS_RESET_DESCRIPTION"] = "Restore every option to its default value."
 L["OPTIONS_RESET_IGNORE"] = "Reset Ignore List"
 L["OPTIONS_RESET_IGNORE_CONFIRM"] = "Remove all items from the Ignore List on this character?"
 L["OPTIONS_RESET_ALL"] = "Reset All Magic Eraser Settings"

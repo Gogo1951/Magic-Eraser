@@ -56,7 +56,7 @@ local function RefreshTooltip(anchor)
         and (GetColor("ON") .. L["ON"] .. "|r")
         or (GetColor("OFF") .. L["OFF"] .. "|r")
     tooltip:AddDoubleLine(L["AUTO_VEND"], autoVendStatus)
-    tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESC"] .. "|r", 1, 1, 1, true)
+    tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESCRIPTION"] .. "|r", 1, 1, 1, true)
 
     tooltip:AddDoubleLine(
         GetColor("INFO") .. L["SHIFT_RIGHT_CLICK"] .. "|r",
