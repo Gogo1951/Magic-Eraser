@@ -17,6 +17,14 @@ local vendPending = false
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
 
+-- Single guard for all Auto-Vend chat output. Disabling Auto-Vend messages
+-- silences the deferred-combat notice and the per-item sale lines alike.
+local function PrintVendMessage(message)
+    if MagicEraserCharDB and MagicEraserCharDB.autoVendMessagesEnabled then
+        ns:PrintMessage(message)
+    end
+end
+
 --------------------------------------------------------------------------------
 -- Queue Processor
 --------------------------------------------------------------------------------
@@ -36,7 +44,7 @@ local function ProcessSellQueue()
         wipe(sellQueue)
         if not vendPending then
             vendPending = true
-            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+            PrintVendMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
         end
         return
     end
@@ -59,11 +67,10 @@ local function ProcessSellQueue()
         UseContainerItem(item.bag, item.slot)
 
         local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
-
-        ns:PrintMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+        PrintVendMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
     end
 
-    C_Timer.After(0.25, ProcessSellQueue)
+    C_Timer.After(0.1, ProcessSellQueue)
 end
 
 --------------------------------------------------------------------------------
@@ -122,6 +129,7 @@ local function ScanAndVend()
         scanRetries = scanRetries + 1
         C_Timer.After(0.5, ScanAndVend)
     elseif #sellQueue > 0 then
+        table.sort(sellQueue, function(a, b) return a.value < b.value end)
         ProcessSellQueue()
     else
         isSelling = false
@@ -157,7 +165,7 @@ function ns:OnMerchantShow()
     if InCombatLockdown() then
         if not vendPending then
             vendPending = true
-            ns:PrintMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
+            PrintVendMessage(L["AUTO_VEND_COMBAT_DEFERRED"])
         end
         return
     end

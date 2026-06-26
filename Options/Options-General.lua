@@ -12,7 +12,7 @@ function ns.BuildGeneralOptions()
         type = "group",
         name = ns.AddonTitle,
         args = {
-            descIntro = ns.OptionsDesc(L["OPTIONS_DESC"], 1),
+            descIntro = ns.OptionsDesc(L["OPTIONS_DESCRIPTION"], 1),
 
             spacerWelcome0 = ns.OptionsSpacer(5),
             toggleWelcome = {
@@ -30,13 +30,14 @@ function ns.BuildGeneralOptions()
 
             spacerAutoVend0 = ns.OptionsSpacer(10),
             headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 11),
-            descAutoVend = ns.OptionsDesc(L["OPTIONS_AUTO_VEND_DESC"], 12),
-            spacerAutoVend1 = ns.OptionsSpacer(13),
+            spacerAutoVend1 = ns.OptionsSpacer(12),
+            descAutoVend = ns.OptionsDesc(L["OPTIONS_AUTO_VEND_DESCRIPTION"], 13),
+            spacerAutoVend2 = ns.OptionsSpacer(14),
             toggleAutoVend = {
                 type = "toggle",
-                name = L["AUTO_VEND"],
+                name = L["OPTIONS_ENABLE_AUTO_VEND"],
                 width = "full",
-                order = 14,
+                order = 15,
                 get = function()
                     return MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled
                 end,
@@ -44,14 +45,39 @@ function ns.BuildGeneralOptions()
                     MagicEraserCharDB.autoVendEnabled = value
                 end,
             },
+            toggleAutoVendMessages = {
+                type = "toggle",
+                name = L["OPTIONS_AUTO_VEND_MESSAGES"],
+                width = "full",
+                order = 16,
+                hidden = function()
+                    return not (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled)
+                end,
+                get = function()
+                    return MagicEraserCharDB and MagicEraserCharDB.autoVendMessagesEnabled
+                end,
+                set = function(_, value)
+                    MagicEraserCharDB.autoVendMessagesEnabled = value
+                end,
+            },
+
+            spacerCommands0 = ns.OptionsSpacer(20),
+            headerCommands = ns.OptionsHeader(L["OPTIONS_COMMANDS_HEADER"], 21),
+            spacerCommands1 = ns.OptionsSpacer(22),
+            descCommands = ns.OptionsDesc(
+                GetColor("INFO") .. L["OPTIONS_CMD_ERASER"] .. "|r" .. "  " .. L["OPTIONS_CMD_ERASER_DESCRIPTION"],
+                23
+            ),
 
             spacerReset0 = ns.OptionsSpacer(50),
             headerReset = ns.OptionsHeader(L["OPTIONS_RESET"], 51),
             spacerReset1 = ns.OptionsSpacer(52),
+            descReset = ns.OptionsDesc(L["OPTIONS_RESET_DESCRIPTION"], 53),
+            spacerReset2 = ns.OptionsSpacer(54),
             resetIgnoreList = {
                 type = "execute",
                 name = L["OPTIONS_RESET_IGNORE"],
-                order = 53,
+                order = 55,
                 confirm = true,
                 confirmText = L["OPTIONS_RESET_IGNORE_CONFIRM"],
                 func = function()
@@ -62,12 +88,14 @@ function ns.BuildGeneralOptions()
                 type = "execute",
                 name = L["OPTIONS_RESET_ALL"],
                 width = "double",
-                order = 54,
+                order = 56,
                 confirm = true,
                 confirmText = L["OPTIONS_RESET_ALL_CONFIRM"],
                 func = function()
                     MagicEraserCharDB.autoVendEnabled = false
+                    MagicEraserCharDB.autoVendMessagesEnabled = true
                     ns:ClearIgnoreList()
+                    ns:PrintMessage(L["MESSAGE_RESET"])
                 end,
             },
 

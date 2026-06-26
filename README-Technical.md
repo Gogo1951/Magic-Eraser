@@ -40,7 +40,7 @@ Magic-Eraser/
     ├── Options-Utilities.lua   Shared ns.Options* widget constructors.
     ├── Options-General.lua     ns.BuildGeneralOptions — root panel.
     ├── Options-Diagnostics.lua ns.BuildDiagnosticsOptions — Diagnostic Tools panel.
-    └── Options.lua             Registration only: RegisterOptionsTable + AddToBlizOptions.
+    └── Options.lua             Panel registration (RegisterOptionsTable + AddToBlizOptions) and the /eraser slash command.
 ```
 
 ## Architecture
@@ -66,7 +66,7 @@ The dispatcher taps the diagnostics event log *before* calling the handler, behi
 
 `RunEraser` checks `InCombatLockdown()` at entry and bails with `L["COMBAT_LOCKOUT"]`. There is no deferred replay — the player clicks again after combat.
 
-Auto-Vend *does* face combat: a merchant frame can be open while in combat (combat starting with the window already open, or lingering combat tags), and `UseContainerItem` is protected, so calling it under lockdown throws `ADDON_ACTION_FORBIDDEN`. Auto-Vend therefore guards in two places — `ns:OnMerchantShow` (opened in combat) and each `ProcessSellQueue` tick (combat started mid-queue) — and on either it stops, sets `vendPending`, and prints `L["AUTO_VEND_COMBAT_DEFERRED"]` once. `ns:OnCombatEnded` (`PLAYER_REGEN_ENABLED`) then re-scans from scratch and resumes if the merchant is still open, since slots may have shifted during combat. `MERCHANT_CLOSED` clears `vendPending`.
+Auto-Vend *does* face combat: a merchant frame can be open while in combat (combat starting with the window already open, or lingering combat tags), and `UseContainerItem` is protected, so calling it under lockdown throws `ADDON_ACTION_FORBIDDEN`. Auto-Vend therefore guards in two places — `ns:OnMerchantShow` (opened in combat) and each `ProcessSellQueue` tick (combat started mid-queue) — and on either it stops, sets `vendPending`, and announces the deferral once via `PrintVendMessage` (see Auto-Vend). `ns:OnCombatEnded` (`PLAYER_REGEN_ENABLED`) then re-scans from scratch and resumes if the merchant is still open, since slots may have shifted during combat. `MERCHANT_CLOSED` clears `vendPending`.
 
 ### Scan → Evaluate → Rank → Erase
 
@@ -104,10 +104,12 @@ Quest data is `itemId → { questId, ... }`; an item is erasable if **any** list
 
 Auto-Vend is a separate, opt-in feature (`MagicEraserCharDB.autoVendEnabled`) in `Auto-Vend.lua`. It uses a two-stage scan-then-process pattern rather than selling inside the scan:
 
-1. `ScanAndVend` walks bags, applies the same ignore-list and class-reagent filters as the eraser, and queues every item with a positive `sellPrice` and a non-nil `GetItemDeleteReason`.
-2. `ProcessSellQueue` advances one item per 0.25s tick (`C_Timer.After`) and re-reads the slot before selling, because bag positions shift after a sale. The 0.25s spacing is deliberate — tighter spacing makes the merchant frame drop sales silently.
+1. `ScanAndVend` walks bags, applies the same ignore-list and class-reagent filters as the eraser, and queues every item with a positive `sellPrice` and a non-nil `GetItemDeleteReason`. Once built, the queue is sorted by total stack value ascending (`table.sort`), so the cheapest items sell first.
+2. `ProcessSellQueue` advances one item per 0.1s tick (`C_Timer.After`) and re-reads the slot before selling, because bag positions shift after a sale. The interval paces sales so the merchant frame keeps up; raise it if the server starts dropping sales under load.
 
 Items with `sellPrice == 0` (most quest items) are filtered at scan time — they cannot be vendored, so the eraser handles them instead. `MERCHANT_CLOSED` flips `isSelling` false and the next tick wipes the queue.
+
+All Auto-Vend chat output — the per-item `L["SOLD_ITEM"]` line and the `L["AUTO_VEND_COMBAT_DEFERRED"]` notice — routes through the file-local `PrintVendMessage`, which is a no-op unless `MagicEraserCharDB.autoVendMessagesEnabled` is set. Turning off **Enable Auto-Vend Messages** silences the feature's chat without changing what it sells. The toggle is hidden in the options panel while Auto-Vend itself is disabled.
 
 ## Quest-Item Alerts
 
@@ -116,6 +118,16 @@ Items with `sellPrice == 0` (most quest items) are filtered at scan time — the
 ## Minimap Button
 
 `Minimap-Button.lua` builds an LDB data object whose icon mirrors the current erase candidate. Click handlers: left = `RunEraser`, right = toggle the current candidate on the ignore list, middle = clear the ignore list, shift + right = toggle Auto-Vend. `ns:RefreshDisplay` invalidates the cache, recomputes the candidate, repoints the icon, and re-renders the tooltip if the button currently owns it.
+
+## Slash Command
+
+`/eraser` opens the options panel. Registration lives in `Options/Options.lua` (`SLASH_MAGICERASER1` + `SlashCmdList.MAGICERASER`); the handler is the file-local `OpenOptions`, which walks a three-tier fallback so it works across client versions:
+
+1. `Settings.OpenToCategory` — modern Settings API.
+2. `InterfaceOptionsFrame_OpenToCategory`, called twice — legacy quirk where the first call only scrolls the tree and the second actually opens the panel.
+3. `AceConfigDialog:Open` — last resort.
+
+The category is looked up by `ns.AddonTitle`, the same name passed to `AddToBlizOptions`, so registration and lookup stay in sync. The command is surfaced to players under the panel's **/Commands** header (`L["OPTIONS_COMMANDS_HEADER"]` + `L["OPTIONS_CMD_ERASER"]`).
 
 ## Diagnostic Tools
 
@@ -138,6 +150,7 @@ All diagnostics strings are plain English in the diagnostics files (never locali
 - **`MagicEraserCharDB`** (per-character):
     - `ignoreList` — `itemId → true` map; items added via right-click on the minimap button.
     - `autoVendEnabled` — boolean, default `false`.
+    - `autoVendMessagesEnabled` — boolean, default `true`; gates all Auto-Vend chat output via `PrintVendMessage`.
 
 Defaults live in `ns.DEFAULT_CONFIGURATION` (`Data/Default-Settings.lua`) and are applied by `ApplyDefaults` in `ns:OnPlayerLogin` — a recursive additive merge that seeds a fresh table per scope for table-valued defaults (`minimap`, `ignoreList`) rather than aliasing the shared default.
 
@@ -170,6 +183,7 @@ Copy `Locales/enUS.lua` to `Locales/<locale>.lua`. Drop the `true` argument from
 - **Consumable eligibility is level-dependent**: `GetItemDeleteReason` reads `UnitLevel`, so the candidate must refresh on `PLAYER_LEVEL_UP` — a bag update is not guaranteed to fire after a ding.
 - **Bypassing the dispatcher**: register events only by adding to `ns.EVENT_NAMES` plus an `ns:OnXxx` handler. A feature that creates its own event frame escapes the diagnostics event-log tap and goes unlogged.
 - **Auto-Vend and `sellPrice == 0`**: filtered at scan time. Quest items aren't vendorable, so the eraser keeps them rather than the vendor swallowing them.
+- **New Auto-Vend chat must use `PrintVendMessage`**: calling `ns:PrintMessage` directly from the vend path ignores the **Enable Auto-Vend Messages** toggle. Route every Auto-Vend line through the `PrintVendMessage` guard in `Auto-Vend.lua`.
 
 ## Contributing
 
