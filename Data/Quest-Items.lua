@@ -299,7 +299,6 @@ ns.AllowedDeleteQuestItems = {
     [4506] = {682}, -- Stromgarde Badge
     [5165] = {905}, -- Sunscale Feather
     [20474] = {8330}, -- Sunstrider Book Satchel
-    [6866] = {1779, 1781, 9600}, -- Symbol of Life
     [7516] = {1948}, -- Tabetha's Instructions
     [21751] = {8536}, -- Tactical Task Briefing III
     [20946] = {8536}, -- Tactical Task Briefing III
