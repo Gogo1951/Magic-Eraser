@@ -248,7 +248,6 @@ ns.AllowedDeleteConsumables = {
     [1708] = true, -- Sweet Nectar
     [4537] = true, -- Tel'Abim Banana
     [29450] = true, -- Telaari Grapes
-    [7676] = true, -- Thistle Tea
     [2686] = true, -- Thunder Ale
     [7228] = true, -- Tigule's Strawberry Ice Cream
     [4540] = true, -- Tough Hunk of Bread
