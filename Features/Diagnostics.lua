@@ -1,4 +1,4 @@
-local addonName, ns = ...
+local ADDON_NAME, ns = ...
 
 --------------------------------------------------------------------------------
 -- Diagnostic Tools
@@ -37,36 +37,36 @@ ns.diagnostics = ns.diagnostics or { enabled = false, logging = false, log = nil
     not a diagnostics string.
 ]]
 ns.DiagnosticsStrings = {
-    TAB = "Diagnostic Tools",
-    WARNING = "These tools help diagnose problems and are meant for developers. They won't change how the add-on works, but their output includes technical details about your client and installed add-ons. Leave this off unless you're troubleshooting with someone.",
-    ENABLE = "Enable Diagnostic Tools",
-    EVENT_LOG_TITLE = "Event Log",
-    EVENT_LOG_START = "Start Event Log",
-    EVENT_LOG_STOP = "Stop Event Log",
-    EVENT_LOG_SHOW = "Show Captured Events",
-    EVENT_LOG_HINT = "Captures the events Magic Eraser registered for, with arguments, in the order they fired. Best for 'nothing gets erased' or 'Auto-Vend didn't sell' reports -- it separates 'the event never fired' from 'the event fired but nothing happened.'",
-    EVENTS_TITLE = "Event Registration",
-    EVENTS_BUTTON = "Test Event Registration",
-    API_TITLE = "API Endpoints",
-    API_BUTTON = "Test WoW API Endpoints",
-    ERASER_TITLE = "Eraser Context",
-    ERASER_BUTTON = "Show Eraser Context",
-    DISPLAY_TITLE = "Display Context",
-    DISPLAY_BUTTON = "Show Display Context",
-    ADDONS_TITLE = "Other Add-ons",
-    ADDONS_BUTTON = "List Installed Add-ons",
-    SAVED_TITLE = "Saved Variables",
-    SAVED_BUTTON = "Dump Saved Variables",
-    LIBS_TITLE = "Library Versions",
-    LIBS_BUTTON = "List Library Versions",
-    TAINT_TITLE = "Taint Log",
-    TAINT_STATE = "Taint logging is currently set to level %d (0 = off, 2 = verbose).",
-    TAINT_ON = "Turn On Taint Log",
-    TAINT_OFF = "Turn Off Taint Log",
-    TAINT_HINT = "Writes to Logs\\taint.log. The setting persists until turned off; reload your UI to capture taint from login onward.",
-    TOOLS_TITLE = "External Tools",
-    TOOLS_ERRORS = "Lua errors: install BugSack and !BugGrabber, or enable %s to surface them.",
-    TOOLS_ETRACE = "Live event tracing: use %s."
+	TAB = "Diagnostic Tools",
+	WARNING = "These tools help diagnose problems and are meant for developers. They won't change how the add-on works, but their output includes technical details about your client and installed add-ons. Leave this off unless you're troubleshooting with someone.",
+	ENABLE = "Enable Diagnostic Tools",
+	EVENT_LOG_TITLE = "Event Log",
+	EVENT_LOG_START = "Start Event Log",
+	EVENT_LOG_STOP = "Stop Event Log",
+	EVENT_LOG_SHOW = "Show Captured Events",
+	EVENT_LOG_HINT = "Captures the events Magic Eraser registered for, with arguments, in the order they fired. Best for 'nothing gets erased' or 'Auto-Vend didn't sell' reports -- it separates 'the event never fired' from 'the event fired but nothing happened.'",
+	EVENTS_TITLE = "Event Registration",
+	EVENTS_BUTTON = "Test Event Registration",
+	API_TITLE = "API Endpoints",
+	API_BUTTON = "Test WoW API Endpoints",
+	ERASER_TITLE = "Eraser Context",
+	ERASER_BUTTON = "Show Eraser Context",
+	DISPLAY_TITLE = "Display Context",
+	DISPLAY_BUTTON = "Show Display Context",
+	ADDONS_TITLE = "Other Add-ons",
+	ADDONS_BUTTON = "List Installed Add-ons",
+	SAVED_TITLE = "Saved Variables",
+	SAVED_BUTTON = "Dump Saved Variables",
+	LIBS_TITLE = "Library Versions",
+	LIBS_BUTTON = "List Library Versions",
+	TAINT_TITLE = "Taint Log",
+	TAINT_STATE = "Taint logging is currently set to level %d (0 = off, 2 = verbose).",
+	TAINT_ON = "Turn On Taint Log",
+	TAINT_OFF = "Turn Off Taint Log",
+	TAINT_HINT = "Writes to Logs\\taint.log. The setting persists until turned off; reload your UI to capture taint from login onward.",
+	TOOLS_TITLE = "External Tools",
+	TOOLS_ERRORS = "Lua errors: install BugSack and !BugGrabber, or enable %s to surface them.",
+	TOOLS_ETRACE = "Live event tracing: use %s.",
 }
 
 --------------------------------------------------------------------------------
@@ -74,10 +74,10 @@ ns.DiagnosticsStrings = {
 --------------------------------------------------------------------------------
 
 function ns:SetDiagnosticsEnabled(value)
-    ns.diagnostics.enabled = value and true or false
-    if not ns.diagnostics.enabled then
-        ns:StopEventLog()
-    end
+	ns.diagnostics.enabled = value and true or false
+	if not ns.diagnostics.enabled then
+		ns:StopEventLog()
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -85,22 +85,27 @@ end
 --------------------------------------------------------------------------------
 
 local function GetClientHeader()
-    local version, build, _, tocVersion = GetBuildInfo()
-    return string.format(
-        "%s %s // Client %s // Build %s // TOC %s // Locale %s // Project %s",
-        ns.AddonTitle, ns.Version, version, build, tocVersion,
-        GetLocale(), tostring(WOW_PROJECT_ID)
-    )
+	local version, build, _, tocVersion = GetBuildInfo()
+	return string.format(
+		"%s %s // Client %s // Build %s // TOC %s // Locale %s // Project %s",
+		ns.AddonTitle,
+		ns.Version,
+		version,
+		build,
+		tocVersion,
+		GetLocale(),
+		tostring(WOW_PROJECT_ID)
+	)
 end
 
 local function CountKeys(value)
-    local count = 0
-    if type(value) == "table" then
-        for _ in pairs(value) do
-            count = count + 1
-        end
-    end
-    return count
+	local count = 0
+	if type(value) == "table" then
+		for _ in pairs(value) do
+			count = count + 1
+		end
+	end
+	return count
 end
 
 --------------------------------------------------------------------------------
@@ -112,26 +117,26 @@ local EVENT_LOG_MAX_ARGS = 8
 local EVENT_LOG_MAX_ARG_LENGTH = 255
 
 --[[
-    Firehose events flood the log in milliseconds and bury the signal, so the
-    logger skips them. Magic Eraser never registers any of these (it uses
-    BAG_UPDATE_DELAYED, not the raw BAG_UPDATE), so the set is defensive -- it
-    keeps the log clean if a future event is added.
+    Events ns:LogEvent drops before recording -- deliberately empty. The
+    dispatcher only ever hands LogEvent the events Magic Eraser registers (Core's
+    ns.EVENT_NAMES), and none of those is a sustained firehose worth dropping:
+    the add-on listens on the coalesced BAG_UPDATE_DELAYED rather than raw
+    BAG_UPDATE, and every registered event is potential signal in a bug report.
+    The lookup in LogEvent stays so a genuine no-signal firehose can be excluded
+    here if one is ever registered. Generic offenders
+    (COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA, ...) do not belong here unless
+    registered -- the log never sees an event the add-on didn't register.
 ]]
-ns.DIAGNOSTIC_EVENT_EXCLUDE = {
-    COMBAT_LOG_EVENT_UNFILTERED = true,
-    UNIT_AURA = true,
-    BAG_UPDATE = true,
-    UPDATE_MOUSEOVER_UNIT = true
-}
+ns.DIAGNOSTIC_EVENT_EXCLUDE = {}
 
 function ns:StartEventLog()
-    ns.diagnostics.log = {}
-    ns.diagnostics.logging = true
+	ns.diagnostics.log = {}
+	ns.diagnostics.logging = true
 end
 
 function ns:StopEventLog()
-    ns.diagnostics.logging = false
-    ns.diagnostics.log = nil
+	ns.diagnostics.logging = false
+	ns.diagnostics.log = nil
 end
 
 --[[
@@ -146,32 +151,38 @@ end
     would eat the following ", " separator.
 ]]
 function ns:LogEvent(event, ...)
-    if ns.DIAGNOSTIC_EVENT_EXCLUDE[event] then return end
-    local log = ns.diagnostics.log
-    if not log then return end
-    local parts = {}
-    for index = 1, select("#", ...) do
-        if index > EVENT_LOG_MAX_ARGS then break end
-        local raw = string.sub(tostring((select(index, ...))), 1, EVENT_LOG_MAX_ARG_LENGTH)
-        parts[index] = (raw:gsub("|", "||"))
-    end
-    log[#log + 1] = string.format("%.3f %s(%s)", GetTime(), event, table.concat(parts, ", "))
-    if #log > EVENT_LOG_SIZE then
-        table.remove(log, 1)
-    end
+	if ns.DIAGNOSTIC_EVENT_EXCLUDE[event] then
+		return
+	end
+	local log = ns.diagnostics.log
+	if not log then
+		return
+	end
+	local parts = {}
+	for index = 1, select("#", ...) do
+		if index > EVENT_LOG_MAX_ARGS then
+			break
+		end
+		local raw = string.sub(tostring((select(index, ...))), 1, EVENT_LOG_MAX_ARG_LENGTH)
+		parts[index] = (raw:gsub("|", "||"))
+	end
+	log[#log + 1] = string.format("%.3f %s(%s)", GetTime(), event, table.concat(parts, ", "))
+	if #log > EVENT_LOG_SIZE then
+		table.remove(log, 1)
+	end
 end
 
 function ns:BuildEventLogReport()
-    local lines = {GetClientHeader(), ""}
-    local log = ns.diagnostics.log
-    if not log or #log == 0 then
-        lines[#lines + 1] = "(no events captured)"
-    else
-        for _, entry in ipairs(log) do
-            lines[#lines + 1] = entry
-        end
-    end
-    return table.concat(lines, "\n")
+	local lines = { GetClientHeader(), "" }
+	local log = ns.diagnostics.log
+	if not log or #log == 0 then
+		lines[#lines + 1] = "(no events captured)"
+	else
+		for _, entry in ipairs(log) do
+			lines[#lines + 1] = entry
+		end
+	end
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -190,37 +201,37 @@ end
 local probeFrame
 
 local function GetProbeFrame()
-    if not probeFrame then
-        probeFrame = CreateFrame("Frame")
-    end
-    return probeFrame
+	if not probeFrame then
+		probeFrame = CreateFrame("Frame")
+	end
+	return probeFrame
 end
 
 function ns:RunEventChecks()
-    local lines = {GetClientHeader(), ""}
-    local hasIsEventValid = type(C_EventUtils) == "table" and type(C_EventUtils.IsEventValid) == "function"
-    local probe = GetProbeFrame()
-    local failures = 0
-    for _, event in ipairs(ns.EVENT_NAMES or {}) do
-        local valid = "n/a"
-        if hasIsEventValid then
-            valid = C_EventUtils.IsEventValid(event) and "valid" or "INVALID"
-        end
-        local ok = pcall(probe.RegisterEvent, probe, event)
-        if ok then
-            probe:UnregisterEvent(event)
-        else
-            failures = failures + 1
-        end
-        lines[#lines + 1] = string.format("[%s] %s (IsEventValid: %s)", ok and "PASS" or "FAIL", event, valid)
-    end
-    lines[#lines + 1] = ""
-    if failures == 0 then
-        lines[#lines + 1] = "All events register on this client."
-    else
-        lines[#lines + 1] = string.format("%d event(s) failed to register.", failures)
-    end
-    return table.concat(lines, "\n")
+	local lines = { GetClientHeader(), "" }
+	local hasIsEventValid = type(C_EventUtils) == "table" and type(C_EventUtils.IsEventValid) == "function"
+	local probe = GetProbeFrame()
+	local failures = 0
+	for _, event in ipairs(ns.EVENT_NAMES or {}) do
+		local valid = "n/a"
+		if hasIsEventValid then
+			valid = C_EventUtils.IsEventValid(event) and "valid" or "INVALID"
+		end
+		local ok = pcall(probe.RegisterEvent, probe, event)
+		if ok then
+			probe:UnregisterEvent(event)
+		else
+			failures = failures + 1
+		end
+		lines[#lines + 1] = string.format("[%s] %s (IsEventValid: %s)", ok and "PASS" or "FAIL", event, valid)
+	end
+	lines[#lines + 1] = ""
+	if failures == 0 then
+		lines[#lines + 1] = "All events register on this client."
+	else
+		lines[#lines + 1] = string.format("%d event(s) failed to register.", failures)
+	end
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -235,41 +246,166 @@ end
     client provides -- the legacy global ships on Era but is gone on TBC.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
-    -- { label, testFunction }
-    {"C_AddOns.GetAddOnMetadata", function() return type(C_AddOns) == "table" and type(C_AddOns.GetAddOnMetadata) == "function" end},
-    {"GetAddOnMetadata (legacy)", function() return type(GetAddOnMetadata) == "function" end},
-    {"C_Container.GetContainerNumSlots", function() return type(C_Container) == "table" and type(C_Container.GetContainerNumSlots) == "function" end},
-    {"C_Container.GetContainerItemInfo", function() return type(C_Container) == "table" and type(C_Container.GetContainerItemInfo) == "function" end},
-    {"C_Container.PickupContainerItem", function() return type(C_Container) == "table" and type(C_Container.PickupContainerItem) == "function" end},
-    {"C_Container.UseContainerItem", function() return type(C_Container) == "table" and type(C_Container.UseContainerItem) == "function" end},
-    {"C_QuestLog.IsQuestFlaggedCompleted", function() return type(C_QuestLog) == "table" and type(C_QuestLog.IsQuestFlaggedCompleted) == "function" end},
-    {"C_Item.RequestLoadItemDataByID", function() return type(C_Item) == "table" and type(C_Item.RequestLoadItemDataByID) == "function" end},
-    {"GetItemInfo", function() return type(GetItemInfo) == "function" end},
-    {"GetItemQualityColor", function() return type(GetItemQualityColor) == "function" end},
-    {"GetCursorInfo", function() return type(GetCursorInfo) == "function" end},
-    {"CursorHasItem", function() return type(CursorHasItem) == "function" end},
-    {"ClearCursor", function() return type(ClearCursor) == "function" end},
-    {"DeleteCursorItem", function() return type(DeleteCursorItem) == "function" end},
-    {"IsShiftKeyDown", function() return type(IsShiftKeyDown) == "function" end},
-    {"InCombatLockdown", function() return type(InCombatLockdown) == "function" end},
-    {"UnitLevel", function() return type(UnitLevel) == "function" end},
-    {"UnitClass", function() return type(UnitClass) == "function" end},
-    {"PlaySound", function() return type(PlaySound) == "function" end},
-    {"C_Timer.After", function() return type(C_Timer) == "table" and type(C_Timer.After) == "function" end},
-    {"C_EventUtils.IsEventValid", function() return type(C_EventUtils) == "table" and type(C_EventUtils.IsEventValid) == "function" end},
-    {"GetCVar", function() return type(GetCVar) == "function" end},
-    {"SetCVar", function() return type(SetCVar) == "function" end},
-    {"GetBuildInfo", function() return type(GetBuildInfo) == "function" end},
-    {"GetLocale", function() return type(GetLocale) == "function" end}
+	-- { label, testFunction }
+	{
+		"C_AddOns.GetAddOnMetadata",
+		function()
+			return type(C_AddOns) == "table" and type(C_AddOns.GetAddOnMetadata) == "function"
+		end,
+	},
+	{
+		"GetAddOnMetadata (legacy)",
+		function()
+			return type(GetAddOnMetadata) == "function"
+		end,
+	},
+	{
+		"C_Container.GetContainerNumSlots",
+		function()
+			return type(C_Container) == "table" and type(C_Container.GetContainerNumSlots) == "function"
+		end,
+	},
+	{
+		"C_Container.GetContainerItemInfo",
+		function()
+			return type(C_Container) == "table" and type(C_Container.GetContainerItemInfo) == "function"
+		end,
+	},
+	{
+		"C_Container.PickupContainerItem",
+		function()
+			return type(C_Container) == "table" and type(C_Container.PickupContainerItem) == "function"
+		end,
+	},
+	{
+		"C_Container.UseContainerItem",
+		function()
+			return type(C_Container) == "table" and type(C_Container.UseContainerItem) == "function"
+		end,
+	},
+	{
+		"C_QuestLog.IsQuestFlaggedCompleted",
+		function()
+			return type(C_QuestLog) == "table" and type(C_QuestLog.IsQuestFlaggedCompleted) == "function"
+		end,
+	},
+	{
+		"C_Item.RequestLoadItemDataByID",
+		function()
+			return type(C_Item) == "table" and type(C_Item.RequestLoadItemDataByID) == "function"
+		end,
+	},
+	{
+		"GetItemInfo",
+		function()
+			return type(GetItemInfo) == "function"
+		end,
+	},
+	{
+		"GetItemQualityColor",
+		function()
+			return type(GetItemQualityColor) == "function"
+		end,
+	},
+	{
+		"GetCursorInfo",
+		function()
+			return type(GetCursorInfo) == "function"
+		end,
+	},
+	{
+		"CursorHasItem",
+		function()
+			return type(CursorHasItem) == "function"
+		end,
+	},
+	{
+		"ClearCursor",
+		function()
+			return type(ClearCursor) == "function"
+		end,
+	},
+	{
+		"DeleteCursorItem",
+		function()
+			return type(DeleteCursorItem) == "function"
+		end,
+	},
+	{
+		"IsShiftKeyDown",
+		function()
+			return type(IsShiftKeyDown) == "function"
+		end,
+	},
+	{
+		"InCombatLockdown",
+		function()
+			return type(InCombatLockdown) == "function"
+		end,
+	},
+	{
+		"UnitLevel",
+		function()
+			return type(UnitLevel) == "function"
+		end,
+	},
+	{
+		"UnitClass",
+		function()
+			return type(UnitClass) == "function"
+		end,
+	},
+	{
+		"PlaySound",
+		function()
+			return type(PlaySound) == "function"
+		end,
+	},
+	{
+		"C_Timer.After",
+		function()
+			return type(C_Timer) == "table" and type(C_Timer.After) == "function"
+		end,
+	},
+	{
+		"C_EventUtils.IsEventValid",
+		function()
+			return type(C_EventUtils) == "table" and type(C_EventUtils.IsEventValid) == "function"
+		end,
+	},
+	{
+		"GetCVar",
+		function()
+			return type(GetCVar) == "function"
+		end,
+	},
+	{
+		"SetCVar",
+		function()
+			return type(SetCVar) == "function"
+		end,
+	},
+	{
+		"GetBuildInfo",
+		function()
+			return type(GetBuildInfo) == "function"
+		end,
+	},
+	{
+		"GetLocale",
+		function()
+			return type(GetLocale) == "function"
+		end,
+	},
 }
 
 function ns:RunApiChecks()
-    local lines = {GetClientHeader(), ""}
-    for _, check in ipairs(ns.DIAGNOSTIC_API_CHECKS) do
-        local ok, result = pcall(check[2])
-        lines[#lines + 1] = ((ok and result) and "[PASS] " or "[FAIL] ") .. check[1]
-    end
-    return table.concat(lines, "\n")
+	local lines = { GetClientHeader(), "" }
+	for _, check in ipairs(ns.DIAGNOSTIC_API_CHECKS) do
+		local ok, result = pcall(check[2])
+		lines[#lines + 1] = ((ok and result) and "[PASS] " or "[FAIL] ") .. check[1]
+	end
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -284,35 +420,38 @@ end
     a clickable swatch.
 ]]
 function ns:BuildEraserContextReport()
-    local lines = {GetClientHeader(), ""}
+	local lines = { GetClientHeader(), "" }
 
-    local _, class = UnitClass("player")
-    lines[#lines + 1] = string.format("Player: %s level %d", tostring(class), UnitLevel("player") or 0)
-    lines[#lines + 1] = string.format("Auto-Vend: %s", (MagicEraserCharDB and MagicEraserCharDB.autoVendEnabled) and "enabled" or "disabled")
+	local _, class = UnitClass("player")
+	lines[#lines + 1] = string.format("Player: %s level %d", tostring(class), UnitLevel("player") or 0)
+	lines[#lines + 1] =
+		string.format("Auto-Vend: %s", (ns.db and ns.db.profile.autoVendEnabled) and "enabled" or "disabled")
 
-    local ignoreCount = CountKeys(MagicEraserCharDB and MagicEraserCharDB.ignoreList)
-    lines[#lines + 1] = string.format("Ignore list: %d %s", ignoreCount, ignoreCount == 1 and "entry" or "entries")
-    lines[#lines + 1] = string.format(
-        "Databases: quest=%d, consumables=%d, equipment=%d",
-        CountKeys(ns.AllowedDeleteQuestItems), CountKeys(ns.AllowedDeleteConsumables), CountKeys(ns.AllowedDeleteEquipment)
-    )
-    local reagents = ns.ClassReagentExclusions and ns.ClassReagentExclusions[class]
-    lines[#lines + 1] = string.format("Class reagent exclusions (%s): %d", tostring(class), CountKeys(reagents))
+	local ignoreCount = CountKeys(ns.db and ns.db.profile.ignoreList)
+	lines[#lines + 1] = string.format("Ignore list: %d %s", ignoreCount, ignoreCount == 1 and "entry" or "entries")
+	lines[#lines + 1] = string.format(
+		"Databases: quest=%d, consumables=%d, equipment=%d",
+		CountKeys(ns.AllowedDeleteQuestItems),
+		CountKeys(ns.AllowedDeleteConsumables),
+		CountKeys(ns.AllowedDeleteEquipment)
+	)
+	local reagents = ns.ClassReagentExclusions and ns.ClassReagentExclusions[class]
+	lines[#lines + 1] = string.format("Class reagent exclusions (%s): %d", tostring(class), CountKeys(reagents))
 
-    lines[#lines + 1] = ""
-    local item = ns:FindItemToDelete()
-    if item then
-        lines[#lines + 1] = "Current erase candidate:"
-        lines[#lines + 1] = "  link     = " .. (tostring(item.link):gsub("|", "||"))
-        lines[#lines + 1] = string.format("  itemId   = %s", tostring(item.itemId))
-        lines[#lines + 1] = string.format("  reason   = %s", tostring(item.deleteReason))
-        lines[#lines + 1] = string.format("  value    = %d copper (x%d)", item.value or 0, item.count or 1)
-        lines[#lines + 1] = string.format("  bag/slot = %s/%s", tostring(item.bag), tostring(item.slot))
-    else
-        lines[#lines + 1] = "Current erase candidate: (none -- no flagged items in bags)"
-    end
+	lines[#lines + 1] = ""
+	local item = ns:FindItemToDelete()
+	if item then
+		lines[#lines + 1] = "Current erase candidate:"
+		lines[#lines + 1] = "  link     = " .. (tostring(item.link):gsub("|", "||"))
+		lines[#lines + 1] = string.format("  itemId   = %s", tostring(item.itemId))
+		lines[#lines + 1] = string.format("  reason   = %s", tostring(item.deleteReason))
+		lines[#lines + 1] = string.format("  value    = %d copper (x%d)", item.value or 0, item.count or 1)
+		lines[#lines + 1] = string.format("  bag/slot = %s/%s", tostring(item.bag), tostring(item.slot))
+	else
+		lines[#lines + 1] = "Current erase candidate: (none -- no flagged items in bags)"
+	end
 
-    return table.concat(lines, "\n")
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -324,27 +463,27 @@ end
     scale, and the button's saved placement. Read-only.
 ]]
 function ns:BuildDisplayContextReport()
-    local lines = {GetClientHeader(), ""}
+	local lines = { GetClientHeader(), "" }
 
-    local width, height = GetPhysicalScreenSize()
-    lines[#lines + 1] = string.format("Physical screen size: %s x %s", tostring(width), tostring(height))
-    lines[#lines + 1] = string.format("UIParent scale: %s", tostring(UIParent and UIParent:GetScale()))
-    lines[#lines + 1] = string.format("uiScale CVar: %s", tostring(GetCVar("uiScale")))
+	local width, height = GetPhysicalScreenSize()
+	lines[#lines + 1] = string.format("Physical screen size: %s x %s", tostring(width), tostring(height))
+	lines[#lines + 1] = string.format("UIParent scale: %s", tostring(UIParent and UIParent:GetScale()))
+	lines[#lines + 1] = string.format("uiScale CVar: %s", tostring(GetCVar("uiScale")))
 
-    lines[#lines + 1] = ""
-    local LibDBIcon = LibStub("LibDBIcon-1.0")
-    local button = LibDBIcon and LibDBIcon.GetMinimapButton and LibDBIcon:GetMinimapButton(addonName)
-    lines[#lines + 1] = string.format("Minimap button created: %s", button and "yes" or "no")
+	lines[#lines + 1] = ""
+	local LibDBIcon = LibStub("LibDBIcon-1.0")
+	local button = LibDBIcon and LibDBIcon.GetMinimapButton and LibDBIcon:GetMinimapButton(ADDON_NAME)
+	lines[#lines + 1] = string.format("Minimap button created: %s", button and "yes" or "no")
 
-    local minimap = MagicEraserDB and MagicEraserDB.minimap
-    if type(minimap) == "table" then
-        lines[#lines + 1] = string.format("Minimap button hidden: %s", tostring(minimap.hide or false))
-        lines[#lines + 1] = string.format("Minimap saved angle: %s", tostring(minimap.minimapPos))
-    else
-        lines[#lines + 1] = "Minimap saved position: (none yet)"
-    end
+	local minimap = ns.db and ns.db.global.minimap
+	if type(minimap) == "table" then
+		lines[#lines + 1] = string.format("Minimap button hidden: %s", tostring(minimap.hide or false))
+		lines[#lines + 1] = string.format("Minimap saved angle: %s", tostring(minimap.minimapPos))
+	else
+		lines[#lines + 1] = "Minimap saved position: (none yet)"
+	end
 
-    return table.concat(lines, "\n")
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -352,16 +491,16 @@ end
 --------------------------------------------------------------------------------
 
 function ns:BuildAddOnReport()
-    local lines = {GetClientHeader(), ""}
-    local getInfo = (C_AddOns and C_AddOns.GetAddOnInfo) or GetAddOnInfo
-    local getMeta = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
-    local count = (C_AddOns and C_AddOns.GetNumAddOns and C_AddOns.GetNumAddOns()) or GetNumAddOns()
-    for index = 1, count do
-        local name, _, _, loadable = getInfo(index)
-        local version = getMeta(index, "Version") or "?"
-        lines[#lines + 1] = string.format("%s v%s [%s]", name, version, loadable and "loadable" or "disabled")
-    end
-    return table.concat(lines, "\n")
+	local lines = { GetClientHeader(), "" }
+	local getInfo = (C_AddOns and C_AddOns.GetAddOnInfo) or GetAddOnInfo
+	local getMeta = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
+	local count = (C_AddOns and C_AddOns.GetNumAddOns and C_AddOns.GetNumAddOns()) or GetNumAddOns()
+	for index = 1, count do
+		local name, _, _, loadable = getInfo(index)
+		local version = getMeta(index, "Version") or "?"
+		lines[#lines + 1] = string.format("%s v%s [%s]", name, version, loadable and "loadable" or "disabled")
+	end
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -369,45 +508,56 @@ end
 --------------------------------------------------------------------------------
 
 local function DumpTable(value, indent, depth, lines)
-    if depth > 8 then
-        lines[#lines + 1] = indent .. "<max depth>"
-        return
-    end
-    local keys = {}
-    for key in pairs(value) do
-        keys[#keys + 1] = key
-    end
-    table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
-    for _, key in ipairs(keys) do
-        local entry = value[key]
-        if type(entry) == "table" then
-            lines[#lines + 1] = indent .. tostring(key) .. " = {"
-            DumpTable(entry, indent .. "    ", depth + 1, lines)
-            lines[#lines + 1] = indent .. "}"
-        else
-            lines[#lines + 1] = indent .. tostring(key) .. " = " .. tostring(entry)
-        end
-    end
+	if depth > 8 then
+		lines[#lines + 1] = indent .. "<max depth>"
+		return
+	end
+	local keys = {}
+	for key in pairs(value) do
+		keys[#keys + 1] = key
+	end
+	table.sort(keys, function(a, b)
+		return tostring(a) < tostring(b)
+	end)
+	for _, key in ipairs(keys) do
+		local entry = value[key]
+		if type(entry) == "table" then
+			lines[#lines + 1] = indent .. tostring(key) .. " = {"
+			DumpTable(entry, indent .. "    ", depth + 1, lines)
+			lines[#lines + 1] = indent .. "}"
+		else
+			lines[#lines + 1] = indent .. tostring(key) .. " = " .. tostring(entry)
+		end
+	end
 end
 
 --[[
-    Dumps the account table in full (small) and summarizes the per-character
-    ignore list by length rather than printing every itemId (see DATA -- large
-    lists are described, not reproduced).
+    Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
+    player can paste their exact configuration. Each profile's ignoreList is
+    replaced with a length summary rather than printing every itemId (see DATA --
+    large lists are described, not reproduced).
 ]]
-function ns:BuildSavedVariablesReport()
-    local lines = {GetClientHeader(), "", "MagicEraserDB = {"}
-    DumpTable(MagicEraserDB or {}, "    ", 1, lines)
-    lines[#lines + 1] = "}"
-    lines[#lines + 1] = ""
+local function SummarizeForDump(value)
+	if type(value) ~= "table" then
+		return value
+	end
+	local copy = {}
+	for key, entry in pairs(value) do
+		if key == "ignoreList" and type(entry) == "table" then
+			local count = CountKeys(entry)
+			copy[key] = string.format("{ %d %s }", count, count == 1 and "entry" or "entries")
+		else
+			copy[key] = SummarizeForDump(entry)
+		end
+	end
+	return copy
+end
 
-    local char = MagicEraserCharDB or {}
-    local ignoreCount = CountKeys(char.ignoreList)
-    lines[#lines + 1] = "MagicEraserCharDB = {"
-    lines[#lines + 1] = "    autoVendEnabled = " .. tostring(char.autoVendEnabled)
-    lines[#lines + 1] = string.format("    ignoreList = { %d %s }", ignoreCount, ignoreCount == 1 and "entry" or "entries")
-    lines[#lines + 1] = "}"
-    return table.concat(lines, "\n")
+function ns:BuildSavedVariablesReport()
+	local lines = { GetClientHeader(), "", "MagicEraserDB = {" }
+	DumpTable(SummarizeForDump(MagicEraserDB or {}), "    ", 1, lines)
+	lines[#lines + 1] = "}"
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -415,16 +565,16 @@ end
 --------------------------------------------------------------------------------
 
 function ns:BuildLibraryReport()
-    local lines = {GetClientHeader(), ""}
-    local names = {}
-    for name in LibStub:IterateLibraries() do
-        names[#names + 1] = name
-    end
-    table.sort(names)
-    for _, name in ipairs(names) do
-        lines[#lines + 1] = string.format("%s (minor %s)", name, tostring(LibStub.minors[name]))
-    end
-    return table.concat(lines, "\n")
+	local lines = { GetClientHeader(), "" }
+	local names = {}
+	for name in LibStub:IterateLibraries() do
+		names[#names + 1] = name
+	end
+	table.sort(names)
+	for _, name in ipairs(names) do
+		lines[#lines + 1] = string.format("%s (minor %s)", name, tostring(LibStub.minors[name]))
+	end
+	return table.concat(lines, "\n")
 end
 
 --------------------------------------------------------------------------------
@@ -438,9 +588,9 @@ end
 ]]
 
 function ns:GetTaintLogState()
-    return tonumber(GetCVar("taintLog")) or 0
+	return tonumber(GetCVar("taintLog")) or 0
 end
 
 function ns:SetTaintLog(enabled)
-    SetCVar("taintLog", enabled and 2 or 0)
+	SetCVar("taintLog", enabled and 2 or 0)
 end

@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Free up bag space the easy way. Magic Eraser finds and deletes the lowest-value junk in your inventory: old quest items, outgrown food, vendor whites, and gray trash. Then it auto-sells the rest at any merchant. One click, cleaner bags.
+Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically.
 
 <img width="360" alt="Magic Eraser minimap button and tooltip" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
 
@@ -16,7 +16,7 @@ Free up bag space the easy way. Magic Eraser finds and deletes the lowest-value 
 
 ## Setup
 
-1. **Install** from [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [GitHub](https://github.com/Gogo1951/Magic-Eraser).
+1. **Install** from [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser), [GitHub](https://github.com/Gogo1951/Magic-Eraser), or [Wago](https://addons.wago.io/addons/magic-eraser).
 2. Log in. The minimap button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Right-click to flip Auto-Vend on.
 4. Done — your bags now keep themselves clean. *"Cleanest bags on the server!"*
@@ -70,7 +70,6 @@ Please reach out if you would like to be involved!
 
 ## Links
 
-- [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser)
 - [GitHub](https://github.com/Gogo1951/Magic-Eraser)
 - [Discord](https://discord.gg/eh8hKq992Q)
 

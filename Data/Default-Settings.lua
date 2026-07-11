@@ -5,20 +5,19 @@ local _, ns = ...
 --------------------------------------------------------------------------------
 
 --[[
-    One key per setting. Applied as an additive merge in Features/Core.lua
-    (ns:OnPlayerLogin): fill only nil fields, never overwrite an explicit user
-    value. Account settings live in MagicEraserDB, per-character settings in
-    MagicEraserCharDB. Table-valued defaults (minimap, ignoreList) seed a fresh
-    empty table per scope rather than sharing this one.
+    AceDB-3.0 defaults. Every user setting lives under profile; AceDB applies
+    these via metatables (no hand-rolled merge, and explicit false survives).
+    The global subtable holds only the minimap button position, which is
+    profile-independent so switching or resetting a profile never moves it.
 ]]
-ns.DEFAULT_CONFIGURATION = {
-    account = {
-        showWelcome = true,
-        minimap = {}
-    },
-    character = {
-        autoVendEnabled = false,
-        autoVendMessagesEnabled = true,
-        ignoreList = {}
-    }
+ns.DATABASE_DEFAULTS = {
+	profile = {
+		showWelcome = true,
+		autoVendEnabled = false,
+		autoVendMessagesEnabled = true,
+		ignoreList = {},
+	},
+	global = {
+		minimap = {},
+	},
 }

@@ -1,4 +1,4 @@
-local addonName, ns = ...
+local _, ns = ...
 
 --------------------------------------------------------------------------------
 -- Shared Options Helpers
@@ -12,13 +12,17 @@ local addonName, ns = ...
 local GetColor = ns.GetColor
 
 function ns.OptionsHeader(text, order)
-    return { type = "header", name = GetColor("TITLE") .. text .. "|r", order = order }
+	return { type = "header", name = GetColor("TITLE") .. text .. "|r", order = order }
 end
 
 function ns.OptionsDesc(text, order)
-    return { type = "description", name = text, fontSize = "medium", order = order }
+	return { type = "description", name = text, fontSize = "medium", order = order }
 end
 
 function ns.OptionsSpacer(order)
-    return { type = "description", name = " ", order = order }
+	return { type = "description", name = " ", order = order }
+end
+
+function ns.OptionsSubHeader(text, order)
+	return { type = "description", name = "\n" .. GetColor("TITLE") .. text .. "|r", fontSize = "medium", order = order }
 end

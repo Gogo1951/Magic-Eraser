@@ -1,5 +1,5 @@
-local addonName, ns = ...
-ns.L = LibStub("AceLocale-3.0"):GetLocale(addonName)
+local ADDON_NAME, ns = ...
+ns.L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 
 --------------------------------------------------------------------------------
 -- Identity
@@ -13,12 +13,12 @@ ns.DefaultIcon = "Interface/Icons/inv_misc_bag_07_green"
 --------------------------------------------------------------------------------
 
 local function GetVersion()
-    local version = C_AddOns and C_AddOns.GetAddOnMetadata(addonName, "Version")
-        or GetAddOnMetadata(addonName, "Version")
-    if not version or version:find("@") then
-        return "Dev"
-    end
-    return version
+	local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
+	local version = GetAddOnMetadata(ADDON_NAME, "Version")
+	if not version or version:find("@") then
+		return "Dev"
+	end
+	return version
 end
 
 ns.Version = GetVersion()
@@ -28,9 +28,10 @@ ns.Version = GetVersion()
 --------------------------------------------------------------------------------
 
 ns.Links = {
-    CURSEFORGE = "https://www.curseforge.com/wow/addons/magic-eraser",
-    GITHUB     = "https://github.com/Gogo1951/Magic-Eraser",
-    DISCORD    = "https://discord.gg/eh8hKq992Q",
+	CURSEFORGE = "https://www.curseforge.com/wow/addons/magic-eraser",
+	GITHUB = "https://github.com/Gogo1951/Magic-Eraser",
+	DISCORD = "https://discord.gg/eh8hKq992Q",
+	WAGO = "https://addons.wago.io/addons/magic-eraser",
 }
 
 --------------------------------------------------------------------------------
@@ -44,8 +45,9 @@ ns.Links = {
     NotifyChange in the panels.
 ]]
 ns.OPTIONS_REGISTRY = {
-    General = addonName,
-    Diagnostics = addonName .. "_Diagnostics"
+	General = ADDON_NAME,
+	Profiles = ADDON_NAME .. "_Profiles",
+	Diagnostics = ADDON_NAME .. "_Diagnostics",
 }
 
 --------------------------------------------------------------------------------
@@ -58,20 +60,20 @@ ns.OPTIONS_REGISTRY = {
     accessor are built). Keys match the COLORS keys one-to-one.
 ]]
 ns.PALETTE = {
-    TITLE     = "FFD100", -- Gold: Titles, Headers, Section Names
-    INFO      = "00BBFF", -- Blue: Interactions, Toggles, Links, Keybinds
-    BODY      = "CCCCCC", -- Silver: Descriptions, Help Text
-    TEXT      = "FFFFFF", -- White: Messages, Values, Spell Names
-    ON        = "33CC33", -- Green: Enabled / On
-    OFF       = "CC3333", -- Red: Disabled / Off
-    SEPARATOR = "AAAAAA", -- Gray: Separators, Dividers
-    MUTED     = "808080", -- Dark Gray: Meta-data, Version Numbers
+	TITLE = "FFD100", -- Gold: Titles, Headers, Section Names
+	INFO = "00BBFF", -- Blue: Interactions, Toggles, Links, Keybinds
+	BODY = "CCCCCC", -- Silver: Descriptions, Help Text
+	TEXT = "FFFFFF", -- White: Messages, Values, Spell Names
+	ON = "33CC33", -- Green: Enabled / On
+	OFF = "CC3333", -- Red: Disabled / Off
+	SEPARATOR = "AAAAAA", -- Gray: Separators, Dividers
+	MUTED = "808080", -- Dark Gray: Meta-data, Version Numbers
 }
 
 ns.CurrencyColors = {
-    GOLD   = "FFD700",
-    SILVER = "C7C7CF",
-    COPPER = "EDA55F",
+	GOLD = "FFD700",
+	SILVER = "C7C7CF",
+	COPPER = "EDA55F",
 }
 
 --------------------------------------------------------------------------------
@@ -79,10 +81,10 @@ ns.CurrencyColors = {
 --------------------------------------------------------------------------------
 
 ns.ClassReagentExclusions = {
-    SHAMAN = {
-        [17057] = true, -- Shiny Fish Scales
-        [17058] = true, -- Fish Oil
-    },
+	SHAMAN = {
+		[17057] = true, -- Shiny Fish Scales
+		[17058] = true, -- Fish Oil
+	},
 }
 
 --------------------------------------------------------------------------------
@@ -90,8 +92,8 @@ ns.ClassReagentExclusions = {
 --------------------------------------------------------------------------------
 
 ns.DeletePriority = {
-    quest      = 1,
-    gray       = 2,
-    consumable = 3,
-    equipment  = 3,
+	quest = 1,
+	gray = 2,
+	consumable = 3,
+	equipment = 3,
 }
