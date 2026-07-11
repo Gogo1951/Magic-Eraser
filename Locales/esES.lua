@@ -1,5 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("MagicEraser", "esES")
-if not L then return end
+if not L then
+	return
+end
 
 --------------------------------------------------------------------------------
 -- Add-on Identity
@@ -13,7 +15,6 @@ L["ADDON_TITLE"] = "Magic Eraser"
 
 -- System
 L["CHAT_LOADED"] = "Versión %s. Los ajustes (incluyendo la opción para desactivar este mensaje) se pueden encontrar en Opciones > AddOns > Magic Eraser. ¿Disfrutando del add-on? ¡Díselo a un amigo! (="
-L["MESSAGE_RESET"] = "Todos los ajustes han sido restablecidos a sus valores predeterminados."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "No se pueden eliminar objetos durante el combate."
@@ -21,7 +22,6 @@ L["CURSOR_TOO_FAST"] = "¡Más despacio! Estás haciendo clic más rápido de lo
 L["ERASED_ITEM"] = "%s%s%s eliminado."
 L["ERASED_VALUE_SUFFIX"] = ", valor %s"
 L["ERASED_QUEST_SUFFIX"] = ", este objeto estaba asociado a una misión completada"
-L["BAGS_CLEAN"] = "¡Felicidades, tus bolsas están llenas de cosas buenas! Tendrás que eliminar algo manualmente si quieres liberar espacio."
 L["QUEST_ITEM_READY"] = "¡%s ahora se puede eliminar de forma segura!"
 
 -- Auto-Vend
@@ -45,7 +45,8 @@ L["ACTION_CLEAR_IGNORE"] = "Vaciar lista de ignorados"
 L["BAGS_CLEAN_SHORT"] = "¡Felicidades, tus bolsas están llenas de cosas buenas!"
 L["BAGS_CLEAN_HINT"] = "Tendrás que eliminar algo manualmente si quieres liberar espacio."
 L["LOADING_ITEM"] = "Cargando ID: %d"
-L["TOOLTIP_HINT"] = "Ajustes adicionales en Opciones > AddOns > Magic Eraser."
+L["MINIMAP_OPTIONS"] = "Opciones de Magic Eraser"
+L["MINIMAP_OPTIONS_KEYBIND"] = "Mayús + Clic central"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -61,21 +62,17 @@ L["OFF"] = "Desactivado"
 -- Options: Main Panel
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESCRIPTION"] = "Magic Eraser identifica la basura de menor valor en tu inventario y la elimina con un solo clic en el botón del minimapa. Objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris... desaparecidos. Cuando visitas a un comerciante, Auto-venta vende el resto por ti automáticamente."
+L["OPTIONS_DESCRIPTION"] = "Limpia tus bolsas al instante. Los objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris se eliminan con cada clic en el botón del minimapa. Cuando visitas a un comerciante, todo lo que se puede vender se vende automáticamente."
 L["OPTIONS_WELCOME"] = "Habilitar mensaje de bienvenida"
+L["OPTIONS_MINIMAP"] = "Habilitar botón del minimapa"
 L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
 L["OPTIONS_CMD_ERASER"] = "/eraser"
 L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Abre la interfaz de opciones de Magic Eraser."
-L["OPTIONS_RESET"] = "Restablecer"
-L["OPTIONS_RESET_DESCRIPTION"] = "Restaura todas las opciones a su valor predeterminado."
-L["OPTIONS_RESET_IGNORE"] = "Restablecer lista de ignorados"
-L["OPTIONS_RESET_IGNORE_CONFIRM"] = "¿Eliminar todos los objetos de la lista de ignorados de este personaje?"
-L["OPTIONS_RESET_ALL"] = "Restablecer todos los ajustes de Magic Eraser"
-L["OPTIONS_RESET_ALL_CONFIRM"] = "¿Restablecer todos los ajustes de Magic Eraser a sus valores predeterminados? Esto vacía la lista de ignorados y desactiva la auto-venta."
 L["OPTIONS_FEEDBACK"] = "Comentarios y soporte"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"

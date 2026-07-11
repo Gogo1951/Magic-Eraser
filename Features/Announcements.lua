@@ -1,4 +1,4 @@
-local addonName, ns = ...
+local _, ns = ...
 
 --------------------------------------------------------------------------------
 -- Messaging
@@ -13,5 +13,5 @@ local addonName, ns = ...
     Format: |cff[INFO]Add-on Name|r |cff[SEPARATOR]//|r |cff[TEXT]Message|r
 ]]
 function ns:PrintMessage(message)
-    print(ns.BrandPrefix .. ns.GetColor("TEXT") .. message .. "|r")
+	print(ns.BrandPrefix .. ns.GetColor("TEXT") .. message .. "|r")
 end
