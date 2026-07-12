@@ -1,17 +1,15 @@
 local _, ns = ...
+local GetColor = ns.GetColor
 
 --------------------------------------------------------------------------------
 -- Messaging
 --------------------------------------------------------------------------------
 
 --[[
-    Player-only print. Branded colors, no target marker: the add-on name in
-    C_INFO, the // separator in C_SEPARATOR, the body in C_TEXT -- all applied
-    here via ns.BrandPrefix so locale strings stay clean. Magic Eraser sends no
-    cross-player chat, so there is no Announce/whisper path.
-
-    Format: |cff[INFO]Add-on Name|r |cff[SEPARATOR]//|r |cff[TEXT]Message|r
+    Player-only branded print via ns.BrandPrefix (built in Utilities, so locale
+    strings stay clean). Magic Eraser sends no cross-player chat, so there is no
+    Announce/whisper path.
 ]]
 function ns:PrintMessage(message)
-	print(ns.BrandPrefix .. ns.GetColor("TEXT") .. message .. "|r")
+	print(ns.BrandPrefix .. GetColor("TEXT") .. message .. "|r")
 end

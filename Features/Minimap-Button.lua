@@ -25,6 +25,23 @@ local function RefreshTooltip(anchor)
 
 	local item = ns:FindItemToDelete()
 
+	-- Clutter Report (always at the top). With clutter it summarizes the haul;
+	-- with clean bags it carries the congratulations message instead.
+	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
+	if item then
+		local reclaimSlots, reclaimItems, reclaimValue = ns:GetReclaimSummary()
+		local slotsText = GetColor("TEXT") .. format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots)) .. "|r"
+		local itemsText = GetColor("MUTED") .. format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems)) .. "|r"
+		tooltip:AddDoubleLine(
+			slotsText .. " " .. itemsText,
+			GetColor("TEXT") .. format(L["CLUTTER_VALUE"], ns:FormatCurrency(reclaimValue)) .. "|r"
+		)
+	else
+		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
+	end
+
+	tooltip:AddLine(" ")
+
 	if item then
 		-- Lowest Value Item
 		tooltip:AddLine(GetColor("TITLE") .. L["LOWEST_VALUE_ITEM"] .. "|r")
@@ -47,15 +64,13 @@ local function RefreshTooltip(anchor)
 			GetColor("INFO") .. L["ACTION_IGNORE"] .. "|r"
 		)
 	else
-		-- Clean Bags
-		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
-		tooltip:AddLine(" ")
+		-- Replaces the Lowest Value Item section when bags are clean.
 		tooltip:AddLine(GetColor("BODY") .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
 	end
 
 	-- Auto-Vend
 	tooltip:AddLine(" ")
-	local autoVendStatus = (ns.db and ns.db.profile.autoVendEnabled) and (GetColor("ON") .. L["ON"] .. "|r")
+	local autoVendStatus = (ns.db and ns.db.global.autoVendEnabled) and (GetColor("ON") .. L["ON"] .. "|r")
 		or (GetColor("OFF") .. L["OFF"] .. "|r")
 	tooltip:AddDoubleLine(L["AUTO_VEND"], autoVendStatus)
 	tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESCRIPTION"] .. "|r", 1, 1, 1, true)
@@ -65,8 +80,9 @@ local function RefreshTooltip(anchor)
 		GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
 	)
 
-	-- Ignore List
-	local hasIgnoredItems = ns.db and ns.db.profile.ignoreList and next(ns.db.profile.ignoreList) ~= nil
+	-- Ignore List (per character)
+	local ignoreList = ns:GetIgnoreList()
+	local hasIgnoredItems = ignoreList and next(ignoreList) ~= nil
 
 	if hasIgnoredItems then
 		tooltip:AddLine(" ")
@@ -75,7 +91,7 @@ local function RefreshTooltip(anchor)
 		local sortedItems = {}
 		local loadingItems = {}
 
-		for itemId in pairs(ns.db.profile.ignoreList) do
+		for itemId in pairs(ignoreList) do
 			local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(itemId)
 			if name then
 				insert(sortedItems, { name = name, quality = quality, icon = icon })
@@ -163,7 +179,10 @@ if LibDataBroker then
 			end
 
 			if IsShiftKeyDown() and button == "RightButton" then
-				ns.db.profile.autoVendEnabled = not ns.db.profile.autoVendEnabled
+				if not ns.db then
+					return
+				end
+				ns.db.global.autoVendEnabled = not ns.db.global.autoVendEnabled
 				AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
 				RefreshTooltip(self)
 				return

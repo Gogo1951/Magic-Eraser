@@ -9,21 +9,6 @@ ns.AddonTitle = ns.L["ADDON_TITLE"]
 ns.DefaultIcon = "Interface/Icons/inv_misc_bag_07_green"
 
 --------------------------------------------------------------------------------
--- Version
---------------------------------------------------------------------------------
-
-local function GetVersion()
-	local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
-	local version = GetAddOnMetadata(ADDON_NAME, "Version")
-	if not version or version:find("@") then
-		return "Dev"
-	end
-	return version
-end
-
-ns.Version = GetVersion()
-
---------------------------------------------------------------------------------
 -- Links
 --------------------------------------------------------------------------------
 

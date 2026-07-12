@@ -41,12 +41,23 @@ local vendPasses = 0
 local announcedSales = {}
 
 --[[
+    Per-visit totals for summary mode. Accrued for every newly announced sale
+    regardless of the Verbose/Summary setting, so flipping the dropdown
+    mid-visit still produces a correct closing line. Reset in StartVending
+    alongside announcedSales, and flushed in OnMerchantClosed.
+]]
+
+local summaryCount = 0
+local summaryValue = 0
+
+--[[
     Single guard for all Auto-Vend chat output. Disabling Auto-Vend messages
-    silences the deferred-combat notice and the per-item sale lines alike.
+    silences the deferred-combat notice, the per-item sale lines, and the
+    per-visit summary line alike.
 ]]
 
 local function PrintVendMessage(message)
-	if ns.db and ns.db.profile.autoVendMessagesEnabled then
+	if ns.db and ns.db.global.autoVendMessagesEnabled then
 		ns:PrintMessage(message)
 	end
 end
@@ -115,8 +126,12 @@ local function ProcessSellQueue()
 		local saleKey = string.format("%d:%d:%d", item.bag, item.slot, item.itemId)
 		if not announcedSales[saleKey] then
 			announcedSales[saleKey] = true
-			local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
-			PrintVendMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+			summaryCount = summaryCount + item.count
+			summaryValue = summaryValue + item.value
+			if not (ns.db and ns.db.global.autoVendSummaryEnabled) then
+				local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
+				PrintVendMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
+			end
 		end
 	end
 
@@ -194,6 +209,8 @@ local function StartVending()
 	scanRetries = 0
 	vendPasses = 0
 	wipe(announcedSales)
+	summaryCount = 0
+	summaryValue = 0
 	ScanAndVend()
 end
 
@@ -209,7 +226,7 @@ end
 ]]
 
 function ns:OnMerchantShow()
-	if not (ns.db and ns.db.profile.autoVendEnabled) then
+	if not (ns.db and ns.db.global.autoVendEnabled) then
 		return
 	end
 
@@ -231,9 +248,29 @@ function ns:OnMerchantShow()
 end
 
 function ns:OnMerchantClosed()
+	--[[
+	    Summary mode prints one line per merchant visit, so closing the window
+	    is the flush point. Routed through PrintVendMessage so the Enable
+	    Auto-Vend Messages toggle silences it like all other vend output.
+	]]
+	if ns.db and ns.db.global.autoVendSummaryEnabled and summaryCount > 0 then
+		PrintVendMessage(
+			string.format(L["SOLD_SUMMARY"], ns:FormatCommaNumber(summaryCount), ns:FormatCurrency(summaryValue))
+		)
+	end
+	summaryCount = 0
+	summaryValue = 0
+
 	isSelling = false
 	vendPending = false
 	wipe(sellQueue)
+
+	--[[
+	    Bag-space warnings are suppressed while the merchant window is open (see
+	    OnBagUpdateDelayed in Core), since selling churns free slots. Re-check on
+	    close so the warning reflects where the bags landed after this visit.
+	]]
+	ns:CheckBagsFullNudge()
 end
 
 --[[
@@ -248,7 +285,7 @@ function ns:OnCombatEnded()
 	end
 	vendPending = false
 
-	if ns.db and ns.db.profile.autoVendEnabled and MerchantFrame and MerchantFrame:IsShown() then
+	if ns.db and ns.db.global.autoVendEnabled and MerchantFrame and MerchantFrame:IsShown() then
 		StartVending()
 	end
 end

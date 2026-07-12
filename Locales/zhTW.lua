@@ -14,18 +14,28 @@ L["ADDON_TITLE"] = "Magic Eraser"
 --------------------------------------------------------------------------------
 
 -- System
-L["CHAT_LOADED"] = "版本 %s。設定（包含關閉此訊息的選項）可以在 選項 > 插件 > Magic Eraser 中找到。喜歡這個插件嗎？告訴朋友吧！(="
+L["CHAT_LOADED"] =
+	"版本 %s。設定（包含關閉此訊息的選項）可以在 選項 > 插件 > Magic Eraser 中找到。喜歡這個插件嗎？告訴朋友吧！(="
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "戰鬥中無法刪除物品。"
+L["CONFIRM_ERASE"] = "刪除 %s%s？"
+L["BAGS_FULL"] = "你的背包已滿！"
+L["BAGS_FULL_NUDGE"] = "你的背包快滿了。還剩 %d 個空格。"
+L["BAGS_FULL_NUDGE_ONE"] = "你的背包快滿了。還剩 1 個空格。"
 L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物品的速度。"
 L["ERASED_ITEM"] = "已刪除 %s%s%s。"
 L["ERASED_VALUE_SUFFIX"] = "，價值 %s"
 L["ERASED_QUEST_SUFFIX"] = "，該物品關聯的任務已完成"
 L["QUEST_ITEM_READY"] = "%s 現在可以安全刪除了！"
 
+-- Item Tooltip
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser 將刪除此物品。"
+L["TOOLTIP_IGNORED"] = "受你的忽略清單保護。"
+
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，價值 %s。"
+L["SOLD_SUMMARY"] = "已出售 %s 件物品，價值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "戰鬥結束後將執行自動售賣。"
 
 --------------------------------------------------------------------------------
@@ -33,6 +43,10 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "戰鬥結束後將執行自動售賣。"
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "最低價值物品"
+L["CLUTTER_REPORT"] = "雜物報告"
+L["CLUTTER_SLOTS"] = "%s 個格子"
+L["CLUTTER_ITEMS"] = "(%s 件物品)"
+L["CLUTTER_VALUE"] = "價值 %s"
 L["NO_VALUE"] = "無價值"
 L["LEFT_CLICK"] = "左鍵點擊"
 L["RIGHT_CLICK"] = "右鍵點擊"
@@ -62,15 +76,40 @@ L["OFF"] = "已停用"
 -- Options: Main Panel
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESCRIPTION"] = "瞬間清理你的背包。每次點擊小地圖按鈕，都會刪除已完成的任務物品、低等級消耗品、可售賣給商人的白色物品以及灰色垃圾。當你拜訪商人時，所有可出售的物品都會自動售出。"
+L["OPTIONS_DESCRIPTION"] =
+	"瞬間清理你的背包。每次點擊小地圖按鈕，都會刪除已完成的任務物品、低等級消耗品、可售賣給商人的白色物品以及灰色垃圾。當你拜訪商人時，所有可出售的物品都會自動售出。"
 L["OPTIONS_WELCOME"] = "啟用歡迎訊息"
 L["OPTIONS_MINIMAP"] = "啟用小地圖按鈕"
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/指令"
+L["OPTIONS_COMMAND_ERASER"] = "/eraser"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "開啟 Magic Eraser 選項介面。"
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
+L["OPTIONS_TOOLTIP_WARNING"] = "為背包內物品啟用提示"
+
+-- Auto-Vend
 L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為垃圾的物品。"
 L["OPTIONS_ENABLE_AUTO_VEND"] = "啟用自動售賣"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
-L["OPTIONS_COMMANDS_HEADER"] = "/指令"
-L["OPTIONS_CMD_ERASER"] = "/eraser"
-L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "開啟 Magic Eraser 選項介面。"
+L["OPTIONS_AUTO_VEND_VERBOSE"] = "逐項"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "彙總"
+L["OPTIONS_BAGS_FULL_HEADER"] = "背包空間警告"
+L["OPTIONS_BAGS_FULL_NUDGE"] = "啟用背包空間警告"
+L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格閾值"
+
+-- Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "刪除確認"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "在刪除下方勾選的物品類型前先詢問。"
+L["OPTIONS_ENABLE_SAFETY"] = "啟用刪除確認"
+L["OPTIONS_SAFETY_QUEST"] = "對已完成任務的物品"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "對低等級消耗品"
+L["OPTIONS_SAFETY_WHITE"] = "對可售賣的白色物品"
+L["OPTIONS_SAFETY_GRAY"] = "對可售賣的灰色物品"
+
+-- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "回饋與支援"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"

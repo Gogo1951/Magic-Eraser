@@ -14,18 +14,28 @@ L["ADDON_TITLE"] = "Magic Eraser"
 --------------------------------------------------------------------------------
 
 -- System
-L["CHAT_LOADED"] = "Versione %s. Le impostazioni (inclusa l'opzione per disabilitare questo messaggio) si trovano in Opzioni > AddOn > Magic Eraser. Ti piace l'add-on? Dillo a un amico! (="
+L["CHAT_LOADED"] =
+	"Versione %s. Le impostazioni (inclusa l'opzione per disabilitare questo messaggio) si trovano in Opzioni > AddOn > Magic Eraser. Ti piace l'add-on? Dillo a un amico! (="
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Non puoi eliminare oggetti durante il combattimento."
+L["CONFIRM_ERASE"] = "Eliminare %s%s?"
+L["BAGS_FULL"] = "Le tue borse sono piene!"
+L["BAGS_FULL_NUDGE"] = "Le tue borse sono quasi piene. Ti restano %d slot."
+L["BAGS_FULL_NUDGE_ONE"] = "Le tue borse sono quasi piene. Ti resta 1 slot."
 L["CURSOR_TOO_FAST"] = "Piano! Stai cliccando più velocemente di quanto il gioco possa eliminare gli oggetti."
 L["ERASED_ITEM"] = "%s%s%s eliminato."
 L["ERASED_VALUE_SUFFIX"] = ", valore %s"
 L["ERASED_QUEST_SUFFIX"] = ", questo oggetto era associato a una missione completata"
 L["QUEST_ITEM_READY"] = "%s ora può essere eliminato in sicurezza!"
 
+-- Item Tooltip
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser eliminerà questo oggetto."
+L["TOOLTIP_IGNORED"] = "Protetto dalla tua lista ignorati."
+
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s venduto, valore %s."
+L["SOLD_SUMMARY"] = "%s oggetti venduti, valore %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La vendita automatica avverrà al termine del combattimento."
 
 --------------------------------------------------------------------------------
@@ -33,6 +43,10 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "La vendita automatica avverrà al termine del 
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Oggetto di minor valore"
+L["CLUTTER_REPORT"] = "Rapporto spazzatura"
+L["CLUTTER_SLOTS"] = "%s slot"
+L["CLUTTER_ITEMS"] = "(%s oggetti)"
+L["CLUTTER_VALUE"] = "Valore %s"
 L["NO_VALUE"] = "Nessun valore"
 L["LEFT_CLICK"] = "Clic sinistro"
 L["RIGHT_CLICK"] = "Clic destro"
@@ -62,15 +76,41 @@ L["OFF"] = "Disattivato"
 -- Options: Main Panel
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESCRIPTION"] = "Riordina le tue borse all'istante. Oggetti di missioni completate, consumabili di basso livello, oggetti bianchi di qualità dal mercante e spazzatura grigia vengono eliminati a ogni clic sul pulsante della minimappa. Quando visiti un mercante, tutto ciò che è vendibile viene venduto automaticamente."
+L["OPTIONS_DESCRIPTION"] =
+	"Riordina le tue borse all'istante. Oggetti di missioni completate, consumabili di basso livello, oggetti bianchi di qualità dal mercante e spazzatura grigia vengono eliminati a ogni clic sul pulsante della minimappa. Quando visiti un mercante, tutto ciò che è vendibile viene venduto automaticamente."
 L["OPTIONS_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_MINIMAP"] = "Abilita pulsante della minimappa"
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
+L["OPTIONS_COMMAND_ERASER"] = "/eraser"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Apre l'interfaccia delle opzioni di Magic Eraser."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "Descrizioni oggetti"
+L["OPTIONS_TOOLTIP_WARNING"] = "Abilita descrizioni per gli oggetti nelle borse"
+
+-- Auto-Vend
+L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
+	"Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Abilita Vendita automatica"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Abilita messaggi Vendita automatica"
-L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
-L["OPTIONS_CMD_ERASER"] = "/eraser"
-L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Apre l'interfaccia delle opzioni di Magic Eraser."
+L["OPTIONS_AUTO_VEND_VERBOSE"] = "Per oggetto"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Riepilogo"
+L["OPTIONS_BAGS_FULL_HEADER"] = "Avvisi di spazio nelle borse"
+L["OPTIONS_BAGS_FULL_NUDGE"] = "Abilita avvisi di spazio nelle borse"
+L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Soglia di slot liberi"
+
+-- Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Conferme di eliminazione"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Chiedi conferma prima di eliminare i tipi di oggetto selezionati sotto."
+L["OPTIONS_ENABLE_SAFETY"] = "Abilita conferme di eliminazione"
+L["OPTIONS_SAFETY_QUEST"] = "Per gli oggetti di missioni completate"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "Per i consumabili di basso livello"
+L["OPTIONS_SAFETY_WHITE"] = "Per gli oggetti bianchi di qualità dal mercante"
+L["OPTIONS_SAFETY_GRAY"] = "Per gli oggetti grigi di qualità dal mercante"
+
+-- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Feedback e supporto"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
