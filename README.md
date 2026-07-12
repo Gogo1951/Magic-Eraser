@@ -2,7 +2,7 @@
 
 Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically.
 
-<img width="360" alt="Magic Eraser minimap button and tooltip" src="https://github.com/user-attachments/assets/55412aca-a905-4b17-838f-857606c5a3dc" />
+<img width="360" src="https://github.com/user-attachments/assets/8d4393ce-2afd-47b2-a9bc-b67bc4c3b97e" />
 
 ## Features
 
@@ -38,6 +38,8 @@ When two items are worth the same, category priority breaks the tie — complete
 | Middle-click      | Clear the entire Ignore List.               |
 | Shift+Right-click | Toggle Auto-Vend on or off.                 |
 
+<img width="360" src="https://github.com/user-attachments/assets/252363c9-2a5f-4874-b875-09cefd9a0dba" />
+
 ### Auto-Vend
 
 Turn it on and every flagged item sells automatically the moment you open a merchant, with each sale printed to chat alongside its item link and price. Toggle it with Shift+Right-click on the minimap button or from the options panel. It's off by default.
@@ -46,6 +48,8 @@ Turn it on and every flagged item sells automatically the moment you open a merc
 
 Right-click the minimap button to protect whatever item is currently flagged. The list is per-character, so every alt keeps its own. Middle-click the button to wipe the list and start over.
 
+<img width="360" src="https://github.com/user-attachments/assets/0e746c9a-a9f2-4761-ba43-dc13df016c8d" />
+
 ### Quest Alerts
 
 Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert for any quest item that's now safe to erase.
@@ -53,6 +57,8 @@ Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert f
 ### Options
 
 Find the panel at **Options > AddOns > Magic Eraser**. From there you can toggle the welcome message, switch Auto-Vend on or off, reset the Ignore List, or reset every Magic Eraser setting at once.
+
+<img width="800" src="https://github.com/user-attachments/assets/45d78b67-4f45-4dd6-a4ef-0d017f560a20" />
 
 ## Testing & Localization Status
 
