@@ -14,18 +14,28 @@ L["ADDON_TITLE"] = "Magic Eraser"
 --------------------------------------------------------------------------------
 
 -- System
-L["CHAT_LOADED"] = "버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에서 찾을 수 있습니다. 애드온이 마음에 드시나요? 친구에게 알려주세요! (="
+L["CHAT_LOADED"] =
+	"버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에서 찾을 수 있습니다. 애드온이 마음에 드시나요? 친구에게 알려주세요! (="
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "전투 중에는 아이템을 삭제할 수 없습니다."
+L["CONFIRM_ERASE"] = "%s%s 삭제하시겠습니까?"
+L["BAGS_FULL"] = "가방이 가득 찼습니다!"
+L["BAGS_FULL_NUDGE"] = "가방이 거의 찼습니다. %d칸 남았습니다."
+L["BAGS_FULL_NUDGE_ONE"] = "가방이 거의 찼습니다. 1칸 남았습니다."
 L["CURSOR_TOO_FAST"] = "천천히! 게임이 아이템을 삭제하는 것보다 빠르게 클릭하고 있습니다."
 L["ERASED_ITEM"] = "%s%s%s 삭제됨."
 L["ERASED_VALUE_SUFFIX"] = ", 가치 %s"
 L["ERASED_QUEST_SUFFIX"] = ", 이 아이템은 완료된 퀘스트와 관련되어 있었습니다"
 L["QUEST_ITEM_READY"] = "%s 이제 안전하게 삭제할 수 있습니다!"
 
+-- Item Tooltip
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser가 이 아이템을 삭제합니다."
+L["TOOLTIP_IGNORED"] = "무시 목록으로 보호됨."
+
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
+L["SOLD_SUMMARY"] = "%s개 아이템 판매됨, 가치 %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩니다."
 
 --------------------------------------------------------------------------------
@@ -33,6 +43,10 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "최저가 아이템"
+L["CLUTTER_REPORT"] = "잡동사니 보고서"
+L["CLUTTER_SLOTS"] = "%s칸"
+L["CLUTTER_ITEMS"] = "(%s개)"
+L["CLUTTER_VALUE"] = "가치 %s"
 L["NO_VALUE"] = "가치 없음"
 L["LEFT_CLICK"] = "좌클릭"
 L["RIGHT_CLICK"] = "우클릭"
@@ -62,15 +76,41 @@ L["OFF"] = "비활성화"
 -- Options: Main Panel
 --------------------------------------------------------------------------------
 
-L["OPTIONS_DESCRIPTION"] = "가방을 즉시 정리하세요. 완료된 퀘스트 아이템, 저레벨 소모품, 상인 품질의 흰색 아이템, 회색 잡동사니가 미니맵 버튼을 클릭할 때마다 삭제됩니다. 상인을 방문하면 판매 가능한 것은 모두 자동으로 판매됩니다."
+L["OPTIONS_DESCRIPTION"] =
+	"가방을 즉시 정리하세요. 완료된 퀘스트 아이템, 저레벨 소모품, 상인 품질의 흰색 아이템, 회색 잡동사니가 미니맵 버튼을 클릭할 때마다 삭제됩니다. 상인을 방문하면 판매 가능한 것은 모두 자동으로 판매됩니다."
 L["OPTIONS_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_MINIMAP"] = "미니맵 버튼 활성화"
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
+L["OPTIONS_COMMAND_ERASER"] = "/eraser"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Magic Eraser 설정 인터페이스를 엽니다."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "아이템 툴팁"
+L["OPTIONS_TOOLTIP_WARNING"] = "가방 속 아이템 툴팁 활성화"
+
+-- Auto-Vend
+L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
+	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "자동 판매 활성화"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "자동 판매 메시지 활성화"
-L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
-L["OPTIONS_CMD_ERASER"] = "/eraser"
-L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Magic Eraser 설정 인터페이스를 엽니다."
+L["OPTIONS_AUTO_VEND_VERBOSE"] = "항목별"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "요약"
+L["OPTIONS_BAGS_FULL_HEADER"] = "가방 공간 경고"
+L["OPTIONS_BAGS_FULL_NUDGE"] = "가방 공간 경고 활성화"
+L["OPTIONS_BAGS_FULL_THRESHOLD"] = "빈 칸 기준값"
+
+-- Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "삭제 확인"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "아래에서 선택한 아이템 유형을 삭제하기 전에 확인합니다."
+L["OPTIONS_ENABLE_SAFETY"] = "삭제 확인 활성화"
+L["OPTIONS_SAFETY_QUEST"] = "완료된 퀘스트 아이템"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "저레벨 소모품"
+L["OPTIONS_SAFETY_WHITE"] = "상인 품질의 흰색 아이템"
+L["OPTIONS_SAFETY_GRAY"] = "상인 품질의 회색 아이템"
+
+-- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "피드백 및 지원"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"

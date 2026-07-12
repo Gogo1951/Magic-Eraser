@@ -19,14 +19,23 @@ L["CHAT_LOADED"] =
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
+L["CONFIRM_ERASE"] = "Erase %s%s?"
+L["BAGS_FULL"] = "Your bags are full!"
+L["BAGS_FULL_NUDGE"] = "Your bags are nearly full. You have %d slots remaining."
+L["BAGS_FULL_NUDGE_ONE"] = "Your bags are nearly full. You have 1 slot remaining."
 L["CURSOR_TOO_FAST"] = "Slow down! You are clicking faster than the game can erase items."
 L["ERASED_ITEM"] = "Erased %s%s%s."
 L["ERASED_VALUE_SUFFIX"] = ", worth %s"
 L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
 
+-- Item Tooltip
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser will erase this."
+L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
+
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
+L["SOLD_SUMMARY"] = "Sold %s items, worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 --------------------------------------------------------------------------------
@@ -34,6 +43,10 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Lowest Value Item"
+L["CLUTTER_REPORT"] = "Clutter Report"
+L["CLUTTER_SLOTS"] = "%s Slots"
+L["CLUTTER_ITEMS"] = "(%s Items)"
+L["CLUTTER_VALUE"] = "Value %s"
 L["NO_VALUE"] = "No Value"
 L["LEFT_CLICK"] = "Left-Click"
 L["RIGHT_CLICK"] = "Right-Click"
@@ -67,13 +80,37 @@ L["OPTIONS_DESCRIPTION"] =
 	"Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically."
 L["OPTIONS_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_MINIMAP"] = "Enable Mini-map Button"
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
+L["OPTIONS_COMMAND_ERASER"] = "/eraser"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options interface."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
+L["OPTIONS_TOOLTIP_WARNING"] = "Enable Tooltips for In-Bag Items"
+
+-- Auto-Vend
 L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
 	"Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
-L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
-L["OPTIONS_CMD_ERASER"] = "/eraser"
-L["OPTIONS_CMD_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options interface."
+L["OPTIONS_AUTO_VEND_VERBOSE"] = "Line Item"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary"
+L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
+L["OPTIONS_BAGS_FULL_NUDGE"] = "Enable Bag-Space Warnings"
+L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
+
+-- Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Eraser Confirmations"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Ask before erasing the item types you check below."
+L["OPTIONS_ENABLE_SAFETY"] = "Enable Eraser Confirmations"
+L["OPTIONS_SAFETY_QUEST"] = "For Completed Quest Items"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "For Low-level Consumable Items"
+L["OPTIONS_SAFETY_WHITE"] = "For White Vendor-quality Items"
+L["OPTIONS_SAFETY_GRAY"] = "For Gray Vendor-quality Items"
+
+-- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Feedback & Support"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"

@@ -241,9 +241,9 @@ end
 --[[
     Existence and shape checks only: read-only, no side effects, no protected
     calls. Kept one-to-one with the APIs Magic Eraser calls or guards in Core.lua,
-    Auto-Vend.lua, Minimap-Button.lua, and Data/Data.lua. The C_AddOns /
-    GetAddOnMetadata pair is listed modern + legacy so the report shows what each
-    client provides -- the legacy global ships on Era but is gone on TBC.
+    Auto-Vend.lua, and Minimap-Button.lua. The C_AddOns / GetAddOnMetadata pair is
+    listed modern + legacy so the report shows what each client provides -- the
+    legacy global ships on Era but is gone on TBC.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
 	-- { label, testFunction }
@@ -281,6 +281,12 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"C_Container.UseContainerItem",
 		function()
 			return type(C_Container) == "table" and type(C_Container.UseContainerItem) == "function"
+		end,
+	},
+	{
+		"C_Container.GetContainerNumFreeSlots",
+		function()
+			return type(C_Container) == "table" and type(C_Container.GetContainerNumFreeSlots) == "function"
 		end,
 	},
 	{
@@ -332,33 +338,21 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
-		"IsShiftKeyDown",
+		"StaticPopup_Show",
 		function()
-			return type(IsShiftKeyDown) == "function"
+			return type(StaticPopup_Show) == "function"
+		end,
+	},
+	{
+		"TooltipDataProcessor.AddTooltipPostCall",
+		function()
+			return type(TooltipDataProcessor) == "table" and type(TooltipDataProcessor.AddTooltipPostCall) == "function"
 		end,
 	},
 	{
 		"InCombatLockdown",
 		function()
 			return type(InCombatLockdown) == "function"
-		end,
-	},
-	{
-		"UnitLevel",
-		function()
-			return type(UnitLevel) == "function"
-		end,
-	},
-	{
-		"UnitClass",
-		function()
-			return type(UnitClass) == "function"
-		end,
-	},
-	{
-		"PlaySound",
-		function()
-			return type(PlaySound) == "function"
 		end,
 	},
 	{
@@ -383,18 +377,6 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"SetCVar",
 		function()
 			return type(SetCVar) == "function"
-		end,
-	},
-	{
-		"GetBuildInfo",
-		function()
-			return type(GetBuildInfo) == "function"
-		end,
-	},
-	{
-		"GetLocale",
-		function()
-			return type(GetLocale) == "function"
 		end,
 	},
 }
@@ -425,9 +407,9 @@ function ns:BuildEraserContextReport()
 	local _, class = UnitClass("player")
 	lines[#lines + 1] = string.format("Player: %s level %d", tostring(class), UnitLevel("player") or 0)
 	lines[#lines + 1] =
-		string.format("Auto-Vend: %s", (ns.db and ns.db.profile.autoVendEnabled) and "enabled" or "disabled")
+		string.format("Auto-Vend: %s", (ns.db and ns.db.global.autoVendEnabled) and "enabled" or "disabled")
 
-	local ignoreCount = CountKeys(ns.db and ns.db.profile.ignoreList)
+	local ignoreCount = CountKeys(ns:GetIgnoreList())
 	lines[#lines + 1] = string.format("Ignore list: %d %s", ignoreCount, ignoreCount == 1 and "entry" or "entries")
 	lines[#lines + 1] = string.format(
 		"Databases: quest=%d, consumables=%d, equipment=%d",
@@ -533,19 +515,27 @@ end
 
 --[[
     Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
-    player can paste their exact configuration. Each profile's ignoreList is
-    replaced with a length summary rather than printing every itemId (see DATA --
-    large lists are described, not reproduced).
+    player can paste their exact configuration. Each profile's per-character
+    ignoreLists is replaced with a per-character length summary rather than
+    printing every itemId (see DATA -- large lists are described, not reproduced).
 ]]
+local function SummarizeList(entry)
+	local count = CountKeys(entry)
+	return string.format("{ %d %s }", count, count == 1 and "entry" or "entries")
+end
+
 local function SummarizeForDump(value)
 	if type(value) ~= "table" then
 		return value
 	end
 	local copy = {}
 	for key, entry in pairs(value) do
-		if key == "ignoreList" and type(entry) == "table" then
-			local count = CountKeys(entry)
-			copy[key] = string.format("{ %d %s }", count, count == 1 and "entry" or "entries")
+		if key == "ignoreLists" and type(entry) == "table" then
+			local perChar = {}
+			for charKey, list in pairs(entry) do
+				perChar[charKey] = SummarizeList(list)
+			end
+			copy[key] = perChar
 		else
 			copy[key] = SummarizeForDump(entry)
 		end

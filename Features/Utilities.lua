@@ -38,7 +38,7 @@ ns.BrandPrefix = string.format("%s%s|r %s//|r ", COLORS.INFO, ns.AddonTitle, COL
 local format, insert, floor = string.format, table.insert, math.floor
 
 function ns:FormatCommaNumber(number)
-	return tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+	return (tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", ""))
 end
 
 function ns:FormatCurrency(rawValue)

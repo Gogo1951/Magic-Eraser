@@ -16,7 +16,7 @@ Clean up your bags instantly. Completed quest items, low-level consumables, vend
 
 ## Setup
 
-1. **Install** from [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser), [GitHub](https://github.com/Gogo1951/Magic-Eraser), or [Wago](https://addons.wago.io/addons/magic-eraser).
+1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
 2. Log in. The minimap button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Right-click to flip Auto-Vend on.
 4. Done — your bags now keep themselves clean. *"Cleanest bags on the server!"*
@@ -58,11 +58,11 @@ Find the panel at **Options > AddOns > Magic Eraser**. From there you can toggle
 
 🟢 World of Warcraft Classic (🟡 Season of Discovery) // WoW 1.15.8
 
-🟢 Burning Crusade Anniversary // WoW 2.5.5
+🟢 Burning Crusade Anniversary // WoW 2.5.6
 
-🔴 Mists of Pandaria Classic // WoW 5.5.3
+🔴 Mists of Pandaria Classic // WoW 5.5.4
 
-🔴 World of Warcraft // WoW 12.0.5
+🔴 World of Warcraft // WoW 12.1.0
 
 **Localization Status** // Works with all Classic WoW Locales (enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW).
 
