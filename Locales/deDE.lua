@@ -35,7 +35,7 @@ L["TOOLTIP_IGNORED"] = "Durch deine Ignorierliste geschützt."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
-L["SOLD_SUMMARY"] = "%s Gegenstände verkauft, Wert %s."
+L["SOLD_SUMMARY"] = "%s Gegenstände (%s Plätze) verkauft, Wert %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 
 --------------------------------------------------------------------------------
@@ -44,9 +44,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kamp
 
 L["LOWEST_VALUE_ITEM"] = "Gegenstand mit geringstem Wert"
 L["CLUTTER_REPORT"] = "Ramsch-Bericht"
-L["CLUTTER_SLOTS"] = "%s Plätze"
 L["CLUTTER_ITEMS"] = "(%s Gegenstände)"
-L["CLUTTER_VALUE"] = "Wert %s"
+L["CLUTTER_SLOTS"] = "%s Plätze"
 L["NO_VALUE"] = "Kein Wert"
 L["LEFT_CLICK"] = "Linksklick"
 L["RIGHT_CLICK"] = "Rechtsklick"
@@ -67,7 +66,8 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Umschalt + Mittelklick"
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "Auto-Verkauf"
-L["AUTO_VEND_DESCRIPTION"] = "Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind."
+L["AUTO_VEND_DESCRIPTION"] =
+	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["IGNORE_LIST"] = "Ignorierliste"
 L["ON"] = "Aktiviert"
 L["OFF"] = "Deaktiviert"
@@ -91,17 +91,17 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Gegenstands-Tooltips"
 L["OPTIONS_TOOLTIP_WARNING"] = "Tooltips für Gegenstände in Taschen aktivieren"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
-	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Auto-Verkauf-Nachrichten aktivieren"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "Einzelposten"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "Zusammenfassung"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Nur Zusammenfassung"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "Taschenplatz-Warnungen aktivieren"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "Lösch-Bestätigungen"
 L["OPTIONS_SAFETY_DESCRIPTION"] = "Vor dem Löschen der unten markierten Gegenstandstypen nachfragen."
 L["OPTIONS_ENABLE_SAFETY"] = "Lösch-Bestätigungen aktivieren"

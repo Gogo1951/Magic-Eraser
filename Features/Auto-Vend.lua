@@ -43,11 +43,13 @@ local announcedSales = {}
 --[[
     Per-visit totals for summary mode. Accrued for every newly announced sale
     regardless of the Verbose/Summary setting, so flipping the dropdown
-    mid-visit still produces a correct closing line. Reset in StartVending
-    alongside announcedSales, and flushed in OnMerchantClosed.
+    mid-visit still produces a correct closing line. summarySlots counts one per
+    sale (each sold stack empties one bag slot). Reset in StartVending alongside
+    announcedSales, and flushed in OnMerchantClosed.
 ]]
 
 local summaryCount = 0
+local summarySlots = 0
 local summaryValue = 0
 
 --[[
@@ -127,6 +129,7 @@ local function ProcessSellQueue()
 		if not announcedSales[saleKey] then
 			announcedSales[saleKey] = true
 			summaryCount = summaryCount + item.count
+			summarySlots = summarySlots + 1
 			summaryValue = summaryValue + item.value
 			if not (ns.db and ns.db.global.autoVendSummaryEnabled) then
 				local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
@@ -210,6 +213,7 @@ local function StartVending()
 	vendPasses = 0
 	wipe(announcedSales)
 	summaryCount = 0
+	summarySlots = 0
 	summaryValue = 0
 	ScanAndVend()
 end
@@ -249,16 +253,24 @@ end
 
 function ns:OnMerchantClosed()
 	--[[
-	    Summary mode prints one line per merchant visit, so closing the window
-	    is the flush point. Routed through PrintVendMessage so the Enable
-	    Auto-Vend Messages toggle silences it like all other vend output.
+	    The per-visit summary prints one closing line whenever anything sold, in
+	    both message modes: Summary Only shows it alone, and Line Item shows it
+	    beneath the per-item lines. Closing the window is the flush point. Routed
+	    through PrintVendMessage so the Enable Auto-Vend Messages toggle silences
+	    it like all other vend output.
 	]]
-	if ns.db and ns.db.global.autoVendSummaryEnabled and summaryCount > 0 then
+	if summaryCount > 0 then
 		PrintVendMessage(
-			string.format(L["SOLD_SUMMARY"], ns:FormatCommaNumber(summaryCount), ns:FormatCurrency(summaryValue))
+			string.format(
+				L["SOLD_SUMMARY"],
+				ns:FormatCommaNumber(summaryCount),
+				ns:FormatCommaNumber(summarySlots),
+				ns:FormatCurrency(summaryValue)
+			)
 		)
 	end
 	summaryCount = 0
+	summarySlots = 0
 	summaryValue = 0
 
 	isSelling = false

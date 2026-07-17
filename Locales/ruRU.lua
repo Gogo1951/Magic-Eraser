@@ -36,7 +36,7 @@ L["TOOLTIP_IGNORED"] = "Защищён вашим списком игнорир�
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s продан, стоимость %s."
-L["SOLD_SUMMARY"] = "Продано предметов: %s, стоимость %s."
+L["SOLD_SUMMARY"] = "Продано предметов: %s (%s ячеек), стоимость %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Автопродажа сработает после окончания боя."
 
 --------------------------------------------------------------------------------
@@ -45,9 +45,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "Автопродажа сработает по
 
 L["LOWEST_VALUE_ITEM"] = "Предмет наименьшей ценности"
 L["CLUTTER_REPORT"] = "Отчёт о хламе"
-L["CLUTTER_SLOTS"] = "%s ячеек"
 L["CLUTTER_ITEMS"] = "(%s предметов)"
-L["CLUTTER_VALUE"] = "Стоимость %s"
+L["CLUTTER_SLOTS"] = "%s ячеек"
 L["NO_VALUE"] = "Без ценности"
 L["LEFT_CLICK"] = "Левый клик"
 L["RIGHT_CLICK"] = "Правый клик"
@@ -70,7 +69,7 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + Средний клик"
 
 L["AUTO_VEND"] = "Автопродажа"
 L["AUTO_VEND_DESCRIPTION"] =
-	"Автоматически продаёт предметы, отмеченные Magic Eraser как мусор."
+	"Автоматически продаёт предметы, отмеченные Magic Eraser как мусор, при открытии окна торговца."
 L["IGNORE_LIST"] = "Список игнорируемых"
 L["ON"] = "Включено"
 L["OFF"] = "Выключено"
@@ -94,17 +93,17 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Подсказки предметов"
 L["OPTIONS_TOOLTIP_WARNING"] = "Включить подсказки для предметов в сумках"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
-	"Автоматически продаёт предметы, отмеченные Magic Eraser как мусор, при открытии окна торговца."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить автопродажу"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "По предметам"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "Сводка"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Только сводка"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "Включить предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Порог свободных ячеек"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "Подтверждения удаления"
 L["OPTIONS_SAFETY_DESCRIPTION"] =
 	"Спрашивать перед удалением отмеченных ниже типов предметов."

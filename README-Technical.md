@@ -22,9 +22,11 @@ Magic-Eraser/
 │   ├── Consumables.lua         ns.AllowedDeleteConsumables: itemId → true, outgrown food/drink.
 │   └── Equipment.lua           ns.AllowedDeleteEquipment: itemId → true, vendor-quality whites.
 ├── Features/
-│   ├── Core.lua                Event dispatcher, saved-variable lifecycle + migrations, scan/evaluate/rank/erase pipeline, scan cache, ignore list, bag-space warning.
+│   ├── Core.lua                Event dispatcher, saved-variable lifecycle + migrations, ignore list.
 │   ├── Utilities.lua           Derived COLORS table + ns.GetColor, ns.BrandPrefix, currency/number formatting, ns:IsQuestCompleted.
 │   ├── Announcements.lua       ns:PrintMessage — player-only branded print.
+│   ├── Eraser.lua              Scan cache + bounded retry, ns:GetItemDeleteReason, ranking, the safety popup, ns:PerformErase / ns:RunEraser, ns:GetReclaimSummary.
+│   ├── Bag-Warnings.lua        Free-slot counting, ns:IsBagWindowOpen gate, ns:CheckBagsFullNudge, ns:OnMailClosed, ns:SeedBagSpaceBaseline (login baseline).
 │   ├── Auto-Vend.lua           Merchant auto-sell (scan → queue → process, multi-pass). Owns ns:OnMerchantShow / ns:OnMerchantClosed / ns:OnCombatEnded.
 │   ├── Item-Tooltips.lua       ns.SetupTooltipHooks — appends the will-erase / protected line to bag-item tooltips.
 │   ├── Diagnostics.lua         Diagnostic Tools: report builders, event log, API/event probes, taint log. Runtime-only, never persisted, strings never localized.
@@ -72,7 +74,7 @@ Auto-Vend faces combat differently: a merchant frame can be open while in combat
 
 ### Scan → Evaluate → Rank → Erase
 
-The pipeline lives in `Core.lua`:
+The pipeline lives in `Eraser.lua`:
 
 1. **Scan** — `FindItemToDelete` walks bags 0–4 via `C_Container.GetContainerItemInfo`, skipping items on the per-character ignore list and in the class reagent exclusions.
 2. **Evaluate** — `GetItemDeleteReason` returns `"quest"`, `"consumable"`, `"equipment"`, `"gray"`, or `nil`. Quest items must additionally pass `IsQuestCompleted`; consumables must be at least 10 levels below the player.
@@ -83,7 +85,7 @@ The same single scan populates the tooltip's Clutter Report totals (`cachedRecla
 
 ### Item Data Caching
 
-`GetItemInfo` returns `nil` on a cold cache. `FindItemToDelete` (Core) and `ScanAndVend` (Auto-Vend) detect this, call `C_Item.RequestLoadItemDataByID`, and schedule a bounded retry capped at `MAX_SCAN_RETRIES` (5) so an item whose data never resolves cannot loop forever. Core's `ScheduleScanRetry` allows one pending retry (`retryPending`) and uses an `inScanRetry` flag so the attempt counter resets only on a genuinely fresh scan trigger — every fresh trigger flows through `InvalidateCache`, which resets the counter unless a retry is in progress. Auto-Vend resets its counter on `MERCHANT_SHOW`.
+`GetItemInfo` returns `nil` on a cold cache. `FindItemToDelete` (Eraser) and `ScanAndVend` (Auto-Vend) detect this, call `C_Item.RequestLoadItemDataByID`, and schedule a bounded retry capped at `MAX_SCAN_RETRIES` (5) so an item whose data never resolves cannot loop forever. Eraser's `ScheduleScanRetry` allows one pending retry (`retryPending`) and uses an `inScanRetry` flag so the attempt counter resets only on a genuinely fresh scan trigger — every fresh trigger flows through `InvalidateCache`, which resets the counter unless a retry is in progress. Auto-Vend resets its counter on `MERCHANT_SHOW`.
 
 The eraser also keeps a short-lived candidate cache (`cachedItem` + `isCacheValid`) invalidated on bag update, level-up, ignore-list change, deletion, and quest turn-in.
 
@@ -138,9 +140,9 @@ Hooks install from `ns:OnPlayerLogin` via `C_Timer.After(0, ns.SetupTooltipHooks
 
 ## Bag-Space Warnings
 
-An opt-in countdown (`bagsFullNudgeEnabled`, off by default) that warns as free slots drop to or below `bagsFullThreshold`. It never deletes and does not care whether anything is erasable — it is purely a free-space alert. `CountFreeSlots` sums only general bags, excluding specialty bags (quiver/soul/profession) since ordinary loot can't go there. `lastNudgeFree` dedups so the same count is never printed twice in a row, and resets once free climbs back above the threshold so re-entering the warning zone warns again.
+Lives in `Features/Bag-Warnings.lua`. An opt-in countdown (`bagsFullNudgeEnabled`, off by default) that warns as free slots drop to or below `bagsFullThreshold`. It never deletes and does not care whether anything is erasable — it is purely a free-space alert. `CountFreeSlots` sums only general bags, excluding specialty bags (quiver/soul/profession) since ordinary loot can't go there. `lastNudgeFree` dedups so the same count is never printed twice in a row, and resets once free climbs back above the threshold so re-entering the warning zone warns again.
 
-Warnings are suppressed while a merchant or mailbox window is open (`IsBagWindowOpen`, checked live rather than via a tracked flag), because those visits churn bags hardest and any count would be stale the moment the window closes. `OnMerchantClosed` and `OnMailClosed` re-check once on close so the warning reflects where the bags actually landed. The baseline is seeded at login (`lastNudgeFree = CountFreeSlots()`) so the login-time `BAG_UPDATE_DELAYED` burst — the client populating bags on load — is treated as already known and doesn't warn about space you arrived with.
+Warnings are suppressed while a merchant or mailbox window is open (`IsBagWindowOpen`, checked live rather than via a tracked flag), because those visits churn bags hardest and any count would be stale the moment the window closes. `OnMerchantClosed` and `OnMailClosed` re-check once on close so the warning reflects where the bags actually landed. The baseline is seeded at login by `ns:SeedBagSpaceBaseline` (called from Core's `OnPlayerLogin`) so the login-time `BAG_UPDATE_DELAYED` burst — the client populating bags on load — is treated as already known and doesn't warn about space you arrived with.
 
 ## Quest-Item Alerts
 

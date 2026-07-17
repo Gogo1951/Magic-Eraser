@@ -63,14 +63,6 @@ function ns.BuildGeneralOptions()
 			spacerTooltip0 = ns.OptionsSpacer(24),
 			headerTooltip = ns.OptionsHeader(L["OPTIONS_TOOLTIP_HEADER"], 25),
 			spacerTooltip1 = ns.OptionsSpacer(26),
-			--[[
-				A live sample of the tooltip line, composed exactly as
-				Features/Item-Tooltips.lua renders the Ignore List protection notice
-				(ns.BrandPrefix + a colored body), so the panel shows the real line
-				a player sees on a protected item.
-			]]
-			exampleTooltip = ns.OptionsDesc(ns.BrandPrefix .. GetColor("TEXT") .. L["TOOLTIP_IGNORED"] .. "|r", 27),
-			spacerTooltip2 = ns.OptionsSpacer(28),
 			toggleTooltipWarning = {
 				type = "toggle",
 				name = L["OPTIONS_TOOLTIP_WARNING"],
@@ -87,7 +79,7 @@ function ns.BuildGeneralOptions()
 			spacerAutoVend0 = ns.OptionsSpacer(30),
 			headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 31),
 			spacerAutoVend1 = ns.OptionsSpacer(32),
-			descAutoVend = ns.OptionsDesc(L["OPTIONS_AUTO_VEND_DESCRIPTION"], 33),
+			descAutoVend = ns.OptionsDesc(L["AUTO_VEND_DESCRIPTION"], 33),
 			spacerAutoVend2 = ns.OptionsSpacer(34),
 			toggleAutoVend = {
 				type = "toggle",
@@ -143,18 +135,6 @@ function ns.BuildGeneralOptions()
 			spacerBagsFull0 = ns.OptionsSpacer(40),
 			headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 41),
 			spacerBagsFull1 = ns.OptionsSpacer(42),
-			--[[
-			    A live sample of the warning, composed exactly as PrintMessage
-			    renders it (ns.BrandPrefix + TEXT-colored body) so the panel shows
-			    the real chat line. Built from the same BAGS_FULL_NUDGE string the
-			    warning uses -- with a stand-in count of 3 -- so the example tracks
-			    any future wording change instead of drifting from it.
-			]]
-			exampleBagsFull = ns.OptionsDesc(
-				ns.BrandPrefix .. GetColor("TEXT") .. string.format(L["BAGS_FULL_NUDGE"], 3) .. "|r",
-				43
-			),
-			spacerBagsFull2 = ns.OptionsSpacer(44),
 			toggleBagsFullNudge = {
 				type = "toggle",
 				name = L["OPTIONS_BAGS_FULL_NUDGE"],
