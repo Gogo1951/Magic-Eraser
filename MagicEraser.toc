@@ -17,7 +17,7 @@
 ## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
 ## X-License: MIT
 
-## Interface: 11508, 20506
+## Interface: 11509, 20506
 ## Version: @project-version@
 ## X-Curse-Project-ID: 1146812
 ## X-Wago-ID: aNebBj62
@@ -64,6 +64,8 @@ Data/Equipment.lua
 Features/Core.lua
 Features/Utilities.lua
 Features/Announcements.lua
+Features/Eraser.lua
+Features/Bag-Warnings.lua
 Features/Auto-Vend.lua
 Features/Item-Tooltips.lua
 Features/Diagnostics.lua

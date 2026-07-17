@@ -35,7 +35,7 @@ L["TOOLTIP_IGNORED"] = "무시 목록으로 보호됨."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
-L["SOLD_SUMMARY"] = "%s개 아이템 판매됨, 가치 %s."
+L["SOLD_SUMMARY"] = "%s개 아이템 (%s칸) 판매됨, 가치 %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩니다."
 
 --------------------------------------------------------------------------------
@@ -44,9 +44,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩
 
 L["LOWEST_VALUE_ITEM"] = "최저가 아이템"
 L["CLUTTER_REPORT"] = "잡동사니 보고서"
-L["CLUTTER_SLOTS"] = "%s칸"
 L["CLUTTER_ITEMS"] = "(%s개)"
-L["CLUTTER_VALUE"] = "가치 %s"
+L["CLUTTER_SLOTS"] = "%s칸"
 L["NO_VALUE"] = "가치 없음"
 L["LEFT_CLICK"] = "좌클릭"
 L["RIGHT_CLICK"] = "우클릭"
@@ -67,7 +66,8 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + 휠클릭"
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "자동 판매"
-L["AUTO_VEND_DESCRIPTION"] = "Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
+L["AUTO_VEND_DESCRIPTION"] =
+	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["IGNORE_LIST"] = "무시 목록"
 L["ON"] = "활성화"
 L["OFF"] = "비활성화"
@@ -91,17 +91,17 @@ L["OPTIONS_TOOLTIP_HEADER"] = "아이템 툴팁"
 L["OPTIONS_TOOLTIP_WARNING"] = "가방 속 아이템 툴팁 활성화"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
-	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "자동 판매 활성화"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "자동 판매 메시지 활성화"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "항목별"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "요약"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "요약만"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "가방 공간 경고"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "가방 공간 경고 활성화"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "빈 칸 기준값"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "삭제 확인"
 L["OPTIONS_SAFETY_DESCRIPTION"] = "아래에서 선택한 아이템 유형을 삭제하기 전에 확인합니다."
 L["OPTIONS_ENABLE_SAFETY"] = "삭제 확인 활성화"

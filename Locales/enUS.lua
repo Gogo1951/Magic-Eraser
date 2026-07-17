@@ -35,7 +35,7 @@ L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
-L["SOLD_SUMMARY"] = "Sold %s items, worth %s."
+L["SOLD_SUMMARY"] = "Sold %s Items (%s Bag Slots), worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 --------------------------------------------------------------------------------
@@ -44,9 +44,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 L["LOWEST_VALUE_ITEM"] = "Lowest Value Item"
 L["CLUTTER_REPORT"] = "Clutter Report"
-L["CLUTTER_SLOTS"] = "%s Slots"
 L["CLUTTER_ITEMS"] = "(%s Items)"
-L["CLUTTER_VALUE"] = "Value %s"
+L["CLUTTER_SLOTS"] = "%s Bag Slots"
 L["NO_VALUE"] = "No Value"
 L["LEFT_CLICK"] = "Left-Click"
 L["RIGHT_CLICK"] = "Right-Click"
@@ -67,7 +66,7 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + Middle-Click"
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "Auto-Vend"
-L["AUTO_VEND_DESCRIPTION"] = "Automatically sell items flagged as junk by Magic Eraser."
+L["AUTO_VEND_DESCRIPTION"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
 L["IGNORE_LIST"] = "Ignore List"
 L["ON"] = "Enabled"
 L["OFF"] = "Disabled"
@@ -91,24 +90,24 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
 L["OPTIONS_TOOLTIP_WARNING"] = "Enable Tooltips for In-Bag Items"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
-	"Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "Line Item"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "Enable Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "Eraser Confirmations"
 L["OPTIONS_SAFETY_DESCRIPTION"] = "Ask before erasing the item types you check below."
 L["OPTIONS_ENABLE_SAFETY"] = "Enable Eraser Confirmations"
 L["OPTIONS_SAFETY_QUEST"] = "For Completed Quest Items"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "For Low-level Consumable Items"
-L["OPTIONS_SAFETY_WHITE"] = "For White Vendor-quality Items"
-L["OPTIONS_SAFETY_GRAY"] = "For Gray Vendor-quality Items"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "For Low-Level Consumable Items"
+L["OPTIONS_SAFETY_WHITE"] = "For White Vendor-Quality Items"
+L["OPTIONS_SAFETY_GRAY"] = "For Gray Vendor-Quality Items"
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Feedback & Support"

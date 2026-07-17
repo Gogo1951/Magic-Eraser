@@ -35,7 +35,7 @@ L["TOOLTIP_IGNORED"] = "受你的忽略列表保护。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，价值 %s。"
-L["SOLD_SUMMARY"] = "已出售 %s 件物品，价值 %s。"
+L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 个格子），价值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "战斗结束后将执行自动售卖。"
 
 --------------------------------------------------------------------------------
@@ -44,9 +44,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "战斗结束后将执行自动售卖。"
 
 L["LOWEST_VALUE_ITEM"] = "最低价值物品"
 L["CLUTTER_REPORT"] = "杂物报告"
-L["CLUTTER_SLOTS"] = "%s 个格子"
 L["CLUTTER_ITEMS"] = "(%s 件物品)"
-L["CLUTTER_VALUE"] = "价值 %s"
+L["CLUTTER_SLOTS"] = "%s 个格子"
 L["NO_VALUE"] = "无价值"
 L["LEFT_CLICK"] = "左键点击"
 L["RIGHT_CLICK"] = "右键点击"
@@ -67,7 +66,7 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + 中键点击"
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "自动售卖"
-L["AUTO_VEND_DESCRIPTION"] = "自动出售被 Magic Eraser 标记为垃圾的物品。"
+L["AUTO_VEND_DESCRIPTION"] = "打开商人窗口时自动出售被 Magic Eraser 标记为垃圾的物品。"
 L["IGNORE_LIST"] = "忽略列表"
 L["ON"] = "已启用"
 L["OFF"] = "已禁用"
@@ -91,16 +90,17 @@ L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
 L["OPTIONS_TOOLTIP_WARNING"] = "为背包内物品启用提示"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] = "打开商人窗口时自动出售被 Magic Eraser 标记为垃圾的物品。"
 L["OPTIONS_ENABLE_AUTO_VEND"] = "启用自动售卖"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "启用自动售卖消息"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "逐项"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "汇总"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "仅汇总"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空间警告"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "启用背包空间警告"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格阈值"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "删除确认"
 L["OPTIONS_SAFETY_DESCRIPTION"] = "在删除下方勾选的物品类型前先询问。"
 L["OPTIONS_ENABLE_SAFETY"] = "启用删除确认"

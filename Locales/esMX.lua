@@ -35,7 +35,7 @@ L["TOOLTIP_IGNORED"] = "Protegido por tu lista de ignorados."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendido, valor %s."
-L["SOLD_SUMMARY"] = "%s objetos vendidos, valor %s."
+L["SOLD_SUMMARY"] = "%s objetos (%s espacios) vendidos, valor %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-venta venderá los objetos al terminar el combate."
 
 --------------------------------------------------------------------------------
@@ -44,9 +44,8 @@ L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-venta venderá los objetos al terminar el
 
 L["LOWEST_VALUE_ITEM"] = "Objeto de menor valor"
 L["CLUTTER_REPORT"] = "Informe de basura"
-L["CLUTTER_SLOTS"] = "%s espacios"
 L["CLUTTER_ITEMS"] = "(%s objetos)"
-L["CLUTTER_VALUE"] = "Valor %s"
+L["CLUTTER_SLOTS"] = "%s espacios"
 L["NO_VALUE"] = "Sin valor"
 L["LEFT_CLICK"] = "Clic izquierdo"
 L["RIGHT_CLICK"] = "Clic derecho"
@@ -67,7 +66,8 @@ L["MINIMAP_OPTIONS_KEYBIND"] = "Mayús + Clic central"
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "Auto-venta"
-L["AUTO_VEND_DESCRIPTION"] = "Vende automáticamente los objetos marcados como basura por Magic Eraser."
+L["AUTO_VEND_DESCRIPTION"] =
+	"Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
 L["IGNORE_LIST"] = "Lista de ignorados"
 L["ON"] = "Activado"
 L["OFF"] = "Desactivado"
@@ -91,17 +91,17 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Descripciones de objetos"
 L["OPTIONS_TOOLTIP_WARNING"] = "Habilitar descripciones para objetos en las bolsas"
 
 -- Auto-Vend
-L["OPTIONS_AUTO_VEND_DESCRIPTION"] =
-	"Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"
 L["OPTIONS_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "Por objeto"
-L["OPTIONS_AUTO_VEND_SUMMARY"] = "Resumen"
+L["OPTIONS_AUTO_VEND_SUMMARY"] = "Solo resumen"
+
+-- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_NUDGE"] = "Habilitar avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Umbral de espacios libres"
 
--- Eraser Confirmation
+-- Eraser Confirmations
 L["OPTIONS_SAFETY_HEADER"] = "Confirmaciones de eliminación"
 L["OPTIONS_SAFETY_DESCRIPTION"] = "Preguntar antes de eliminar los tipos de objeto que marques abajo."
 L["OPTIONS_ENABLE_SAFETY"] = "Habilitar confirmaciones de eliminación"

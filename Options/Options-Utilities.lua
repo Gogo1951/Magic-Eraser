@@ -23,6 +23,12 @@ function ns.OptionsSpacer(order)
 	return { type = "description", name = " ", order = order }
 end
 
-function ns.OptionsSubHeader(text, order)
-	return { type = "description", name = "\n" .. GetColor("TITLE") .. text .. "|r", fontSize = "medium", order = order }
+function ns.OptionsSubHeader(text, order, hidden)
+	return {
+		type = "description",
+		name = "\n" .. GetColor("TITLE") .. text .. "|r",
+		fontSize = "medium",
+		order = order,
+		hidden = hidden,
+	}
 end
