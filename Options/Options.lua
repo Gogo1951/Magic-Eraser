@@ -19,7 +19,12 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 function ns:RegisterOptionsPanels()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.General, ns.BuildGeneralOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
+	-- AddToBlizOptions returns (frame, categoryID). The ID is what Settings.OpenToCategory
+	-- expects; relying on the display name matching the ID is fragile -- the library only
+	-- aliases the ID to the name on clients without C_SettingsUtil.OpenSettingsPanel (Era),
+	-- so on TBC Anniversary a name-based lookup returns nil. Capture the real references here.
+	ns.GeneralPanel, ns.GeneralCategoryID =
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
@@ -34,16 +39,14 @@ end
 --------------------------------------------------------------------------------
 
 function ns:OpenOptionsPanel()
-	if Settings and Settings.GetCategory then
-		local category = Settings.GetCategory(ns.AddonTitle)
-		if category then
-			Settings.OpenToCategory(category.ID)
-			return
-		end
+	if Settings and Settings.OpenToCategory and ns.GeneralCategoryID then
+		Settings.OpenToCategory(ns.GeneralCategoryID)
+		return
 	end
-	if InterfaceOptionsFrame_OpenToCategory then
-		InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
-		InterfaceOptionsFrame_OpenToCategory(ns.AddonTitle)
+	if InterfaceOptionsFrame_OpenToCategory and ns.GeneralPanel then
+		InterfaceOptionsFrame_OpenToCategory(ns.GeneralPanel)
+		-- Called twice for Classic compatibility.
+		InterfaceOptionsFrame_OpenToCategory(ns.GeneralPanel)
 		return
 	end
 	AceConfigDialog:Open(ns.OPTIONS_REGISTRY.General)
