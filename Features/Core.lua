@@ -99,6 +99,7 @@ end
 ]]
 ns.EVENT_NAMES = {
 	"PLAYER_LOGIN",
+	"PLAYER_ENTERING_WORLD",
 	"PLAYER_LEVEL_UP",
 	"BAG_UPDATE_DELAYED",
 	"QUEST_TURNED_IN",
@@ -110,6 +111,7 @@ ns.EVENT_NAMES = {
 
 local EVENT_HANDLERS = {
 	PLAYER_LOGIN = "OnPlayerLogin",
+	PLAYER_ENTERING_WORLD = "OnEnteringWorld",
 	PLAYER_LEVEL_UP = "OnPlayerLevelUp",
 	BAG_UPDATE_DELAYED = "OnBagUpdateDelayed",
 	QUEST_TURNED_IN = "OnQuestTurnedIn",
