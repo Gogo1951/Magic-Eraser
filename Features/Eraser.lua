@@ -66,6 +66,17 @@ local function ScheduleScanRetry()
 end
 
 --------------------------------------------------------------------------------
+-- Quest State
+--------------------------------------------------------------------------------
+
+function ns:IsQuestCompleted(questId)
+	if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
+		return C_QuestLog.IsQuestFlaggedCompleted(questId)
+	end
+	return false
+end
+
+--------------------------------------------------------------------------------
 -- Scanning & Evaluation
 --------------------------------------------------------------------------------
 
@@ -257,16 +268,21 @@ function ns:PerformErase(item)
 
 		local stackString = (item.count > 1) and format(" x%d", item.count) or ""
 
-		local valueString
+		--[[
+		    One complete sentence per outcome rather than a stem plus a glued-on
+		    clause, so a translation can place the "worth" and "from a quest"
+		    wording wherever its language wants it.
+		]]
+		local message
 		if item.deleteReason == "quest" then
-			valueString = L["ERASED_QUEST_SUFFIX"]
+			message = format(L["ERASED_ITEM_FROM_QUEST"], item.link, stackString)
 		elseif item.value > 0 then
-			valueString = format(L["ERASED_VALUE_SUFFIX"], ns:FormatCurrency(item.value))
+			message = format(L["ERASED_ITEM_WITH_VALUE"], item.link, stackString, ns:FormatCurrency(item.value))
 		else
-			valueString = ""
+			message = format(L["ERASED_ITEM"], item.link, stackString)
 		end
 
-		self:PrintMessage(format(L["ERASED_ITEM"], item.link, stackString, valueString))
+		self:PrintMessage(message)
 
 		ns:InvalidateCache()
 		C_Timer.After(0.2, function()
@@ -280,6 +296,44 @@ function ns:PerformErase(item)
 
 	ns:RefreshDisplay()
 end
+
+--------------------------------------------------------------------------------
+-- Quest-Item Alerts
+--------------------------------------------------------------------------------
+
+function ns:OnQuestTurnedIn(questId)
+	C_Timer.After(1.0, function()
+		local questItemDatabase = ns.AllowedDeleteQuestItems or {}
+		local alertedItems = {}
+
+		for bag = 0, 4 do
+			local slotCount = GetContainerNumSlots(bag) or 0
+			for slot = 1, slotCount do
+				local itemInfo = GetContainerItemInfo(bag, slot)
+				if itemInfo then
+					local itemId = itemInfo.itemID
+
+					if questItemDatabase[itemId] and not alertedItems[itemId] then
+						for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
+							if trackedQuestId == questId then
+								ns:PrintMessage(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
+								alertedItems[itemId] = true
+								break
+							end
+						end
+					end
+				end
+			end
+		end
+
+		ns:InvalidateCache()
+		ns:RefreshDisplay()
+	end)
+end
+
+--------------------------------------------------------------------------------
+-- Erasing
+--------------------------------------------------------------------------------
 
 function ns:RunEraser()
 	if InCombatLockdown() then

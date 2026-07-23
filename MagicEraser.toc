@@ -23,7 +23,7 @@
 ## X-Wago-ID: aNebBj62
 
 ## SavedVariables: MagicEraserDB
-# MIGRATION (remove after 2026-10-08): drop MagicEraserCharDB once the AceDB migration window closes
+# MIGRATION (remove after 2026-08-21): drop MagicEraserCharDB once the AceDB migration window closes
 ## SavedVariablesPerCharacter: MagicEraserCharDB
 
 # Includes
@@ -64,14 +64,17 @@ Data/Equipment.lua
 Features/Core.lua
 Features/Utilities.lua
 Features/Announcements.lua
+Features/Ignore-List.lua
 Features/Eraser.lua
 Features/Bag-Warnings.lua
+Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
 Features/Item-Tooltips.lua
 Features/Diagnostics.lua
 Features/Minimap-Button.lua
 Options/Options-Utilities.lua
 Options/Options-General.lua
+Options/Options-Ignore-List.lua
 Options/Options-Profiles.lua
 Options/Options-Diagnostics.lua
 Options/Options.lua

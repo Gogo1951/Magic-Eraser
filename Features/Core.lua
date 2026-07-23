@@ -5,9 +5,7 @@ local L = ns.L
 -- Locals
 --------------------------------------------------------------------------------
 
-local GetContainerNumSlots = C_Container.GetContainerNumSlots
-local GetContainerItemInfo = C_Container.GetContainerItemInfo
-local format, ipairs = string.format, ipairs
+local ipairs = ipairs
 
 --------------------------------------------------------------------------------
 -- Version
@@ -23,66 +21,6 @@ local function GetVersion()
 end
 
 ns.Version = GetVersion()
-
---------------------------------------------------------------------------------
--- Ignore List
---------------------------------------------------------------------------------
-
---[[
-    The ignore list is the one per-character setting. It lives inside the profile
-    but keyed by character (ns.db.keys.char = "Name - Realm"), so each toon has
-    its own list within whatever profile is active, and switching profiles swaps
-    the whole set. The bucket is created on first use, so a brand-new toon simply
-    starts empty. Returns nil only before the database exists.
-]]
-function ns:GetIgnoreList()
-	if not ns.db then
-		return nil
-	end
-	local ignoreLists = ns.db.profile.ignoreLists
-	if type(ignoreLists) ~= "table" then
-		ignoreLists = {}
-		ns.db.profile.ignoreLists = ignoreLists
-	end
-	local charKey = ns.db.keys.char
-	local list = ignoreLists[charKey]
-	if not list then
-		list = {}
-		ignoreLists[charKey] = list
-	end
-	return list
-end
-
-function ns:IsIgnored(itemId)
-	local ignoreList = ns:GetIgnoreList()
-	return ignoreList and ignoreList[itemId]
-end
-
-function ns:ToggleIgnore(itemId)
-	if not itemId then
-		return
-	end
-	local ignoreList = ns:GetIgnoreList()
-	if not ignoreList then
-		return
-	end
-	if ignoreList[itemId] then
-		ignoreList[itemId] = nil
-	else
-		ignoreList[itemId] = true
-	end
-	ns:InvalidateCache()
-	ns:RefreshDisplay()
-end
-
-function ns:ClearIgnoreList()
-	local ignoreList = ns:GetIgnoreList()
-	if ignoreList then
-		wipe(ignoreList)
-	end
-	ns:InvalidateCache()
-	ns:RefreshDisplay()
-end
 
 --------------------------------------------------------------------------------
 -- Events
@@ -106,6 +44,8 @@ ns.EVENT_NAMES = {
 	"MERCHANT_SHOW",
 	"MERCHANT_CLOSED",
 	"MAIL_CLOSED",
+	"BANKFRAME_OPENED",
+	"BANKFRAME_CLOSED",
 	"PLAYER_REGEN_ENABLED",
 }
 
@@ -118,6 +58,8 @@ local EVENT_HANDLERS = {
 	MERCHANT_SHOW = "OnMerchantShow",
 	MERCHANT_CLOSED = "OnMerchantClosed",
 	MAIL_CLOSED = "OnMailClosed",
+	BANKFRAME_OPENED = "OnBankOpened",
+	BANKFRAME_CLOSED = "OnBankClosed",
 	PLAYER_REGEN_ENABLED = "OnCombatEnded",
 }
 
@@ -125,7 +67,7 @@ local updatePending = false
 
 function ns:OnPlayerLogin()
 	--[[
-        MIGRATION (remove after 2026-10-08): the pre-AceDB build kept two raw
+        MIGRATION (remove after 2026-08-21): the pre-AceDB build kept two raw
         saved tables -- account-wide MagicEraserDB (showWelcome, minimap, and, on
         the oldest builds, an account-level autoVendEnabled) and per-character
         MagicEraserCharDB (autoVendEnabled, autoVendMessagesEnabled, ignoreList).
@@ -167,7 +109,7 @@ function ns:OnPlayerLogin()
 		legacyAutoVend = legacyAccount.autoVendEnabled
 	end
 
-	ns.db = LibStub("AceDB-3.0"):New("MagicEraserDB", ns.DATABASE_DEFAULTS, true)
+	ns.db = LibStub("AceDB-3.0"):New("MagicEraserDB", ns.DATABASE_DEFAULTS)
 
 	local global = ns.db.global
 	local profile = ns.db.profile
@@ -175,9 +117,9 @@ function ns:OnPlayerLogin()
 
 	--[[
 	    Apply the captured pre-AceDB values to their current homes: settings are
-	    account-wide now, so they go to global; the minimap seed goes to
-	    global.minimap; the per-character ignore list is folded in by the
-	    per-toon seeding below.
+	    account-wide now, so they go to global, and the minimap seed goes to
+	    global.minimap. The per-character ignore list is folded in by the
+	    per-character profile migration below.
 	]]
 	if legacyShowWelcome ~= nil then
 		global.showWelcome = legacyShowWelcome
@@ -201,7 +143,7 @@ function ns:OnPlayerLogin()
 	MagicEraserCharDB = nil
 
 	--[[
-	    MIGRATION (remove after 2026-10-11): the first AceDB build kept every
+	    MIGRATION (remove after 2026-08-21): the first AceDB build kept every
 	    setting on one shared "Default" profile. They are account-wide now, so
 	    move any a user actually changed up to global. These keys are no longer in
 	    the profile defaults, so a non-nil raw read means the user set it; clear it
@@ -216,6 +158,7 @@ function ns:OnPlayerLogin()
 		"autoVendSummaryEnabled",
 		"bagsFullNudgeEnabled",
 		"bagsFullThreshold",
+		"bankRetrievalEnabled",
 		"safetyEnabled",
 		"safetyQuest",
 		"safetyConsumable",
@@ -229,42 +172,57 @@ function ns:OnPlayerLogin()
 		end
 	end
 
-	if type(profile.ignoreLists) ~= "table" then
-		profile.ignoreLists = {}
-	end
-
 	--[[
-	    ONE-TIME RESET (remove after 2026-10-11): the first AceDB builds put every
-	    toon on one shared "Default" profile, merging all their ignore lists into a
-	    single flat profile.ignoreList. That pollution can't be unmerged, so the
-	    mere presence of that flat list marks an affected profile -- zero every
-	    per-character bucket in it (including any that an earlier build already
-	    seeded from the shared pool) and delete the flat list. Self-disabling once
-	    the flat list is gone, and scoped to the one profile that carried it. A
-	    pre-AceDB install never had a flat list, so it skips this entirely.
+	    MIGRATION (remove after 2026-08-21): Magic Eraser moved from one shared
+	    "Default" profile -- every toon's ignore list keyed by ns.db.keys.char
+	    inside it -- to a real per-character AceDB profile per toon (AceDB:New above
+	    now omits the shared-Default flag). Put THIS toon on its own profile with a
+	    flat profile.ignoreList, then drop the obsolete keyed table. Runs once per
+	    toon; a no-op afterward.
+
+	    The first AceDB builds merged every toon's list into one flat
+	    Default.ignoreList and seeded the keyed buckets from that merged pool, so
+	    both are unreliable; that flat list still sitting on the old "Default" is
+	    the marker to discard the keyed buckets and fall back to the pre-AceDB
+	    per-toon list captured above.
 	]]
-	if type(profile.ignoreList) == "table" then
-		wipe(profile.ignoreLists)
+	local gathered = {}
+	if
+		ns.db:GetCurrentProfile() == "Default"
+		and type(profile.ignoreList) == "table"
+		and next(profile.ignoreList) ~= nil
+	then
+		profile.ignoreLists = nil
 		profile.ignoreList = nil
 	end
-
-	--[[
-	    MIGRATION (remove after 2026-10-11): seed this toon's bucket once, from its
-	    OWN pre-AceDB per-character list (MagicEraserCharDB) only -- one character's
-	    data, never the shared pool. A toon with no legacy list starts empty.
-	]]
-	if profile.ignoreLists[charKey] == nil then
-		local seeded = {}
-		if legacyIgnoreList then
-			for itemId in pairs(legacyIgnoreList) do
-				seeded[itemId] = true
-			end
+	if type(profile.ignoreLists) == "table" and type(profile.ignoreLists[charKey]) == "table" then
+		for itemId in pairs(profile.ignoreLists[charKey]) do
+			gathered[itemId] = true
 		end
-		profile.ignoreLists[charKey] = seeded
+		profile.ignoreLists[charKey] = nil
+	end
+	if legacyIgnoreList then
+		for itemId in pairs(legacyIgnoreList) do
+			gathered[itemId] = true
+		end
 	end
 
+	if ns.db:GetCurrentProfile() ~= charKey then
+		ns.db:SetProfile(charKey)
+	end
+
+	local ignoreList = ns.db.profile.ignoreList
+	if type(ignoreList) ~= "table" then
+		ignoreList = {}
+		ns.db.profile.ignoreList = ignoreList
+	end
+	for itemId in pairs(gathered) do
+		ignoreList[itemId] = true
+	end
+	ns.db.profile.ignoreLists = nil
+
 	--[[
-	    MIGRATION (remove after 2026-10-11): the Verbose/Summary rollout forces
+	    MIGRATION (remove after 2026-08-21): the Verbose/Summary rollout forces
 	    Auto-Vend messages on once for everyone -- including users who had turned
 	    them off under the old per-item behavior. The marker has no default entry,
 	    so AceDB never strips it and the reset cannot re-fire. Messages are
@@ -276,7 +234,7 @@ function ns:OnPlayerLogin()
 	end
 
 	--[[
-	    CLEANUP (remove after 2026-10-11): the removed Delete Macro feature left an
+	    MIGRATION (remove after 2026-08-21): the removed Delete Macro feature left an
 	    account-wide "- Eraser" macro on anyone who had enabled it. Delete that
 	    stray once so no broken macro lingers. Guarded on combat (DeleteMacro is
 	    protected) and marked done only after a real pass, so login-in-combat
@@ -394,45 +352,15 @@ function ns:OnBagUpdateDelayed()
 
 			--[[
                 Bag-space warning counts down (4, 3, 2, 1...) as the bags fill,
-                but only when no merchant or mailbox window is open -- see
-                CheckBagsFullNudge and OnMerchantClosed/OnMailClosed, which
-                defer the check to when the window closes.
+                but only when no merchant, mailbox or bank window is open -- see
+                CheckBagsFullNudge and OnMerchantClosed/OnMailClosed/OnBankClosed,
+                which defer the check to when the window closes.
             ]]
 			if not ns:IsBagWindowOpen() then
 				ns:CheckBagsFullNudge()
 			end
 		end)
 	end
-end
-
-function ns:OnQuestTurnedIn(questId)
-	C_Timer.After(1.0, function()
-		local questItemDatabase = ns.AllowedDeleteQuestItems or {}
-		local alertedItems = {}
-
-		for bag = 0, 4 do
-			local slotCount = GetContainerNumSlots(bag) or 0
-			for slot = 1, slotCount do
-				local itemInfo = GetContainerItemInfo(bag, slot)
-				if itemInfo then
-					local itemId = itemInfo.itemID
-
-					if questItemDatabase[itemId] and not alertedItems[itemId] then
-						for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
-							if trackedQuestId == questId then
-								ns:PrintMessage(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
-								alertedItems[itemId] = true
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-
-		ns:InvalidateCache()
-		ns:RefreshDisplay()
-	end)
 end
 
 --[[

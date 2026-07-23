@@ -24,8 +24,8 @@ local GetColor = ns.GetColor
 
     Layout mirrors the add-on's chat output -- ns.BrandPrefix ("Magic Eraser //")
     plus a colored body -- under a one-line spacer, so it reads as a distinct
-    footer near the bottom of the tooltip. Green (ON) for protected, red (OFF)
-    for will-erase.
+    footer near the bottom of the tooltip. White (TEXT) for the protected
+    notice, red (OFF) for the will-erase warning.
 ]]
 --[[
     True only when the tooltip is anchored to one of the player's carried bag

@@ -23,20 +23,26 @@ L["CONFIRM_ERASE"] = "Erase %s%s?"
 L["BAGS_FULL"] = "Your bags are full!"
 L["BAGS_FULL_NUDGE"] = "Your bags are nearly full. You have %d slots remaining."
 L["BAGS_FULL_NUDGE_ONE"] = "Your bags are nearly full. You have 1 slot remaining."
-L["CURSOR_TOO_FAST"] = "Slow down! You are clicking faster than the game can erase items."
-L["ERASED_ITEM"] = "Erased %s%s%s."
-L["ERASED_VALUE_SUFFIX"] = ", worth %s"
-L["ERASED_QUEST_SUFFIX"] = ", this item was associated with a quest you have completed"
+L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can erase items."
+L["ERASED_ITEM"] = "Erased %s%s."
+L["ERASED_ITEM_WITH_VALUE"] = "Erased %s%s, worth %s."
+L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, from a quest you have completed."
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
-
--- Item Tooltip
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser will erase this."
-L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
 L["SOLD_SUMMARY"] = "Sold %s Items (%s Bag Slots), worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
+
+-- Bank Retrieval
+L["BANK_RETRIEVED"] = "Pulled %s Items (%s Bag Slots) out of your bank, worth %s."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser will erase this."
+L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -77,27 +83,36 @@ L["OFF"] = "Disabled"
 
 L["OPTIONS_DESCRIPTION"] =
 	"Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically."
-L["OPTIONS_WELCOME"] = "Enable Welcome Message"
-L["OPTIONS_MINIMAP"] = "Enable Mini-map Button"
+L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
+L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
 L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options interface."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
-L["OPTIONS_TOOLTIP_WARNING"] = "Enable Tooltips for In-Bag Items"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options panel."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
-L["OPTIONS_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
+L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "Line Item"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
 
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Automatically pull items flagged as junk by Magic Eraser out of your bank when you open it, so you can erase them."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Add a line to an item's tooltip in your bags when Magic Eraser would erase it, or when your Ignore List is protecting it."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltips for In-Bag Items"
+
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
-L["OPTIONS_BAGS_FULL_NUDGE"] = "Enable Bag-Space Warnings"
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat as your free bag slots drop to the threshold you set below."
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Enable Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
 
 -- Eraser Confirmations
@@ -115,3 +130,19 @@ L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Ignore List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_IGNORE_DESCRIPTION"] =
+	"Items on an ignore list are never erased and never sold. The Global list protects an item on every character, and a character's own list protects it on that character only."
+L["OPTIONS_IGNORE_GLOBAL"] = "Global"
+L["OPTIONS_IGNORE_ADD_ID"] = "Add by Item ID"
+L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
+	"Type an item ID and press Enter. You can also shift-click an item link in chat to drop it in here."
+L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Type an item ID, or shift-click an item link in chat."
+L["OPTIONS_IGNORE_PROMOTE"] = "Global"
+L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so it is protected on every character."
+L["OPTIONS_IGNORE_REMOVE"] = "Remove"
+L["OPTIONS_IGNORE_EMPTY"] = "This list is empty."

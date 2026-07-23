@@ -5,12 +5,7 @@ local L = ns.L
 -- Locals
 --------------------------------------------------------------------------------
 
-local GetContainerNumFreeSlots = C_Container.GetContainerNumFreeSlots
-local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetTime = GetTime
-
--- Blizzard's count of equippable bag slots; bag 0 is the backpack.
-local BAG_SLOTS = NUM_BAG_SLOTS or 4
 
 --------------------------------------------------------------------------------
 -- Bag-Space Warnings
@@ -33,64 +28,28 @@ local lastNudgeFree = nil
 --[[
     Bag-space warnings stay quiet until GetTime() reaches this deadline, set on
     every PLAYER_ENTERING_WORLD (see ns:OnEnteringWorld). Secondary to the
-    unknown-vs-zero guard in CountFreeSlots: it simply keeps the check idle for a
-    moment after each loading screen, while the client repopulates the containers.
+    unknown-vs-zero guard in ns:CountFreeBagSlots: it simply keeps the check idle
+    for a moment after each loading screen, while the client repopulates the
+    containers.
 ]]
 local BAG_SETTLE_SECONDS = 2
 local bagWarningsHeldUntil = 0
 
 --[[
-    Free general-purpose bag slots, or nil when the container API has no data yet.
-
-    Specialty bags -- soul bags, quivers, ammo pouches, profession bags -- are
-    excluded: ordinary loot can't go there, so their free slots are useless to
-    this warning. GogoLoot's Speedy-Loot budget is deliberately conservative in
-    exactly the same way.
-
-    The nil return is what fixes the reported bug. The shipped version summed
-    "(bagFree or 0)" for every bag, which silently turned "the API has no data
-    yet" into "this bag has zero free slots". Mid-loading-screen every container
-    reads nil, so the total came out 0 and printed "Your bags are full!" to a
-    player with 41 slots open -- and it repeated on every zone, because the
-    correct read in between (free > threshold) re-armed the dedup each time.
-    Reporting "unknown" instead lets the caller skip rather than cry full.
-
-    Readiness is judged from the data itself: the backpack always has slots and
-    always answers once the inventory is loaded, so a zero slot total, or no bag
-    answering at all, means nothing is loaded yet.
-]]
-local function CountFreeSlots()
-	local free, totalSlots, answered = 0, 0, 0
-	for bag = 0, BAG_SLOTS do
-		totalSlots = totalSlots + (GetContainerNumSlots(bag) or 0)
-
-		local bagFree, bagFamily = GetContainerNumFreeSlots(bag)
-		-- 0 is truthy in Lua, so this rejects only a missing reading, never a full bag.
-		if bagFree then
-			answered = answered + 1
-			if bagFamily == 0 or bagFamily == nil then
-				free = free + bagFree
-			end
-		end
-	end
-
-	if totalSlots == 0 or answered == 0 then
-		return nil
-	end
-	return free
-end
-
---[[
-    A merchant or mailbox visit is exactly when bags churn hardest -- selling
-    junk frees slots, buying and looting mail fills them -- so the countdown
-    would fire a burst of noise that is stale the moment the window closes. We
-    suppress it while either window is open (checked live rather than via a
-    tracked flag so it stays correct even if a SHOW event is missed) and re-check
-    once on close, so the warning reflects where the bags actually landed. Core's
+    A merchant, mailbox or bank visit is exactly when bags churn hardest --
+    selling junk and pulling items out of the bank move whole stacks, buying and
+    looting mail fill slots back up -- so the countdown would fire a burst of
+    noise that is stale the moment the window closes. We suppress it while any of
+    those windows is open (checked live rather than via a tracked flag so it
+    stays correct even if a SHOW event is missed) and re-check once on close, so
+    the warning reflects where the bags actually landed. Core's
     OnBagUpdateDelayed gates the nudge on this, so it is exposed on ns.
 ]]
 function ns:IsBagWindowOpen()
-	return (MerchantFrame and MerchantFrame:IsShown()) or (MailFrame and MailFrame:IsShown()) or false
+	return (MerchantFrame and MerchantFrame:IsShown())
+		or (MailFrame and MailFrame:IsShown())
+		or (BankFrame and BankFrame:IsShown())
+		or false
 end
 
 --[[
@@ -101,7 +60,7 @@ end
     baseline armed, which is the same state we start in.
 ]]
 function ns:SeedBagSpaceBaseline()
-	lastNudgeFree = CountFreeSlots()
+	lastNudgeFree = ns:CountFreeBagSlots()
 end
 
 --[[
@@ -117,11 +76,11 @@ end
 --[[
     Bag-space warning. Purely a free-space alert -- it never deletes and does not
     care whether there is anything erasable. Shared by the debounced bag update
-    (which gates it on no bag window being open) and the merchant/mailbox close
-    handlers (which fire it once the churn has settled). The lastNudgeFree dedup
-    means the close-fire only prints when the count actually changed from the
-    last line shown, so opening and closing a window without touching the bags
-    stays quiet.
+    (which gates it on no bag window being open) and the merchant, mailbox and
+    bank close handlers (which fire it once the churn has settled). The
+    lastNudgeFree dedup means the close-fire only prints when the count actually
+    changed from the last line shown, so opening and closing a window without
+    touching the bags stays quiet.
 ]]
 function ns:CheckBagsFullNudge()
 	if not (ns.db and ns.db.global.bagsFullNudgeEnabled) then
@@ -133,7 +92,7 @@ function ns:CheckBagsFullNudge()
 		return
 	end
 
-	local free = CountFreeSlots()
+	local free = ns:CountFreeBagSlots()
 	if not free then
 		-- Containers have no data yet: the answer is unknown, not full.
 		return

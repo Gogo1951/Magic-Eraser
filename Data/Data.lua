@@ -31,9 +31,23 @@ ns.Links = {
 ]]
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
+	IgnoreList = ADDON_NAME .. "_IgnoreList",
 	Profiles = ADDON_NAME .. "_Profiles",
 	Diagnostics = ADDON_NAME .. "_Diagnostics",
 }
+
+--------------------------------------------------------------------------------
+-- Ignore List Scopes
+--------------------------------------------------------------------------------
+
+--[[
+    The Ignore List panel names one scope per list on the account. Every scope
+    but one is an AceDB profile name ("Name - Realm", never localized), so the
+    account-wide list needs a key that no profile can collide with -- hence the
+    asterisks, which the profile picker's name box would never produce. Read by
+    ns:GetIgnoreListForScope in Features/Ignore-List.lua.
+]]
+ns.IGNORE_SCOPE_GLOBAL = "**global**"
 
 --------------------------------------------------------------------------------
 -- Color Palette
@@ -47,7 +61,8 @@ ns.OPTIONS_REGISTRY = {
 ns.PALETTE = {
 	TITLE = "FFD100", -- Gold: Titles, Headers, Section Names
 	INFO = "00BBFF", -- Blue: Interactions, Toggles, Links, Keybinds
-	BODY = "CCCCCC", -- Silver: Descriptions, Help Text
+	BODY = "FFFFFF", -- White: Descriptions, Options Body Text
+	HELP = "CCCCCC", -- Silver: Pro Tips, Helper Text
 	TEXT = "FFFFFF", -- White: Messages, Values, Spell Names
 	ON = "33CC33", -- Green: Enabled / On
 	OFF = "CC3333", -- Red: Disabled / Off

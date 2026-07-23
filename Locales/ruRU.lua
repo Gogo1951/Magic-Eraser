@@ -25,19 +25,26 @@ L["BAGS_FULL_NUDGE"] = "Ваши сумки почти полны. Свобод�
 L["BAGS_FULL_NUDGE_ONE"] = "Ваши сумки почти полны. Свободна 1 ячейка."
 L["CURSOR_TOO_FAST"] =
 	"Помедленнее! Вы кликаете быстрее, чем игра успевает удалять предметы."
-L["ERASED_ITEM"] = "%s%s%s удалён."
-L["ERASED_VALUE_SUFFIX"] = ", стоимость %s"
-L["ERASED_QUEST_SUFFIX"] = ", этот предмет был связан с выполненным заданием"
+L["ERASED_ITEM"] = "%s%s удалён."
+L["ERASED_ITEM_WITH_VALUE"] = "%s%s удалён, стоимость %s."
+L["ERASED_ITEM_FROM_QUEST"] = "%s%s удалён, из выполненного вами задания."
 L["QUEST_ITEM_READY"] = "%s теперь можно безопасно удалить!"
-
--- Item Tooltip
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser удалит этот предмет."
-L["TOOLTIP_IGNORED"] = "Защищён вашим списком игнорируемых."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s продан, стоимость %s."
 L["SOLD_SUMMARY"] = "Продано предметов: %s (%s ячеек), стоимость %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Автопродажа сработает после окончания боя."
+
+-- Bank Retrieval
+L["BANK_RETRIEVED"] =
+	"Из банка извлечено предметов: %s (%s ячеек), стоимость %s."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser удалит этот предмет."
+L["TOOLTIP_IGNORED"] = "Защищён вашим списком игнорируемых."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -58,7 +65,7 @@ L["ACTION_TOGGLE"] = "Переключить"
 L["ACTION_CLEAR_IGNORE"] = "Очистить список игнорируемых"
 L["BAGS_CLEAN_SHORT"] = "Поздравляем, ваши сумки полны полезных вещей!"
 L["BAGS_CLEAN_HINT"] =
-	"Чтобы освободить место, придётся удалить что-нибудь вручную."
+	"Чтобы освободить больше места, придётся удалить что-нибудь вручную."
 L["LOADING_ITEM"] = "Загрузка ID: %d"
 L["MINIMAP_OPTIONS"] = "Настройки Magic Eraser"
 L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + Средний клик"
@@ -80,27 +87,37 @@ L["OFF"] = "Выключено"
 
 L["OPTIONS_DESCRIPTION"] =
 	"Мгновенно наведите порядок в сумках. Завершённые квестовые предметы, низкоуровневые расходники, белые предметы для продажи и серый мусор удаляются с каждым кликом по кнопке у миникарты. Когда вы посещаете торговца, всё, что можно продать, продаётся автоматически."
-L["OPTIONS_WELCOME"] = "Включить приветственное сообщение"
-L["OPTIONS_MINIMAP"] = "Включить кнопку у миникарты"
+L["OPTIONS_ENABLE_WELCOME"] = "Включить приветственное сообщение"
+L["OPTIONS_ENABLE_MINIMAP"] = "Включить кнопку у миникарты"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Команды"
 L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Открывает интерфейс настроек Magic Eraser."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Подсказки предметов"
-L["OPTIONS_TOOLTIP_WARNING"] = "Включить подсказки для предметов в сумках"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Открывает панель настроек Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить автопродажу"
-L["OPTIONS_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
+L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "По предметам"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Только сводка"
 
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Автоматически извлекает из банка предметы, отмеченные Magic Eraser как мусор, когда вы его открываете, чтобы вы могли их удалить."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "Подсказки предметов"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Добавляет строку в подсказку предмета в сумках, когда Magic Eraser собирается его удалить или когда его защищает список игнорируемых."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Включить подсказки для предметов в сумках"
+
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Предупреждения о месте в сумках"
-L["OPTIONS_BAGS_FULL_NUDGE"] = "Включить предупреждения о месте в сумках"
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
+	"Ведёт обратный отсчёт в чате, пока свободные ячейки сумок снижаются до заданного ниже порога."
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Включить предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Порог свободных ячеек"
 
 -- Eraser Confirmations
@@ -119,3 +136,21 @@ L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Ignore List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_IGNORE_DESCRIPTION"] =
+	"Предметы из списка игнорируемых никогда не удаляются и не продаются. Общий список защищает предмет на всех персонажах, а собственный список персонажа — только на нём."
+L["OPTIONS_IGNORE_GLOBAL"] = "Общий"
+L["OPTIONS_IGNORE_ADD_ID"] = "Добавить по ID предмета"
+L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
+	"Введите ID предмета и нажмите Enter. Также можно нажать Shift+клик по ссылке на предмет в чате, чтобы вставить её сюда."
+L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
+	"Введите ID предмета или нажмите Shift+клик по ссылке на предмет в чате."
+L["OPTIONS_IGNORE_PROMOTE"] = "Общий"
+L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+	"Переместить этот предмет в общий список, чтобы он был защищён на всех персонажах."
+L["OPTIONS_IGNORE_REMOVE"] = "Убрать"
+L["OPTIONS_IGNORE_EMPTY"] = "Этот список пуст."
