@@ -8,21 +8,23 @@ local _, ns = ...
     AceDB-3.0 defaults. AceDB applies these via metatables (no hand-rolled merge,
     and explicit false survives).
 
-    Only the ignore list is profile-scoped, and it is stored per character inside
-    the profile: profile.ignoreLists is keyed by ns.db.keys.char (see
-    ns:GetIgnoreList), so every toon keeps its own list while a single shared
-    "Default" profile holds them all. Switching profiles swaps the whole set of
-    per-toon lists -- e.g. a "Farming" profile carries its own toon lists.
+    Each character gets its own AceDB profile (Core.lua creates ns.db without the
+    shared-Default flag), so the one profile-scoped setting -- the per-character
+    ignore list -- is a flat profile.ignoreList that is naturally per-character
+    (see ns:GetIgnoreList).
 
     Everything else lives under global: account-wide, identical on every toon,
-    and untouched by profile switches. minimap is global too, so switching or
-    resetting a profile never moves the button.
+    and untouched by profile switches. That includes the second ignore list,
+    global.ignoreList, which protects an item on every character at once; the two
+    lists are additive and ns:IsIgnored answers for both. minimap is global too,
+    so switching or resetting a profile never moves the button.
 ]]
 ns.DATABASE_DEFAULTS = {
 	profile = {
-		ignoreLists = {},
+		ignoreList = {},
 	},
 	global = {
+		ignoreList = {},
 		showWelcome = true,
 		tooltipWarningEnabled = true,
 		autoVendEnabled = true,
@@ -30,6 +32,7 @@ ns.DATABASE_DEFAULTS = {
 		autoVendSummaryEnabled = true,
 		bagsFullNudgeEnabled = false,
 		bagsFullThreshold = 4,
+		bankRetrievalEnabled = true,
 		safetyEnabled = false,
 		safetyQuest = true,
 		safetyConsumable = false,

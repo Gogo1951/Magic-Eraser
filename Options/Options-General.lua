@@ -21,7 +21,7 @@ function ns.BuildGeneralOptions()
 			spacerWelcome0 = ns.OptionsSpacer(5),
 			toggleWelcome = {
 				type = "toggle",
-				name = L["OPTIONS_WELCOME"],
+				name = L["OPTIONS_ENABLE_WELCOME"],
 				width = "full",
 				order = 6,
 				get = function()
@@ -33,7 +33,7 @@ function ns.BuildGeneralOptions()
 			},
 			toggleMinimap = {
 				type = "toggle",
-				name = L["OPTIONS_MINIMAP"],
+				name = L["OPTIONS_ENABLE_MINIMAP"],
 				width = "full",
 				order = 7,
 				get = function()
@@ -60,22 +60,6 @@ function ns.BuildGeneralOptions()
 				23
 			),
 
-			spacerTooltip0 = ns.OptionsSpacer(24),
-			headerTooltip = ns.OptionsHeader(L["OPTIONS_TOOLTIP_HEADER"], 25),
-			spacerTooltip1 = ns.OptionsSpacer(26),
-			toggleTooltipWarning = {
-				type = "toggle",
-				name = L["OPTIONS_TOOLTIP_WARNING"],
-				width = "full",
-				order = 29,
-				get = function()
-					return ns.db and ns.db.global.tooltipWarningEnabled
-				end,
-				set = function(_, value)
-					ns.db.global.tooltipWarningEnabled = value
-				end,
-			},
-
 			spacerAutoVend0 = ns.OptionsSpacer(30),
 			headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 31),
 			spacerAutoVend1 = ns.OptionsSpacer(32),
@@ -95,7 +79,7 @@ function ns.BuildGeneralOptions()
 			},
 			toggleAutoVendMessages = {
 				type = "toggle",
-				name = SUB_INDENT .. L["OPTIONS_AUTO_VEND_MESSAGES"],
+				name = SUB_INDENT .. L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"],
 				width = "double",
 				order = 36,
 				hidden = function()
@@ -132,14 +116,52 @@ function ns.BuildGeneralOptions()
 				end,
 			},
 
-			spacerBagsFull0 = ns.OptionsSpacer(40),
-			headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 41),
-			spacerBagsFull1 = ns.OptionsSpacer(42),
-			toggleBagsFullNudge = {
+			spacerBank0 = ns.OptionsSpacer(40),
+			headerBank = ns.OptionsHeader(L["OPTIONS_BANK_HEADER"], 41),
+			spacerBank1 = ns.OptionsSpacer(42),
+			descBank = ns.OptionsDesc(L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"], 43),
+			spacerBank2 = ns.OptionsSpacer(44),
+			toggleBankRetrieval = {
 				type = "toggle",
-				name = L["OPTIONS_BAGS_FULL_NUDGE"],
+				name = L["OPTIONS_ENABLE_BANK_RETRIEVAL"],
 				width = "full",
 				order = 45,
+				get = function()
+					return ns.db and ns.db.global.bankRetrievalEnabled
+				end,
+				set = function(_, value)
+					ns.db.global.bankRetrievalEnabled = value
+				end,
+			},
+
+			spacerTooltip0 = ns.OptionsSpacer(50),
+			headerTooltip = ns.OptionsHeader(L["OPTIONS_TOOLTIP_HEADER"], 51),
+			spacerTooltip1 = ns.OptionsSpacer(52),
+			descTooltip = ns.OptionsDesc(L["OPTIONS_TOOLTIP_DESCRIPTION"], 53),
+			spacerTooltip2 = ns.OptionsSpacer(54),
+			toggleTooltipWarning = {
+				type = "toggle",
+				name = L["OPTIONS_ENABLE_TOOLTIPS"],
+				width = "full",
+				order = 55,
+				get = function()
+					return ns.db and ns.db.global.tooltipWarningEnabled
+				end,
+				set = function(_, value)
+					ns.db.global.tooltipWarningEnabled = value
+				end,
+			},
+
+			spacerBagsFull0 = ns.OptionsSpacer(60),
+			headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 61),
+			spacerBagsFull1 = ns.OptionsSpacer(62),
+			descBagsFull = ns.OptionsDesc(L["OPTIONS_BAGS_FULL_DESCRIPTION"], 63),
+			spacerBagsFull2 = ns.OptionsSpacer(64),
+			toggleBagsFullNudge = {
+				type = "toggle",
+				name = L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"],
+				width = "full",
+				order = 65,
 				get = function()
 					return ns.db and ns.db.global.bagsFullNudgeEnabled
 				end,
@@ -151,7 +173,7 @@ function ns.BuildGeneralOptions()
 				type = "range",
 				name = L["OPTIONS_BAGS_FULL_THRESHOLD"],
 				width = "full",
-				order = 46,
+				order = 66,
 				min = 1,
 				max = 10,
 				step = 1,
@@ -166,16 +188,16 @@ function ns.BuildGeneralOptions()
 				end,
 			},
 
-			spacerSafety0 = ns.OptionsSpacer(60),
-			headerSafety = ns.OptionsHeader(L["OPTIONS_SAFETY_HEADER"], 61),
-			spacerSafety1 = ns.OptionsSpacer(62),
-			descSafety = ns.OptionsDesc(L["OPTIONS_SAFETY_DESCRIPTION"], 63),
-			spacerSafety2 = ns.OptionsSpacer(64),
+			spacerSafety0 = ns.OptionsSpacer(70),
+			headerSafety = ns.OptionsHeader(L["OPTIONS_SAFETY_HEADER"], 71),
+			spacerSafety1 = ns.OptionsSpacer(72),
+			descSafety = ns.OptionsDesc(L["OPTIONS_SAFETY_DESCRIPTION"], 73),
+			spacerSafety2 = ns.OptionsSpacer(74),
 			toggleSafety = {
 				type = "toggle",
 				name = GetColor("TEXT") .. L["OPTIONS_ENABLE_SAFETY"] .. "|r",
 				width = "full",
-				order = 65,
+				order = 75,
 				get = function()
 					return ns.db and ns.db.global.safetyEnabled
 				end,
@@ -187,7 +209,7 @@ function ns.BuildGeneralOptions()
 				type = "toggle",
 				name = SUB_INDENT .. L["OPTIONS_SAFETY_QUEST"],
 				width = "full",
-				order = 66,
+				order = 76,
 				hidden = function()
 					return not (ns.db and ns.db.global.safetyEnabled)
 				end,
@@ -202,7 +224,7 @@ function ns.BuildGeneralOptions()
 				type = "toggle",
 				name = SUB_INDENT .. L["OPTIONS_SAFETY_CONSUMABLE"],
 				width = "full",
-				order = 67,
+				order = 77,
 				hidden = function()
 					return not (ns.db and ns.db.global.safetyEnabled)
 				end,
@@ -217,7 +239,7 @@ function ns.BuildGeneralOptions()
 				type = "toggle",
 				name = SUB_INDENT .. L["OPTIONS_SAFETY_WHITE"],
 				width = "full",
-				order = 68,
+				order = 78,
 				hidden = function()
 					return not (ns.db and ns.db.global.safetyEnabled)
 				end,
@@ -232,7 +254,7 @@ function ns.BuildGeneralOptions()
 				type = "toggle",
 				name = SUB_INDENT .. L["OPTIONS_SAFETY_GRAY"],
 				width = "full",
-				order = 69,
+				order = 79,
 				hidden = function()
 					return not (ns.db and ns.db.global.safetyEnabled)
 				end,

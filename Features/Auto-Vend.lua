@@ -32,6 +32,9 @@ local scanRetries = 0
 local MAX_VEND_PASSES = 4
 local vendPasses = 0
 
+local CLOSE_CONFIRM_SECONDS = 0.4
+local visitGeneration = 0
+
 --[[
     Slots already announced this merchant visit. A retry pass can re-sell a slot
     whose first UseContainerItem was silently dropped, but the player only needs
@@ -39,6 +42,15 @@ local vendPasses = 0
 ]]
 
 local announcedSales = {}
+
+--[[
+    Attempted-but-unconfirmed sales, keyed bag:slot:itemId -> the data needed to
+    announce the sale later (count, value, link). ProcessSellQueue fills this;
+    ConfirmSales drains it as items are confirmed gone from their slots. Wiped
+    per visit alongside announcedSales.
+]]
+
+local pendingSales = {}
 
 --[[
     Per-visit totals for summary mode. Accrued for every newly announced sale
@@ -61,6 +73,48 @@ local summaryValue = 0
 local function PrintVendMessage(message)
 	if ns.db and ns.db.global.autoVendMessagesEnabled then
 		ns:PrintMessage(message)
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Sale Confirmation
+--------------------------------------------------------------------------------
+
+--[[
+    A sale is only real once the item actually leaves its slot. UseContainerItem
+    is optimistic: a merchant that cannot complete the transaction -- e.g. a
+    "dead" corpse vendor that still opens a merchant frame -- accepts the call
+    silently, so announcing at send time would report phantom sales. Instead
+    ProcessSellQueue records each attempt in pendingSales and we confirm here:
+    any slot that no longer holds the attempted item has sold, and is announced
+    and counted exactly once. An item still sitting in its slot did not sell --
+    it stays pending for a later pass, and an unsellable-but-flagged item is
+    simply never announced.
+
+    Runs at the top of each ScanAndVend re-scan (0.3s after a pass -- long enough
+    for the sell round-trip to empty the slot) and once more shortly after the
+    merchant window closes, on the deferred flush in ns:OnMerchantClosed.
+]]
+
+local function ConfirmSales()
+	for saleKey, sale in pairs(pendingSales) do
+		local currentItemInfo = GetContainerItemInfo(sale.bag, sale.slot)
+		if not currentItemInfo or currentItemInfo.itemID ~= sale.itemId then
+			-- Slot no longer holds the attempted item: the sale went through.
+			pendingSales[saleKey] = nil
+			if not announcedSales[saleKey] then
+				announcedSales[saleKey] = true
+				summaryCount = summaryCount + sale.count
+				summarySlots = summarySlots + 1
+				summaryValue = summaryValue + sale.value
+				if not (ns.db and ns.db.global.autoVendSummaryEnabled) then
+					local stackString = (sale.count > 1) and string.format(" x%d", sale.count) or ""
+					PrintVendMessage(
+						string.format(L["SOLD_ITEM"], sale.link, stackString, ns:FormatCurrency(sale.value))
+					)
+				end
+			end
+		end
 	end
 end
 
@@ -125,16 +179,21 @@ local function ProcessSellQueue()
 	if currentItemInfo and currentItemInfo.itemID == item.itemId and not ns:IsIgnored(item.itemId) then
 		UseContainerItem(item.bag, item.slot)
 
+		-- Record the attempt but do not announce yet: ConfirmSales counts this
+		-- sale only once it sees the item leave the slot, so a merchant that
+		-- silently accepts the call without buying (a dead corpse vendor) never
+		-- produces a phantom "Sold" line. Skip a slot already confirmed on an
+		-- earlier pass; a re-attempt of a still-present item just refreshes it.
 		local saleKey = string.format("%d:%d:%d", item.bag, item.slot, item.itemId)
 		if not announcedSales[saleKey] then
-			announcedSales[saleKey] = true
-			summaryCount = summaryCount + item.count
-			summarySlots = summarySlots + 1
-			summaryValue = summaryValue + item.value
-			if not (ns.db and ns.db.global.autoVendSummaryEnabled) then
-				local stackString = (item.count > 1) and string.format(" x%d", item.count) or ""
-				PrintVendMessage(string.format(L["SOLD_ITEM"], item.link, stackString, ns:FormatCurrency(item.value)))
-			end
+			pendingSales[saleKey] = {
+				bag = item.bag,
+				slot = item.slot,
+				itemId = item.itemId,
+				count = item.count,
+				value = item.value,
+				link = item.link,
+			}
 		end
 	end
 
@@ -149,6 +208,11 @@ function ScanAndVend()
 	if not isSelling then
 		return
 	end
+
+	-- Confirm the previous pass before rebuilding the queue. This runs 0.3s
+	-- after that pass's last UseContainerItem (the hand-off below), long enough
+	-- for sold slots to have emptied.
+	ConfirmSales()
 
 	local isDataMissing = false
 	local _, playerClass = UnitClass("player")
@@ -211,7 +275,9 @@ local function StartVending()
 	sellIndex = 0
 	scanRetries = 0
 	vendPasses = 0
+	visitGeneration = visitGeneration + 1
 	wipe(announcedSales)
+	wipe(pendingSales)
 	summaryCount = 0
 	summarySlots = 0
 	summaryValue = 0
@@ -252,37 +318,57 @@ function ns:OnMerchantShow()
 end
 
 function ns:OnMerchantClosed()
-	--[[
-	    The per-visit summary prints one closing line whenever anything sold, in
-	    both message modes: Summary Only shows it alone, and Line Item shows it
-	    beneath the per-item lines. Closing the window is the flush point. Routed
-	    through PrintVendMessage so the Enable Auto-Vend Messages toggle silences
-	    it like all other vend output.
-	]]
-	if summaryCount > 0 then
-		PrintVendMessage(
-			string.format(
-				L["SOLD_SUMMARY"],
-				ns:FormatCommaNumber(summaryCount),
-				ns:FormatCommaNumber(summarySlots),
-				ns:FormatCurrency(summaryValue)
-			)
-		)
-	end
-	summaryCount = 0
-	summarySlots = 0
-	summaryValue = 0
-
 	isSelling = false
 	vendPending = false
 	wipe(sellQueue)
 
 	--[[
-	    Bag-space warnings are suppressed while the merchant window is open (see
-	    OnBagUpdateDelayed in Core), since selling churns free slots. Re-check on
-	    close so the warning reflects where the bags landed after this visit.
+	    Final confirmation, deferred so the last sells have time to leave their
+	    slots. A pass that hit the retry cap, or whose last sells landed after the
+	    final re-scan, can still have entries in pendingSales; reading those slots
+	    the instant the window closes would check them before the bags update and
+	    drop real sales from the count. A dead merchant's never-sold items are
+	    still in their slots, so they confirm nothing and stay silent. The
+	    generation check drops this flush when a new visit has already begun.
 	]]
-	ns:CheckBagsFullNudge()
+	local generation = visitGeneration
+	C_Timer.After(CLOSE_CONFIRM_SECONDS, function()
+		if generation ~= visitGeneration then
+			return
+		end
+
+		ConfirmSales()
+
+		--[[
+		    The per-visit summary prints one closing line whenever anything sold,
+		    in both message modes: Summary Only shows it alone, and Line Item
+		    shows it beneath the per-item lines. This deferred flush is the flush
+		    point. Routed through PrintVendMessage so the Enable Auto-Vend
+		    Messages toggle silences it like all other vend output.
+		]]
+		if summaryCount > 0 then
+			PrintVendMessage(
+				string.format(
+					L["SOLD_SUMMARY"],
+					ns:FormatCommaNumber(summaryCount),
+					ns:FormatCommaNumber(summarySlots),
+					ns:FormatCurrency(summaryValue)
+				)
+			)
+		end
+		summaryCount = 0
+		summarySlots = 0
+		summaryValue = 0
+		wipe(pendingSales)
+
+		--[[
+		    Bag-space warnings are suppressed while the merchant window is open
+		    (see OnBagUpdateDelayed in Core), since selling churns free slots.
+		    Re-check here so the warning reflects where the bags landed after this
+		    visit.
+		]]
+		ns:CheckBagsFullNudge()
+	end)
 end
 
 --[[

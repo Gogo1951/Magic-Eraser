@@ -24,19 +24,25 @@ L["BAGS_FULL"] = "你的背包已滿！"
 L["BAGS_FULL_NUDGE"] = "你的背包快滿了。還剩 %d 個空格。"
 L["BAGS_FULL_NUDGE_ONE"] = "你的背包快滿了。還剩 1 個空格。"
 L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物品的速度。"
-L["ERASED_ITEM"] = "已刪除 %s%s%s。"
-L["ERASED_VALUE_SUFFIX"] = "，價值 %s"
-L["ERASED_QUEST_SUFFIX"] = "，該物品關聯的任務已完成"
+L["ERASED_ITEM"] = "已刪除 %s%s。"
+L["ERASED_ITEM_WITH_VALUE"] = "已刪除 %s%s，價值 %s。"
+L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，來自你已完成的任務。"
 L["QUEST_ITEM_READY"] = "%s 現在可以安全刪除了！"
-
--- Item Tooltip
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser 將刪除此物品。"
-L["TOOLTIP_IGNORED"] = "受你的忽略清單保護。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，價值 %s。"
 L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 個格子），價值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "戰鬥結束後將執行自動售賣。"
+
+-- Bank Retrieval
+L["BANK_RETRIEVED"] = "已從銀行取出 %s 件物品（%s 個格子），價值 %s。"
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser 將刪除此物品。"
+L["TOOLTIP_IGNORED"] = "受你的忽略清單保護。"
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -77,27 +83,37 @@ L["OFF"] = "已停用"
 
 L["OPTIONS_DESCRIPTION"] =
 	"瞬間清理你的背包。每次點擊小地圖按鈕，都會刪除已完成的任務物品、低等級消耗品、可售賣給商人的白色物品以及灰色垃圾。當你拜訪商人時，所有可出售的物品都會自動售出。"
-L["OPTIONS_WELCOME"] = "啟用歡迎訊息"
-L["OPTIONS_MINIMAP"] = "啟用小地圖按鈕"
+L["OPTIONS_ENABLE_WELCOME"] = "啟用歡迎訊息"
+L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/指令"
 L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "開啟 Magic Eraser 選項介面。"
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
-L["OPTIONS_TOOLTIP_WARNING"] = "為背包內物品啟用提示"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "開啟 Magic Eraser 選項面板。"
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "啟用自動售賣"
-L["OPTIONS_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
+L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "逐項"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "僅彙總"
 
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "銀行取回"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "啟用銀行取回"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"開啟銀行時自動取出被 Magic Eraser 標記為垃圾的物品，方便你刪除它們。"
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"當 Magic Eraser 會刪除某件背包物品，或忽略清單正在保護它時，為該物品的提示加入一行說明。"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "為背包內物品啟用提示"
+
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空間警告"
-L["OPTIONS_BAGS_FULL_NUDGE"] = "啟用背包空間警告"
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
+	"當背包空格減少到你在下方設定的閾值時，在聊天框中倒數提醒。"
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "啟用背包空間警告"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格閾值"
 
 -- Eraser Confirmations
@@ -115,3 +131,19 @@ L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Ignore List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_IGNORE_DESCRIPTION"] =
+	"忽略清單中的物品永遠不會被刪除或出售。全域清單會在所有角色上保護該物品，而角色自己的清單只在該角色上保護它。"
+L["OPTIONS_IGNORE_GLOBAL"] = "全域"
+L["OPTIONS_IGNORE_ADD_ID"] = "以物品 ID 新增"
+L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
+	"輸入物品 ID 後按 Enter。你也可以在聊天框中 Shift+點擊物品連結，將其填入此處。"
+L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "請輸入物品 ID，或在聊天框中 Shift+點擊物品連結。"
+L["OPTIONS_IGNORE_PROMOTE"] = "全域"
+L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "將此物品移到全域清單，使其在所有角色上都受保護。"
+L["OPTIONS_IGNORE_REMOVE"] = "移除"
+L["OPTIONS_IGNORE_EMPTY"] = "此清單為空。"

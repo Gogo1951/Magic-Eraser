@@ -240,10 +240,11 @@ end
 
 --[[
     Existence and shape checks only: read-only, no side effects, no protected
-    calls. Kept one-to-one with the APIs Magic Eraser calls or guards in Core.lua,
-    Auto-Vend.lua, and Minimap-Button.lua. The C_AddOns / GetAddOnMetadata pair is
-    listed modern + legacy so the report shows what each client provides -- the
-    legacy global ships on Era but is gone on TBC.
+    calls. One row per API Magic Eraser actually calls or guards, wherever it
+    lives -- nothing incidental, and nothing the add-on does not use. The
+    C_AddOns / GetAddOnMetadata pair is listed modern + legacy so the report
+    shows what each client provides -- the legacy global ships on Era but is
+    gone on TBC.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
 	-- { label, testFunction }
@@ -408,9 +409,16 @@ function ns:BuildEraserContextReport()
 	lines[#lines + 1] = string.format("Player: %s level %d", tostring(class), UnitLevel("player") or 0)
 	lines[#lines + 1] =
 		string.format("Auto-Vend: %s", (ns.db and ns.db.global.autoVendEnabled) and "enabled" or "disabled")
+	lines[#lines + 1] =
+		string.format("Bank retrieval: %s", (ns.db and ns.db.global.bankRetrievalEnabled) and "enabled" or "disabled")
 
-	local ignoreCount = CountKeys(ns:GetIgnoreList())
-	lines[#lines + 1] = string.format("Ignore list: %d %s", ignoreCount, ignoreCount == 1 and "entry" or "entries")
+	-- Both scopes, because protection is additive: an unexpectedly skipped item
+	-- may be on either list, and the character's own list alone would not say so.
+	lines[#lines + 1] = string.format(
+		"Ignore list: character=%d, global=%d",
+		CountKeys(ns:GetIgnoreList()),
+		CountKeys(ns:GetGlobalIgnoreList())
+	)
 	lines[#lines + 1] = string.format(
 		"Databases: quest=%d, consumables=%d, equipment=%d",
 		CountKeys(ns.AllowedDeleteQuestItems),
@@ -515,9 +523,10 @@ end
 
 --[[
     Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
-    player can paste their exact configuration. Each profile's per-character
-    ignoreLists is replaced with a per-character length summary rather than
-    printing every itemId (see DATA -- large lists are described, not reproduced).
+    player can paste their exact configuration. A profile's ignoreList is replaced
+    with a length summary rather than printing every itemId (see DATA -- large
+    lists are described, not reproduced); a legacy keyed ignoreLists, if a profile
+    still carries one mid-migration, is summarized per character.
 ]]
 local function SummarizeList(entry)
 	local count = CountKeys(entry)
@@ -530,7 +539,9 @@ local function SummarizeForDump(value)
 	end
 	local copy = {}
 	for key, entry in pairs(value) do
-		if key == "ignoreLists" and type(entry) == "table" then
+		if key == "ignoreList" and type(entry) == "table" then
+			copy[key] = SummarizeList(entry)
+		elseif key == "ignoreLists" and type(entry) == "table" then
 			local perChar = {}
 			for charKey, list in pairs(entry) do
 				perChar[charKey] = SummarizeList(list)

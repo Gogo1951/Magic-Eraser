@@ -14,22 +14,14 @@ local _, ns = ...
 ]]
 local COLOR_PREFIX = "|cff"
 
-local COLORS = {
-	TITLE = COLOR_PREFIX .. ns.PALETTE.TITLE,
-	INFO = COLOR_PREFIX .. ns.PALETTE.INFO,
-	BODY = COLOR_PREFIX .. ns.PALETTE.BODY,
-	TEXT = COLOR_PREFIX .. ns.PALETTE.TEXT,
-	ON = COLOR_PREFIX .. ns.PALETTE.ON,
-	OFF = COLOR_PREFIX .. ns.PALETTE.OFF,
-	SEPARATOR = COLOR_PREFIX .. ns.PALETTE.SEPARATOR,
-	MUTED = COLOR_PREFIX .. ns.PALETTE.MUTED,
-}
+local COLORS = {}
+for key, hex in pairs(ns.PALETTE) do
+	COLORS[key] = COLOR_PREFIX .. hex
+end
 
 function ns.GetColor(key)
 	return COLORS[key] or COLORS.TEXT
 end
-
-ns.BrandPrefix = string.format("%s%s|r %s//|r ", COLORS.INFO, ns.AddonTitle, COLORS.SEPARATOR)
 
 --------------------------------------------------------------------------------
 -- Formatting
@@ -73,12 +65,53 @@ function ns:FormatCurrency(rawValue)
 end
 
 --------------------------------------------------------------------------------
--- Game State
+-- Bag Space
 --------------------------------------------------------------------------------
 
-function ns:IsQuestCompleted(questId)
-	if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
-		return C_QuestLog.IsQuestFlaggedCompleted(questId)
+local GetContainerNumFreeSlots = C_Container.GetContainerNumFreeSlots
+local GetContainerNumSlots = C_Container.GetContainerNumSlots
+
+-- Blizzard's count of equippable bag slots; bag 0 is the backpack.
+local BAG_SLOTS = NUM_BAG_SLOTS or 4
+
+--[[
+    Free general-purpose bag slots, or nil when the container API has no data yet.
+
+    Specialty bags -- soul bags, quivers, ammo pouches, profession bags -- are
+    excluded: ordinary loot can't go there, so their free slots are useless to
+    the callers. GogoLoot's Speedy-Loot budget is deliberately conservative in
+    exactly the same way.
+
+    Return nil, not 0, when no container has answered yet. Summing "(bagFree or
+    0)" across bags can't tell "the API has no data yet" apart from "zero free
+    slots": mid-loading-screen every container reads nil, so the total collapses
+    to 0 and reads as bags-full. Reporting "unknown" instead lets the caller skip
+    rather than act on space the player actually has.
+
+    Readiness is judged from the data itself: the backpack always has slots and
+    always answers once the inventory is loaded, so a zero slot total, or no bag
+    answering at all, means nothing is loaded yet.
+
+    Shared by the bag-space warning (Bag-Warnings.lua) and the bank-retrieval
+    budget (Bank-Retrieval.lua), which is what puts it here rather than in either.
+]]
+function ns:CountFreeBagSlots()
+	local free, totalSlots, answered = 0, 0, 0
+	for bag = 0, BAG_SLOTS do
+		totalSlots = totalSlots + (GetContainerNumSlots(bag) or 0)
+
+		local bagFree, bagFamily = GetContainerNumFreeSlots(bag)
+		-- 0 is truthy in Lua, so this rejects only a missing reading, never a full bag.
+		if bagFree then
+			answered = answered + 1
+			if bagFamily == 0 or bagFamily == nil then
+				free = free + bagFree
+			end
+		end
 	end
-	return false
+
+	if totalSlots == 0 or answered == 0 then
+		return nil
+	end
+	return free
 end

@@ -24,19 +24,25 @@ L["BAGS_FULL"] = "¡Tus bolsas están llenas!"
 L["BAGS_FULL_NUDGE"] = "Tus bolsas están casi llenas. Te quedan %d espacios."
 L["BAGS_FULL_NUDGE_ONE"] = "Tus bolsas están casi llenas. Te queda 1 espacio."
 L["CURSOR_TOO_FAST"] = "¡Más despacio! Estás haciendo clic más rápido de lo que el juego puede eliminar objetos."
-L["ERASED_ITEM"] = "%s%s%s eliminado."
-L["ERASED_VALUE_SUFFIX"] = ", valor %s"
-L["ERASED_QUEST_SUFFIX"] = ", este objeto estaba asociado a una misión completada"
+L["ERASED_ITEM"] = "%s%s eliminado."
+L["ERASED_ITEM_WITH_VALUE"] = "%s%s eliminado, valor %s."
+L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminado, de una misión que has completado."
 L["QUEST_ITEM_READY"] = "¡%s ahora se puede eliminar de forma segura!"
-
--- Item Tooltip
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser eliminará esto."
-L["TOOLTIP_IGNORED"] = "Protegido por tu lista de ignorados."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendido, valor %s."
 L["SOLD_SUMMARY"] = "%s objetos (%s espacios) vendidos, valor %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-venta venderá los objetos al terminar el combate."
+
+-- Bank Retrieval
+L["BANK_RETRIEVED"] = "%s objetos (%s espacios) sacados de tu banco, valor %s."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_WILL_ERASE"] = "Magic Eraser eliminará esto."
+L["TOOLTIP_IGNORED"] = "Protegido por tu lista de ignorados."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -56,7 +62,7 @@ L["ACTION_IGNORE"] = "Ignorar"
 L["ACTION_TOGGLE"] = "Alternar"
 L["ACTION_CLEAR_IGNORE"] = "Vaciar lista de ignorados"
 L["BAGS_CLEAN_SHORT"] = "¡Felicidades, tus bolsas están llenas de cosas buenas!"
-L["BAGS_CLEAN_HINT"] = "Tendrás que eliminar algo manualmente si quieres liberar espacio."
+L["BAGS_CLEAN_HINT"] = "Tendrás que eliminar algo manualmente si quieres liberar más espacio."
 L["LOADING_ITEM"] = "Cargando ID: %d"
 L["MINIMAP_OPTIONS"] = "Opciones de Magic Eraser"
 L["MINIMAP_OPTIONS_KEYBIND"] = "Mayús + Clic central"
@@ -78,27 +84,37 @@ L["OFF"] = "Desactivado"
 
 L["OPTIONS_DESCRIPTION"] =
 	"Limpia tus bolsas al instante. Los objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris se eliminan con cada clic en el botón del minimapa. Cuando visitas a un comerciante, todo lo que se puede vender se vende automáticamente."
-L["OPTIONS_WELCOME"] = "Habilitar mensaje de bienvenida"
-L["OPTIONS_MINIMAP"] = "Habilitar botón del minimapa"
+L["OPTIONS_ENABLE_WELCOME"] = "Habilitar mensaje de bienvenida"
+L["OPTIONS_ENABLE_MINIMAP"] = "Habilitar botón del minimapa"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
 L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Abre la interfaz de opciones de Magic Eraser."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Descripciones de objetos"
-L["OPTIONS_TOOLTIP_WARNING"] = "Habilitar descripciones para objetos en las bolsas"
+L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Abre el panel de opciones de Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"
-L["OPTIONS_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
+L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
 L["OPTIONS_AUTO_VEND_VERBOSE"] = "Por objeto"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Solo resumen"
 
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Saca automáticamente de tu banco los objetos marcados como basura por Magic Eraser al abrirlo, para que puedas eliminarlos."
+
+-- Item Tooltips
+L["OPTIONS_TOOLTIP_HEADER"] = "Descripciones de objetos"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Añade una línea a la descripción de un objeto en tus bolsas cuando Magic Eraser vaya a eliminarlo, o cuando tu lista de ignorados lo esté protegiendo."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Habilitar descripciones para objetos en las bolsas"
+
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avisos de espacio en bolsas"
-L["OPTIONS_BAGS_FULL_NUDGE"] = "Habilitar avisos de espacio en bolsas"
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
+	"Cuenta atrás en el chat a medida que tus espacios libres bajan hasta el umbral que definas abajo."
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Habilitar avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Umbral de espacios libres"
 
 -- Eraser Confirmations
@@ -116,3 +132,20 @@ L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Ignore List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_IGNORE_DESCRIPTION"] =
+	"Los objetos de una lista de ignorados nunca se eliminan ni se venden. La lista Global protege un objeto en todos los personajes, y la lista propia de un personaje lo protege solo en ese personaje."
+L["OPTIONS_IGNORE_GLOBAL"] = "Global"
+L["OPTIONS_IGNORE_ADD_ID"] = "Añadir por ID de objeto"
+L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
+	"Escribe un ID de objeto y pulsa Intro. También puedes hacer Mayús+clic en un enlace de objeto del chat para insertarlo aquí."
+L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Escribe un ID de objeto, o haz Mayús+clic en un enlace de objeto del chat."
+L["OPTIONS_IGNORE_PROMOTE"] = "Global"
+L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+	"Mueve este objeto a la lista Global, para que esté protegido en todos los personajes."
+L["OPTIONS_IGNORE_REMOVE"] = "Quitar"
+L["OPTIONS_IGNORE_EMPTY"] = "Esta lista está vacía."

@@ -63,7 +63,31 @@ local function RefreshTooltip(anchor)
 		GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
 	)
 
-	-- Ignore List (per character)
+	-- Clutter Report. With clutter it summarizes the haul; with clean bags it
+	-- carries the congratulations message instead.
+	tooltip:AddLine(" ")
+	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
+	if item then
+		local reclaimSlots, reclaimItems, reclaimValue = ns:GetReclaimSummary()
+		local slotsText = GetColor("TEXT") .. format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots)) .. "|r"
+		local itemsText = GetColor("MUTED") .. format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems)) .. "|r"
+		tooltip:AddDoubleLine(
+			slotsText .. " " .. itemsText,
+			GetColor("TEXT") .. ns:FormatCurrency(reclaimValue) .. "|r"
+		)
+	else
+		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
+	end
+
+	--[[
+	    Ignore List, this character's only -- which is what keeps the Middle-Click
+	    hint underneath it honest, since Clear Ignore List clears exactly what is
+	    listed here and never touches the account-wide list (see ns:ToggleIgnore
+	    and ns:ClearIgnoreList in Features/Ignore-List.lua). Last of the content
+	    sections because it is the only one whose length varies with how much the
+	    player has protected, so everything above it holds a fixed position no
+	    matter how long the list grows.
+	]]
 	local ignoreList = ns:GetIgnoreList()
 	local hasIgnoredItems = ignoreList and next(ignoreList) ~= nil
 
@@ -103,23 +127,6 @@ local function RefreshTooltip(anchor)
 			GetColor("INFO") .. L["MIDDLE_CLICK"] .. "|r",
 			GetColor("INFO") .. L["ACTION_CLEAR_IGNORE"] .. "|r"
 		)
-	end
-
-	-- Clutter Report (kept at the bottom so the item you are about to erase
-	-- reads first). With clutter it summarizes the haul; with clean bags it
-	-- carries the congratulations message instead.
-	tooltip:AddLine(" ")
-	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
-	if item then
-		local reclaimSlots, reclaimItems, reclaimValue = ns:GetReclaimSummary()
-		local slotsText = GetColor("TEXT") .. format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots)) .. "|r"
-		local itemsText = GetColor("MUTED") .. format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems)) .. "|r"
-		tooltip:AddDoubleLine(
-			slotsText .. " " .. itemsText,
-			GetColor("TEXT") .. ns:FormatCurrency(reclaimValue) .. "|r"
-		)
-	else
-		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
 	end
 
 	-- Options
