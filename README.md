@@ -22,13 +22,13 @@ Clean up your bags instantly. Completed quest items, low-level consumables, vend
 2. Log in. The minimap button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Middle-click to open the options panel.
 4. Auto-Vend and Bank Retrieval are on out of the box, so the rest pays for itself the next time you talk to a merchant.
-5. Done — your bags now keep themselves clean. *"Hasta la vista, vendor trash."*
+5. Done — your bags now keep themselves clean. *"Cleanest bags on the server!"*
 
 ## How It Works
 
 ### Smart Scanning
 
-Magic Eraser watches your bags and picks out the lowest-value match from four categories: completed quest items you no longer need, outgrown food and drink (anything with a required level at least ten below your own), vendor-quality white gear from the curated list, and gray trash with a sell price. The minimap icon updates live to show what's next on the chopping block.
+Magic Eraser watches your bags and picks out the lowest-value match from four categories: completed quest items you no longer need, outgrown food and drink (anything you passed the use level on ten levels ago — starter food and drink go at level 5 instead of lingering), vendor-quality white gear from the curated list, and gray trash with a sell price. The minimap icon updates live to show what's next on the chopping block.
 
 When two items are worth the same, category priority breaks the tie — completed quest items first, then gray trash, then consumables and equipment. Anything on your Ignore List or flagged as a class-specific reagent is skipped, so Shamans never lose their Fish Oil or Shiny Fish Scales.
 
@@ -48,7 +48,7 @@ Hover the button and the tooltip lays out the whole picture: the item you're abo
 
 ### Auto-Vend
 
-Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat can report each sale with its item link and price, or stay quiet until the window closes and give you a single summary line — your pick. Toggle the whole thing with Shift+Right-click on the minimap button or from the options panel.
+Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat can report each sale with its item link and price, or stay quiet until the window closes and give you a single summary line — your pick. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the minimap button or from the options panel.
 
 ### Bank Retrieval
 
@@ -107,15 +107,19 @@ Please reach out if you would like to be involved!
 
 🟢 Pairs With // Jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 
+🟢 Pairs With // Cidan's [BetterBags](https://www.curseforge.com/wow/addons/better-bags)
+
 🟢 Pairs With // GeodesicDragon's [Free Bag Spaces](https://www.curseforge.com/wow/addons/free-bag-spaces)
 
 🟢 Pairs With // syndenbock's [MinimapButtonButton](https://www.curseforge.com/wow/addons/minimapbuttonbutton)
 
 🟡 Some Overlap // Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
 
+🔴 Direct Alternative // Milestorme's [Auto Junk Destroyer](https://www.curseforge.com/wow/addons/auto-junk-destroyer)
+
 🔴 Direct Alternative // IceDNicco's [Auto Sell Grey](https://www.curseforge.com/wow/addons/auto-sell-grey)
 
-🔴 Direct Alternative // olafskiii's [AutoVendor](https://www.curseforge.com/wow/addons/autovendor)
+🔴 Direct Alternative // Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
 
 🔴 Direct Alternative // moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
 

@@ -53,8 +53,8 @@ local function RefreshTooltip(anchor)
 
 	-- Auto-Vend
 	tooltip:AddLine(" ")
-	local autoVendStatus = (ns.db and ns.db.global.autoVendEnabled) and (GetColor("ON") .. L["ON"] .. "|r")
-		or (GetColor("OFF") .. L["OFF"] .. "|r")
+	local autoVendStatus = (ns.db and ns.db.global.autoVendEnabled) and (GetColor("ON") .. L["ENABLED"] .. "|r")
+		or (GetColor("OFF") .. L["DISABLED"] .. "|r")
 	tooltip:AddDoubleLine(GetColor("TITLE") .. L["AUTO_VEND"] .. "|r", autoVendStatus)
 	tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESCRIPTION"] .. "|r", 1, 1, 1, true)
 
@@ -132,7 +132,7 @@ local function RefreshTooltip(anchor)
 	-- Options
 	tooltip:AddLine(" ")
 	tooltip:AddLine(GetColor("TITLE") .. L["MINIMAP_OPTIONS"] .. "|r")
-	tooltip:AddLine(GetColor("INFO") .. L["MINIMAP_OPTIONS_KEYBIND"] .. "|r")
+	tooltip:AddLine(GetColor("INFO") .. L["SHIFT_MIDDLE_CLICK"] .. "|r")
 
 	tooltip:Show()
 end

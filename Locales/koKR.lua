@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "좌클릭"
 L["RIGHT_CLICK"] = "우클릭"
 L["MIDDLE_CLICK"] = "휠클릭"
 L["SHIFT_RIGHT_CLICK"] = "Shift + 우클릭"
+L["SHIFT_MIDDLE_CLICK"] = "Shift + 휠클릭"
 L["ACTION_ERASE"] = "삭제"
 L["ACTION_IGNORE"] = "무시"
 L["ACTION_TOGGLE"] = "전환"
@@ -65,7 +66,6 @@ L["BAGS_CLEAN_SHORT"] = "축하합니다, 가방이 좋은 것들로 가득 차 
 L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
 L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 옵션"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + 휠클릭"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -75,8 +75,8 @@ L["AUTO_VEND"] = "자동 판매"
 L["AUTO_VEND_DESCRIPTION"] =
 	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["IGNORE_LIST"] = "무시 목록"
-L["ON"] = "활성화"
-L["OFF"] = "비활성화"
+L["ENABLED"] = "활성화"
+L["DISABLED"] = "비활성화"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -145,7 +145,6 @@ L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"아이템 ID를 입력하고 Enter 키를 누르세요. 대화창의 아이템 링크를 Shift+클릭해 여기에 넣을 수도 있습니다."
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
 	"아이템 ID를 입력하거나, 대화창의 아이템 링크를 Shift+클릭하세요."
-L["OPTIONS_IGNORE_PROMOTE"] = "전체"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"이 아이템을 전체 목록으로 옮겨 모든 캐릭터에서 보호합니다."
 L["OPTIONS_IGNORE_REMOVE"] = "제거"

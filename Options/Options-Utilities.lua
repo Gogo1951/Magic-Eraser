@@ -11,8 +11,8 @@ local _, ns = ...
 ]]
 local GetColor = ns.GetColor
 
-function ns.OptionsHeader(text, order)
-	return { type = "header", name = GetColor("TITLE") .. text .. "|r", order = order }
+function ns.OptionsHeader(text, order, hidden)
+	return { type = "header", name = GetColor("TITLE") .. text .. "|r", order = order, hidden = hidden }
 end
 
 function ns.OptionsDesc(text, order)
@@ -21,16 +21,6 @@ end
 
 function ns.OptionsSpacer(order)
 	return { type = "description", name = " ", order = order }
-end
-
-function ns.OptionsSubHeader(text, order, hidden)
-	return {
-		type = "description",
-		name = "\n" .. GetColor("TITLE") .. text .. "|r",
-		fontSize = "medium",
-		order = order,
-		hidden = hidden,
-	}
 end
 
 --------------------------------------------------------------------------------

@@ -11,10 +11,12 @@ local GetColor = ns.GetColor
 
 --[[
     A single runtime toggle gates the whole panel. When off, only the warning
-    text and the enable toggle are visible; everything below is hidden. Per the
-    guide, hide unavailable controls rather than graying them out -- and since a
-    plain header has no `hidden` field, the gated sections inline their header
-    widgets with `hidden` functions.
+    text and the enable toggle are visible; everything below is hidden rather
+    than grayed out. Every gated section hides on that one condition, so the
+    builders below bake it in once instead of repeating it on every widget;
+    ns.OptionsHeader takes a `hidden` argument and earns its keep on panels whose
+    sections hide on different conditions. The warning and the enable toggle are
+    always visible, so they use the shared helpers plainly.
 ]]
 
 local function DiagnosticsOn()

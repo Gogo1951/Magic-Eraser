@@ -1,5 +1,7 @@
 local _, ns = ...
 
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+
 --------------------------------------------------------------------------------
 -- Ignore List
 --------------------------------------------------------------------------------
@@ -59,6 +61,16 @@ end
     Ignore List section shows -- so both keep meaning what the player just read.
     The account-wide list is edited from the Ignore List panel instead, through
     ns:SetIgnoredInScope below.
+
+    Both repaint that panel as well. It is registered as a builder function, so a
+    repaint rebuilds its rows straight off the live lists -- but something has to
+    ask for one, and a minimap click while the panel is already on screen is the
+    one edit path with nothing that does. Opening the panel builds it, and an
+    edit made in the panel is followed by AceConfigDialog re-opening the frame,
+    which is why ns:SetIgnoredInScope does not repeat this; without it here, the
+    panel would keep showing the rows it drew when it opened until the player
+    closed and reopened it. NotifyChange costs nothing while nothing is
+    displaying the table.
 ]]
 function ns:ToggleIgnore(itemId)
 	if not itemId then
@@ -75,6 +87,7 @@ function ns:ToggleIgnore(itemId)
 	end
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
 end
 
 function ns:ClearIgnoreList()
@@ -84,6 +97,7 @@ function ns:ClearIgnoreList()
 	end
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
 end
 
 --------------------------------------------------------------------------------

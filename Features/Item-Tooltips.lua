@@ -84,12 +84,12 @@ local function AddEraserWarning(tooltip, itemId)
 	end
 
 	-- Cold item cache: let the API resolve and add nothing this pass.
-	local _, _, rarity, _, requiredLevel, _, _, _, _, _, sellPrice = GetItemInfo(itemId)
+	local _, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemId)
 	if rarity == nil then
 		return
 	end
 
-	if ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel) then
+	if ns:GetItemDeleteReason(itemId, rarity, sellPrice) then
 		tooltip:AddLine(" ")
 		tooltip:AddLine(ns.BrandPrefix .. GetColor("OFF") .. L["TOOLTIP_WILL_ERASE"] .. "|r")
 		return true

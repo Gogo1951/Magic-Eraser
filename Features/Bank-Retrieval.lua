@@ -244,7 +244,7 @@ local function ScanBank(generation)
 				local itemId = itemInfo.itemID
 
 				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
-					local name, _, rarity, _, requiredLevel, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
+					local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
 						isDataMissing = true
@@ -252,7 +252,7 @@ local function ScanBank(generation)
 							C_Item.RequestLoadItemDataByID(itemId)
 						end
 					else
-						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
+						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 
 						if deleteReason then
 							local count = itemInfo.stackCount or 1

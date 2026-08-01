@@ -23,7 +23,7 @@
 ## X-Wago-ID: aNebBj62
 
 ## SavedVariables: MagicEraserDB
-# MIGRATION (remove after 2026-08-21): drop MagicEraserCharDB once the AceDB migration window closes
+# MIGRATION (remove after 2026-08-15): drop MagicEraserCharDB once the AceDB migration window closes
 ## SavedVariablesPerCharacter: MagicEraserCharDB
 
 # Includes

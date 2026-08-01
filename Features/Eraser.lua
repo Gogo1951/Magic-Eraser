@@ -80,7 +80,28 @@ end
 -- Scanning & Evaluation
 --------------------------------------------------------------------------------
 
-function ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
+--[[
+    The player level at which a consumable counts as outgrown. Normally ten
+    levels past the item's own use level; the starter food and drink usable below
+    level 5 are the exception, and go at 5 flat rather than lingering in the bags
+    until 11 -- by 5 the player has already replaced them.
+
+    The use level is read from Data/Consumables.lua ([itemId] = { useLevel }),
+    never from GetItemInfo's requiredLevel: static data answers on a cold item
+    cache and does not shift between client versions (Style Guide → DATA: STATIC
+    OVER API).
+]]
+local CONSUMABLE_OUTGROWN_DELTA = 10
+local CONSUMABLE_STARTER_LEVEL = 5
+
+local function GetConsumableEraseLevel(useLevel)
+	if useLevel < CONSUMABLE_STARTER_LEVEL then
+		return CONSUMABLE_STARTER_LEVEL
+	end
+	return useLevel + CONSUMABLE_OUTGROWN_DELTA
+end
+
+function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	local playerLevel = UnitLevel("player")
 	local questItemDatabase = ns.AllowedDeleteQuestItems or {}
 	local consumableDatabase = ns.AllowedDeleteConsumables or {}
@@ -93,7 +114,8 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
 			end
 		end
 	elseif consumableDatabase[itemId] then
-		if (playerLevel - (requiredLevel or 1)) >= 10 then
+		local useLevel = consumableDatabase[itemId][1] or 1
+		if playerLevel >= GetConsumableEraseLevel(useLevel) then
 			return "consumable"
 		end
 	elseif equipmentDatabase[itemId] then
@@ -135,8 +157,7 @@ function ns:FindItemToDelete()
 				local itemId = itemInfo.itemID
 
 				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
-					local name, _, rarity, _, requiredLevel, _, _, _, _, icon, sellPrice =
-						GetItemInfo(itemInfo.hyperlink)
+					local name, _, rarity, _, _, _, _, _, _, icon, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
 						isDataMissing = true
@@ -146,7 +167,7 @@ function ns:FindItemToDelete()
 					else
 						local count = itemInfo.stackCount or 1
 						local totalValue = (sellPrice or 0) * count
-						local deleteReason = self:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
+						local deleteReason = self:GetItemDeleteReason(itemId, rarity, sellPrice)
 
 						if deleteReason then
 							-- Slots counts one per qualifying slot; items counts stacked quantity.

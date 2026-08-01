@@ -7,6 +7,8 @@ local L = ns.L
 
 local ipairs = ipairs
 
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+
 --------------------------------------------------------------------------------
 -- Version
 --------------------------------------------------------------------------------
@@ -67,7 +69,7 @@ local updatePending = false
 
 function ns:OnPlayerLogin()
 	--[[
-        MIGRATION (remove after 2026-08-21): the pre-AceDB build kept two raw
+        MIGRATION (remove after 2026-08-15): the pre-AceDB build kept two raw
         saved tables -- account-wide MagicEraserDB (showWelcome, minimap, and, on
         the oldest builds, an account-level autoVendEnabled) and per-character
         MagicEraserCharDB (autoVendEnabled, autoVendMessagesEnabled, ignoreList).
@@ -143,7 +145,7 @@ function ns:OnPlayerLogin()
 	MagicEraserCharDB = nil
 
 	--[[
-	    MIGRATION (remove after 2026-08-21): the first AceDB build kept every
+	    MIGRATION (remove after 2026-08-15): the first AceDB build kept every
 	    setting on one shared "Default" profile. They are account-wide now, so
 	    move any a user actually changed up to global. These keys are no longer in
 	    the profile defaults, so a non-nil raw read means the user set it; clear it
@@ -173,7 +175,7 @@ function ns:OnPlayerLogin()
 	end
 
 	--[[
-	    MIGRATION (remove after 2026-08-21): Magic Eraser moved from one shared
+	    MIGRATION (remove after 2026-08-15): Magic Eraser moved from one shared
 	    "Default" profile -- every toon's ignore list keyed by ns.db.keys.char
 	    inside it -- to a real per-character AceDB profile per toon (AceDB:New above
 	    now omits the shared-Default flag). Put THIS toon on its own profile with a
@@ -222,7 +224,7 @@ function ns:OnPlayerLogin()
 	ns.db.profile.ignoreLists = nil
 
 	--[[
-	    MIGRATION (remove after 2026-08-21): the Verbose/Summary rollout forces
+	    MIGRATION (remove after 2026-08-15): the Verbose/Summary rollout forces
 	    Auto-Vend messages on once for everyone -- including users who had turned
 	    them off under the old per-item behavior. The marker has no default entry,
 	    so AceDB never strips it and the reset cannot re-fire. Messages are
@@ -234,7 +236,7 @@ function ns:OnPlayerLogin()
 	end
 
 	--[[
-	    MIGRATION (remove after 2026-08-21): the removed Delete Macro feature left an
+	    MIGRATION (remove after 2026-08-15): the removed Delete Macro feature left an
 	    account-wide "- Eraser" macro on anyone who had enabled it. Delete that
 	    stray once so no broken macro lingers. Guarded on combat (DeleteMacro is
 	    protected) and marked done only after a real pass, so login-in-combat
@@ -251,17 +253,15 @@ function ns:OnPlayerLogin()
 	ns:RegisterOptionsPanels()
 
 	--[[
-	    Reset Profile (AceDBOptions) resets only the profile scope, which now holds
-	    just the per-character ignore lists. Every other setting lives in global,
-	    which the profile reset never touches, so the button would leave all the
-	    real settings unchanged. Hook OnProfileReset to also restore the global
-	    settings to their defaults, so "Reset Profile" behaves like a full reset.
+	    A profile holds exactly one thing -- this character's ignore list -- so a
+	    reset, a switch and a Copy From all mean the same thing here: the list the
+	    erase candidate is computed from just changed, so re-scan. None of the
+	    three touches the account-wide settings, which live in global, outside the
+	    profile scope AceDB resets.
 	]]
-	ns.db.RegisterCallback(ns, "OnProfileReset", "OnDatabaseReset")
-
-	-- The erase candidate comes from the active profile's ignore lists, so a profile switch must re-scan immediately.
-	ns.db.RegisterCallback(ns, "OnProfileChanged", "OnProfileSwitched")
-	ns.db.RegisterCallback(ns, "OnProfileCopied", "OnProfileSwitched")
+	for _, message in ipairs({ "OnProfileChanged", "OnProfileReset", "OnProfileCopied" }) do
+		ns.db.RegisterCallback(ns, message, "OnProfileSwitched")
+	end
 
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
 	if LibDBIcon and ns.LDBObject then
@@ -294,48 +294,17 @@ function ns:OnPlayerLogin()
 	C_Timer.After(0, ns.SetupTooltipHooks)
 end
 
---[[
-    Restore the account-wide (global) settings to their DATABASE_DEFAULTS values.
-    Fired from the AceDB OnProfileReset callback so the Reset Profile button
-    resets the whole add-on, not just the ignore lists. Scalar settings are set
-    back to their defaults; the minimap button is re-enabled (its default) but
-    left where it is, since its saved position is not a "setting" a reset should
-    move. Refreshes the display and repaints the options panel afterward.
-]]
-function ns:OnDatabaseReset()
-	local defaults = ns.DATABASE_DEFAULTS.global
-	local global = ns.db.global
-
-	for key, value in pairs(defaults) do
-		if type(value) ~= "table" then
-			global[key] = value
-		end
-	end
-
-	if type(global.minimap) == "table" then
-		global.minimap.hide = nil
-	end
-	local LibDBIcon = LibStub("LibDBIcon-1.0")
-	if LibDBIcon then
-		LibDBIcon:Show(ADDON_NAME)
-	end
-
-	ns:RefreshDisplay()
-
-	local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
-end
-
 function ns:OnProfileSwitched()
 	ns:RefreshDisplay()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
 end
 
 --[[
-    Consumable eligibility is gated on the player's level
-    (playerLevel - requiredLevel >= 10 in GetItemDeleteReason), so leveling up
-    can newly qualify outgrown food. Re-scan on level-up so the candidate
-    reflects the new level immediately instead of waiting for the next bag
-    update or quest turn-in to happen to fire.
+    Consumable eligibility is gated on the player's level (see
+    GetConsumableEraseLevel in Eraser.lua), so leveling up can newly qualify
+    outgrown food. Re-scan on level-up so the candidate reflects the new level
+    immediately instead of waiting for the next bag update or quest turn-in to
+    happen to fire.
 ]]
 function ns:OnPlayerLevelUp()
 	ns:InvalidateCache()

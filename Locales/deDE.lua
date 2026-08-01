@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "Linksklick"
 L["RIGHT_CLICK"] = "Rechtsklick"
 L["MIDDLE_CLICK"] = "Mittelklick"
 L["SHIFT_RIGHT_CLICK"] = "Umschalt + Rechtsklick"
+L["SHIFT_MIDDLE_CLICK"] = "Umschalt + Mittelklick"
 L["ACTION_ERASE"] = "Löschen"
 L["ACTION_IGNORE"] = "Ignorieren"
 L["ACTION_TOGGLE"] = "Umschalten"
@@ -65,7 +66,6 @@ L["BAGS_CLEAN_SHORT"] = "Glückwunsch, deine Taschen sind voller nützlicher Din
 L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, um mehr Platz zu schaffen."
 L["LOADING_ITEM"] = "Lade ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Umschalt + Mittelklick"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -75,8 +75,8 @@ L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["IGNORE_LIST"] = "Ignorierliste"
-L["ON"] = "Aktiviert"
-L["OFF"] = "Deaktiviert"
+L["ENABLED"] = "Aktiviert"
+L["DISABLED"] = "Deaktiviert"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -145,7 +145,6 @@ L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"Gib eine Gegenstands-ID ein und drücke die Eingabetaste. Du kannst auch mit Umschalt auf einen Gegenstandslink im Chat klicken, um ihn hier einzufügen."
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
 	"Gib eine Gegenstands-ID ein oder klicke mit Umschalt auf einen Gegenstandslink im Chat."
-L["OPTIONS_IGNORE_PROMOTE"] = "Accountweit"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Verschiebt diesen Gegenstand auf die accountweite Liste, damit er auf jedem Charakter geschützt ist."
 L["OPTIONS_IGNORE_REMOVE"] = "Entfernen"

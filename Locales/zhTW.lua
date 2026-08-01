@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "左鍵點擊"
 L["RIGHT_CLICK"] = "右鍵點擊"
 L["MIDDLE_CLICK"] = "中鍵點擊"
 L["SHIFT_RIGHT_CLICK"] = "Shift + 右鍵點擊"
+L["SHIFT_MIDDLE_CLICK"] = "Shift + 中鍵點擊"
 L["ACTION_ERASE"] = "刪除"
 L["ACTION_IGNORE"] = "忽略"
 L["ACTION_TOGGLE"] = "切換"
@@ -65,17 +66,16 @@ L["BAGS_CLEAN_SHORT"] = "恭喜，你的背包裡都是好東西！"
 L["BAGS_CLEAN_HINT"] = "如果需要更多空間，你需要手動刪除一些物品。"
 L["LOADING_ITEM"] = "載入中 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + 中鍵點擊"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "自動售賣"
-L["AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為垃圾的物品。"
+L["AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為雜物的物品。"
 L["IGNORE_LIST"] = "忽略清單"
-L["ON"] = "已啟用"
-L["OFF"] = "已停用"
+L["ENABLED"] = "已啟用"
+L["DISABLED"] = "已停用"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -101,7 +101,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "僅彙總"
 L["OPTIONS_BANK_HEADER"] = "銀行取回"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "啟用銀行取回"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"開啟銀行時自動取出被 Magic Eraser 標記為垃圾的物品，方便你刪除它們。"
+	"開啟銀行時自動取出被 Magic Eraser 標記為雜物的物品，方便你刪除它們。"
 
 -- Item Tooltips
 L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
@@ -143,7 +143,6 @@ L["OPTIONS_IGNORE_ADD_ID"] = "以物品 ID 新增"
 L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"輸入物品 ID 後按 Enter。你也可以在聊天框中 Shift+點擊物品連結，將其填入此處。"
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "請輸入物品 ID，或在聊天框中 Shift+點擊物品連結。"
-L["OPTIONS_IGNORE_PROMOTE"] = "全域"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "將此物品移到全域清單，使其在所有角色上都受保護。"
 L["OPTIONS_IGNORE_REMOVE"] = "移除"
 L["OPTIONS_IGNORE_EMPTY"] = "此清單為空。"

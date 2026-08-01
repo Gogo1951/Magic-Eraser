@@ -133,7 +133,7 @@ end
 local function PromoteButton(itemId, order)
 	return {
 		type = "execute",
-		name = L["OPTIONS_IGNORE_PROMOTE"],
+		name = L["OPTIONS_IGNORE_GLOBAL"],
 		desc = L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"],
 		width = "relative",
 		relWidth = COLUMN_WIDTH_PROMOTE,

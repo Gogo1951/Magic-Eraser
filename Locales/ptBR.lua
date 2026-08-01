@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "Clique esquerdo"
 L["RIGHT_CLICK"] = "Clique direito"
 L["MIDDLE_CLICK"] = "Clique do meio"
 L["SHIFT_RIGHT_CLICK"] = "Shift + Clique direito"
+L["SHIFT_MIDDLE_CLICK"] = "Shift + Clique do meio"
 L["ACTION_ERASE"] = "Excluir"
 L["ACTION_IGNORE"] = "Ignorar"
 L["ACTION_TOGGLE"] = "Alternar"
@@ -65,7 +66,6 @@ L["BAGS_CLEAN_SHORT"] = "Parabéns, suas bolsas estão cheias de coisas boas!"
 L["BAGS_CLEAN_HINT"] = "Você precisará excluir algo manualmente para liberar mais espaço."
 L["LOADING_ITEM"] = "Carregando ID: %d"
 L["MINIMAP_OPTIONS"] = "Opções do Magic Eraser"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + Clique do meio"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -75,8 +75,8 @@ L["AUTO_VEND"] = "Venda automática"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automaticamente itens marcados como lixo pelo Magic Eraser ao abrir uma janela de mercador."
 L["IGNORE_LIST"] = "Lista de ignorados"
-L["ON"] = "Ativado"
-L["OFF"] = "Desativado"
+L["ENABLED"] = "Ativado"
+L["DISABLED"] = "Desativado"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -138,13 +138,12 @@ L["OPTIONS_WAGO"] = "Wago"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
-	"Itens em uma lista de ignorados nunca são excluídos nem vendidos. A lista Global protege um item em todos os personagens, e a lista do próprio personagem o protege apenas nele."
+	"Itens em uma Lista de ignorados nunca são excluídos nem vendidos. A lista Global protege um item em todos os personagens, e a lista do próprio personagem o protege apenas nele."
 L["OPTIONS_IGNORE_GLOBAL"] = "Global"
 L["OPTIONS_IGNORE_ADD_ID"] = "Adicionar por ID do item"
 L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"Digite um ID de item e pressione Enter. Você também pode dar Shift+clique em um link de item no chat para inseri-lo aqui."
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Digite um ID de item, ou dê Shift+clique em um link de item no chat."
-L["OPTIONS_IGNORE_PROMOTE"] = "Global"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Move este item para a lista Global, para que ele fique protegido em todos os personagens."
 L["OPTIONS_IGNORE_REMOVE"] = "Remover"

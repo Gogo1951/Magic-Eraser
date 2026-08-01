@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "Clic sinistro"
 L["RIGHT_CLICK"] = "Clic destro"
 L["MIDDLE_CLICK"] = "Clic centrale"
 L["SHIFT_RIGHT_CLICK"] = "Maiusc + Clic destro"
+L["SHIFT_MIDDLE_CLICK"] = "Maiusc + Clic centrale"
 L["ACTION_ERASE"] = "Elimina"
 L["ACTION_IGNORE"] = "Ignora"
 L["ACTION_TOGGLE"] = "Attiva/Disattiva"
@@ -65,7 +66,6 @@ L["BAGS_CLEAN_SHORT"] = "Congratulazioni, le tue borse sono piene di cose utili!
 L["BAGS_CLEAN_HINT"] = "Dovrai eliminare qualcosa manualmente se vuoi liberare più spazio."
 L["LOADING_ITEM"] = "Caricamento ID: %d"
 L["MINIMAP_OPTIONS"] = "Opzioni di Magic Eraser"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Maiusc + Clic centrale"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -75,8 +75,8 @@ L["AUTO_VEND"] = "Vendita automatica"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
 L["IGNORE_LIST"] = "Lista ignorati"
-L["ON"] = "Attivato"
-L["OFF"] = "Disattivato"
+L["ENABLED"] = "Attivato"
+L["DISABLED"] = "Disattivato"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -138,14 +138,13 @@ L["OPTIONS_WAGO"] = "Wago"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
-	"Gli oggetti in una lista ignorati non vengono mai eliminati né venduti. La lista Globale protegge un oggetto su ogni personaggio, mentre la lista di un personaggio lo protegge solo su quel personaggio."
+	"Gli oggetti in una Lista ignorati non vengono mai eliminati né venduti. La lista Globale protegge un oggetto su ogni personaggio, mentre la lista di un personaggio lo protegge solo su quel personaggio."
 L["OPTIONS_IGNORE_GLOBAL"] = "Globale"
 L["OPTIONS_IGNORE_ADD_ID"] = "Aggiungi tramite ID oggetto"
 L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"Digita un ID oggetto e premi Invio. Puoi anche fare Maiusc+clic su un collegamento a un oggetto in chat per inserirlo qui."
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
 	"Digita un ID oggetto, oppure fai Maiusc+clic su un collegamento a un oggetto in chat."
-L["OPTIONS_IGNORE_PROMOTE"] = "Globale"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Sposta questo oggetto nella lista Globale, così da proteggerlo su ogni personaggio."
 L["OPTIONS_IGNORE_REMOVE"] = "Rimuovi"

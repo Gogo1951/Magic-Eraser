@@ -5,8 +5,10 @@ local _, ns = ...
 --------------------------------------------------------------------------------
 
 --[[
-    AceDB-3.0 defaults. AceDB applies these via metatables (no hand-rolled merge,
-    and explicit false survives).
+    AceDB-3.0 defaults. AceDB copies these into the saved table itself when a
+    scope is first touched (no hand-rolled merge, and explicit false survives).
+    Only wildcard defaults resolve lazily through metatables, and there are none
+    here.
 
     Each character gets its own AceDB profile (Core.lua creates ns.db without the
     shared-Default flag), so the one profile-scoped setting -- the per-character

@@ -38,7 +38,9 @@ local visitGeneration = 0
 --[[
     Slots already announced this merchant visit. A retry pass can re-sell a slot
     whose first UseContainerItem was silently dropped, but the player only needs
-    to hear about that sale once. Wiped per visit in StartVending, not per pass.
+    to hear about that sale once. Wiped per visit in BeginVisit -- never per
+    pass, and never on the combat resume, which continues the same visit rather
+    than opening a new one.
 ]]
 
 local announcedSales = {}
@@ -46,8 +48,10 @@ local announcedSales = {}
 --[[
     Attempted-but-unconfirmed sales, keyed bag:slot:itemId -> the data needed to
     announce the sale later (count, value, link). ProcessSellQueue fills this;
-    ConfirmSales drains it as items are confirmed gone from their slots. Wiped
-    per visit alongside announcedSales.
+    ConfirmSales drains it as items are confirmed gone from their slots. Visit
+    scoped alongside announcedSales, which is what lets a sale attempted just
+    before combat interrupted the pass still be confirmed and announced once the
+    pass restarts.
 ]]
 
 local pendingSales = {}
@@ -56,7 +60,7 @@ local pendingSales = {}
     Per-visit totals for summary mode. Accrued for every newly announced sale
     regardless of the Verbose/Summary setting, so flipping the dropdown
     mid-visit still produces a correct closing line. summarySlots counts one per
-    sale (each sold stack empties one bag slot). Reset in StartVending alongside
+    sale (each sold stack empties one bag slot). Visit scoped alongside
     announcedSales, and flushed in OnMerchantClosed.
 ]]
 
@@ -138,8 +142,11 @@ local function ProcessSellQueue()
 
 	--[[
         UseContainerItem below is protected and forbidden in combat. If we
-        entered combat mid-queue, stop now; OnCombatEnded re-scans and resumes
-        from scratch once PLAYER_REGEN_ENABLED fires (slots may have shifted).
+        entered combat mid-queue, stop now; OnCombatEnded starts a fresh pass
+        once PLAYER_REGEN_ENABLED fires, rebuilding the queue from live bag state
+        because slots may have shifted. Only the queue is dropped: pendingSales
+        keeps the already-attempted sales so the resumed pass can still confirm
+        and announce them.
     ]]
 
 	if InCombatLockdown() then
@@ -229,7 +236,7 @@ function ScanAndVend()
 				local itemId = itemInfo.itemID
 
 				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
-					local name, _, rarity, _, requiredLevel, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
+					local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
 						isDataMissing = true
@@ -237,7 +244,7 @@ function ScanAndVend()
 							C_Item.RequestLoadItemDataByID(itemId)
 						end
 					elseif sellPrice and sellPrice > 0 then
-						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice, requiredLevel)
+						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 
 						if deleteReason then
 							local count = itemInfo.stackCount or 1
@@ -270,17 +277,33 @@ function ScanAndVend()
 	end
 end
 
-local function StartVending()
-	isSelling = true
-	sellIndex = 0
-	scanRetries = 0
-	vendPasses = 0
+--[[
+    Open a visit: clear the sale accounting the visit owns. MERCHANT_SHOW starts
+    a visit whether or not a pass can run right now, so this fires even when the
+    pass is deferred to the end of combat -- otherwise the resumed pass would
+    inherit the previous merchant's announced slots.
+]]
+local function BeginVisit()
 	visitGeneration = visitGeneration + 1
 	wipe(announcedSales)
 	wipe(pendingSales)
 	summaryCount = 0
 	summarySlots = 0
 	summaryValue = 0
+end
+
+--[[
+    Everything a fresh pass needs and nothing the visit owns, so a pass can be
+    restarted mid-visit without disturbing the books. That is what lets a sale
+    attempted moments before combat interrupted us survive: it is still sitting
+    in pendingSales, and the ConfirmSales at the top of the resumed ScanAndVend
+    is what finally announces and counts it.
+]]
+local function StartPass()
+	isSelling = true
+	sellIndex = 0
+	scanRetries = 0
+	vendPasses = 0
 	ScanAndVend()
 end
 
@@ -300,6 +323,8 @@ function ns:OnMerchantShow()
 		return
 	end
 
+	BeginVisit()
+
 	--[[
         Vendoring relies on UseContainerItem, a protected call the client blocks
         in combat. If the merchant opened during combat, defer the whole pass
@@ -314,7 +339,7 @@ function ns:OnMerchantShow()
 		return
 	end
 
-	StartVending()
+	StartPass()
 end
 
 function ns:OnMerchantClosed()
@@ -376,6 +401,9 @@ end
     is protected), so once combat ends we resume the deferred pass -- but only if
     the merchant window is still open. Fires on every combat end, so the
     vendPending guard keeps it free when nothing is waiting.
+
+    A pass, not a visit: the merchant window never closed, so the sales already
+    attempted are still this visit's and are still owed an announcement.
 ]]
 function ns:OnCombatEnded()
 	if not vendPending then
@@ -384,6 +412,6 @@ function ns:OnCombatEnded()
 	vendPending = false
 
 	if ns.db and ns.db.global.autoVendEnabled and MerchantFrame and MerchantFrame:IsShown() then
-		StartVending()
+		StartPass()
 	end
 end

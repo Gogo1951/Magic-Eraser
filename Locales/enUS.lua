@@ -57,6 +57,7 @@ L["LEFT_CLICK"] = "Left-Click"
 L["RIGHT_CLICK"] = "Right-Click"
 L["MIDDLE_CLICK"] = "Middle-Click"
 L["SHIFT_RIGHT_CLICK"] = "Shift + Right-Click"
+L["SHIFT_MIDDLE_CLICK"] = "Shift + Middle-Click"
 L["ACTION_ERASE"] = "Erase"
 L["ACTION_IGNORE"] = "Ignore"
 L["ACTION_TOGGLE"] = "Toggle"
@@ -65,17 +66,17 @@ L["BAGS_CLEAN_SHORT"] = "Congratulations, your bags are full of good stuff!"
 L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
 L["LOADING_ITEM"] = "Loading ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
-L["MINIMAP_OPTIONS_KEYBIND"] = "Shift + Middle-Click"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
 L["AUTO_VEND"] = "Auto-Vend"
-L["AUTO_VEND_DESCRIPTION"] = "Automatically sell items flagged as junk by Magic Eraser when you open a merchant window."
+L["AUTO_VEND_DESCRIPTION"] =
+	"Automatically sell items flagged as clutter by Magic Eraser when you open a merchant window."
 L["IGNORE_LIST"] = "Ignore List"
-L["ON"] = "Enabled"
-L["OFF"] = "Disabled"
+L["ENABLED"] = "Enabled"
+L["DISABLED"] = "Disabled"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -101,7 +102,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Automatically pull items flagged as junk by Magic Eraser out of your bank when you open it, so you can erase them."
+	"Automatically pull items flagged as clutter by Magic Eraser out of your bank when you open it, so you can erase them."
 
 -- Item Tooltips
 L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
@@ -136,13 +137,12 @@ L["OPTIONS_WAGO"] = "Wago"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
-	"Items on an ignore list are never erased and never sold. The Global list protects an item on every character, and a character's own list protects it on that character only."
+	"Items on an Ignore List are never erased and never sold. The Global list protects an item on every character, and a character's own list protects it on that character only."
 L["OPTIONS_IGNORE_GLOBAL"] = "Global"
 L["OPTIONS_IGNORE_ADD_ID"] = "Add by Item ID"
 L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
 	"Type an item ID and press Enter. You can also shift-click an item link in chat to drop it in here."
 L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Type an item ID, or shift-click an item link in chat."
-L["OPTIONS_IGNORE_PROMOTE"] = "Global"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so it is protected on every character."
 L["OPTIONS_IGNORE_REMOVE"] = "Remove"
 L["OPTIONS_IGNORE_EMPTY"] = "This list is empty."
