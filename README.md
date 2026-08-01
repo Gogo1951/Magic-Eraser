@@ -101,20 +101,6 @@ Please reach out if you would like to be involved!
 
 ## Related Add-ons
 
-🟢 Pairs With // Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
-
-🟢 Pairs With // plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
-
-🟢 Pairs With // Jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
-
-🟢 Pairs With // Cidan's [BetterBags](https://www.curseforge.com/wow/addons/better-bags)
-
-🟢 Pairs With // GeodesicDragon's [Free Bag Spaces](https://www.curseforge.com/wow/addons/free-bag-spaces)
-
-🟢 Pairs With // syndenbock's [MinimapButtonButton](https://www.curseforge.com/wow/addons/minimapbuttonbutton)
-
-🟡 Some Overlap // Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
-
 🔴 Direct Alternative // Milestorme's [Auto Junk Destroyer](https://www.curseforge.com/wow/addons/auto-junk-destroyer)
 
 🔴 Direct Alternative // IceDNicco's [Auto Sell Grey](https://www.curseforge.com/wow/addons/auto-sell-grey)
