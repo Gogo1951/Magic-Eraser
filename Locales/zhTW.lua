@@ -16,6 +16,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"版本 %s。設定（包含關閉此訊息的選項）可以在 選項 > 插件 > Magic Eraser 中找到。喜歡這個插件嗎？告訴朋友吧！(="
+L["CHAT_OPTIONS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟選項介面。"
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "戰鬥中無法刪除物品。"
@@ -62,7 +63,7 @@ L["ACTION_ERASE"] = "刪除"
 L["ACTION_IGNORE"] = "忽略"
 L["ACTION_TOGGLE"] = "切換"
 L["ACTION_CLEAR_IGNORE"] = "清空忽略清單"
-L["BAGS_CLEAN_SHORT"] = "恭喜，你的背包裡都是好東西！"
+L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包裡都是好東西！"
 L["BAGS_CLEAN_HINT"] = "如果需要更多空間，你需要手動刪除一些物品。"
 L["LOADING_ITEM"] = "載入中 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
@@ -74,6 +75,7 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
 L["AUTO_VEND"] = "自動售賣"
 L["AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為雜物的物品。"
 L["IGNORE_LIST"] = "忽略清單"
+L["TAB_IGNORE_LIST"] = "忽略清單"
 L["ENABLED"] = "已啟用"
 L["DISABLED"] = "已停用"
 
@@ -88,13 +90,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/指令"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "開啟 Magic Eraser 選項面板。"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "開啟本插件的選項介面。"
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "啟用自動售賣"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "逐項"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "逐項"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "僅彙總"
 
 -- Bank Retrieval

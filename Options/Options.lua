@@ -30,7 +30,17 @@ function ns:RegisterOptionsPanels()
 	-- the ignore lists themselves, so AceConfig re-invokes it on every open and
 	-- every NotifyChange and the panel never renders a stale list.
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["IGNORE_LIST"], ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], ns.AddonTitle)
+
+	--[[
+	    Widen the Ignore List tree. AceGUI defaults it to 175px, which truncates
+	    the longer "Name - Realm" scope keys, and its SetStatusTable fills
+	    treewidth in only when the key is absent -- so seeding it here wins, while
+	    a player dragging the splitter still overwrites it from then on.
+	]]
+	local ignoreStatus = AceConfigDialog:GetStatusTable(ns.OPTIONS_REGISTRY.IgnoreList)
+	ignoreStatus.groups = ignoreStatus.groups or {}
+	ignoreStatus.groups.treewidth = ns.OPTIONS_TREE_WIDTH
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
@@ -45,6 +55,13 @@ end
 --------------------------------------------------------------------------------
 
 function ns:OpenOptionsPanel()
+	-- Combat first: the Settings panel is protected there, so every route below is
+	-- blocked and the player would get an ADDON_ACTION_BLOCKED error instead.
+	if InCombatLockdown() then
+		ns:PrintMessage(L["CHAT_OPTIONS_IN_COMBAT"])
+		return
+	end
+
 	if Settings and Settings.OpenToCategory and ns.GeneralCategoryID then
 		Settings.OpenToCategory(ns.GeneralCategoryID)
 		return

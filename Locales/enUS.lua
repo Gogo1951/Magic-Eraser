@@ -16,6 +16,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"Version %s. Settings (including the option to disable this message) can be found under Options > AddOns > Magic Eraser. Enjoying the add-on? Tell a friend about it! (="
+L["CHAT_OPTIONS_IN_COMBAT"] = "As a safety precaution, the Options Interface cannot be opened during combat."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
@@ -31,11 +32,11 @@ L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
-L["SOLD_SUMMARY"] = "Sold %s Items (%s Bag Slots), worth %s."
+L["SOLD_SUMMARY"] = "Sold %s items (%s bag slots), worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 -- Bank Retrieval
-L["BANK_RETRIEVED"] = "Pulled %s Items (%s Bag Slots) out of your bank, worth %s."
+L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -62,7 +63,7 @@ L["ACTION_ERASE"] = "Erase"
 L["ACTION_IGNORE"] = "Ignore"
 L["ACTION_TOGGLE"] = "Toggle"
 L["ACTION_CLEAR_IGNORE"] = "Clear Ignore List"
-L["BAGS_CLEAN_SHORT"] = "Congratulations, your bags are full of good stuff!"
+L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
 L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
 L["LOADING_ITEM"] = "Loading ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
@@ -75,6 +76,7 @@ L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Automatically sell items flagged as clutter by Magic Eraser when you open a merchant window."
 L["IGNORE_LIST"] = "Ignore List"
+L["TAB_IGNORE_LIST"] = "Ignore List"
 L["ENABLED"] = "Enabled"
 L["DISABLED"] = "Disabled"
 
@@ -89,13 +91,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Opens the Magic Eraser options panel."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Opens the Options Interface for this add-on."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "Line Item"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Line Item"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
 
 -- Bank Retrieval

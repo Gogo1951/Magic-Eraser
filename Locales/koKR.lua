@@ -16,6 +16,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에서 찾을 수 있습니다. 애드온이 마음에 드시나요? 친구에게 알려주세요! (="
+L["CHAT_OPTIONS_IN_COMBAT"] = "안전을 위해 전투 중에는 설정 창을 열 수 없습니다."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "전투 중에는 아이템을 삭제할 수 없습니다."
@@ -62,7 +63,7 @@ L["ACTION_ERASE"] = "삭제"
 L["ACTION_IGNORE"] = "무시"
 L["ACTION_TOGGLE"] = "전환"
 L["ACTION_CLEAR_IGNORE"] = "무시 목록 초기화"
-L["BAGS_CLEAN_SHORT"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
+L["BAGS_CLEAN_CONGRATS"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
 L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
 L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 옵션"
@@ -75,6 +76,7 @@ L["AUTO_VEND"] = "자동 판매"
 L["AUTO_VEND_DESCRIPTION"] =
 	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["IGNORE_LIST"] = "무시 목록"
+L["TAB_IGNORE_LIST"] = "무시 목록"
 L["ENABLED"] = "활성화"
 L["DISABLED"] = "비활성화"
 
@@ -89,13 +91,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Magic Eraser 옵션 창을 엽니다."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "이 애드온의 설정 창을 엽니다."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "자동 판매 활성화"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "자동 판매 메시지 활성화"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "항목별"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "항목별"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "요약만"
 
 -- Bank Retrieval

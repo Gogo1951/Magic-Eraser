@@ -365,7 +365,7 @@ function ns:RunEraser()
 	local item = self:FindItemToDelete()
 
 	if not item then
-		self:PrintMessage(L["BAGS_CLEAN_SHORT"] .. " " .. L["BAGS_CLEAN_HINT"])
+		self:PrintMessage(L["BAGS_CLEAN_CONGRATS"] .. " " .. L["BAGS_CLEAN_HINT"])
 		ns:RefreshDisplay()
 		return
 	end

@@ -16,6 +16,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"Version %s. Einstellungen (einschließlich der Option, diese Nachricht zu deaktivieren) findest du unter Optionen > AddOns > Magic Eraser. Gefällt dir das Add-on? Erzähle einem Freund davon! (="
+L["CHAT_OPTIONS_IN_COMBAT"] = "Aus Sicherheitsgründen kann das Optionsfenster im Kampf nicht geöffnet werden."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Gegenstände können im Kampf nicht gelöscht werden."
@@ -62,7 +63,7 @@ L["ACTION_ERASE"] = "Löschen"
 L["ACTION_IGNORE"] = "Ignorieren"
 L["ACTION_TOGGLE"] = "Umschalten"
 L["ACTION_CLEAR_IGNORE"] = "Ignorierliste leeren"
-L["BAGS_CLEAN_SHORT"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
+L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
 L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, um mehr Platz zu schaffen."
 L["LOADING_ITEM"] = "Lade ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
@@ -75,6 +76,7 @@ L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["IGNORE_LIST"] = "Ignorierliste"
+L["TAB_IGNORE_LIST"] = "Ignorierliste"
 L["ENABLED"] = "Aktiviert"
 L["DISABLED"] = "Deaktiviert"
 
@@ -89,13 +91,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Befehle"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Öffnet das Optionsfenster von Magic Eraser."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Auto-Verkauf-Nachrichten aktivieren"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "Einzelposten"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Einzelposten"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Nur Zusammenfassung"
 
 -- Bank Retrieval

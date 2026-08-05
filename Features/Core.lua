@@ -74,7 +74,9 @@ function ns:OnPlayerLogin()
         the oldest builds, an account-level autoVendEnabled) and per-character
         MagicEraserCharDB (autoVendEnabled, autoVendMessagesEnabled, ignoreList).
         Capture those legacy values before AceDB adopts MagicEraserDB, fold them
-        into the profile once the database exists, then clear the legacy keys.
+        into their current homes once the database exists -- settings into
+        global, while the per-character ignore list reaches the profile via the
+        per-character migration below -- then clear the legacy keys.
         autoVendEnabled prefers the per-character value and falls back to the old
         account-level one, folding in the previous account->character migration.
     ]]
