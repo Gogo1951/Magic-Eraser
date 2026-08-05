@@ -16,6 +16,8 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"Версия %s. Настройки (включая опцию отключения этого сообщения) можно найти в Настройки > Аддоны > Magic Eraser. Нравится аддон? Расскажите другу! (="
+L["CHAT_OPTIONS_IN_COMBAT"] =
+	"В целях безопасности панель настроек нельзя открыть во время боя."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Нельзя удалять предметы во время боя."
@@ -64,7 +66,7 @@ L["ACTION_ERASE"] = "Удалить"
 L["ACTION_IGNORE"] = "Игнорировать"
 L["ACTION_TOGGLE"] = "Переключить"
 L["ACTION_CLEAR_IGNORE"] = "Очистить список игнорируемых"
-L["BAGS_CLEAN_SHORT"] = "Поздравляем, ваши сумки полны полезных вещей!"
+L["BAGS_CLEAN_CONGRATS"] = "Поздравляем, ваши сумки полны полезных вещей!"
 L["BAGS_CLEAN_HINT"] =
 	"Чтобы освободить больше места, придётся удалить что-нибудь вручную."
 L["LOADING_ITEM"] = "Загрузка ID: %d"
@@ -78,6 +80,7 @@ L["AUTO_VEND"] = "Автопродажа"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Автоматически продаёт предметы, отмеченные Magic Eraser как хлам, при открытии окна торговца."
 L["IGNORE_LIST"] = "Список игнорируемых"
+L["TAB_IGNORE_LIST"] = "Список игнорируемых"
 L["ENABLED"] = "Включено"
 L["DISABLED"] = "Выключено"
 
@@ -92,13 +95,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Включить кнопку у миникарт
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Команды"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Открывает панель настроек Magic Eraser."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Открывает панель настроек этого аддона."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить автопродажу"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "По предметам"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "По предметам"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Только сводка"
 
 -- Bank Retrieval

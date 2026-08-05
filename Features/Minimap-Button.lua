@@ -47,8 +47,13 @@ local function RefreshTooltip(anchor)
 			GetColor("INFO") .. L["ACTION_IGNORE"] .. "|r"
 		)
 	else
-		-- Replaces the Lowest Value Item section when bags are clean.
-		tooltip:AddLine(GetColor("BODY") .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
+		--[[
+		    Replaces the Lowest Value Item section when bags are clean. The
+		    congratulation leads and the Clutter Report below carries the
+		    follow-up hint, matching the order RunEraser prints the same two
+		    strings in, so they read the same way wherever the player meets them.
+		]]
+		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_CONGRATS"] .. "|r", 1, 1, 1, true)
 	end
 
 	-- Auto-Vend
@@ -63,8 +68,8 @@ local function RefreshTooltip(anchor)
 		GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
 	)
 
-	-- Clutter Report. With clutter it summarizes the haul; with clean bags it
-	-- carries the congratulations message instead.
+	-- Clutter Report. With clutter it summarizes the haul; with clean bags there
+	-- is nothing to total, so it carries the hint about what to do instead.
 	tooltip:AddLine(" ")
 	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
 	if item then
@@ -76,7 +81,7 @@ local function RefreshTooltip(anchor)
 			GetColor("TEXT") .. ns:FormatCurrency(reclaimValue) .. "|r"
 		)
 	else
-		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_SHORT"] .. "|r", 1, 1, 1, true)
+		tooltip:AddLine(GetColor("BODY") .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
 	end
 
 	--[[

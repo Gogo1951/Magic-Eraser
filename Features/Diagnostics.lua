@@ -241,10 +241,15 @@ end
 --[[
     Existence and shape checks only: read-only, no side effects, no protected
     calls. One row per API Magic Eraser actually calls or guards, wherever it
-    lives -- nothing incidental, and nothing the add-on does not use. The
-    C_AddOns / GetAddOnMetadata pair is listed modern + legacy so the report
-    shows what each client provides -- the legacy global ships on Era but is
-    gone on TBC.
+    lives -- nothing incidental, and nothing the add-on does not use.
+
+    Every modern/legacy pair the add-on guards on is listed as both halves, and a
+    FAIL on one half is the report working rather than a defect: the pair is what
+    tells a bug report which branch that client actually took. Reading the
+    tooltip pair as PASS legacy plus FAIL modern is how you know the SetBagItem
+    hook is the live path there, and the option-opener pair answers the same
+    question for ns:OpenOptionsPanel's routing. Never drop the half that fails on
+    the client in front of you -- that is the half carrying the answer.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
 	-- { label, testFunction }
@@ -258,6 +263,18 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"GetAddOnMetadata (legacy)",
 		function()
 			return type(GetAddOnMetadata) == "function"
+		end,
+	},
+	{
+		"Settings.OpenToCategory",
+		function()
+			return type(Settings) == "table" and type(Settings.OpenToCategory) == "function"
+		end,
+	},
+	{
+		"InterfaceOptionsFrame_OpenToCategory (legacy)",
+		function()
+			return type(InterfaceOptionsFrame_OpenToCategory) == "function"
 		end,
 	},
 	{
@@ -348,6 +365,12 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"TooltipDataProcessor.AddTooltipPostCall",
 		function()
 			return type(TooltipDataProcessor) == "table" and type(TooltipDataProcessor.AddTooltipPostCall) == "function"
+		end,
+	},
+	{
+		"GameTooltip.SetBagItem (legacy)",
+		function()
+			return type(GameTooltip) == "table" and type(GameTooltip.SetBagItem) == "function"
 		end,
 	},
 	{

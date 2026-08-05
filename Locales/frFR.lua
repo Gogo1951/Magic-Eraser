@@ -16,6 +16,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"Version %s. Les paramètres (y compris l'option pour désactiver ce message) se trouvent dans Options > Extensions > Magic Eraser. Vous appréciez l'extension ? Parlez-en à un ami ! (="
+L["CHAT_OPTIONS_IN_COMBAT"] = "Par mesure de sécurité, le panneau d'options ne peut pas être ouvert en combat."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Impossible de supprimer des objets en combat."
@@ -62,7 +63,7 @@ L["ACTION_ERASE"] = "Supprimer"
 L["ACTION_IGNORE"] = "Ignorer"
 L["ACTION_TOGGLE"] = "Basculer"
 L["ACTION_CLEAR_IGNORE"] = "Vider la liste d'ignorés"
-L["BAGS_CLEAN_SHORT"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
+L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
 L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer plus d'espace."
 L["LOADING_ITEM"] = "Chargement ID : %d"
 L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
@@ -75,6 +76,7 @@ L["AUTO_VEND"] = "Vente auto"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
 L["IGNORE_LIST"] = "Liste d'ignorés"
+L["TAB_IGNORE_LIST"] = "Liste d'ignorés"
 L["ENABLED"] = "Activé"
 L["DISABLED"] = "Désactivé"
 
@@ -89,13 +91,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Ouvre le panneau d'options de Magic Eraser."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cet addon."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Activer la Vente auto"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Activer les messages de Vente auto"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "Par objet"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Par objet"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Résumé uniquement"
 
 -- Bank Retrieval

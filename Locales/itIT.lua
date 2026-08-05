@@ -16,6 +16,8 @@ L["ADDON_TITLE"] = "Magic Eraser"
 -- System
 L["CHAT_LOADED"] =
 	"Versione %s. Le impostazioni (inclusa l'opzione per disabilitare questo messaggio) si trovano in Opzioni > AddOn > Magic Eraser. Ti piace l'add-on? Dillo a un amico! (="
+L["CHAT_OPTIONS_IN_COMBAT"] =
+	"Per sicurezza, il pannello delle opzioni non può essere aperto durante il combattimento."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Non puoi eliminare oggetti durante il combattimento."
@@ -62,7 +64,7 @@ L["ACTION_ERASE"] = "Elimina"
 L["ACTION_IGNORE"] = "Ignora"
 L["ACTION_TOGGLE"] = "Attiva/Disattiva"
 L["ACTION_CLEAR_IGNORE"] = "Svuota lista ignorati"
-L["BAGS_CLEAN_SHORT"] = "Congratulazioni, le tue borse sono piene di cose utili!"
+L["BAGS_CLEAN_CONGRATS"] = "Congratulazioni, le tue borse sono piene di cose utili!"
 L["BAGS_CLEAN_HINT"] = "Dovrai eliminare qualcosa manualmente se vuoi liberare più spazio."
 L["LOADING_ITEM"] = "Caricamento ID: %d"
 L["MINIMAP_OPTIONS"] = "Opzioni di Magic Eraser"
@@ -75,6 +77,7 @@ L["AUTO_VEND"] = "Vendita automatica"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
 L["IGNORE_LIST"] = "Lista ignorati"
+L["TAB_IGNORE_LIST"] = "Lista ignorati"
 L["ENABLED"] = "Attivato"
 L["DISABLED"] = "Disattivato"
 
@@ -89,13 +92,13 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
 
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
-L["OPTIONS_COMMAND_ERASER"] = "/eraser"
-L["OPTIONS_COMMAND_ERASER_DESCRIPTION"] = "Apre il pannello delle opzioni di Magic Eraser."
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Apre il pannello delle opzioni di questo addon."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Abilita Vendita automatica"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Abilita messaggi Vendita automatica"
-L["OPTIONS_AUTO_VEND_VERBOSE"] = "Per oggetto"
+L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Per oggetto"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Solo riepilogo"
 
 -- Bank Retrieval

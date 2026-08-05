@@ -37,6 +37,60 @@ ns.OPTIONS_REGISTRY = {
 }
 
 --------------------------------------------------------------------------------
+-- Options Layout Grid
+--------------------------------------------------------------------------------
+
+--[[
+    The label-beside-control grid. AceConfig renders a widget's own name above it,
+    so a captioned control is built as two args instead -- an ns.OptionsRowLabel
+    cell, then the control with name = "" ordered immediately after. The two flow
+    onto one line because their widths add up to exactly one row.
+]]
+ns.OPTIONS_ROW_WIDTH = 2.6
+ns.OPTIONS_LABEL_WIDTH = 1.3
+ns.OPTIONS_CONTROL_WIDTH = ns.OPTIONS_ROW_WIDTH - ns.OPTIONS_LABEL_WIDTH
+
+-- The item lists' remove column, sized to its icon rather than a caption.
+ns.OPTIONS_REMOVE_ICON_WIDTH = 0.25
+
+--[[
+    The blank cell a sub-option row leads with. AceConfig pins a checkbox at the
+    left edge of its own widget, so padding a label indents the caption and
+    leaves the box behind; leading the row with this cell instead moves the box
+    itself.
+
+    Sized so the sub-option's box starts where its parent's box visually ends.
+    That lands short of a full checkbox: AceGUI's checkbox is a 24px texture
+    anchored flush left and the flow layout adds no gap between widgets, but
+    UI-CheckBox-Up carries transparent padding, so the gold square the player
+    actually sees is inset a couple of pixels inside that footprint. Matching the
+    footprint (0.14) therefore reads as a visible step too far; this matches the
+    square. Nudge here if the two edges drift apart on a different UI scale.
+]]
+ns.OPTIONS_SUB_INDENT_WIDTH = 0.115
+
+-- The item lists' promote column, sized to hold its button caption.
+ns.OPTIONS_PROMOTE_WIDTH = 0.6
+
+--[[
+    A tree panel's sidebar eats into the pane its rows are laid out in, so rows
+    inside one spend a shorter budget than ns.OPTIONS_ROW_WIDTH. AceGUI's tree
+    defaults to 175px, which truncates the longer "Name - Realm" scope keys;
+    widening it costs the item pane exactly what it gains, hence the paired
+    constant. The tree stays drag-resizable, and a drag wins over this seed.
+]]
+ns.OPTIONS_TREE_WIDTH = 220
+ns.OPTIONS_TREE_ROW_WIDTH = 2.3
+
+--[[
+    The AceGUI widget the shared item-list builder draws each row's item with --
+    icon, colored link, and the item's own tooltip on hover. Registered in
+    Options/Options-Utilities.lua and named off the add-on so two add-ons in one
+    session never collide on the widget registry.
+]]
+ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
+
+--------------------------------------------------------------------------------
 -- Ignore List Scopes
 --------------------------------------------------------------------------------
 

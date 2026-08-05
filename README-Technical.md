@@ -8,46 +8,46 @@ This document combines architecture notes and contribution guidance for develope
 Magic-Eraser/
 ├── .github/
 │   └── workflows/
-│       └── package.yml         CurseForge release; vendors the libraries back to the default branch.
-├── .gitattributes              Normalizes line endings to LF on commit.
-├── .pkgmeta                    Externals and packager ignore list.
-├── LICENSE                     MIT.
-├── MagicEraser.toc             Single TOC; dual-flavor Interface line (Classic Era + TBC Anniversary).
-├── README.md                   Player-facing documentation.
-├── README-Technical.md         This document.
-├── README-Testing.md           Manual test plan, run on both flavors before a release is tagged.
+│       └── package.yml          CurseForge release; vendors the libraries back to the default branch.
+├── .gitattributes               Normalizes line endings to LF on commit.
+├── .pkgmeta                     Externals and packager ignore list.
+├── LICENSE                      MIT.
+├── MagicEraser.toc              Single TOC; dual-flavor Interface line (Classic Era + TBC Anniversary).
+├── README.md                    Player-facing documentation.
+├── README-Technical.md          This document.
+├── README-Testing.md            Manual test plan, run on both flavors before a release is tagged.
 ├── Data/
-│   ├── Data.lua                Locale handle, identity, ns.Links, ns.OPTIONS_REGISTRY, ns.IGNORE_SCOPE_GLOBAL, ns.PALETTE + ns.CurrencyColors, class reagent exclusions, ns.DeletePriority. No logic beyond GetLocale.
-│   ├── Default-Settings.lua    ns.DATABASE_DEFAULTS — the AceDB defaults table (global + profile scopes).
-│   ├── Quest-Items.lua         ns.AllowedDeleteQuestItems: itemId → { questId, ... }.
-│   ├── Consumables.lua         ns.AllowedDeleteConsumables: itemId → { useLevel }, outgrown food and drink.
-│   └── Equipment.lua           ns.AllowedDeleteEquipment: itemId → true, vendor-quality whites.
+│   ├── Data.lua                 Locale handle, identity, ns.Links, ns.OPTIONS_REGISTRY, the options layout grid (ns.OPTIONS_ROW_WIDTH and its siblings) plus ns.ITEM_LINK_WIDGET_TYPE, ns.IGNORE_SCOPE_GLOBAL, ns.PALETTE + ns.CurrencyColors, class reagent exclusions, ns.DeletePriority. No logic beyond GetLocale.
+│   ├── Default-Settings.lua     ns.DATABASE_DEFAULTS — the AceDB defaults table (global + profile scopes).
+│   ├── Quest-Items.lua          ns.AllowedDeleteQuestItems: itemId → { questId, ... }.
+│   ├── Consumables.lua          ns.AllowedDeleteConsumables: itemId → { useLevel }, outgrown food and drink.
+│   └── Equipment.lua            ns.AllowedDeleteEquipment: itemId → true, vendor-quality whites.
 ├── Features/
-│   ├── Core.lua                ns.Version, ns.EVENT_NAMES, the one event frame and its dispatcher, AceDB init + every migration, the profile-callback hooks.
-│   ├── Utilities.lua           Derived COLORS table + ns.GetColor, ns:FormatCommaNumber / ns:FormatCurrency, ns:CountFreeBagSlots.
-│   ├── Announcements.lua       ns.BrandPrefix and ns:PrintMessage — player-only branded print.
-│   ├── Ignore-List.lua         Both lists: ns:GetIgnoreList / ns:GetGlobalIgnoreList, ns:IsIgnored, ns:ToggleIgnore, ns:ClearIgnoreList, plus the per-scope reads and writes the Ignore List panel uses (ns:GetIgnoreListForScope, ns:SetIgnoredInScope).
-│   ├── Eraser.lua              Scan cache + bounded retry, ns:IsQuestCompleted, GetConsumableEraseLevel, ns:GetItemDeleteReason, ranking, the safety popup, ns:PerformErase / ns:RunEraser, ns:GetReclaimSummary, ns:OnQuestTurnedIn.
-│   ├── Bag-Warnings.lua        The ns:IsBagWindowOpen gate, ns:CheckBagsFullNudge, ns:SeedBagSpaceBaseline, ns:OnEnteringWorld, ns:OnMailClosed.
-│   ├── Bank-Retrieval.lua      Pulls flagged items out of the bank within a free-slot budget, with confirmed-move accounting. Owns ns:OnBankOpened / ns:OnBankClosed.
-│   ├── Auto-Vend.lua           Merchant auto-sell (scan → queue → sell → confirm, multi-pass). Owns ns:OnMerchantShow / ns:OnMerchantClosed / ns:OnCombatEnded.
-│   ├── Item-Tooltips.lua       ns.SetupTooltipHooks — appends the will-erase / protected line to bag-item tooltips.
-│   ├── Diagnostics.lua         Diagnostic Tools: report builders, event log, API/event probes, taint log. Runtime-only, never persisted, strings never localized.
-│   └── Minimap-Button.lua      LDB data object, tooltip composition, click handlers, ns:RefreshDisplay.
+│   ├── Core.lua                 ns.Version, ns.EVENT_NAMES, the one event frame and its dispatcher, AceDB init + every migration, the profile-callback hooks.
+│   ├── Utilities.lua            Derived COLORS table + ns.GetColor, ns:FormatCommaNumber / ns:FormatCurrency, ns:CountFreeBagSlots.
+│   ├── Announcements.lua        ns.BrandPrefix and ns:PrintMessage — player-only branded print.
+│   ├── Ignore-List.lua          Both lists: ns:GetIgnoreList / ns:GetGlobalIgnoreList, ns:IsIgnored, ns:ToggleIgnore, ns:ClearIgnoreList, plus the per-scope reads and writes the Ignore List panel uses (ns:GetIgnoreListForScope, ns:SetIgnoredInScope).
+│   ├── Eraser.lua               Scan cache + bounded retry, ns:IsQuestCompleted, GetConsumableEraseLevel, ns:GetItemDeleteReason, ranking, the safety popup, ns:PerformErase / ns:RunEraser, ns:GetReclaimSummary, ns:OnQuestTurnedIn.
+│   ├── Bag-Warnings.lua         The ns:IsBagWindowOpen gate, ns:CheckBagsFullNudge, ns:SeedBagSpaceBaseline, ns:OnEnteringWorld, ns:OnMailClosed.
+│   ├── Bank-Retrieval.lua       Pulls flagged items out of the bank within a free-slot budget, with confirmed-move accounting. Owns ns:OnBankOpened / ns:OnBankClosed.
+│   ├── Auto-Vend.lua            Merchant auto-sell (scan → queue → sell → confirm, multi-pass). Owns ns:OnMerchantShow / ns:OnMerchantClosed / ns:OnCombatEnded.
+│   ├── Item-Tooltips.lua        ns.SetupTooltipHooks — appends the will-erase / protected line to bag-item tooltips.
+│   ├── Diagnostics.lua          Diagnostic Tools: report builders, event log, API/event probes, taint log. Runtime-only, never persisted, strings never localized.
+│   └── Minimap-Button.lua       LDB data object, tooltip composition, click handlers, ns:RefreshDisplay.
 ├── Includes/
 │   ├── Images/
-│   │   └── Magic-Eraser.tga    The TOC's IconTexture — the add-on list icon. The minimap button's own fallback is ns.DefaultIcon, a stock game texture.
-│   └── Libraries/              Vendored: LibStub, CallbackHandler-1.0, AceLocale-3.0, AceDB-3.0, AceGUI-3.0, AceConfig-3.0 (Registry/Cmd/Dialog), AceDBOptions-3.0, LibDataBroker-1.1, LibDBIcon-1.0.
+│   │   └── Magic-Eraser.tga     The TOC's IconTexture — the add-on list icon. The minimap button's own fallback is ns.DefaultIcon, a stock game texture.
+│   └── Libraries/               Vendored: LibStub, CallbackHandler-1.0, AceLocale-3.0, AceDB-3.0, AceGUI-3.0, AceConfig-3.0 (Registry/Cmd/Dialog), AceDBOptions-3.0, LibDataBroker-1.1, LibDBIcon-1.0.
 ├── Locales/
-│   ├── enUS.lua                Source of truth; the only NewLocale with the default-fallback flag.
+│   ├── enUS.lua                 Source of truth; the only NewLocale with the default-fallback flag.
 │   └── deDE · esES · esMX · frFR · itIT · koKR · ptBR · ruRU · zhCN · zhTW
 └── Options/
-    ├── Options-Utilities.lua   Shared ns.Options* widget constructors, plus ns.WarmItemCache.
-    ├── Options-General.lua     ns.BuildGeneralOptions — root panel.
-    ├── Options-Ignore-List.lua ns.BuildIgnoreListOptions — one tree node per ignore list on the account.
-    ├── Options-Profiles.lua    ns.BuildProfilesOptions — the stock AceDBOptions-3.0 table, returned unmodified.
-    ├── Options-Diagnostics.lua ns.BuildDiagnosticsOptions — Diagnostic Tools panel.
-    └── Options.lua             Panel registration, ns:OpenOptionsPanel, and the /eraser slash command.
+    ├── Options-Utilities.lua    Shared ns.Options* widget constructors, ns.WarmItemCache, the shared item-list builder (ns:BuildItemListOptions with ns:ParseItemInput / ns:SortItemIdentifiersByName / ns:GetItemDisplayName), and the ItemLink AceGUI widget.
+    ├── Options-General.lua      ns.BuildGeneralOptions — root panel.
+    ├── Options-Ignore-List.lua  ns.BuildIgnoreListOptions — one tree node per ignore list on the account.
+    ├── Options-Profiles.lua     ns.BuildProfilesOptions — the stock AceDBOptions-3.0 table, returned unmodified.
+    ├── Options-Diagnostics.lua  ns.BuildDiagnosticsOptions — Diagnostic Tools panel.
+    └── Options.lua              Panel registration, ns:OpenOptionsPanel, and the /eraser slash command.
 ```
 
 There are no deprecated or dead files. Everything in `Features/` and `Options/` is loaded by the TOC and reachable at runtime. The one legacy artifact is a TOC line, not a file: `## SavedVariablesPerCharacter: MagicEraserCharDB`, kept only as a migration source (see *Saved Variables*).
@@ -190,7 +190,7 @@ There are two lists and protection is **additive**: `ns:IsIgnored` answers true 
 
 The minimap button's right-click (toggle) and middle-click (clear) act on the **current character's list only**, which is exactly what the minimap tooltip's Ignore List section shows — so both keep meaning what the player just read. The account-wide list is edited from the Ignore List panel.
 
-**Who repaints the panel.** The Ignore List panel is registered as a builder function, so a repaint rebuilds its rows straight off the live lists — but something has to ask for one. Opening the panel builds it, and an edit made *in* the panel is followed by AceConfigDialog re-opening the frame, so both are covered for free. A minimap click while the panel is already on screen is the one edit path with nothing to trigger it, which is why `ns:ToggleIgnore` and `ns:ClearIgnoreList` fire `NotifyChange` for `ns.OPTIONS_REGISTRY.IgnoreList` themselves and `ns:SetIgnoredInScope` deliberately does not repeat it.
+**Who repaints the panel.** The Ignore List panel is registered as a builder function, so a repaint rebuilds its rows straight off the live lists — but something has to ask for one. An edit made *in* the panel is covered by the shared item-list builder, which fires `NotifyChange` on `ns.OPTIONS_REGISTRY.IgnoreList` after every add, remove, and promote it drives. A minimap click while the panel is already on screen is the edit path outside the builder, which is why `ns:ToggleIgnore` and `ns:ClearIgnoreList` fire `NotifyChange` themselves. `ns:SetIgnoredInScope` deliberately does not, so a panel edit notifies exactly once rather than twice.
 
 `ns:GetIgnoreListForScope(scopeKey, createIfMissing)` is the panel's single accessor. The current profile resolves through `ns.db.profile` rather than the raw saved table, so an edit lands on the very list the eraser reads and applies live. Every *other* profile is read straight out of `ns.db.sv.profiles`, because AceDB only materializes the profile you are on — and it strips default-valued tables at logout, so a character who never added an entry has no stored `ignoreList` and one who never changed a setting has no stored profile at all. A read returns `nil` in those cases; a write passes `createIfMissing` and builds what it needs on the spot.
 
@@ -243,7 +243,7 @@ Warnings are suppressed while a merchant, mailbox, **or bank** window is open (`
 
 - **Event Log** — the dispatcher tap, a 500-entry ring buffer capping 8 args × 255 bytes each, pipes escaped *after* the length cut so item links paste as plain text and a cut can never leave a dangling pipe. `ns.DIAGNOSTIC_EVENT_EXCLUDE` is deliberately empty (the log only ever sees events the add-on registers).
 - **Event Registration** — every `ns.EVENT_NAMES` entry tested for `C_EventUtils.IsEventValid` and a register/unregister round-trip on a probe frame with no handler attached.
-- **API Endpoints** — `ns.DIAGNOSTIC_API_CHECKS`, kept one-to-one with the APIs the add-on calls or guards; existence/shape checks only. `C_AddOns.GetAddOnMetadata` and the legacy global are both listed, because the legacy one ships on Era and is gone on TBC.
+- **API Endpoints** — `ns.DIAGNOSTIC_API_CHECKS`, kept one-to-one with the APIs the add-on calls or guards; existence/shape checks only. Every modern/legacy pair the add-on guards on is listed as both halves (`C_AddOns.GetAddOnMetadata` and the legacy global, `Settings.OpenToCategory` and `InterfaceOptionsFrame_OpenToCategory`, `TooltipDataProcessor.AddTooltipPostCall` and `GameTooltip.SetBagItem`). **A `[FAIL]` on one half of a pair is the report working, not a defect** — the pair is what tells a bug report which branch that client took, so the failing half is the one carrying the answer and is never dropped. Measured on the two target flavors: the legacy metadata global is `[FAIL]` on **both** Classic Era 1.15.9 and TBC Anniversary 2.5.6, so `GetVersion`'s fallback never fires on a supported client and the guard is pure insurance. `TooltipDataProcessor` splits — `[FAIL]` on Era, `[PASS]` on TBC — which is the measurement behind the two tooltip hook paths (see *Item Tooltip Warnings*). The option-opener pair has been measured only on Era (`Settings.OpenToCategory` `[PASS]`, legacy `[FAIL]`); TBC has not reported on it since those rows postdate the last release there.
 - **Eraser Context** — player level/class, the Auto-Vend and Bank Retrieval toggles, both ignore-list counts, database sizes, class-reagent count, and the live candidate.
 - **Display Context** — screen size, UI scale, and the minimap button's saved placement; answers "the button is gone / off-screen."
 - **Other Add-ons** — every installed add-on with version and loadable state.
@@ -256,9 +256,13 @@ All diagnostics strings live in `ns.DiagnosticsStrings` as plain English and are
 
 `ns:RegisterOptionsPanels` (called from `OnPlayerLogin`, once `ns.db` exists — the Ignore List and Profiles builders both need the database) registers four AceConfig tables from `ns.OPTIONS_REGISTRY` and nests them under Magic Eraser in Blizzard options, in order: **General** (root) → **Ignore List** → **Profiles** → **Diagnostic Tools**. Each child passes `ns.AddonTitle` as its third `AddToBlizOptions` argument. Panel content lives in the per-panel builder files; `Options.lua` is registration only. Widget constructors (`ns.OptionsHeader/Desc/Spacer`) are shared from `Options-Utilities.lua`; `ns.OptionsHeader` takes an optional third `hidden` argument for gated sections. The **Profiles** panel is the stock `AceDBOptions-3.0` table returned unmodified.
 
+Widths come from the layout grid in `Data/Data.lua`, not from numbers typed at the call site. AceConfig renders a widget's own name above it, so a captioned control is built as two args — an `ns.OptionsRowLabel` cell at `ns.OPTIONS_LABEL_WIDTH`, then the control with `name = ""` at `ns.OPTIONS_CONTROL_WIDTH`, ordered immediately after — and the pair flows onto one line because the two widths sum to `ns.OPTIONS_ROW_WIDTH`. A row whose control needs more room passes its own label width and gives the control the remainder, so every row still ends where every other row ends. The rest of the grid sizes the item-list columns (`ns.OPTIONS_REMOVE_ICON_WIDTH`, `ns.OPTIONS_PROMOTE_WIDTH`), the sub-option indent (`ns.OPTIONS_SUB_INDENT_WIDTH`, matched to the checkbox's visible square rather than its 24px texture footprint), and the tree pair (`ns.OPTIONS_TREE_WIDTH` / `ns.OPTIONS_TREE_ROW_WIDTH`, which move together because the sidebar costs the item pane exactly what it gains).
+
 The Ignore List panel is registered as the **builder function itself**, not a built table: its rows are the ignore lists, so AceConfig re-invokes it on every open and every `NotifyChange` and the panel can never render a stale list. It uses `childGroups = "tree"`, keyed by scope rather than by position — the tree remembers the selected node by its arg key, so a key that moved when a profile appeared or dropped out would silently reselect a different character. Character scopes with nothing ignored are left out of the tree entirely, except the one being played, whose list has to stay reachable to put a first item in it. There is no drop target, deliberately: the game closes the bags when the options interface opens, so typing an id or shift-clicking a link into the add box is the only path that can actually work.
 
-`/eraser` opens the options panel. Registration is in `Options.lua` (`SLASH_MAGICERASER1` + `SlashCmdList.MAGICERASER`). `AddToBlizOptions` returns `(frame, categoryID)` and **both are captured** at the root panel's registration; `ns:OpenOptionsPanel` then routes `Settings.OpenToCategory(<captured categoryID>)` first, falls back to `InterfaceOptionsFrame_OpenToCategory(<captured frame>)` called twice, and reaches `AceConfigDialog:Open` only as a last resort. Never look the category up by display name: AceConfigDialog only aliases the category ID to the panel's name on clients lacking `C_SettingsUtil.OpenSettingsPanel`, so a name lookup returns `nil` on TBC Anniversary and the panel opens as a floating standalone window instead of docking into Blizzard's settings.
+Each scope's pane comes from `ns:BuildItemListOptions`, the shared item-list builder in `Options/Options-Utilities.lua`, so this list adds and removes the way every other player-managed list does: an add box that parses an id or a shift-clicked link and clears itself, name-sorted rows drawn by the `ItemLink` AceGUI widget (icon, colored link, the item's own tooltip on hover), and a one-click unconfirmed remove icon. Restore Defaults is absent because the ignore lists ship no defaults to restore. The per-character panes pass the promote button as the builder's `actionColumn`; the Global pane passes none and its item cell absorbs that column, so the remove icon holds its position as scopes are picked. Panes spend `ns.OPTIONS_TREE_ROW_WIDTH` rather than the full row width, because the tree sidebar takes its share of the panel first — and that sidebar is widened from AceGUI's 175px default to `ns.OPTIONS_TREE_WIDTH` in `Options.lua`, since 175px truncates the longer `"Name - Realm"` scope keys. AceGUI fills `treewidth` in only when the key is absent, so seeding the status table wins while a player's own drag still overrides it.
+
+`/eraser` opens the options panel. Registration is in `Options.lua` (`SLASH_MAGICERASER1` + `SlashCmdList.MAGICERASER`). `ns:OpenOptionsPanel` opens with an `InCombatLockdown()` gate: Blizzard's Settings panel is protected in combat, so it prints `L["CHAT_OPTIONS_IN_COMBAT"]` and returns rather than letting the player hit an `ADDON_ACTION_BLOCKED` error. The gate never queues the open for combat end, and it lives at this single entry point rather than in the slash handler or the mini-map `OnClick`, so `/eraser` and Shift + Middle-Click answer identically. Past the gate, `AddToBlizOptions` returns `(frame, categoryID)` and **both are captured** at the root panel's registration; `ns:OpenOptionsPanel` then routes `Settings.OpenToCategory(<captured categoryID>)` first, falls back to `InterfaceOptionsFrame_OpenToCategory(<captured frame>)` called twice, and reaches `AceConfigDialog:Open` only as a last resort. Never look the category up by display name: AceConfigDialog only aliases the category ID to the panel's name on clients lacking `C_SettingsUtil.OpenSettingsPanel`, so a name lookup returns `nil` on TBC Anniversary and the panel opens as a floating standalone window instead of docking into Blizzard's settings.
 
 ## Saved Variables
 
