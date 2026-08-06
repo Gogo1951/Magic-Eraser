@@ -31,7 +31,7 @@ Gather these once so you're not caught short mid-run.
 - **Junk you can park in the bank** — a dozen or more flagged items of clearly different values, for the Bank Retrieval steps. Grays of mixed prices work well.
 - **Access to a bank**, and the ability to empty your bags down to a known free-slot count on demand.
 - **Items that must never be touched**, for the protection steps: some **Linen Cloth** or other white trade goods, and a stack of something valuable.
-- **A shaman** carrying **Fish Oil** or **Shiny Fish Scales** — these are gray with a sell price and must still never be flagged. Skip the shaman steps if you have none.
+- **A shaman** carrying **Fish Oil** or **Shiny Fish Scales** — these are white items on the curated equipment list and must still never be flagged. Skip the shaman steps if you have none.
 - **A mage**, for the conjured food and water steps. Skip those if you have none.
 - **A second character on the same account**, for the per-character Ignore List steps, the Global list steps, and the account-wide settings steps. Give it a long-ish **"Name - Realm"** key if you can — the Ignore List tree steps check that a full character name fits.
 - **Two merchants you can reach in quick succession**, and enough junk to sell fifteen-plus items in one visit.
@@ -249,7 +249,7 @@ When steps 1–36 pass on both flavors, this release's changes are verified — 
 
 **76.** Make a gray item and a consumable worth the same amount. The **gray** must be offered first; consumables and curated equipment rank last and tie with each other. Failure is the consumable jumping the queue.
 
-**77.** On a **shaman**, carry **Fish Oil** and **Shiny Fish Scales**. Both are gray with a sell price, and both must be **completely invisible** to the add-on: never flagged, never sold, never pulled from the bank, and no line on their item tooltips. Failure is either one being offered or sold. On a character that is **not** a shaman, the same two items are ordinary gray trash and **may** be flagged — check that too, so the exclusion is not leaking onto every class.
+**77.** On a **shaman**, carry **Fish Oil** and **Shiny Fish Scales**. Both are white items on the curated equipment list, and both must be **completely invisible** to the add-on: never flagged, never sold, never pulled from the bank, and no line on their item tooltips. Failure is either one being offered or sold. On a character that is **not** a shaman, the same two items are ordinary vendor trash and **must** be flagged — check that too, so the exclusion is not leaking onto every class, and so the pair stays on the curated list where the exclusion has something to protect.
 
 **78.** Ignore an item (Right-Click), then confirm it is skipped everywhere — it never becomes the candidate, it is not sold at a merchant with Auto-Vend on, and it is not pulled out of the bank. Repeat from a second character with an item on the **Global** list and an empty character list. Failure is a protected item being erased, sold, or retrieved on either list.
 
@@ -475,7 +475,7 @@ When steps 1–36 pass on both flavors, this release's changes are verified — 
 
 **169.** Click **Test WoW API Endpoints**. Steps 34–36 cover the three modern/legacy pairs; here just confirm the report builds and that **every line outside those pairs reads PASS** on this flavor. Failure is a FAIL on anything else.
 
-**170.** Click **Show Eraser Context**. It must name your class and level, the Auto-Vend state, the **Bank retrieval** state, an **Ignore list** line reading `character=N, global=M`, a **Databases** line reading `consumables=347` with quest and equipment both in the high hundreds (868 and 994 as shipped), the class reagent exclusion count, and the current erase candidate. Both ignore-list numbers must match what you actually have on each list, and the candidate must match what the mini-map tooltip is showing right now. Failure is a mismatch, a missing line, a zero for any database, or a candidate reported when your bags are clean.
+**170.** Click **Show Eraser Context**. It must name your class and level, the Auto-Vend state, the **Bank retrieval** state, an **Ignore list** line reading `character=N, global=M`, a **Databases** line reading `consumables=347` with quest and equipment both in the high hundreds (868 and 996 as shipped), the class reagent exclusion count, and the current erase candidate. Both ignore-list numbers must match what you actually have on each list, and the candidate must match what the mini-map tooltip is showing right now. Failure is a mismatch, a missing line, a zero for any database, or a candidate reported when your bags are clean.
 
 **171.** Click **Show Display Context**. `Minimap button created` must read `yes`, and a saved angle must be listed. Failure is `no` while the button is plainly on your mini-map.
 
