@@ -148,6 +148,22 @@ local function GetConsumableEraseLevel(useLevel)
 end
 
 function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
+	--[[
+	    The Erase List first, and outside the chain below rather than a branch in
+	    it: a listed item is the player's own instruction, so it matches whatever
+	    its rarity and whatever the curated databases do or do not say about it.
+	    That is the entire point of the list. A white trade good matches no branch
+	    below -- not quest, not consumable, not equipment, and the gray fallback
+	    needs rarity 0 -- so this is the only way one can ever be erased.
+
+	    The Ignore List still wins, and not by a check here. All three scanners
+	    gate on ns:IsIgnored before calling this, and Item-Tooltips.lua returns its
+	    protected line first, so an ignored item never reaches this line at all.
+	]]
+	if ns:IsOnEraseList(itemId) then
+		return "manual"
+	end
+
 	local playerLevel = UnitLevel("player")
 	local questItemDatabase = ns.AllowedDeleteQuestItems or {}
 	local questStarterDatabase = ns.AllowedDeleteQuestStartingItems or {}
@@ -212,8 +228,17 @@ end
     to stop the player losing gold, and selling an over-cap stack hands them that
     gold instead, so the two features that move an item rather than destroy it
     keep working on it.
+
+    An Erase List entry is never capped either, which is why the delete reason is
+    passed in. Everything else the cap guards is the add-on picking an item out by
+    rule, and a rule can be wrong about what the player values; a listed item is
+    not a guess. Capping one would leave the player watching a list they built do
+    nothing, with no line in the tooltip and no message in chat to say why.
 ]]
-function ns:IsOverValueCap(totalValue)
+function ns:IsOverValueCap(totalValue, deleteReason)
+	if deleteReason == "manual" then
+		return false
+	end
 	if not (ns.db and ns.db.global.valueCapEnabled) then
 		return false
 	end
@@ -237,9 +262,7 @@ function ns:FindItemToDelete()
 
 	local best = nil
 	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
-	local _, playerClass = UnitClass("player")
 	local isDataMissing = false
-	local classReagentExclusions = (ns.ClassReagentExclusions and ns.ClassReagentExclusions[playerClass]) or {}
 
 	for bag = 0, 4 do
 		local slotCount = GetContainerNumSlots(bag) or 0
@@ -249,7 +272,8 @@ function ns:FindItemToDelete()
 			if itemInfo and itemInfo.hyperlink then
 				local itemId = itemInfo.itemID
 
-				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
+				-- Ignore List first, so it wins over any Erase List entry.
+				if not ns:IsIgnored(itemId) then
 					local name, _, rarity, _, _, _, _, _, _, icon, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
@@ -262,7 +286,7 @@ function ns:FindItemToDelete()
 						local totalValue = (sellPrice or 0) * count
 						local deleteReason = self:GetItemDeleteReason(itemId, rarity, sellPrice)
 
-						if deleteReason and not ns:IsOverValueCap(totalValue) then
+						if deleteReason and not ns:IsOverValueCap(totalValue, deleteReason) then
 							-- Slots counts one per qualifying slot; items counts stacked quantity.
 							reclaimSlots = reclaimSlots + 1
 							reclaimItems = reclaimItems + count
@@ -317,8 +341,14 @@ end
     Safety Guard. Maps each delete reason to its opt-in confirmation toggle. When
     the guard is on and the matching per-reason toggle is set, erasing that item
     pops a confirmation first. "White vendor-quality" maps to the curated
-    equipment reason, and the five reasons GetItemDeleteReason returns map onto
-    four toggles because quest and questIneligible share safetyQuest.
+    equipment reason, and quest and questIneligible share safetyQuest.
+
+    "manual" is deliberately absent, so an Erase List entry never confirms: an
+    unmapped reason falls through to false below, and asking the player to
+    approve erasing an item they typed in themselves is friction that tells them
+    nothing they did not already know. A mistyped id is caught earlier and better
+    -- the Erase List panel renders every row as the real item link, icon and
+    tooltip included, so a wrong id shows the wrong item's name on sight.
 ]]
 local SAFETY_REASON_KEYS = {
 	quest = "safetyQuest",

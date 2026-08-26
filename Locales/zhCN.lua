@@ -46,6 +46,7 @@ L["BANK_RETRIEVED"] = "已从银行取出 %s 件物品（%s 个格子），价�
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser 将删除此物品。"
 L["TOOLTIP_IGNORED"] = "受你的忽略列表保护。"
+L["TOOLTIP_ON_ERASE_LIST"] = "已被你的删除列表标记。"
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -78,6 +79,7 @@ L["AUTO_VEND"] = "自动售卖"
 L["AUTO_VEND_DESCRIPTION"] = "打开商人窗口时自动出售被 Magic Eraser 标记为杂物的物品。"
 L["IGNORE_LIST"] = "忽略列表"
 L["TAB_IGNORE_LIST"] = "忽略列表"
+L["TAB_ERASE_LIST"] = "删除列表"
 L["ENABLED"] = "已启用"
 L["DISABLED"] = "已禁用"
 
@@ -86,7 +88,7 @@ L["DISABLED"] = "已禁用"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"瞬间清理你的背包。每次点击小地图按钮，都会删除已完成的任务物品、低级消耗品、可售卖给商人的白色物品以及灰色垃圾。当你拜访商人时，所有可出售的物品都会自动售出。"
+	"删除杂物，瞬间腾出背包空间。已完成的任务物品、低级消耗品、可售卖给商人的白色物品以及灰色垃圾，点一下小地图按钮就会消失，能卖的东西还会在商人处自动售出。再也不用背着一身垃圾到处跑。"
 L["OPTIONS_ENABLE_WELCOME"] = "启用欢迎消息"
 L["OPTIONS_ENABLE_MINIMAP"] = "启用小地图按钮"
 
@@ -144,16 +146,33 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "全局"
+L["OPTIONS_LIST_ADD_ID"] = "按物品 ID 添加"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"输入物品 ID 后按回车。你也可以在聊天框中 Shift+点击物品链接，将其填入此处。"
+L["OPTIONS_LIST_ADD_ID_INVALID"] = "请输入物品 ID，或在聊天框中 Shift+点击物品链接。"
+L["OPTIONS_LIST_REMOVE"] = "移除"
+L["OPTIONS_LIST_EMPTY"] = "此列表为空。"
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"忽略列表中的物品永远不会被删除或出售。全局列表会在所有角色上保护该物品，而角色自己的列表只在该角色上保护它。"
-L["OPTIONS_IGNORE_GLOBAL"] = "全局"
-L["OPTIONS_IGNORE_ADD_ID"] = "按物品 ID 添加"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"输入物品 ID 后按回车。你也可以在聊天框中 Shift+点击物品链接，将其填入此处。"
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "请输入物品 ID，或在聊天框中 Shift+点击物品链接。"
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "将此物品移到全局列表，使其在所有角色上都受保护。"
-L["OPTIONS_IGNORE_REMOVE"] = "移除"
-L["OPTIONS_IGNORE_EMPTY"] = "此列表为空。"
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"删除列表中的物品无论价值多少都始终被视为杂物：通过小地图按钮删除，或在商人处出售。全局列表在所有角色上生效，而角色自己的列表只在该角色上生效。忽略列表始终优先，因此同时在两个列表中的物品会被保留。"
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] = "将此物品移到全局列表，使其在所有角色上都被删除。"
+L["OPTIONS_ERASE_RESTORE"] = "恢复默认"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"清空此角色的删除列表，只恢复 Magic Eraser 预设的物品？你自己添加的内容会被移除。"

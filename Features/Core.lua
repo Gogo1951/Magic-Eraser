@@ -73,11 +73,11 @@ function ns:OnPlayerLogin()
 	ns:RegisterOptionsPanels()
 
 	--[[
-	    A profile holds exactly one thing -- this character's ignore list -- so a
-	    reset, a switch and a Copy From all mean the same thing here: the list the
-	    erase candidate is computed from just changed, so re-scan. None of the
-	    three touches the account-wide settings, which live in global, outside the
-	    profile scope AceDB resets.
+	    A profile holds this character's two item lists and the Erase List seed
+	    marker, so a reset, a switch and a Copy From all mean the same thing here:
+	    the lists the erase candidate is computed from just changed, so re-scan.
+	    None of the three touches the account-wide settings, which live in global,
+	    outside the profile scope AceDB resets.
 	]]
 	for _, message in ipairs({ "OnProfileChanged", "OnProfileReset", "OnProfileCopied" }) do
 		ns.db.RegisterCallback(ns, message, "OnProfileSwitched")
@@ -91,6 +91,14 @@ function ns:OnPlayerLogin()
 	if ns.db.global.showWelcome then
 		ns:PrintMessage(L["CHAT_LOADED"]:format(ns.Version))
 	end
+
+	--[[
+	    Put another class's reagents on this character's Erase List, once, the
+	    first time it plays. Ahead of the RefreshDisplay below so the first scan
+	    of the session already accounts for them; the seed itself only drops the
+	    cache and leaves the repaint to us. See ns:SeedEraseList.
+	]]
+	ns:SeedEraseList()
 
 	--[[
 	    Seed the bag-space warning baseline with the free count we log in with, so
@@ -121,9 +129,18 @@ function ns:OnPlayerLogin()
 	C_Timer.After(0, ns.SetupTooltipHooks)
 end
 
+--[[
+    The seed runs here as well as at login, because a switch lands on a profile
+    that may never have been seeded and a reset clears the marker along with the
+    list. Both cases mean this character is owed its seed now rather than at next
+    login. A Copy From carries the source profile's marker, so it does not
+    re-seed, which is right: the player asked for that character's list verbatim.
+]]
 function ns:OnProfileSwitched()
+	ns:SeedEraseList()
 	ns:RefreshDisplay()
 	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.EraseList)
 end
 
 --[[

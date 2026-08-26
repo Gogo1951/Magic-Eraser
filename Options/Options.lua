@@ -8,12 +8,12 @@ local D = ns.DiagnosticsStrings
 
 --[[
     Registration only -- panel content lives in the per-panel builder files.
-    Called from ns:OnPlayerLogin once ns.db exists, because the Ignore List and
-    Profiles builders need the AceDB database. Child order is General (root) ->
-    Ignore List -> Profiles -> the Diagnostic Tools panel last; each panel's
-    third AddToBlizOptions argument is the parent's display name (ns.AddonTitle)
-    so all four nest under Magic Eraser. The Profiles display name comes already
-    localized from AceDBOptions-3.0.
+    Called from ns:OnPlayerLogin once ns.db exists, because the Ignore List,
+    Erase List and Profiles builders need the AceDB database. Child order is
+    General (root) -> Ignore List -> Erase List -> Profiles -> the Diagnostic
+    Tools panel last; each panel's third AddToBlizOptions argument is the
+    parent's display name (ns.AddonTitle) so all five nest under Magic Eraser.
+    The Profiles display name comes already localized from AceDBOptions-3.0.
 ]]
 local AceConfig = LibStub("AceConfig-3.0")
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
@@ -46,6 +46,14 @@ function ns:RegisterOptionsPanels()
 	local ignoreStatus = AceConfigDialog:GetStatusTable(ns.OPTIONS_REGISTRY.IgnoreList)
 	ignoreStatus.groups = ignoreStatus.groups or {}
 	ignoreStatus.groups.treewidth = ns.OPTIONS_TREE_WIDTH
+
+	-- The Erase List is the same panel in reverse, so it gets the same treatment.
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.EraseList, ns.BuildEraseListOptions)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], ns.AddonTitle)
+
+	local eraseStatus = AceConfigDialog:GetStatusTable(ns.OPTIONS_REGISTRY.EraseList)
+	eraseStatus.groups = eraseStatus.groups or {}
+	eraseStatus.groups.treewidth = ns.OPTIONS_TREE_WIDTH
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
