@@ -2,17 +2,19 @@
 
 Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically.
 
+TL;DR: Your bag space is valuable. Reclaim it with Magic Eraser.
+
 <img width="250" src="https://github.com/user-attachments/assets/d30470c9-4585-4288-aec3-b04e34b44afc" />
 
 ## Features
 
 🧹 **One-Click Cleanup** // The mini-map button wears the icon of your lowest-value junk. Left-click and it's gone, with no "Are you sure?" dialog unless you ask for one.
 
-🏦 **Bank Retrieval** // Open your bank and the junk you stashed in there walks itself back into your bags, ready to erase or sell.
+🔔 **Quest Item Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
 
 📊 **Clutter Report** // Hover the button to see how many bag slots your junk is squatting on and exactly what the pile is worth.
 
-🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
+🏦 **Bank Retrieval** // Open your bank and the junk you stashed in there walks itself back into your bags, ready to erase or sell.
 
 🦺 **Safety First** // The trash list is hand-curated and human-reviewed: no name-matching, no heuristics, no surprise deletions. Your bag tooltips flag what's on the chopping block, and Ignore List items are never touched.
 
@@ -22,19 +24,22 @@ Erase junk and free up bag space instantly. Completed quest items, low-level con
 2. Log in. The mini-map button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Middle-click to open the Options Interface.
 4. Auto-Vend and Bank Retrieval are on out of the box, so the rest pays for itself the next time you talk to a merchant.
-5. *"Hasta la vista, vendor trash"*
+5. *"Cleanest bags on the server!"*
 
 ## How It Works
 
-### Smart Scanning
+### What Gets Erased
 
-Magic Eraser watches your bags and picks out the lowest-value match from four categories: quest items you no longer need, outgrown food and drink (anything you passed the use level on ten levels ago, with starter food and drink going at level 5 instead of lingering), vendor-quality white gear from the curated list, and gray trash with a sell price. The mini-map icon updates live to show what's next on the chopping block.
+Only four kinds of clutter are ever in scope, and every list behind them is hand-curated:
 
-A quest item counts as spent once you've handed the quest in. An item that *starts* a quest your character can never take is dead weight the moment it drops, so a Paladin-only Tome of Divinity sitting in a Rogue's bags is fair game right away.
+- **Spent quest items** // Left over from a quest you have already handed in.
+- **Dead-end quest starters** // An item that starts a quest your race or class can never take is junk the moment it drops, so a Paladin-only Tome of Divinity in a Rogue's bags is fair game right away.
+- **Outgrown food and drink** // Ten levels past the point you could first use it. Starter bread and water go at level 5 rather than squatting in your bags until 11.
+- **Vendor-quality whites and gray trash** // Curated white gear, plus any gray with a sell price.
 
-When two items are worth the same, category priority breaks the tie: anything on your Erase List first, then quest items, then gray trash, then consumables and equipment. Anything on your Ignore List is skipped entirely.
+The mini-map icon updates live to show what's next on the chopping block. When two items are worth the same, priority breaks the tie: your Erase List first, then quest items, then gray trash, then consumables and gear. Anything on your Ignore List is skipped entirely.
 
-Class reagents are handled by the Erase List rather than by a rule. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every character that is not a Shaman starts with both already on its Erase List, and a Shaman starts with neither. Nothing overrides you either way: a Shaman who wants them gone can add them, and anyone else can take them off.
+Class reagents are handled by the Erase List rather than by a rule. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every non-Shaman starts with both already listed and a Shaman starts with neither. Nothing overrides you either way.
 
 ### Mini-map Button
 
@@ -50,21 +55,22 @@ Hover the button and the tooltip lays out the whole picture: the item you're abo
 
 ### Auto-Vend
 
-Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat gives you one summary line as the window closes; switch to Line Item and every sale is announced as it happens, with that summary still landing at the end. Turn the messages off entirely if you'd rather it worked in silence. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the mini-map button or from the Options Interface.
+Every flagged item sells automatically the moment you open a merchant, and it's on by default.
 
-### Ignore List
+- One summary line lands in chat as the merchant window closes.
+- Switch to Line Item and every sale is announced as it happens, with that summary still arriving at the end.
+- Turn the messages off entirely if you'd rather it worked in silence.
+- Open a merchant mid-fight and the sale waits politely until combat ends.
+- Toggle the whole thing with Shift+Right-click on the mini-map button, or from the Options Interface.
 
-Right-click the mini-map button to protect whatever item is currently flagged, and middle-click to wipe that list and start over. Anything on it is never erased and never sold.
+### Your Two Lists
 
-There are two lists, and they stack. Each character keeps its own, and there's a Global list that protects an item on every character at once. Manage both from **Options > AddOns > Magic Eraser > Ignore List**, where you can add items by ID or by shift-clicking an item link straight from chat, promote a character's entry to Global, or remove anything you've changed your mind about.
+The Ignore List protects; the Erase List condemns. Both work the same way, and both stack: each character keeps its own, plus a Global list that applies everywhere at once. Manage them at **Options > AddOns > Magic Eraser**, adding items by ID or by shift-clicking an item link straight from chat, and promote any character's entry to Global.
 
-### Erase List
+- **Ignore List** // Never erased, never sold. Right-click the mini-map button to protect whatever is currently flagged, middle-click to wipe the list and start over.
+- **Erase List** // Always erased and always sold, whatever it is worth and whatever category it does or does not fall into. This is for the junk only you know is junk: an alt's leftover mats, a quest reward you will never wear, reagents for a profession you dropped.
 
-The Ignore List in reverse, for the junk only you know is junk. Anything on an Erase List is always erased and always sold, whatever it is worth and whatever category it does or does not fall into, so it covers the things no rule can guess: your alt's leftover crafting mats, a quest reward you will never wear, a stack of reagents for a profession you dropped.
-
-It works the same way the Ignore List does, from **Options > AddOns > Magic Eraser > Erase List**. Two lists that stack, one per character plus a Global list, the same add box, and the same promote button. Two differences worth knowing: your Ignore List always wins, so an item on both is left alone, and Maximum Value to Erase does not apply here, because you already said you wanted this one gone.
-
-The character you're playing also gets a **Restore Defaults** button, which empties that character's list and puts back the class reagents it started with. It asks first, because anything you added yourself goes with it. Only the character you're on has one, since only that character's class is known.
+Two rules worth knowing. Your Ignore List always wins, so an item on both is left alone. Maximum Value to Erase does not apply to the Erase List, because you already said you wanted that one gone. The character you are playing also gets a **Restore Defaults** button that empties its list and puts back the class reagents it started with, and it asks first, because anything you added goes with it.
 
 ### Options
 
@@ -106,6 +112,8 @@ Please reach out if you would like to be involved!
 🟡 Some Overlap // Kemayo's [BankStack](https://www.curseforge.com/wow/addons/bank-stack)
 
 🟡 Some Overlap // Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
+
+🟡 Some Overlap // Stumper_Gaming's [QuickDelete](https://www.curseforge.com/wow/addons/quickdelete-hotkey-to-trash)
 
 🔴 Direct Alternative // moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
 

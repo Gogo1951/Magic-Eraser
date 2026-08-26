@@ -6,6 +6,23 @@ Quest items are keyed to the quest that TAKES the item at TURN-IN, never the
 quest that hands it out. An item given by one quest and turned in on a later
 one is erased while the player still needs it if the granting quest is used.
 
+THE TEST FOR A ROW EARNING ITS PLACE: can the item still be in the bag after
+its quest is done? A row fires on quest-complete, so if the item is gone by
+then the row can never do anything. That rules out most of what this query
+returns. A turn-in item is consumed BY the turn-in, so at the moment the flag
+is set it has already left the bag. Ol' Sooty's Head, Crown of Will, Karnitol's
+Satchel: all real turn-in rows, all incapable of lingering, all correctly
+absent from the table below. This is why the table is a small curated slice of
+this query rather than a paste of it, and why running this query and pasting
+the result wholesale would be wrong.
+
+Two shapes survive the test. The first is SURPLUS, and it is the only one this
+query can find: the drop comes in multiples, the turn-in takes a fixed count,
+you overshoot, and the remainder rots. Need 20, they drop 2 or 3 at a time, you
+finish holding 21. The lingers column marks these. The second shape is items no
+quest ever takes at all, which this query cannot see by construction; the
+SECOND QUERY below is the anti-join that finds them.
+
 CMaNGOS WotLK world DB, MySQL 8. Roles in quest_template:
   SrcItemId        handed to you when you ACCEPT
   ReqSourceId1..4  extra items handed to you when you ACCEPT
@@ -41,6 +58,18 @@ handed_in AS (
   UNION SELECT ReqItemId5, entry FROM quest_template WHERE ReqItemId5 > 0 AND Method <> 0
   UNION SELECT ReqItemId6, entry FROM quest_template WHERE ReqItemId6 > 0 AND Method <> 0
 ),
+needed AS (
+  -- How many the turn-in actually takes. UNION ALL, not UNION: we only MAX it.
+      SELECT ReqItemId1 AS item, ReqItemCount1 AS need FROM quest_template WHERE ReqItemId1 > 0 AND Method <> 0
+  UNION ALL SELECT ReqItemId2, ReqItemCount2 FROM quest_template WHERE ReqItemId2 > 0 AND Method <> 0
+  UNION ALL SELECT ReqItemId3, ReqItemCount3 FROM quest_template WHERE ReqItemId3 > 0 AND Method <> 0
+  UNION ALL SELECT ReqItemId4, ReqItemCount4 FROM quest_template WHERE ReqItemId4 > 0 AND Method <> 0
+  UNION ALL SELECT ReqItemId5, ReqItemCount5 FROM quest_template WHERE ReqItemId5 > 0 AND Method <> 0
+  UNION ALL SELECT ReqItemId6, ReqItemCount6 FROM quest_template WHERE ReqItemId6 > 0 AND Method <> 0
+),
+n_agg AS (
+  SELECT item, MAX(need) AS max_need FROM needed GROUP BY item
+),
 g_agg AS (
   SELECT item, GROUP_CONCAT(DISTINCT quest ORDER BY quest) AS grant_quests
   FROM granted GROUP BY item
@@ -51,6 +80,12 @@ h_agg AS (
   FROM handed_in GROUP BY item
 )
 SELECT
+  -- The only reason a turn-in item is ever still in the bag: the drop comes in
+  -- multiples and the turn-in takes a fixed count, so you overshoot. Anything
+  -- marked consumed-clean is gone the moment its quest completes and can never
+  -- fire a row. See the header.
+  CASE WHEN n.max_need > 1 AND (it.maxcount = 0 OR it.maxcount > n.max_need)
+       THEN '1 surplus possible' ELSE '2 consumed clean' END  AS lingers,
   CASE WHEN it.entry < 22500 THEN '01 WoW'
        WHEN it.entry < 33117 THEN '02 TBC'
        ELSE '03 WotLK' END                                AS section,
@@ -60,6 +95,7 @@ SELECT
                                WHERE g2.item = h2.item AND g2.quest = h2.quest)))  AS late_handin,
   it.entry AS item, it.name, g.grant_quests, h.handin_quests, h.n_handin,
   NULLIF(it.startquest, 0) AS starts_quest, it.Quality AS quality, it.class,
+  n.max_need AS taken_per_turnin, it.maxcount AS stack_cap,
   (SELECT GROUP_CONCAT(CONCAT(h2.quest, '=', qt.Title) ORDER BY h2.quest SEPARATOR ' | ')
      FROM handed_in h2 JOIN quest_template qt ON qt.entry = h2.quest
     WHERE h2.item = it.entry)                             AS handin_titles,
@@ -67,18 +103,194 @@ SELECT
          ' }, -- ', it.name)                              AS lua_line
 FROM h_agg h
 JOIN g_agg g          ON g.item  = h.item
+JOIN n_agg n          ON n.item  = h.item
 JOIN item_template it ON it.entry = h.item
 WHERE it.name NOT LIKE '%Test%'
   AND it.name NOT LIKE '%[PH]%'
   AND it.name NOT LIKE '%UNUSED%'
   AND it.name NOT LIKE '%DEPRECATED%'
   AND it.name NOT LIKE 'OLD %'
-ORDER BY late_handin DESC, section, it.name;
+ORDER BY lingers, late_handin DESC, section, it.name;
+
+============================================================================
+SECOND QUERY :: items a quest hands out that no quest ever takes back
+
+The query above joins granted to handed_in, so it only ever sees items a
+turn-in consumes. This is the anti-join: a quest hands the item over and no
+quest in the game ever takes it. Three shapes of permanent bag clutter live
+here, and none of them can be found by the query above.
+
+  1. Signalling gear. Standard Issue Flare Gun, Brave's Flare, Horn of
+     Kamagua. You fire it to summon the pickup or the quest giver, so the
+     objective completes without the item ever changing hands. In a group
+     only one player fires, and every other player keeps theirs forever.
+  2. Read-me props. Crafty's Shopping List, Greatmother's List of Herbs,
+     Nitrin's Instructions. Handed over at accept purely to say where to go,
+     never collected by anyone.
+  3. Tools used on the world. Empty Cleansing Bowl, Divination Scryer,
+     Arcanometer. Used at a spot, and something else entirely is the turn-in.
+
+Surplus from a collect-20 quest is NOT this category and is not found here.
+Those are ReqItemId rows, so the query above owns them; its lingers column is
+what separates the surplus that rots from the turn-in items that are consumed
+clean and can never fire. Both queries answer the same question from opposite
+sides: can this still be in the bag once the quest is done?
+
+TWO RULES, both learned by getting them wrong on the first run:
+
+  Never key on a granting quest while a later quest still needs the item.
+  Divination Scryer is granted by 7647 Judgment and Redemption AND by 7668
+  The Darkreaver Menace. Keying it to 7647 erases it before Scholomance. The
+  anti-join guarantees no turn-in exists anywhere, so the only way this bites
+  is an item with more than one granting quest. Those sort into confidence
+  bucket 3 and are never keyed automatically.
+
+  Openables stay in, and an earlier run of this query was wrong to drop them.
+  Flags & 4 is ITEM_FLAG_HAS_LOOT, the right click that spills contents into
+  the bags, and the argument for excluding those was that erasing one destroys
+  what is inside. It fails twice. The row only fires once its quest is already
+  complete, by which point the contents are spent quest items too; and in a
+  group only one player's container ever gets used, so everyone else finishes
+  still holding an unopened one. Covert Ops Pack, Smokywood Satchel, Box of
+  Empty Vials. That leftover is exactly the clutter this table exists to
+  clear, and a rare edge case is the point rather than a reason to skip it.
+
+  A real bag is the one container that stays excluded. ContainerSlots above
+  zero means it holds the player's own loot rather than a quest payload, and
+  erasing that is a different and far worse failure. Flags & 32 is
+  NO_USER_DESTROY, which the client refuses to delete anyway, so those are
+  noise either way.
+
+  Never propose an item that starts a quest. Quest-Starting-Items.lua owns
+  those, and its rows are strictly better: they carry the race and class masks
+  that make a wrong-faction starter erasable with no quest state at all. Every
+  such row this query found had startquest equal to its granting quest, so the
+  line it wanted to emit was the same quest id with the masks stripped off. It
+  could never fire either way. GetQuestStarterReason returns "quest" on that
+  same id and runs first in the shared branch, see Eraser.lua. The overlap
+  already in the two tables is deliberate and stays; this rule only stops the
+  query proposing new duplicates.
+
+DROPPED AFTER THE FIRST RUN: a text_mentions column matching the item name
+against quest text. It looked clever and was useless. Short names swamped it,
+Boulder hitting 44 quests, Stick 21, Holy Water 6, while the names it was
+built for never matched at all, because quest text abbreviates. Xiggs says
+"toss the flare gun", never "Standard Issue Flare Gun".
+
+STILL NEEDS YOUR EYE, every row. The query above proves an item is spent,
+because the turn-in consumed it. Nothing proves that here. use_quests is the
+only structural evidence and it is present for a minority of rows. The rest
+are keyed to their lone granting quest, which is a guess. Confirm on Wowhead
+before pasting anything.
+
+If ReqSpellCast is named differently on your schema, check with
+  SHOW COLUMNS FROM quest_template LIKE '%Spell%';
+and for the bag guard,
+  SHOW COLUMNS FROM item_template LIKE '%ontainer%';
+============================================================================
+
+SET SESSION group_concat_max_len = 16384;
+
+WITH granted AS (
+      SELECT SrcItemId    AS item, entry AS quest FROM quest_template WHERE SrcItemId    > 0 AND Method <> 0
+  UNION SELECT ReqSourceId1,       entry          FROM quest_template WHERE ReqSourceId1 > 0 AND Method <> 0
+  UNION SELECT ReqSourceId2,       entry          FROM quest_template WHERE ReqSourceId2 > 0 AND Method <> 0
+  UNION SELECT ReqSourceId3,       entry          FROM quest_template WHERE ReqSourceId3 > 0 AND Method <> 0
+  UNION SELECT ReqSourceId4,       entry          FROM quest_template WHERE ReqSourceId4 > 0 AND Method <> 0
+),
+taken AS (
+  -- Protective exclusion, so deliberately no Method <> 0 filter, matching
+  -- quest_touched in Equipment.lua: a disabled quest still shields its item.
+      SELECT ReqItemId1 AS item FROM quest_template WHERE ReqItemId1 > 0
+  UNION SELECT ReqItemId2        FROM quest_template WHERE ReqItemId2 > 0
+  UNION SELECT ReqItemId3        FROM quest_template WHERE ReqItemId3 > 0
+  UNION SELECT ReqItemId4        FROM quest_template WHERE ReqItemId4 > 0
+  UNION SELECT ReqItemId5        FROM quest_template WHERE ReqItemId5 > 0
+  UNION SELECT ReqItemId6        FROM quest_template WHERE ReqItemId6 > 0
+),
+item_spells AS (
+      SELECT entry AS item, spellid_1 AS spell FROM item_template WHERE spellid_1 > 0
+  UNION SELECT entry,       spellid_2          FROM item_template WHERE spellid_2 > 0
+  UNION SELECT entry,       spellid_3          FROM item_template WHERE spellid_3 > 0
+  UNION SELECT entry,       spellid_4          FROM item_template WHERE spellid_4 > 0
+  UNION SELECT entry,       spellid_5          FROM item_template WHERE spellid_5 > 0
+),
+cast_on AS (
+      SELECT ReqSpellCast1 AS spell, entry AS quest FROM quest_template WHERE ReqSpellCast1 > 0 AND Method <> 0
+  UNION SELECT ReqSpellCast2,        entry          FROM quest_template WHERE ReqSpellCast2 > 0 AND Method <> 0
+  UNION SELECT ReqSpellCast3,        entry          FROM quest_template WHERE ReqSpellCast3 > 0 AND Method <> 0
+  UNION SELECT ReqSpellCast4,        entry          FROM quest_template WHERE ReqSpellCast4 > 0 AND Method <> 0
+),
+g_agg AS (
+  SELECT g.item,
+         GROUP_CONCAT(DISTINCT g.quest ORDER BY g.quest) AS grant_quests,
+         COUNT(DISTINCT g.quest)                         AS n_grant,
+         MAX((q.SpecialFlags &     1) <> 0
+          OR (q.QuestFlags   &  4096) <> 0
+          OR (q.QuestFlags   & 32768) <> 0)              AS any_repeatable
+  FROM granted g
+  JOIN quest_template q ON q.entry = g.quest
+  GROUP BY g.item
+),
+u_agg AS (
+  SELECT s.item, GROUP_CONCAT(DISTINCT c.quest ORDER BY c.quest) AS use_quests
+  FROM item_spells s
+  JOIN cast_on c ON c.spell = s.spell
+  GROUP BY s.item
+)
+SELECT
+  -- 1 keys on a spell some quest actually requires, 2 on a lone granting
+  -- quest, 3 is the multi-grant pile that must never be keyed unread.
+  CASE WHEN u.use_quests IS NOT NULL THEN '1 use-linked'
+       WHEN g.n_grant = 1            THEN '2 single-grant'
+       ELSE                               '3 MULTI-GRANT, read before using'
+  END                                                    AS confidence,
+  CASE WHEN it.entry < 22500 THEN '01 WoW'
+       WHEN it.entry < 33117 THEN '02 TBC'
+       ELSE '03 WotLK' END                               AS section,
+  it.entry AS item, it.name,
+  g.grant_quests, g.n_grant, u.use_quests,
+  (SELECT GROUP_CONCAT(CONCAT(g2.quest, '=', qt.Title) ORDER BY g2.quest SEPARATOR ' | ')
+     FROM granted g2 JOIN quest_template qt ON qt.entry = g2.quest
+    WHERE g2.item = it.entry)                            AS grant_titles,
+  (SELECT GROUP_CONCAT(CONCAT(c2.quest, '=', qt.Title) ORDER BY c2.quest SEPARATOR ' | ')
+     FROM item_spells s2
+     JOIN cast_on c2        ON c2.spell = s2.spell
+     JOIN quest_template qt ON qt.entry = c2.quest
+    WHERE s2.item = it.entry)                            AS use_titles,
+  (SELECT GROUP_CONCAT(DISTINCT qt.NextQuestInChain ORDER BY qt.NextQuestInChain)
+     FROM granted g3 JOIN quest_template qt ON qt.entry = g3.quest
+    WHERE g3.item = it.entry AND qt.NextQuestInChain > 0) AS next_in_chain,
+  it.Quality AS quality, it.class, it.Bonding AS bind, it.Flags AS flags,
+  it.ContainerSlots AS bag_slots,
+  it.maxcount AS max_count, it.spellcharges_1 AS charges,
+  CONCAT('\t[', it.entry, '] = { ',
+         REPLACE(COALESCE(u.use_quests, g.grant_quests), ',', ', '),
+         ' }, -- ', it.name)                             AS lua_line
+FROM g_agg g
+JOIN item_template it ON it.entry = g.item
+LEFT JOIN u_agg u     ON u.item   = g.item
+WHERE NOT EXISTS (SELECT 1 FROM taken t WHERE t.item = g.item)
+  AND g.any_repeatable = 0            -- a completed flag proves nothing there
+  AND it.Quality <= 1                 -- a granted blue is a keeper, not clutter
+  AND (it.class = 12 OR it.Bonding IN (1, 4))
+  AND it.ContainerSlots = 0           -- a real bag holds the player's own loot
+  AND (it.Flags & 32) = 0             -- client refuses to destroy these anyway
+  AND it.startquest = 0               -- Quest-Starting-Items.lua owns these
+  AND it.name NOT LIKE '%Test%'
+  AND it.name NOT LIKE '%[PH]%'
+  AND it.name NOT LIKE '%UNUSED%'
+  AND it.name NOT LIKE '%DEPRECATED%'
+  AND it.name NOT LIKE 'OLD %'
+  AND it.name NOT LIKE '%(old%'
+ORDER BY confidence, section, it.name;
 
 ]]
 
 -- { [itemId] = { questId, ... } }
 ns.AllowedDeleteQuestItems = {
+
+	-- [itemId] = { questId, ... }, -- Item Name
 
 	--------------------------------------------------------------------------------
 	-- 01. World of Warcraft
@@ -88,6 +300,7 @@ ns.AllowedDeleteQuestItems = {
 	[18513] = { 7508 }, -- A Dull and Flat Elven Blade
 	[2839] = { 361 }, -- A Letter to Yvette
 	[11116] = { 3884 }, -- A Mangled Journal
+	[11107] = { 3845 }, -- A Small Pack
 	[3317] = { 460 }, -- A Talking Head
 	[4881] = { 830 }, -- Aged Envelope
 	[20402] = { 8301 }, -- Agent of Nozdormu
@@ -126,6 +339,7 @@ ns.AllowedDeleteQuestItems = {
 	[12848] = { 5127 }, -- Blood Stained Pike
 	[14650] = { 5844 }, -- Bloodhoof Village Gift Voucher
 	[22094] = { 8970 }, -- Bloodkelp
+	[11316] = { 4141, 4142 }, -- Bloodpetal
 	[7668] = { 2201, 2339 }, -- Bloodstained Journal
 	[6928] = { 1689 }, -- Bloodstone Choker
 	[9282] = { 2930 }, -- Blue Punch Card
@@ -148,6 +362,7 @@ ns.AllowedDeleteQuestItems = {
 	[7907] = { 2282 }, -- Certificate of Thievery
 	[18950] = { 7704 }, -- Chambermaid Pillaclencher's Pillow
 	[19881] = { 8201 }, -- Channeler's Head
+	[18749] = { 7647 }, -- Charger's Lost Soul
 	[6839] = { 1701 }, -- Charred Horn
 	[4926] = { 819 }, -- Chen's Empty Keg
 	[7247] = { 1960, 1920 }, -- Chest of Containment Coffers
@@ -155,6 +370,7 @@ ns.AllowedDeleteQuestItems = {
 	[5088] = { 894 }, -- Control Console Operating Manual
 	[5585] = { 1058 }, -- Courser Eye
 	[5738] = { 1079, 1080 }, -- Covert Ops Pack
+	[5851] = { 1182 }, -- Cozzle's Key
 	[5877] = { 1148 }, -- Cracked Silithid Carapace
 	[7846] = { 2258, 2500 }, -- Crag Coyote Fang
 	[12842] = { 5123 }, -- Crudely-written Log
@@ -166,6 +382,7 @@ ns.AllowedDeleteQuestItems = {
 	[11468] = { 4286 }, -- Dark Iron Fanny Pack
 	[5462] = { 1029, 1030, 1045 }, -- Dartol's Rod of Transformation
 	[12368] = { 4771 }, -- Dawn's Gambit
+	[6783] = { 1667 }, -- Dead-tooth's Key
 	[20741] = { 8470 }, -- Deadwood Ritual Totem
 	[5570] = { 1069 }, -- Deepmoss Egg
 	[5397] = { 166, 373 }, -- Defias Gunpowder
@@ -182,6 +399,7 @@ ns.AllowedDeleteQuestItems = {
 	[10445] = { 3461 }, -- Drawing Kit
 	[5068] = { 877 }, -- Dried Seeds
 	[3467] = { 498 }, -- Dull Iron Key
+	[7970] = { 2381 }, -- E.C.A.C.
 	[6635] = { 1517, 1520 }, -- Earth Sapta
 	[8432] = { 2609 }, -- Eau de Mixilpixil
 	[13289] = { 5282 }, -- Egan's Blaster
@@ -209,7 +427,9 @@ ns.AllowedDeleteQuestItems = {
 	[11617] = { 4005 }, -- Eridan's Supplies
 	[11682] = { 4441 }, -- Eridan's Vial
 	[10454] = { 3373 }, -- Essence of Eranikus
+	[10663] = { 3528 }, -- Essence of Hakkar
 	[11129] = { 3911, 7201 }, -- Essence of the Elements
+	[5867] = { 1195 }, -- Etched Phial
 	[11020] = { 3785, 3786, 3791 }, -- Evergreen Pouch
 	[5021] = { 849 }, -- Explosive Stick of Gann
 	[22115] = { 8977, 8978 }, -- Extra-Dimensional Ghost Revealer
@@ -219,17 +439,21 @@ ns.AllowedDeleteQuestItems = {
 	[18626] = { 7603 }, -- Fel Fire
 	[10834] = { 3602 }, -- Felhound Tracker Kit
 	[18501] = { 5526 }, -- Felvine Shard
+	[13157] = { 5206 }, -- Fetid Skull
 	[8523] = { 238 }, -- Field Testing Kit
 	[12347] = { 4763 }, -- Filled Cleansing Bowl
 	[5868] = { 1195, 1196 }, -- Filled Etched Phial
 	[1362] = { 140 }, -- Final Clue to Sander's Treasure
 	[19036] = { 7843 }, -- Final Message to the Wildhammer
 	[8066] = { 2458 }, -- Fizzule's Whistle
+	[12814] = { 5096 }, -- Flame in a Bottle
 	[8051] = { 2458 }, -- Flare Gun
 	[20310] = { 1480 }, -- Flayed Demon Skin
 	[6766] = { 1480 }, -- Flayed Demon Skin (old2)
 	[11668] = { 939 }, -- Flute of Xavaric
 	[11266] = { 4061 }, -- Fractured Elemental Shard
+	[5810] = { 1136 }, -- Fresh Carcass
+	[10338] = { 882 }, -- Fresh Zhevra Carcass
 	[6842] = { 1701 }, -- Furen's Instructions
 	[9323] = { 2937 }, -- Gadrin's Parchment
 	[9978] = { 3161 }, -- Gahz'ridian Detector
@@ -248,9 +472,11 @@ ns.AllowedDeleteQuestItems = {
 	[10441] = { 6981 }, -- Glowing Shard
 	[20464] = { 8315 }, -- Glyphs of Calling
 	[7464] = { 1504 }, -- Glyphs of Summoning
+	[8049] = { 2459 }, -- Gnarlpine Necklace
 	[1307] = { 123 }, -- Gold Pickup Schedule
 	[14646] = { 5805 }, -- Goldshire Gift Voucher
 	[12721] = { 5050 }, -- Good Luck Half-Charm
+	[12722] = { 5051 }, -- Good Luck Other-Half-Charm
 	[11079] = { 3825 }, -- Gor'tesh's Lopped Off Head
 	[9370] = { 2978 }, -- Gordunni Scroll
 	[11833] = { 4507 }, -- Gorishi Queen Lure
@@ -259,6 +485,8 @@ ns.AllowedDeleteQuestItems = {
 	[9460] = { 2974 }, -- Grimtotem Horn
 	[19851] = { 8150 }, -- Grom's Tribute
 	[7442] = { 2078 }, -- Gyromast's Key
+	[15883] = { 30, 272 }, -- Half Pendant of Aquatic Agility
+	[15882] = { 30, 272 }, -- Half Pendant of Aquatic Endurance
 	[12566] = { 4505 }, -- Hardened Flasket
 	[5138] = { 897 }, -- Harvester's Head
 	[13250] = { 5262 }, -- Head of Balnazzar
@@ -267,9 +495,11 @@ ns.AllowedDeleteQuestItems = {
 	[8095] = { 2480 }, -- Hinott's Oil
 	[5099] = { 883 }, -- Hoof of Lakota'mani
 	[10327] = { 881 }, -- Horn of Echeyakee
+	[9530] = { 3062 }, -- Horn of Hatetalon
 	[18598] = { 171 }, -- Human Orphan Whistle
 	[20765] = { 8482 }, -- Incriminating Documents
 	[20798] = { 8489 }, -- Intact Arcane Converter
+	[12220] = { 1016 }, -- Intact Elemental Bracer
 	[11269] = { 4063 }, -- Intact Elemental Core
 	[9369] = { 2973 }, -- Iridescent Sprite Darter Wing
 	[5619] = { 929 }, -- Jade Phial
@@ -286,6 +516,7 @@ ns.AllowedDeleteQuestItems = {
 	[3898] = { 578 }, -- Library Scrip
 	[14544] = { 5726 }, -- Lieutenant's Insignia
 	[11136] = { 3913 }, -- Linken's Tempered Sword
+	[15447] = { 6022 }, -- Living Rot
 	[21378] = { 8804 }, -- Logistics Task Briefing I
 	[21379] = { 8805 }, -- Logistics Task Briefing II
 	[21380] = { 8806 }, -- Logistics Task Briefing III
@@ -303,6 +534,7 @@ ns.AllowedDeleteQuestItems = {
 	[11412] = { 4201 }, -- Nagmara's Vial
 	[21042] = { 8606 }, -- Narain's Special Kit
 	[15876] = { 6146 }, -- Nathanos' Chest
+	[5695] = { 1079 }, -- NG-5 Explosives (Blue)
 	[5694] = { 1079 }, -- NG-5 Explosives (Red)
 	[15002] = { 2932 }, -- Nimboya's Pike
 	[10792] = { 3638 }, -- Nixx's Pledge of Secrecy
@@ -319,27 +551,40 @@ ns.AllowedDeleteQuestItems = {
 	[10793] = { 3640 }, -- Overspark's Pledge of Secrecy
 	[5102] = { 884 }, -- Owatanka's Tailspike
 	[11912] = { 4512 }, -- Package of Empty Ooze Containers
+	[12886] = { 5149 }, -- Pamela's Doll's Head
+	[12887] = { 5149 }, -- Pamela's Doll's Left Side
+	[12888] = { 5149 }, -- Pamela's Doll's Right Side
 	[4614] = { 635 }, -- Pendant of Myzrael
 	[18708] = { 7636 }, -- Petrified Bark
 	[5251] = { 944 }, -- Phial of Scrying
 	[13174] = { 5212 }, -- Plagued Flesh Sample
 	[15043] = { 5901, 5903 }, -- Plagueland Termites
 	[10590] = { 3482 }, -- Pocked Black Box
+	[21211] = { 8746, 8762 }, -- Pouch of Reindeer Dust
 	[9316] = { 2930 }, -- Prismatic Punch Card
 	[5938] = { 1258 }, -- Pristine Crawler Leg
+	[4702] = { 746, 14436 }, -- Prospector's Pick
 	[6286] = { 1474 }, -- Pure Hearts
 	[12906] = { 5159 }, -- Purified Moonwell Water
 	[14649] = { 5843 }, -- Razor Hill Gift Voucher
 	[9281] = { 2930 }, -- Red Punch Card
 	[15209] = { 5721 }, -- Relic Bundle
 	[18539] = { 5526 }, -- Reliquary of Purity
+	[5693] = { 1079 }, -- Remote Detonator (Blue)
+	[5692] = { 1079 }, -- Remote Detonator (Red)
+	[22046] = { 8989, 8990, 8991, 8992 }, -- Right Piece of Lord Valthalak's Amulet
 	[9309] = { 2928 }, -- Robo-mechanical Guts
+	[15875] = { 6146 }, -- Rotten Apple
 	[20613] = { 8421 }, -- Rotting Wood
 	[12533] = { 4867 }, -- Roughshod Pike
 	[10621] = { 3513 }, -- Runed Scroll
 	[6284] = { 1471 }, -- Runes of Summoning
 	[19883] = { 8201 }, -- Sacred Cord
+	[12733] = { 5056 }, -- Sacred Frostsaber Meat
+	[11147] = { 3924 }, -- Samophlange Manual Cover
+	[11148] = { 3924 }, -- Samophlange Manual Page
 	[5866] = { 1194 }, -- Sample of Indurium Ore
+	[16333] = { 6395 }, -- Samuel's Remains
 	[16784] = { 6563 }, -- Sapphire of Aku'Mai
 	[8155] = { 2520 }, -- Sathrah's Sacrifice
 	[19423] = { 7937 }, -- Sayge's Fortune #23
@@ -352,14 +597,18 @@ ns.AllowedDeleteQuestItems = {
 	[16305] = { 2 }, -- Sharptalon's Claw
 	[7666] = { 2198 }, -- Shattered Necklace
 	[9250] = { 2876 }, -- Ship Schedule
+	[15877] = { 28, 29 }, -- Shrine Bauble
 	[1532] = { 582 }, -- Shrunken Head
 	[4450] = { 640 }, -- Sigil Fragment
 	[5058] = { 868 }, -- Silithid Egg
+	[17345] = { 1126 }, -- Silithid Goo
+	[11172] = { 4084 }, -- Silvery Claws
 	[14644] = { 5801, 5802 }, -- Skeleton Key Mold
 	[13853] = { 5544 }, -- Slab of Carrion Worm Meat
 	[17008] = { 6522 }, -- Small Scroll
 	[15736] = { 6041 }, -- Smokey's Special Compound
 	[21315] = { 8746, 8762 }, -- Smokywood Satchel
+	[15874] = { 6142 }, -- Soft-shelled Clam
 	[11725] = { 4450 }, -- Solid Crystal Leg Shaft
 	[3912] = { 592 }, -- Soul Gem
 	[13624] = { 5464, 5465 }, -- Soulbound Keepsake
@@ -374,6 +623,7 @@ ns.AllowedDeleteQuestItems = {
 	[4506] = { 682 }, -- Stromgarde Badge
 	[5165] = { 905 }, -- Sunscale Feather
 	[20474] = { 8330 }, -- Sunstrider Book Satchel
+	[6866] = { 1779, 1781, 9600 }, -- Symbol of Life
 	[7516] = { 1948 }, -- Tabetha's Instructions
 	[21751] = { 8536 }, -- Tactical Task Briefing III
 	[20946] = { 8536 }, -- Tactical Task Briefing III
@@ -381,6 +631,7 @@ ns.AllowedDeleteQuestItems = {
 	[20483] = { 8338 }, -- Tainted Arcane Sliver
 	[8050] = { 2459 }, -- Tallonkai's Jewel
 	[7667] = { 2201 }, -- Talvash's Phial of Scrying
+	[7208] = { 1858 }, -- Tazan's Key
 	[7209] = { 1963 }, -- Tazan's Satchel
 	[5505] = { 1023 }, -- Teronis' Journal
 	[7586] = { 2118 }, -- Tharnariun's Hope
@@ -392,6 +643,7 @@ ns.AllowedDeleteQuestItems = {
 	[11286] = { 4121 }, -- Thorium Shackles
 	[7587] = { 1838 }, -- Thun'grim's Instructions
 	[5415] = { 758 }, -- Thunderhorn Cleansing Totem
+	[5168] = { 918, 922 }, -- Timberling Seed
 	[6775] = { 1642 }, -- Tome of Divinity
 	[6916] = { 1646 }, -- Tome of Divinity
 	[6999] = { 1795 }, -- Tome of the Cabal
@@ -430,7 +682,9 @@ ns.AllowedDeleteQuestItems = {
 	[12565] = { 4506 }, -- Winna's Kitten Carrier
 	[20742] = { 8471 }, -- Winterfall Ritual Totem
 	[5411] = { 754 }, -- Winterhoof Cleansing Totem
+	[9320] = { 2932 }, -- Witherbark Skull
 	[7273] = { 1948 }, -- Witherbark Totem Stick
+	[5475] = { 1026 }, -- Wooden Key
 	[13158] = { 5083 }, -- Words of the High Chief
 	[9280] = { 2930 }, -- Yellow Punch Card
 	[18904] = { 7003 }, -- Zorbin's Ultra-Shrinker
@@ -448,10 +702,13 @@ ns.AllowedDeleteQuestItems = {
 	[22974] = { 9300 }, -- A Ragged Page
 	[22975] = { 9304 }, -- A Smudged Document
 	[22977] = { 9295 }, -- A Torn Letter
+	[32567] = { 10980 }, -- Aether Ray Eye
 	[23249] = { 9360 }, -- Amani Invasion Plans
+	[28786] = { 10256 }, -- Apex's Crystal Focus
 	[22796] = { 9275 }, -- Apothecary's Poison
 	[23706] = { 9487 }, -- Arcane Fragment
 	[28455] = { 10174, 10188, 10192, 10209, 10301 }, -- Archmage Vargoth's Staff
+	[31955] = { 9374 }, -- Arelion's Knapsack
 	[32454] = { 11001 }, -- Arthorn's Research
 	[31946] = { 10946 }, -- Ashtongue Cowl
 	[23580] = { 9418 }, -- Avruu's Orb
@@ -460,6 +717,7 @@ ns.AllowedDeleteQuestItems = {
 	[28336] = { 10305 }, -- Belmara's Tome
 	[29234] = { 10305 }, -- Belmara's Tome
 	[30425] = { 10538 }, -- Bleeding Hollow Blood
+	[31347] = { 10792 }, -- Bleeding Hollow Torch
 	[25817] = { 10021 }, -- Blessed Vial
 	[23910] = { 9616 }, -- Blood Elf Communication
 	[30639] = { 10577 }, -- Blood Elf Disguise
@@ -469,20 +727,26 @@ ns.AllowedDeleteQuestItems = {
 	[30808] = { 10649 }, -- Book of Fel Names
 	[30854] = { 10692 }, -- Book of Fel Names
 	[29429] = { 10221 }, -- Boom's Doom
+	[25490] = { 9923 }, -- Boulderfist Key
+	[23801] = { 9544 }, -- Bristlelimb Key
 	[30616] = { 10570 }, -- Bundle of Bloodthistle
 	[24221] = { 9689 }, -- Bundle of Dragon Bones
 	[29588] = { 10395 }, -- Burning Legion Missive
 	[29590] = { 10393 }, -- Burning Legion Missive
 	[31707] = { 10880 }, -- Cabal Orders
+	[31536] = { 10821 }, -- Camp Anger Key
 	[23693] = { 9472 }, -- Carinda's Scroll of Retribution
 	[31702] = { 10876 }, -- Challenge from the Horde
+	[25648] = { 9955 }, -- Cho'war's Key
 	[24289] = { 10297 }, -- Chrono-beacon
 	[28353] = { 10307 }, -- Cohlien's Cap
 	[29236] = { 10307 }, -- Cohlien's Cap
+	[30426] = { 10522 }, -- Coilskar Chest Key
 	[29207] = { 10173 }, -- Conjuring Powder
 	[25459] = { 9911 }, -- Count Ungula's Mandible
 	[25766] = { 10009 }, -- Creatures That Owe Sal'salabim Golds
 	[29476] = { 10134 }, -- Crimson Crystal Shard
+	[23191] = { 9169 }, -- Crystal Controlling Orb
 	[31736] = { 10833 }, -- Crystal of Deep Shadows
 	[31384] = { 10810 }, -- Damaged Mask
 	[28351] = { 10182 }, -- Dathric's Blade
@@ -492,7 +756,7 @@ ns.AllowedDeleteQuestItems = {
 	[30650] = { 10566 }, -- Dertrok's Wand Case
 	[23777] = { 9520 }, -- Diabolical Plans
 	[23797] = { 9535 }, -- Diabolical Plans
-	[31812] = { 10923 }, -- Doom Skull
+	[31812] = { 10923, 10925 }, -- Doom Skull
 	[24084] = { 9666 }, -- Draenei Banner
 	[31881] = { 10966 }, -- Draenei Orphan Whistle
 	[24330] = { 9731 }, -- Drain Schematics
@@ -501,9 +765,12 @@ ns.AllowedDeleteQuestItems = {
 	[23749] = { 9504 }, -- Empty Bota Bag
 	[31279] = { 10769, 10776 }, -- Enchanted Illidari Tabard
 	[23338] = { 9373 }, -- Eroded Leather Case
+	[29482] = { 10385 }, -- Ethereum Essence
 	[25840] = { 10029 }, -- Extract of the Afterlife
 	[23678] = { 9455 }, -- Faintly Glowing Crystal
 	[23695] = { 9475 }, -- Featherbeard's Map
+	[25770] = { 10011 }, -- Fel Cannon Activator
+	[25771] = { 10011 }, -- Fel Cannon Activator
 	[31366] = { 10819 }, -- Felsworn Gas Mask
 	[24184] = { 9685 }, -- Filled Shimmering Vessel
 	[24336] = { 9467 }, -- Fireproof Satchel
@@ -513,13 +780,19 @@ ns.AllowedDeleteQuestItems = {
 	[23182] = { 9330 }, -- Flame of Stormwind
 	[23181] = { 9326 }, -- Flame of the Undercity
 	[23180] = { 9325 }, -- Flame of Thunder Bluff
+	[28550] = { 10233 }, -- Flaming Torch
 	[24278] = { 9711 }, -- Flare Gun
 	[33106] = { 11164 }, -- Forest Troll Tusk
 	[30875] = { 10679 }, -- Forged Illidari-Bane Blade
 	[22727] = { 9250 }, -- Frame of Atiesh
+	[30850] = { 10641 }, -- Freshly Drawn Blood
 	[24475] = { 9821 }, -- Gordawg's Imprint
 	[31363] = { 10797 }, -- Gorgrom's Favor
+	[23735] = { 9494 }, -- Grand Warlock's Amulet
 	[25866] = { 10045 }, -- Greatmother's List of Herbs
+	[33061] = { 11145 }, -- Grimtotem Key
+	[33050] = { 11144, 11201 }, -- Grimtotem Note
+	[31754] = { 10723, 10802 }, -- Grisly Totem
 	[23850] = { 9564 }, -- Gurf's Dignity
 	[24504] = { 9861 }, -- Howling Wind
 	[31350] = { 10721 }, -- Huffer's Whistle
@@ -527,6 +800,9 @@ ns.AllowedDeleteQuestItems = {
 	[30579] = { 10623 }, -- Illidari-Bane Shard
 	[30756] = { 10621 }, -- Illidari-Bane Shard
 	[22693] = { 8490 }, -- Infused Crystal
+	[30655] = { 10566 }, -- Infused Vekh'nir Crystal
+	[29206] = { 10173 }, -- Inquisitor's Crest - Bottom Half
+	[29205] = { 10173 }, -- Inquisitor's Crest - Top Half
 	[32523] = { 11021 }, -- Ishaal's Almanac
 	[24277] = { 9723, 64141 }, -- Items for Magister Astalor Bloodsworn
 	[25684] = { 9975, 9976 }, -- Kokorek's Talisman
@@ -548,6 +824,7 @@ ns.AllowedDeleteQuestItems = {
 	[22955] = { 9294 }, -- Neutralizing Agent
 	[28664] = { 10252 }, -- Nitrin's Instructions
 	[23847] = { 9561 }, -- Nolkai's Band
+	[25509] = { 9924 }, -- Northwind Cleft Key
 	[23228] = { 8474 }, -- Old Whitebark's Pendant
 	[25745] = { 9993, 9992 }, -- Olemba Seed
 	[22719] = { 9233 }, -- Omarion's Handbook
@@ -570,9 +847,13 @@ ns.AllowedDeleteQuestItems = {
 	[23925] = { 9582 }, -- Ravager Cage Key
 	[23870] = { 9576 }, -- Red Crystal Pendant
 	[33045] = { 11140 }, -- Renn's Supplies
+	[33040] = { 11140 }, -- Repaired Diving Gear
+	[31372] = { 10804 }, -- Rocknail Flayer Carcass
+	[31373] = { 10804 }, -- Rocknail Flayer Giblets
 	[23759] = { 9514 }, -- Rune Covered Tablet
 	[30704] = { 10567 }, -- Ruuan'ok Claw
 	[23417] = { 9383 }, -- Sanctified Crystal
+	[30811] = { 10637, 10688 }, -- Scroll of Demonic Unbanishing
 	[33114] = { 11185 }, -- Sealed Letter
 	[33115] = { 11186 }, -- Sealed Letter
 	[24157] = { 9684 }, -- Shimmering Vessel
@@ -582,24 +863,35 @@ ns.AllowedDeleteQuestItems = {
 	[29796] = { 10507 }, -- Socrethar's Teleportation Stone
 	[30721] = { 10633, 10644 }, -- Spectrecles
 	[31663] = { 10853 }, -- Spirit Calling Totems
+	[31524] = { 10831 }, -- Square of Imbued Netherweave
 	[23818] = { 9538 }, -- Stillpine Furbolg Language Primer
 	[23270] = { 9361 }, -- Tainted Helboar Meat
 	[30540] = { 10710 }, -- Tally's Waiver (Unsigned)
+	[33009] = { 11129 }, -- Tender Strider Meat
+	[30712] = { 10606, 10611 }, -- The Doctor's Key
+	[29912] = { 10446, 10447 }, -- The Final Code
+	[24099] = { 9667 }, -- The High Chief's Key
 	[31345] = { 10793 }, -- The Journal of Val'zareq
 	[22597] = { 9175 }, -- The Lady's Necklace
 	[32888] = { 10098 }, -- The Relics of Terokk
+	[29742] = { 10422 }, -- The Warden's Key
 	[30431] = { 10524 }, -- Thunderlord Clan Artifact
 	[23355] = { 9361 }, -- Toxic Helboar Meat
-	[23788] = { 9526 }, -- Tree Seedlings
+	[30618] = { 10035, 10036 }, -- Trachela's Carcass
+	[23788] = { 9526, 10771 }, -- Tree Seedlings
 	[23900] = { 9594 }, -- Tzerak's Armor Plate
 	[31360] = { 10782 }, -- Unfinished Headpiece
 	[31251] = { 10758, 10764 }, -- Unfired Key Mold
+	[31655] = { 10852 }, -- Veil Skith Prison Key
+	[30561] = { 10565 }, -- Vekh'nir Crystal
+	[31525] = { 10831 }, -- Vial of Primal Reagents
 	[29738] = { 10413 }, -- Vial of Void Horror Ooze
 	[29161] = { 10294 }, -- Void Ridge Soul Shard
 	[23732] = { 9619 }, -- Voidstone
 	[30260] = { 10507 }, -- Voren'thal's Package
 	[28113] = { 10130 }, -- Warboss Nekrogg's Orders
 	[28114] = { 10152 }, -- Warboss Nekrogg's Orders
+	[25604] = { 9948 }, -- Warmaul Prison Key
 	[24502] = { 9853 }, -- Warmaul Skull
 	[31813] = { 10924 }, -- Warp Chaser Blood
 	[24318] = { 9748 }, -- Water Sample Flask
@@ -608,6 +900,7 @@ ns.AllowedDeleteQuestItems = {
 	[24483] = { 9827 }, -- Withered Basidium
 	[24484] = { 9828 }, -- Withered Basidium
 	[33082] = { 11152 }, -- Wreath
+	[31755] = { 10724 }, -- Wyvern Cage Key
 	[31664] = { 10866, 10872 }, -- Zuluhed's Key
 
 	--------------------------------------------------------------------------------
@@ -629,16 +922,26 @@ ns.AllowedDeleteQuestItems = {
 	[35490] = { 11911 }, -- Arcane Splinter
 	[34669] = { 11576, 11582, 12728 }, -- Arcanometer
 	[40730] = { 12847 }, -- Arete's Gate
+	[34083] = { 11432, 11433 }, -- Awakening Rod
 	[43289] = { 13138 }, -- Bag of Jagged Shards
+	[36786] = { 12092, 12096 }, -- Bark of the Walkers
 	[44127] = { 13306, 13332 }, -- Barricade Construction Kit
 	[39041] = { 12662 }, -- Bat Net
+	[42624] = { 12874 }, -- Battered Storm Hammer
+	[38607] = { 12619 }, -- Battle-worn Sword
+	[34688] = { 11587 }, -- Beryl Prison Key
 	[34897] = { 11671 }, -- Beryl Shield Detonator
 	[42928] = { 13059 }, -- Bethod's Sword
 	[34915] = { 11694 }, -- Bixie's Inhibiting Powder
 	[43243] = { 13141 }, -- Blessed Banner of the Crusade
 	[36827] = { 12125 }, -- Blood Gem
 	[35784] = { 11983 }, -- Blood Oath of the Horde
+	[35688] = { 11959 }, -- Blood of Loguhn
 	[37581] = { 12300 }, -- Bloodied Scalping Knife
+	[33778] = { 11346, 11350 }, -- Book of Runes - Chapter 1
+	[33779] = { 11346, 11350 }, -- Book of Runes - Chapter 2
+	[33780] = { 11346, 11350 }, -- Book of Runes - Chapter 3
+	[35734] = { 11982 }, -- Boulder
 	[42441] = { 12988 }, -- Bouldercrag's Bomb
 	[42419] = { 12984 }, -- Bouldercrag's War Horn
 	[35736] = { 11984 }, -- Bounty Hunter's Cage
@@ -652,26 +955,37 @@ ns.AllowedDeleteQuestItems = {
 	[37737] = { 12421 }, -- Brew of the Month Club Membership Form
 	[44576] = { 13000 }, -- Bright Flare
 	[34624] = { 11568 }, -- Bundle of Vrykul Artifacts
+	[34961] = { 11695 }, -- Burblegobble's Key
 	[33278] = { 11270 }, -- Burning Torch
 	[33335] = { 11232 }, -- Cannoneer's Smoke Flare
 	[36756] = { 12067 }, -- Captain Malin's Letter
+	[53510] = { 25444 }, -- Captured Frog
+	[35705] = { 11904 }, -- Cart Release Key
 	[33450] = { 11281 }, -- Carved Horn
 	[35293] = { 11892 }, -- Cenarion Horn
 	[41372] = { 12939 }, -- Challenge Flag
 	[44704] = { 12872, 12928 }, -- Charged Disk
 	[36834] = { 12121 }, -- Charged Drakil'jin Mallet
 	[38689] = { 12532 }, -- Chicken Net
+	[40641] = { 12843 }, -- Cold Iron Key
 	[37187] = { 12211 }, -- Container of Rats
 	[43608] = { 13239 }, -- Copperclaw's Volatile Oil
+	[34711] = { 11607 }, -- Core of Malice
 	[34871] = { 11670 }, -- Crafty's Sack
 	[34801] = { 11650 }, -- Crafty's Shopping List
 	[34812] = { 11653 }, -- Crafty's Ultra-Advanced Proto-Typical Shortening Blaster
 	[42679] = { 12986 }, -- Creteus's Mobile Databank
+	[33238] = { 11227 }, -- Crow Meat
 	[43564] = { 13220 }, -- Crusader Olakin's Remains
 	[39615] = { 12740 }, -- Crusader Parachute
 	[38330] = { 12512 }, -- Crusader's Bandage
+	[44459] = { 13345, 13366 }, -- Cult of the Damned Research - Page 1
+	[44460] = { 13345, 13366 }, -- Cult of the Damned Research - Page 2
+	[44461] = { 13345, 13366 }, -- Cult of the Damned Research - Page 3
+	[44784] = { 13364, 13403 }, -- Cultist Acolyte's Hood
 	[35228] = { 11876 }, -- D.E.H.T.A. Trap Smasher
 	[42203] = { 12979 }, -- Dark Armor Plate
+	[42204] = { 12979 }, -- Dark Armor Sample
 	[44222] = { 13314 }, -- Dart Gun
 	[43229] = { 13120 }, -- Death's Gaze Orb
 	[37445] = { 12261 }, -- Destructive Wards
@@ -683,15 +997,23 @@ ns.AllowedDeleteQuestItems = {
 	[42837] = { 12906 }, -- Disciplining Rod
 	[34082] = { 11443 }, -- Diving Helm
 	[42772] = { 13043 }, -- Dr. Terrible's "Building a Better Flesh Giant"
+	[33308] = { 11255 }, -- Dragonflayer Cage Key
 	[36873] = { 12152 }, -- Drakkari Spirit Dust
+	[41161] = { 12861 }, -- Drakuru "Lock Opener"
 	[35797] = { 11991 }, -- Drakuru's Elixir
+	[43059] = { 12713 }, -- Drakuru's Last Wish
+	[39315] = { 12712 }, -- Drek'Maz's Tiki
+	[38083] = { 11989 }, -- Dull Carving Knife
+	[37013] = { 12180 }, -- Dun Argol Cage Key
 	[41615] = { 12930 }, -- Earthen Mining Pick
 	[39713] = { 12781 }, -- Ebon Hold Gift Voucher
 	[36855] = { 12146 }, -- Emblazoned Battle Horn
 	[36856] = { 12147 }, -- Emblazoned Battle Horn
 	[36864] = { 12151 }, -- Emblazoned Battle Horn
+	[44790] = { 13074, 13075 }, -- Emerald Acorn
 	[35224] = { 11796 }, -- Emergency Torch
 	[34023] = { 11306 }, -- Empty Apothecary's Flask
+	[33614] = { 11306 }, -- Empty Apothecary's Flask
 	[45083] = { 13663 }, -- Enchanted Bridle
 	[33607] = { 11319 }, -- Enchanted Ice Core
 	[38699] = { 12648, 12649 }, -- Ensorcelled Choker
@@ -711,18 +1033,26 @@ ns.AllowedDeleteQuestItems = {
 	[35569] = { 11933 }, -- Flame of the Exodar
 	[37716] = { 12415 }, -- Flashbang Grenade
 	[37129] = { 12206 }, -- Flask of Blight
+	[33615] = { 11306 }, -- Flask of Vrykul Blood
 	[36744] = { 12057 }, -- Flesh-bound Tome
 	[33563] = { 11282 }, -- Forsaken Banner
 	[34013] = { 11410 }, -- Fresh Barbfish Bait
+	[41340] = { 12865 }, -- Fresh Ice Rhino Meat
 	[38684] = { 12620 }, -- Freya's Horn
 	[38657] = { 12611 }, -- Freya's Ward
 	[36847] = { 12127 }, -- Frost Gem
 	[41430] = { 12855 }, -- Frosthound's Collar
+	[35586] = { 11936 }, -- Frozen Axe
+	[35799] = { 11991 }, -- Frozen Mojo
 	[36796] = { 12099 }, -- Gavrock's Runebreaker
 	[37173] = { 12213, 12220 }, -- Geomancer's Orb
+	[33477] = { 11284 }, -- Giant Yeti Meal
 	[39253] = { 12698 }, -- Gift of the Harvester
 	[33289] = { 11237 }, -- Gjalerbron Attack Plans
 	[33347] = { 11266 }, -- Gjalerbron Attack Plans
+	[33284] = { 11231, 11265 }, -- Gjalerbron Cage Key
+	[35276] = { 11887 }, -- Gnomish Emergency Toolkit
+	[34772] = { 11617 }, -- Gnomish Grenade
 	[52709] = { 25283 }, -- Gnomish Playback Device
 	[36865] = { 12153, 12199 }, -- Golem Control Unit
 	[36936] = { 12138, 12198 }, -- Golem Control Unit
@@ -731,9 +1061,12 @@ ns.AllowedDeleteQuestItems = {
 	[40551] = { 12810 }, -- Gore Bladder
 	[33472] = { 11285 }, -- Gorth's Torch
 	[37661] = { 12327 }, -- Gossamer Potion
+	[41506] = { 12915 }, -- Granite Boulder
 	[33554] = { 11301 }, -- Grick's Bonesaw
 	[43511] = { 13204 }, -- Grotesque Fungus
+	[34962] = { 11695 }, -- Gurgleboggle's Key
 	[41431] = { 12823 }, -- Hardpacked Explosive Bundle
+	[36739] = { 12802 }, -- Heart of the Ancients
 	[37314] = { 12252 }, -- High Executor's Branding Iron
 	[38574] = { 12598 }, -- High Impact Grenade
 	[34913] = { 11677 }, -- Highmesa's Cleansing Seeds
@@ -755,21 +1088,29 @@ ns.AllowedDeleteQuestItems = {
 	[33637] = { 11343 }, -- Incense Burner
 	[33774] = { 11344 }, -- Incense Burner
 	[35739] = { 11986, 12026 }, -- Incomplete Journal
+	[49718] = { 24461, 24559 }, -- Infused Saronite Bar
 	[35479] = { 11905 }, -- Interdimensional Refabricator
 	[36726] = { 12039 }, -- Ironbender's Mining Pick
 	[34777] = { 11632 }, -- Ith'rix's Hardened Carapace
 	[43242] = { 13136 }, -- Jagged Shard
+	[43259] = { 13136 }, -- Jagged Shard
 	[35272] = { 11881 }, -- Jenny's Whistle
 	[35943] = { 12035 }, -- Jeremiah's Tools
+	[42422] = { 12982 }, -- Jotunheim Cage Key
 	[41507] = { 12916 }, -- Jumbo Seaforium Charge
 	[38697] = { 12645 }, -- Jungle Punch Sample
+	[39371] = { 12720 }, -- Keleseth's Persuader
 	[39434] = { 12721 }, -- Key of Warlord Zol'Maz
 	[34620] = { 11566 }, -- King Mrgl-Mrgl's Spare Suit
 	[43214] = { 13129 }, -- Kurzel's Blouse Scrap
 	[49676] = { 24442 }, -- Kvaldir Attack Plans
+	[45080] = { 13654 }, -- Large Femur
+	[33290] = { 11231, 11265 }, -- Large Gjalerbron Cage Key
 	[35941] = { 12033 }, -- Letter from Saurfang
 	[37300] = { 12240 }, -- Levine Family Termites
 	[37006] = { 12172, 12173 }, -- Ley Line Attunement Crystal
+	[36779] = { 12083, 12084 }, -- Ley Line Focus Control Amulet
+	[36751] = { 12065, 12066 }, -- Ley Line Focus Control Ring
 	[36815] = { 12107, 12110 }, -- Ley Line Focus Control Talisman
 	[36780] = { 12085 }, -- Lieutenant Ta'zinni's Letter
 	[40397] = { 12805 }, -- Lifeblood Gem
@@ -781,6 +1122,7 @@ ns.AllowedDeleteQuestItems = {
 	[39645] = { 12754 }, -- Makeshift Cover
 	[33119] = { 11188 }, -- Malister's Frost Wand
 	[38627] = { 12607 }, -- Mammoth Harness
+	[43159] = { 13119 }, -- Master Summoner's Staff
 	[39268] = { 12707 }, -- Medallion of Mam'toth
 	[52731] = { 25287, 25500 }, -- Mekkatorque's Speech
 	[34090] = { 11452 }, -- Mezhen's Writings
@@ -788,6 +1130,7 @@ ns.AllowedDeleteQuestItems = {
 	[36940] = { 12105 }, -- Mikhail's Journal
 	[37830] = { 12423 }, -- Mikhail's Journal
 	[37932] = { 12159 }, -- Miner's Lantern
+	[35737] = { 11986, 12026 }, -- Missing Journal Page
 	[38332] = { 12516 }, -- Modified Mojo
 	[52566] = { 25229 }, -- Motivate-a-Tron
 	[37570] = { 12291 }, -- Murkweed Elixir
@@ -797,6 +1140,8 @@ ns.AllowedDeleteQuestItems = {
 	[35125] = { 11794 }, -- Oculus of the Exorcist
 	[43524] = { 13211 }, -- Olakin's Torch
 	[38709] = { 12546 }, -- Omega Rune
+	[40970] = { 12814 }, -- Onslaught Gryphon Reins
+	[37202] = { 12214 }, -- Onslaught Riding Crop
 	[43512] = { 13204 }, -- Ooze-covered Fungus
 	[46397] = { 13959 }, -- Oracle Orphan Whistle
 	[37577] = { 12301 }, -- Orik's Crystalline Orb
@@ -849,6 +1194,7 @@ ns.AllowedDeleteQuestItems = {
 	[38573] = { 12589 }, -- RJR Rifle
 	[37438] = { 12273 }, -- Rod of Compulsion
 	[44433] = { 13342, 13358 }, -- Rod of Siphoning
+	[37727] = { 12417, 12449 }, -- Ruby Acorn
 	[38302] = { 12498 }, -- Ruby Beacon of the Dragon Queen
 	[37833] = { 12419 }, -- Ruby Brooch
 	[33796] = { 11348, 11352 }, -- Rune of Command
@@ -858,6 +1204,8 @@ ns.AllowedDeleteQuestItems = {
 	[33806] = { 11355, 11365 }, -- Runeseeking Pick
 	[35746] = { 11993, 12058 }, -- Runic Keystone
 	[53637] = { 25446 }, -- Sack o' Frogs
+	[36870] = { 12152 }, -- Sacred Drakkari Offering
+	[36758] = { 12068 }, -- Sacred Mojo
 	[34806] = { 11647 }, -- Sage Aeire's Totem
 	[35352] = { 11896 }, -- Sage's Lightning Rod
 	[34948] = { 11680 }, -- Salrand's Key
@@ -866,8 +1214,10 @@ ns.AllowedDeleteQuestItems = {
 	[39664] = { 12713 }, -- Scepter of Domination
 	[39206] = { 12686 }, -- Scepter of Empowerment
 	[35648] = { 11941 }, -- Scintillating Fragment
+	[34908] = { 11676 }, -- Scourge Cage Key
 	[33961] = { 11395 }, -- Scourge Device
 	[33962] = { 11398 }, -- Scourge Device
+	[38149] = { 12484 }, -- Scourged Troll Mummy
 	[33960] = { 11396, 11399 }, -- Scourging Crystal Controller
 	[41267] = { 12888 }, -- SCRAP-E Access Card
 	[34710] = { 11608 }, -- Seaforium Depth Charge Bundle
@@ -894,6 +1244,7 @@ ns.AllowedDeleteQuestItems = {
 	[38467] = { 12530 }, -- Softknuckle Poker
 	[38519] = { 12544 }, -- Soo-rahm's Incense
 	[41366] = { 12893 }, -- Sovereign Rod
+	[43567] = { 13220 }, -- Spool of Thread
 	[33190] = { 11218 }, -- Steelring's Foolproof Dynamite
 	[41390] = { 12661 }, -- Stefan's Horn
 	[38659] = { 12630 }, -- Stefan's Steel Toed Boot
@@ -909,9 +1260,12 @@ ns.AllowedDeleteQuestItems = {
 	[33121] = { 11189 }, -- Tarnished Promise Ring
 	[41988] = { 12937 }, -- Telluric Poultice
 	[49766] = { 24480, 24561 }, -- Tempered Quel'Delar
+	[38324] = { 12510 }, -- Tether to the Plane of Water
 	[43166] = { 13133 }, -- The Bone Witch's Amulet
 	[33342] = { 11257 }, -- The Brave's Machete
+	[43568] = { 13220 }, -- The Doctor's Cleaver
 	[36958] = { 12168 }, -- The Favor of Zangus
+	[49723] = { 24461, 24559 }, -- The Forgemaster's Hammer
 	[35401] = { 11899 }, -- The Greatmother's Soulcatcher
 	[34598] = { 11571 }, -- The King's Empty Conch
 	[34960] = { 11695 }, -- The Legend of the Horn
@@ -920,22 +1274,29 @@ ns.AllowedDeleteQuestItems = {
 	[35116] = { 11730 }, -- The Ultrasonic Screwdriver
 	[42482] = { 13159 }, -- The Violet Hold Key
 	[41505] = { 12915 }, -- Thorim's Charm of Earth
+	[39305] = { 12709 }, -- Tiki Hex Remover
 	[33418] = { 11279 }, -- Tillinghast's Plague Canister
 	[33441] = { 11280 }, -- Tillinghast's Plagued Meat
+	[39316] = { 12712 }, -- Tiri's Magical Incantation
 	[44890] = { 13549 }, -- To'kini's Blowgun
 	[35907] = { 12028 }, -- Toalu'u's Spiritual Incense
+	[38696] = { 12647 }, -- Tormentor's Incense
 	[37432] = { 12271 }, -- Torturer's Rod
 	[35828] = { 11886 }, -- Totemic Beacon
+	[33352] = { 11284 }, -- Tough Ram Meat
 	[37665] = { 12330 }, -- Tranquilizer Dart
 	[35850] = { 11626 }, -- Trident of Naz'jan
 	[35838] = { 12017 }, -- Tu'u'gwar's Bait
 	[37265] = { 12009 }, -- Tua'kea's Breathing Bladder
 	[34715] = { 11610 }, -- Tuskarr Ritual Object
+	[40686] = { 12828 }, -- U.D.E.D.
 	[45896] = { 13629 }, -- Unbound Fragments of Val'anyr
+	[35288] = { 11894 }, -- Uncured Caribou Hide
 	[36835] = { 12126 }, -- Unholy Gem
 	[34833] = { 11657, 11923 }, -- Unlit Torches
 	[38660] = { 12631 }, -- Unliving Choker
 	[38678] = { 12637 }, -- Unliving Choker
+	[33616] = { 11306 }, -- Unstable Mix
 	[36774] = { 12072 }, -- Valnok's Flare Gun
 	[37306] = { 12241, 12248 }, -- Verdant Torch
 	[34815] = { 11654 }, -- Vial of Fresh Blood
@@ -947,11 +1308,14 @@ ns.AllowedDeleteQuestItems = {
 	[33345] = { 11260 }, -- Vrykul Scroll of Ascension
 	[43206] = { 13125 }, -- War Horn of Acherus
 	[34971] = { 11711 }, -- Warsong Flare Gun
+	[38323] = { 12510 }, -- Water Elemental Link
 	[35491] = { 11913 }, -- Wendy's Torch
 	[33311] = { 11250 }, -- Westguard Command Insignia
 	[38676] = { 12632 }, -- Whisker of Har'koa
+	[37707] = { 12414 }, -- Wild Carrot
 	[35281] = { 11893 }, -- Windsoul Totem
 	[37287] = { 12237 }, -- Wintergarde Gryphon Whistle
+	[37465] = { 12277 }, -- Wintergarde Mine Bomb
 	[33340] = { 11261 }, -- Winterhoof Emblem
 	[35121] = { 11728 }, -- Wolf Bait
 	[46396] = { 13960 }, -- Wolvar Orphan Whistle
@@ -960,6 +1324,10 @@ ns.AllowedDeleteQuestItems = {
 	[38673] = { 12633 }, -- Writhing Choker
 	[38680] = { 12638 }, -- Writhing Choker
 	[36734] = { 12050, 12052 }, -- Xink's Shredder Control Device
+	[39313] = { 12712 }, -- Yara's Sword
 	[37933] = { 12478 }, -- Zelig's Scrying Orb
+	[33163] = { 11207, 11208 }, -- Zeppelin Cargo
+	[35836] = { 12007 }, -- Zim'bo's Mojo
 	[36775] = { 12076 }, -- Zort's Scraper
+	[38380] = { 12527 }, -- Zul'Drak Rat
 }

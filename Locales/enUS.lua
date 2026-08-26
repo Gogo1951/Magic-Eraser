@@ -44,7 +44,7 @@ L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser will erase this."
+L["TOOLTIP_WILL_ERASE"] = "Will be erased."
 L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
 L["TOOLTIP_ON_ERASE_LIST"] = "Flagged by your Erase List."
 
@@ -78,7 +78,6 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
 L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Automatically sell items flagged as clutter by Magic Eraser when you open a merchant window."
-L["IGNORE_LIST"] = "Ignore List"
 L["TAB_IGNORE_LIST"] = "Ignore List"
 L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
@@ -89,7 +88,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again."
+	"Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 

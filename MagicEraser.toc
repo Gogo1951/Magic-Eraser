@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
+## Notes: Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically.
 ## Author: Gogo1951
 
 ## Category-enUS: Inventory

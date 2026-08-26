@@ -100,7 +100,7 @@ local function RefreshTooltip(anchor)
 
 	if hasIgnoredItems then
 		tooltip:AddLine(" ")
-		tooltip:AddLine(GetColor("TITLE") .. L["IGNORE_LIST"] .. "|r")
+		tooltip:AddLine(GetColor("TITLE") .. L["TAB_IGNORE_LIST"] .. "|r")
 
 		local sortedItems = {}
 		local loadingItems = {}
