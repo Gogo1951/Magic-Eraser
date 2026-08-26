@@ -68,8 +68,10 @@ local function RefreshTooltip(anchor)
 		GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
 	)
 
-	-- Clutter Report. With clutter it summarizes the haul; with clean bags there
-	-- is nothing to total, so it carries the hint about what to do instead.
+	--[[
+	    Clutter Report. With clutter it summarizes the haul; with clean bags there
+	    is nothing to total, so it carries the hint about what to do instead.
+	]]
 	tooltip:AddLine(" ")
 	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
 	if item then

@@ -28,7 +28,10 @@ L["CURSOR_TOO_FAST"] = "Langsamer! Du klickst schneller, als das Spiel Gegenstä
 L["ERASED_ITEM"] = "%s%s gelöscht."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s gelöscht, Wert %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s gelöscht, aus einer von dir abgeschlossenen Quest."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s gelöscht, aus einer Quest, die dein Charakter nicht annehmen kann."
 L["QUEST_ITEM_READY"] = "%s kann jetzt sicher gelöscht werden!"
+L["QUEST_STARTER_UNAVAILABLE"] =
+	"%s kann sicher gelöscht werden, aus einer Quest, die dein Charakter nicht annehmen kann."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
@@ -99,6 +102,14 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Auto-Verkauf-Nachrichten aktivieren"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Einzelposten"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Nur Zusammenfassung"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Maximaler Wert zum Löschen"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
+	"Löscht niemals einen Gegenstand oder Stapel, der mehr wert ist als das unten festgelegte Limit."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Maximalen Wert zum Löschen aktivieren"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Niemals etwas löschen, das mehr wert ist als"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bankentnahme"

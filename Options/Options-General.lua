@@ -1,6 +1,8 @@
 local ADDON_NAME, ns = ...
 local L = ns.L
 
+local format, ipairs = string.format, ipairs
+
 local GetColor = ns.GetColor
 
 --[[
@@ -64,8 +66,30 @@ local function AutoVendOff()
 	return not (ns.db and ns.db.global.autoVendEnabled)
 end
 
+local function ValueCapOff()
+	return not (ns.db and ns.db.global.valueCapEnabled)
+end
+
+local function BagsFullOff()
+	return not (ns.db and ns.db.global.bagsFullNudgeEnabled)
+end
+
 local function SafetyOff()
 	return not (ns.db and ns.db.global.safetyEnabled)
+end
+
+--[[
+    The value cap's dropdown, built once from ns.VALUE_CAP_CHOICES rather than
+    typed out twice. values is keyed by the gold amount the setting stores, and
+    sorting repeats those keys in run order because AceConfig otherwise orders a
+    dropdown by its labels -- which sorts them as text, landing "13 Gold"
+    between "1 Gold" and "2 Gold".
+]]
+local VALUE_CAP_VALUES, VALUE_CAP_SORTING = {}, {}
+
+for index, gold in ipairs(ns.VALUE_CAP_CHOICES) do
+	VALUE_CAP_VALUES[gold] = format(L["OPTIONS_VALUE_CAP_GOLD"], gold)
+	VALUE_CAP_SORTING[index] = gold
 end
 
 --[[
@@ -87,6 +111,22 @@ local LINK_URL_WIDTH = ns.OPTIONS_ROW_WIDTH - LINK_LABEL_WIDTH
 local SUB_TOGGLE_WIDTH = 2.0
 local AUTO_VEND_MESSAGE_MODE_WIDTH = 1.0
 local AUTO_VEND_MESSAGES_WIDTH = 1.3
+
+--[[
+    The value cap's row is a caption beside a dropdown, the same shape as
+    Auto-Vend's message row two sections above it, so it spends the same pair of
+    widths and the two dropdowns line up with each other down the panel.
+]]
+local VALUE_CAP_LABEL_WIDTH = 1.3
+local VALUE_CAP_SELECT_WIDTH = 1.0
+
+--[[
+    The bag-space row is a caption beside a slider, the same shape as the value
+    cap's row above it, so it spends the same pair of widths and the two rows
+    line up with each other down the panel.
+]]
+local BAGS_FULL_LABEL_WIDTH = 1.3
+local BAGS_FULL_RANGE_WIDTH = 1.0
 
 --------------------------------------------------------------------------------
 -- General Panel
@@ -187,16 +227,61 @@ function ns.BuildGeneralOptions()
 				},
 			}),
 
-			spacerBank0 = ns.OptionsSpacer(40),
-			headerBank = ns.OptionsHeader(L["OPTIONS_BANK_HEADER"], 41),
-			spacerBank1 = ns.OptionsSpacer(42),
-			descBank = ns.OptionsDesc(L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"], 43),
-			spacerBank2 = ns.OptionsSpacer(44),
+			--[[
+			    Maximum Value to Erase. Both controls invalidate the scan cache
+			    and repaint rather than only writing the setting: the cap changes
+			    which items are candidates at all, so without this the mini-map
+			    button keeps wearing the icon of something the eraser will no
+			    longer touch until the next bag update happens to clear it.
+			]]
+			spacerValueCap0 = ns.OptionsSpacer(40),
+			headerValueCap = ns.OptionsHeader(L["OPTIONS_VALUE_CAP_HEADER"], 41),
+			spacerValueCap1 = ns.OptionsSpacer(42),
+			descValueCap = ns.OptionsDesc(L["OPTIONS_VALUE_CAP_DESCRIPTION"], 43),
+			spacerValueCap2 = ns.OptionsSpacer(44),
+			toggleValueCap = {
+				type = "toggle",
+				name = L["OPTIONS_ENABLE_VALUE_CAP"],
+				width = "full",
+				order = 45,
+				get = function()
+					return ns.db and ns.db.global.valueCapEnabled
+				end,
+				set = function(_, value)
+					ns.db.global.valueCapEnabled = value
+					ns:InvalidateCache()
+					ns:RefreshDisplay()
+				end,
+			},
+			rowValueCapLimit = SubRow(46, ValueCapOff, {
+				ns.OptionsRowLabel(SubLabel(L["OPTIONS_VALUE_CAP_LIMIT"]), nil, VALUE_CAP_LABEL_WIDTH),
+				{
+					type = "select",
+					name = "",
+					width = VALUE_CAP_SELECT_WIDTH,
+					values = VALUE_CAP_VALUES,
+					sorting = VALUE_CAP_SORTING,
+					get = function()
+						return ns.db and ns.db.global.valueCapGold
+					end,
+					set = function(_, value)
+						ns.db.global.valueCapGold = value
+						ns:InvalidateCache()
+						ns:RefreshDisplay()
+					end,
+				},
+			}),
+
+			spacerBank0 = ns.OptionsSpacer(50),
+			headerBank = ns.OptionsHeader(L["OPTIONS_BANK_HEADER"], 51),
+			spacerBank1 = ns.OptionsSpacer(52),
+			descBank = ns.OptionsDesc(L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"], 53),
+			spacerBank2 = ns.OptionsSpacer(54),
 			toggleBankRetrieval = {
 				type = "toggle",
 				name = L["OPTIONS_ENABLE_BANK_RETRIEVAL"],
 				width = "full",
-				order = 45,
+				order = 55,
 				get = function()
 					return ns.db and ns.db.global.bankRetrievalEnabled
 				end,
@@ -205,16 +290,16 @@ function ns.BuildGeneralOptions()
 				end,
 			},
 
-			spacerTooltip0 = ns.OptionsSpacer(50),
-			headerTooltip = ns.OptionsHeader(L["OPTIONS_TOOLTIP_HEADER"], 51),
-			spacerTooltip1 = ns.OptionsSpacer(52),
-			descTooltip = ns.OptionsDesc(L["OPTIONS_TOOLTIP_DESCRIPTION"], 53),
-			spacerTooltip2 = ns.OptionsSpacer(54),
+			spacerTooltip0 = ns.OptionsSpacer(60),
+			headerTooltip = ns.OptionsHeader(L["OPTIONS_TOOLTIP_HEADER"], 61),
+			spacerTooltip1 = ns.OptionsSpacer(62),
+			descTooltip = ns.OptionsDesc(L["OPTIONS_TOOLTIP_DESCRIPTION"], 63),
+			spacerTooltip2 = ns.OptionsSpacer(64),
 			toggleTooltipWarning = {
 				type = "toggle",
 				name = L["OPTIONS_ENABLE_TOOLTIPS"],
 				width = "full",
-				order = 55,
+				order = 65,
 				get = function()
 					return ns.db and ns.db.global.tooltipWarningEnabled
 				end,
@@ -223,16 +308,16 @@ function ns.BuildGeneralOptions()
 				end,
 			},
 
-			spacerBagsFull0 = ns.OptionsSpacer(60),
-			headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 61),
-			spacerBagsFull1 = ns.OptionsSpacer(62),
-			descBagsFull = ns.OptionsDesc(L["OPTIONS_BAGS_FULL_DESCRIPTION"], 63),
-			spacerBagsFull2 = ns.OptionsSpacer(64),
+			spacerBagsFull0 = ns.OptionsSpacer(70),
+			headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 71),
+			spacerBagsFull1 = ns.OptionsSpacer(72),
+			descBagsFull = ns.OptionsDesc(L["OPTIONS_BAGS_FULL_DESCRIPTION"], 73),
+			spacerBagsFull2 = ns.OptionsSpacer(74),
 			toggleBagsFullNudge = {
 				type = "toggle",
 				name = L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"],
 				width = "full",
-				order = 65,
+				order = 75,
 				get = function()
 					return ns.db and ns.db.global.bagsFullNudgeEnabled
 				end,
@@ -240,35 +325,34 @@ function ns.BuildGeneralOptions()
 					ns.db.global.bagsFullNudgeEnabled = value
 				end,
 			},
-			rangeBagsFullThreshold = {
-				type = "range",
-				name = L["OPTIONS_BAGS_FULL_THRESHOLD"],
-				width = "full",
-				order = 66,
-				min = 1,
-				max = 10,
-				step = 1,
-				hidden = function()
-					return not (ns.db and ns.db.global.bagsFullNudgeEnabled)
-				end,
-				get = function()
-					return ns.db and ns.db.global.bagsFullThreshold
-				end,
-				set = function(_, value)
-					ns.db.global.bagsFullThreshold = value
-				end,
-			},
+			rowBagsFullThreshold = SubRow(76, BagsFullOff, {
+				ns.OptionsRowLabel(SubLabel(L["OPTIONS_BAGS_FULL_THRESHOLD"]), nil, BAGS_FULL_LABEL_WIDTH),
+				{
+					type = "range",
+					name = "",
+					width = BAGS_FULL_RANGE_WIDTH,
+					min = 1,
+					max = 10,
+					step = 1,
+					get = function()
+						return ns.db and ns.db.global.bagsFullThreshold
+					end,
+					set = function(_, value)
+						ns.db.global.bagsFullThreshold = value
+					end,
+				},
+			}),
 
-			spacerSafety0 = ns.OptionsSpacer(70),
-			headerSafety = ns.OptionsHeader(L["OPTIONS_SAFETY_HEADER"], 71),
-			spacerSafety1 = ns.OptionsSpacer(72),
-			descSafety = ns.OptionsDesc(L["OPTIONS_SAFETY_DESCRIPTION"], 73),
-			spacerSafety2 = ns.OptionsSpacer(74),
+			spacerSafety0 = ns.OptionsSpacer(80),
+			headerSafety = ns.OptionsHeader(L["OPTIONS_SAFETY_HEADER"], 81),
+			spacerSafety1 = ns.OptionsSpacer(82),
+			descSafety = ns.OptionsDesc(L["OPTIONS_SAFETY_DESCRIPTION"], 83),
+			spacerSafety2 = ns.OptionsSpacer(84),
 			toggleSafety = {
 				type = "toggle",
 				name = GetColor("TEXT") .. L["OPTIONS_ENABLE_SAFETY"] .. "|r",
 				width = "full",
-				order = 75,
+				order = 85,
 				get = function()
 					return ns.db and ns.db.global.safetyEnabled
 				end,
@@ -276,7 +360,7 @@ function ns.BuildGeneralOptions()
 					ns.db.global.safetyEnabled = value
 				end,
 			},
-			rowSafetyQuest = SubRow(76, SafetyOff, {
+			rowSafetyQuest = SubRow(86, SafetyOff, {
 				{
 					type = "toggle",
 					name = SubLabel(L["OPTIONS_SAFETY_QUEST"]),
@@ -289,7 +373,7 @@ function ns.BuildGeneralOptions()
 					end,
 				},
 			}),
-			rowSafetyConsumable = SubRow(77, SafetyOff, {
+			rowSafetyConsumable = SubRow(87, SafetyOff, {
 				{
 					type = "toggle",
 					name = SubLabel(L["OPTIONS_SAFETY_CONSUMABLE"]),
@@ -302,7 +386,7 @@ function ns.BuildGeneralOptions()
 					end,
 				},
 			}),
-			rowSafetyWhite = SubRow(78, SafetyOff, {
+			rowSafetyWhite = SubRow(88, SafetyOff, {
 				{
 					type = "toggle",
 					name = SubLabel(L["OPTIONS_SAFETY_WHITE"]),
@@ -315,7 +399,7 @@ function ns.BuildGeneralOptions()
 					end,
 				},
 			}),
-			rowSafetyGray = SubRow(79, SafetyOff, {
+			rowSafetyGray = SubRow(89, SafetyOff, {
 				{
 					type = "toggle",
 					name = SubLabel(L["OPTIONS_SAFETY_GRAY"]),

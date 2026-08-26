@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically.
+Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
 
 <img width="360" src="https://github.com/user-attachments/assets/8d4393ce-2afd-47b2-a9bc-b67bc4c3b97e" />
 
@@ -12,7 +12,7 @@ Clean up your bags instantly. Completed quest items, low-level consumables, vend
 
 📊 **Clutter Report** // Hover the button to see how many bag slots your junk is squatting on and exactly what the pile is worth.
 
-🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase.
+🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
 
 🦺 **Safety First** // The trash list is hand-curated and human-reviewed: no name-matching, no heuristics, no surprise deletions. Your bag tooltips flag what's on the chopping block, and class reagents and Ignore List items are never touched.
 
@@ -28,19 +28,21 @@ Clean up your bags instantly. Completed quest items, low-level consumables, vend
 
 ### Smart Scanning
 
-Magic Eraser watches your bags and picks out the lowest-value match from four categories: completed quest items you no longer need, outgrown food and drink (anything you passed the use level on ten levels ago, with starter food and drink going at level 5 instead of lingering), vendor-quality white gear from the curated list, and gray trash with a sell price. The mini-map icon updates live to show what's next on the chopping block.
+Magic Eraser watches your bags and picks out the lowest-value match from four categories: quest items you no longer need, outgrown food and drink (anything you passed the use level on ten levels ago, with starter food and drink going at level 5 instead of lingering), vendor-quality white gear from the curated list, and gray trash with a sell price. The mini-map icon updates live to show what's next on the chopping block.
 
-When two items are worth the same, category priority breaks the tie: completed quest items first, then gray trash, then consumables and equipment. Anything on your Ignore List or flagged as a class-specific reagent is skipped, so Shamans never lose their Fish Oil or Shiny Fish Scales.
+A quest item counts as spent once you've handed the quest in. An item that *starts* a quest your character can never take is dead weight the moment it drops, so a Paladin-only Tome of Divinity sitting in a Rogue's bags is fair game right away.
+
+When two items are worth the same, category priority breaks the tie: quest items first, then gray trash, then consumables and equipment. Anything on your Ignore List or flagged as a class-specific reagent is skipped, so Shamans never lose their Fish Oil or Shiny Fish Scales.
 
 ### Mini-map Button
 
-| Action             | Effect                                                    |
-| ------------------ | --------------------------------------------------------- |
-| Left-click         | Erase the lowest-value flagged item.                      |
-| Right-click        | Toggle the flagged item on this character's Ignore List.  |
-| Middle-click       | Clear this character's Ignore List.                       |
-| Shift+Right-click  | Toggle Auto-Vend on or off.                               |
-| Shift+Middle-click | Open the Options Interface.                               |
+| Action             | Effect                                                   |
+| ------------------ | -------------------------------------------------------- |
+| Left-click         | Erase the lowest-value flagged item.                     |
+| Right-click        | Toggle the flagged item on this character's Ignore List. |
+| Middle-click       | Clear this character's Ignore List.                      |
+| Shift+Right-click  | Toggle Auto-Vend on or off.                              |
+| Shift+Middle-click | Open the Options Interface.                              |
 
 Hover the button and the tooltip lays out the whole picture: the item you're about to erase and what it's worth, whether Auto-Vend is on, everything you've told it to spare, and a Clutter Report totalling the bag slots and gold still sitting in the trash pile.
 
@@ -48,11 +50,17 @@ Hover the button and the tooltip lays out the whole picture: the item you're abo
 
 ### Auto-Vend
 
-Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat can report each sale with its item link and price, or stay quiet until the window closes and give you a single summary line. Your pick. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the mini-map button or from the Options Interface.
+Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat gives you one summary line as the window closes; switch to Line Item and every sale is announced as it happens, with that summary still landing at the end. Turn the messages off entirely if you'd rather it worked in silence. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the mini-map button or from the Options Interface.
+
+### Maximum Value to Erase
+
+Worried about a big stack going up in smoke? Switch this on and pick a ceiling, and Magic Eraser will never erase an item or stack worth more than it. The dropdown runs 1, 2, 3, 5, 8, 13, 21 gold, because the gaps should widen the way your tolerance does.
+
+It guards the eraser only. Anything over the ceiling still sells at a merchant and still walks home from your bank, so you keep the gold instead of watching it disappear. Off by default.
 
 ### Bank Retrieval
 
-Open your bank and Magic Eraser pulls every flagged item out of it and into your bags, then prints one line telling you what came back and what it's worth. It stops short of filling you up: retrieval leaves the same free-slot cushion you set for Bag-Space Warnings, so you always have room for the next drop. On by default, and a single toggle turns it off.
+Open your bank and Magic Eraser pulls every flagged item out of it and into your bags, then prints one line telling you what came back and what it's worth. It stops short of filling you up: retrieval leaves the same free-slot cushion you set for Bag-Space Warnings, so you always have room for the next drop. If there isn't room for all of it, the most valuable junk comes home first. On by default, and a single toggle turns it off.
 
 ### Ignore List
 
@@ -64,7 +72,7 @@ There are two lists, and they stack. Each character keeps its own, and there's a
 
 ### Quest Alerts & Bag Tooltips
 
-Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert for any quest item that's now safe to erase. Between turn-ins, hovering an item in your bags adds a line to its tooltip when Magic Eraser would erase it, or when your Ignore List is shielding it, so nothing ever goes without warning.
+Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert for any quest item that's now safe to erase. Loot something that starts a quest your race or class can never take and it speaks up on the spot, instead of letting the thing ride along for twenty levels. Between alerts, hovering an item in your bags adds a line to its tooltip when Magic Eraser would erase it, or when your Ignore List is shielding it, so nothing ever goes without warning.
 
 ### Eraser Confirmations
 
@@ -76,7 +84,7 @@ Turn these on and chat counts down as your free bag slots drop toward the thresh
 
 ### Options
 
-Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`. From there you can toggle the welcome message and the mini-map button, tune Auto-Vend and its chat output, switch Bank Retrieval and bag tooltips on or off, set up confirmations and bag-space warnings, and manage profiles.
+Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`. From there you can toggle the welcome message and the mini-map button, tune Auto-Vend and its chat output, cap the value of what gets erased, switch Bank Retrieval and bag tooltips on or off, set up confirmations and bag-space warnings, and manage profiles.
 
 <img width="800" src="https://github.com/user-attachments/assets/45d78b67-4f45-4dd6-a4ef-0d017f560a20" />
 
@@ -107,9 +115,11 @@ Please reach out if you would like to be involved!
 
 🟢 Pairs With // jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 
-🟢 Pairs With // Cidanz's [BetterBags](https://www.curseforge.com/wow/addons/better-bags)
+🟢 Pairs With // Gogo1951's [Connoisseur](https://www.curseforge.com/wow/addons/consumable-connoisseur)
 
 🟢 Pairs With // Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
+
+🟡 Some Overlap // Kemayo's [BankStack](https://www.curseforge.com/wow/addons/bank-stack)
 
 🟡 Some Overlap // Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 
@@ -117,7 +127,7 @@ Please reach out if you would like to be involved!
 
 🔴 Direct Alternative // Kemayo's [DropTheCheapestThing](https://www.curseforge.com/wow/addons/dropthecheapestthing)
 
-🔴 Direct Alternative // Jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
+🔴 Direct Alternative // jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
 
 🔴 Direct Alternative // Supernovadusts's [SellTrash](https://www.curseforge.com/wow/addons/selltrash)
 

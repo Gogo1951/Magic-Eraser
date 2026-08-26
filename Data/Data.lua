@@ -142,12 +142,69 @@ ns.ClassReagentExclusions = {
 }
 
 --------------------------------------------------------------------------------
+-- Race & Class Bits
+--------------------------------------------------------------------------------
+
+--[[
+    Bit values for quest_template.RequiredRaces and RequiredClasses, carried in
+    Data/Quest-Starting-Items.lua. A quest whose mask is non-zero and lacks the
+    player's bit can never be taken by this character, so the item that starts
+    it is dead weight the moment it drops, with no quest state involved.
+
+    Keyed by the tokens UnitRace and UnitClass return, not by localized names.
+    Undead's race token is "Scourge", which is why it reads oddly here.
+]]
+ns.RaceBits = {
+	Human = 1,
+	Orc = 2,
+	Dwarf = 4,
+	NightElf = 8,
+	Scourge = 16, -- Undead
+	Tauren = 32,
+	Gnome = 64,
+	Troll = 128,
+	Goblin = 256,
+	BloodElf = 512,
+	Draenei = 1024,
+}
+
+ns.ClassBits = {
+	WARRIOR = 1,
+	PALADIN = 2,
+	HUNTER = 4,
+	ROGUE = 8,
+	PRIEST = 16,
+	DEATHKNIGHT = 32,
+	SHAMAN = 64,
+	MAGE = 128,
+	WARLOCK = 256,
+	DRUID = 1024,
+}
+
+--------------------------------------------------------------------------------
 -- Deletion Priority
 --------------------------------------------------------------------------------
 
 ns.DeletePriority = {
 	quest = 1,
+	questIneligible = 1,
 	gray = 2,
 	consumable = 3,
 	equipment = 3,
 }
+
+--------------------------------------------------------------------------------
+-- Maximum Value to Erase
+--------------------------------------------------------------------------------
+
+--[[
+    The gold amounts the value cap offers, and the conversion its comparison
+    needs: the setting is stored in gold because gold is what the player picked,
+    while item values come back from the API in copper.
+
+    The run is the modified Fibonacci sequence, the same one agile estimators
+    reach for, and for the same reason -- the gaps widen the way tolerance does.
+    One gold to two is a real difference; twenty to twenty-one is not. (=
+]]
+ns.COPPER_PER_GOLD = 10000
+ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
