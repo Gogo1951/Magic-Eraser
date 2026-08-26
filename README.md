@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
+Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically.
 
 <img width="250" src="https://github.com/user-attachments/assets/d30470c9-4585-4288-aec3-b04e34b44afc" />
 
