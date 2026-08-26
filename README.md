@@ -52,16 +52,6 @@ Hover the button and the tooltip lays out the whole picture: the item you're abo
 
 Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat gives you one summary line as the window closes; switch to Line Item and every sale is announced as it happens, with that summary still landing at the end. Turn the messages off entirely if you'd rather it worked in silence. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the mini-map button or from the Options Interface.
 
-### Maximum Value to Erase
-
-Worried about a big stack going up in smoke? Switch this on and pick a ceiling, and Magic Eraser will never erase an item or stack worth more than it. The dropdown runs 1, 2, 3, 5, 8, 13, 21 gold, because the gaps should widen the way your tolerance does.
-
-It guards the eraser only. Anything over the ceiling still sells at a merchant and still walks home from your bank, so you keep the gold instead of watching it disappear. Off by default.
-
-### Bank Retrieval
-
-Open your bank and Magic Eraser pulls every flagged item out of it and into your bags, then prints one line telling you what came back and what it's worth. It stops short of filling you up: retrieval leaves the same free-slot cushion you set for Bag-Space Warnings, so you always have room for the next drop. If there isn't room for all of it, the most valuable junk comes home first. On by default, and a single toggle turns it off.
-
 ### Ignore List
 
 Right-click the mini-map button to protect whatever item is currently flagged, and middle-click to wipe that list and start over. Anything on it is never erased and never sold.
@@ -69,18 +59,6 @@ Right-click the mini-map button to protect whatever item is currently flagged, a
 There are two lists, and they stack. Each character keeps its own, and there's a Global list that protects an item on every character at once. Manage both from **Options > AddOns > Magic Eraser > Ignore List**, where you can add items by ID or by shift-clicking an item link straight from chat, promote a character's entry to Global, or remove anything you've changed your mind about.
 
 <img width="360" src="https://github.com/user-attachments/assets/0e746c9a-a9f2-4761-ba43-dc13df016c8d" />
-
-### Quest Alerts & Bag Tooltips
-
-Hand in a quest and Magic Eraser re-checks your bags, then prints a chat alert for any quest item that's now safe to erase. Loot something that starts a quest your race or class can never take and it speaks up on the spot, instead of letting the thing ride along for twenty levels. Between alerts, hovering an item in your bags adds a line to its tooltip when Magic Eraser would erase it, or when your Ignore List is shielding it, so nothing ever goes without warning.
-
-### Eraser Confirmations
-
-Want a second look before anything disappears? Switch confirmations on in the Options Interface and pick which of the four categories should ask first. Off by default, because the whole point is one click.
-
-### Bag-Space Warnings
-
-Turn these on and chat counts down as your free bag slots drop toward the threshold you set (four slots left, three, two), so you know it's time to click the button before a drop goes to waste.
 
 ### Options
 
