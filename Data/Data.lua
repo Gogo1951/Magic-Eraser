@@ -32,6 +32,7 @@ ns.Links = {
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
 	IgnoreList = ADDON_NAME .. "_IgnoreList",
+	EraseList = ADDON_NAME .. "_EraseList",
 	Profiles = ADDON_NAME .. "_Profiles",
 	Diagnostics = ADDON_NAME .. "_Diagnostics",
 }
@@ -91,17 +92,20 @@ ns.OPTIONS_TREE_ROW_WIDTH = 2.3
 ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
 --------------------------------------------------------------------------------
--- Ignore List Scopes
+-- Item List Scopes
 --------------------------------------------------------------------------------
 
 --[[
-    The Ignore List panel names one scope per list on the account. Every scope
-    but one is an AceDB profile name ("Name - Realm", never localized), so the
-    account-wide list needs a key that no profile can collide with -- hence the
-    asterisks, which the profile picker's name box would never produce. Read by
-    ns:GetIgnoreListForScope in Features/Ignore-List.lua.
+    The Ignore List and Erase List panels each name one scope per list on the
+    account. Every scope but one is an AceDB profile name ("Name - Realm", never
+    localized), so the account-wide list needs a key that no profile can collide
+    with -- hence the asterisks, which the profile picker's name box would never
+    produce. One constant serves both panels because the two never share a table:
+    the key is only ever looked up against one list at a time. Read by
+    ns:GetIgnoreListForScope in Features/Ignore-List.lua and
+    ns:GetEraseListForScope in Features/Erase-List.lua.
 ]]
-ns.IGNORE_SCOPE_GLOBAL = "**global**"
+ns.LIST_SCOPE_GLOBAL = "**global**"
 
 --------------------------------------------------------------------------------
 -- Color Palette
@@ -131,10 +135,27 @@ ns.CurrencyColors = {
 }
 
 --------------------------------------------------------------------------------
--- Class Reagent Exclusions
+-- Class Reagents
 --------------------------------------------------------------------------------
 
-ns.ClassReagentExclusions = {
+--[[
+    Items one class needs and every other class can throw away, keyed by the
+    class token UnitClass returns. Shiny Fish Scales and Fish Oil are the
+    Shaman's Water Breathing and Water Walking reagents.
+
+    Only ns:SeedEraseList in Features/Erase-List.lua acts on this table, putting
+    another class's reagents on a character's Erase List once, the first time it
+    plays; Features/Diagnostics.lua also reads it, for the count on the Eraser
+    Context report. Nothing filters on it at scan time, so a Shaman who
+    deliberately adds Fish Oil to their own list is obeyed instead of silently
+    overridden.
+
+    Hand-maintained, and never added to one of the four Data/ tables that carry
+    SQL queries: those files are regenerated from their queries, and a hand-added
+    row does not survive the next regeneration. An id no query can express
+    belongs in a file no query rewrites.
+]]
+ns.ClassReagents = {
 	SHAMAN = {
 		[17057] = true, -- Shiny Fish Scales
 		[17058] = true, -- Fish Oil
@@ -185,7 +206,14 @@ ns.ClassBits = {
 -- Deletion Priority
 --------------------------------------------------------------------------------
 
+--[[
+    Tie-break when two erase candidates are worth the same, lowest first. Erase
+    List entries lead at 0: everything below is the add-on picking an item out by
+    rule, and a rule should never win a tie against an item the player listed by
+    hand.
+]]
 ns.DeletePriority = {
+	manual = 0,
 	quest = 1,
 	questIneligible = 1,
 	gray = 2,

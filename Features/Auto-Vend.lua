@@ -226,8 +226,6 @@ function ScanAndVend()
 	ConfirmSales()
 
 	local isDataMissing = false
-	local _, playerClass = UnitClass("player")
-	local classReagentExclusions = (ns.ClassReagentExclusions and ns.ClassReagentExclusions[playerClass]) or {}
 
 	wipe(sellQueue)
 	sellIndex = 0
@@ -239,7 +237,8 @@ function ScanAndVend()
 			if itemInfo and itemInfo.hyperlink then
 				local itemId = itemInfo.itemID
 
-				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
+				-- Ignore List first, so it wins over any Erase List entry.
+				if not ns:IsIgnored(itemId) then
 					local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
