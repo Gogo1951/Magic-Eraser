@@ -33,6 +33,17 @@ local MAX_VEND_PASSES = 4
 local vendPasses = 0
 
 local CLOSE_CONFIRM_SECONDS = 0.4
+
+--[[
+    Bumped at every visit boundary -- BeginVisit when a merchant opens, and
+    ns:OnMerchantClosed when one closes. Every timer a pass schedules carries the
+    generation it was created under and drops out once a newer one exists, so
+    closing and reopening a merchant mid-pass cannot leave the old chain walking
+    the new visit's queue. isSelling alone would not catch it: the second visit
+    sets that flag back to true and the stale timer would sail straight through.
+    Bank-Retrieval.lua guards its own chains the same way with passGeneration.
+]]
+
 local visitGeneration = 0
 
 --[[
@@ -133,7 +144,17 @@ end
 
 local ScanAndVend
 
-local function ProcessSellQueue()
+local function ProcessSellQueue(generation)
+	--[[
+	    A newer visit owns sellQueue now, so a stale tick returns without
+	    touching it -- the wipe below would empty the queue the live pass is
+	    still working through.
+	]]
+
+	if generation ~= visitGeneration then
+		return
+	end
+
 	-- Stop if we are done or if the merchant window was closed
 	if not isSelling then
 		wipe(sellQueue)
@@ -170,7 +191,9 @@ local function ProcessSellQueue()
 	if sellIndex > #sellQueue then
 		if vendPasses < MAX_VEND_PASSES then
 			vendPasses = vendPasses + 1
-			C_Timer.After(0.3, ScanAndVend)
+			C_Timer.After(0.3, function()
+				ScanAndVend(generation)
+			end)
 		else
 			isSelling = false
 			wipe(sellQueue)
@@ -206,15 +229,17 @@ local function ProcessSellQueue()
 		end
 	end
 
-	C_Timer.After(0.1, ProcessSellQueue)
+	C_Timer.After(0.1, function()
+		ProcessSellQueue(generation)
+	end)
 end
 
 --------------------------------------------------------------------------------
 -- Scanner
 --------------------------------------------------------------------------------
 
-function ScanAndVend()
-	if not isSelling then
+function ScanAndVend(generation)
+	if not isSelling or generation ~= visitGeneration then
 		return
 	end
 
@@ -269,12 +294,14 @@ function ScanAndVend()
 
 	if isDataMissing and scanRetries < MAX_SCAN_RETRIES then
 		scanRetries = scanRetries + 1
-		C_Timer.After(0.5, ScanAndVend)
+		C_Timer.After(0.5, function()
+			ScanAndVend(generation)
+		end)
 	elseif #sellQueue > 0 then
 		table.sort(sellQueue, function(a, b)
 			return a.value < b.value
 		end)
-		ProcessSellQueue()
+		ProcessSellQueue(generation)
 	else
 		isSelling = false
 	end
@@ -284,7 +311,8 @@ end
     Open a visit: clear the sale accounting the visit owns. MERCHANT_SHOW starts
     a visit whether or not a pass can run right now, so this fires even when the
     pass is deferred to the end of combat -- otherwise the resumed pass would
-    inherit the previous merchant's announced slots.
+    inherit the previous merchant's announced slots. The generation bump retires
+    every timer still pending from the previous visit.
 ]]
 local function BeginVisit()
 	visitGeneration = visitGeneration + 1
@@ -301,13 +329,19 @@ end
     attempted moments before combat interrupted us survive: it is still sitting
     in pendingSales, and the ConfirmSales at the top of the resumed ScanAndVend
     is what finally announces and counts it.
+
+    The pass runs under the visit generation live at this moment, and every timer
+    it schedules carries that value. A combat resume is the same visit, so it
+    picks up the same generation.
 ]]
 local function StartPass()
 	isSelling = true
 	sellIndex = 0
 	scanRetries = 0
 	vendPasses = 0
-	ScanAndVend()
+
+	local generation = visitGeneration
+	ScanAndVend(generation)
 end
 
 --------------------------------------------------------------------------------
@@ -346,6 +380,15 @@ function ns:OnMerchantShow()
 end
 
 function ns:OnMerchantClosed()
+	--[[
+	    Closing ends the visit, so bump first: every timer the pass left pending
+	    carries the old generation and retires here rather than waking up inside
+	    the next visit. The flush below captures the bumped value, so it still
+	    runs unless a new visit has begun by the time it fires.
+	]]
+
+	visitGeneration = visitGeneration + 1
+
 	isSelling = false
 	vendPending = false
 	wipe(sellQueue)
