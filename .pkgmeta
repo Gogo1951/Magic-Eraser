@@ -28,6 +28,7 @@ ignore:
   - .github
   - .gitignore
   - .idea
+  - .luacheckrc
   - .pkgmeta
   - .vscode
   - LICENSE
