@@ -199,16 +199,20 @@ end
       getSourceTable: function returning the table of itemId keys to list
       onAdd: function(itemId) adding an item to that source
       onRemove: function(itemId) removing one
+      onRestore: optional function() putting the list back to its defaults
       notifyKey: AceConfigRegistry name to NotifyChange on every mutation
       labels: { addName, addHelp, addInvalid, removeDesc, empty }
+        plus { restoreName, restoreConfirm } when onRestore is supplied
       rowWidth: optional total row budget, default ns.OPTIONS_ROW_WIDTH
       startOrder: optional first order, so a panel can seat its own head above
       actionColumn: optional extra cell per row, either
         { type = "execute", name, desc, width, func = function(itemId) }
         or { type = "select", desc, values, sorting, width, get, set }
 
-    Restore Defaults is deliberately absent: it belongs to lists that ship
-    defaults, and a list the player built from nothing has none to restore.
+    Restore Defaults appears only for a list that ships defaults, which is why
+    onRestore is optional rather than part of the shape: a list the player built
+    from nothing has none to restore, so the row would only offer to empty it.
+    Today the Erase List's per-character scope is the one caller that passes it.
 ]]
 
 --[[
@@ -227,6 +231,25 @@ function ns:BuildItemListOptions(spec)
 	local rowWidth = spec.rowWidth or ns.OPTIONS_ROW_WIDTH
 	local args = {}
 	local order = spec.startOrder or 1
+
+	if spec.onRestore then
+		args.restoreDefaults = {
+			type = "execute",
+			name = labels.restoreName,
+			width = "double",
+			confirm = true,
+			confirmText = labels.restoreConfirm,
+			order = order,
+			func = function()
+				spec.onRestore()
+				AceConfigRegistry:NotifyChange(spec.notifyKey)
+			end,
+		}
+		order = order + 1
+
+		args.spacerRestore = ns.OptionsSpacer(order)
+		order = order + 1
+	end
 
 	args.addItemLabel = ns.OptionsRowLabel(labels.addName, order)
 	order = order + 1

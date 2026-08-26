@@ -8,11 +8,12 @@ local GetColor = ns.GetColor
 
 --[[
     Appends a single branded line to an item's tooltip: a warning when Magic
-    Eraser would erase the item, or a protection notice when the Ignore List is
-    shielding it. The verdict comes from the very rules the eraser's scan uses
-    (ns:IsIgnored, the class-reagent exclusions, and ns:GetItemDeleteReason), so
-    the line shows only when the item truly would be erased -- the consumable
-    level gate and quest-completion check included. Purely read-only.
+    Eraser would erase the item, a distinct one when the item is on an Erase
+    List, or a protection notice when the Ignore List is shielding it. The
+    verdict comes from the very rules the eraser's scan uses (ns:IsIgnored and
+    ns:GetItemDeleteReason), in the same order, so the line shows only when the
+    item truly would be erased -- the consumable level gate and quest-completion
+    check included. Purely read-only.
 
     Two hook paths, because the tooltip API differs across the flavors we target:
     modern clients expose the data-driven TooltipDataProcessor; others lack it and
@@ -94,18 +95,11 @@ local function AddEraserWarning(tooltip, itemId, stackCount)
 		return
 	end
 
-	-- Ignore List protection wins over any erase verdict.
+	-- Ignore List protection wins over any erase verdict, Erase List included.
 	if ns:IsIgnored(itemId) then
 		tooltip:AddLine(" ")
 		tooltip:AddLine(ns.BrandPrefix .. GetColor("TEXT") .. L["TOOLTIP_IGNORED"] .. "|r")
 		return true
-	end
-
-	-- Class reagents the scan skips are never erased; say nothing.
-	local _, playerClass = UnitClass("player")
-	local classReagentExclusions = (ns.ClassReagentExclusions and ns.ClassReagentExclusions[playerClass]) or {}
-	if classReagentExclusions[itemId] then
-		return
 	end
 
 	-- Cold item cache: let the API resolve and add nothing this pass.
@@ -114,19 +108,34 @@ local function AddEraserWarning(tooltip, itemId, stackCount)
 		return
 	end
 
-	--[[
-	    Over the player's Maximum Value to Erase, the eraser leaves it alone, so
-	    the tooltip says nothing rather than promising an erase that never comes.
-	]]
-	if ns:IsOverValueCap((sellPrice or 0) * (stackCount or 1)) then
+	local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
+	if not deleteReason then
 		return
 	end
 
-	if ns:GetItemDeleteReason(itemId, rarity, sellPrice) then
-		tooltip:AddLine(" ")
-		tooltip:AddLine(ns.BrandPrefix .. GetColor("OFF") .. L["TOOLTIP_WILL_ERASE"] .. "|r")
-		return true
+	--[[
+	    Over the player's Maximum Value to Erase, the eraser leaves it alone, so
+	    the tooltip says nothing rather than promising an erase that never comes.
+	    The reason is passed through because an Erase List entry is exempt from
+	    the cap and so always keeps its line (see ns:IsOverValueCap).
+
+	    The verdict is read before the cap here, where the scan reads it after.
+	    Same outcome either way, since the cap only ever suppresses; this order
+	    just means the exemption is decided in one place instead of two.
+	]]
+	if ns:IsOverValueCap((sellPrice or 0) * (stackCount or 1), deleteReason) then
+		return
 	end
+
+	--[[
+	    A listed item names the Erase List rather than the generic warning. The
+	    player put it there, possibly months ago on another character, so saying
+	    which list is what turns a surprise into a reminder.
+	]]
+	local warning = (deleteReason == "manual") and L["TOOLTIP_ON_ERASE_LIST"] or L["TOOLTIP_WILL_ERASE"]
+	tooltip:AddLine(" ")
+	tooltip:AddLine(ns.BrandPrefix .. GetColor("OFF") .. warning .. "|r")
+	return true
 end
 
 function ns.SetupTooltipHooks()

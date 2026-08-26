@@ -218,11 +218,13 @@ end
 
 --[[
     Exactly the eraser's predicate, run over the bank containers instead of the
-    bags: skip anything on either ignore list or in this class's reagent
-    exclusions, resolve the item, and keep whatever ns:GetItemDeleteReason
-    flags. Cold item data reschedules the whole scan behind the same cap
-    Eraser.lua and Auto-Vend.lua use, so an item whose data never resolves
-    cannot loop forever.
+    bags: skip anything on either ignore list, resolve the item, and keep
+    whatever ns:GetItemDeleteReason flags, Erase List entries included. Cold item
+    data reschedules the whole scan behind the same cap Eraser.lua and
+    Auto-Vend.lua use, so an item whose data never resolves cannot loop forever.
+
+    Maximum Value to Erase is not consulted here at all, so it needs no Erase
+    List carve-out: retrieval moves an item rather than destroying it.
 ]]
 local function ScanBank(generation)
 	if not isRetrieving or generation ~= passGeneration then
@@ -230,8 +232,6 @@ local function ScanBank(generation)
 	end
 
 	local isDataMissing = false
-	local _, playerClass = UnitClass("player")
-	local classReagentExclusions = (ns.ClassReagentExclusions and ns.ClassReagentExclusions[playerClass]) or {}
 
 	wipe(moveQueue)
 	moveIndex = 0
@@ -243,7 +243,8 @@ local function ScanBank(generation)
 			if itemInfo and itemInfo.hyperlink then
 				local itemId = itemInfo.itemID
 
-				if not ns:IsIgnored(itemId) and not classReagentExclusions[itemId] then
+				-- Ignore List first, so it wins over any Erase List entry.
+				if not ns:IsIgnored(itemId) then
 					local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then

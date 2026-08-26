@@ -47,6 +47,7 @@ L["BANK_RETRIEVED"] = "%s Gegenstände (%s Plätze) aus deiner Bank geholt, Wert
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser wird dies löschen."
 L["TOOLTIP_IGNORED"] = "Durch deine Ignorierliste geschützt."
+L["TOOLTIP_ON_ERASE_LIST"] = "Durch deine Löschliste markiert."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -80,6 +81,7 @@ L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
 L["IGNORE_LIST"] = "Ignorierliste"
 L["TAB_IGNORE_LIST"] = "Ignorierliste"
+L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
 L["DISABLED"] = "Deaktiviert"
 
@@ -88,7 +90,7 @@ L["DISABLED"] = "Deaktiviert"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Räume deine Taschen im Handumdrehen auf. Abgeschlossene Questgegenstände, niedrigstufige Verbrauchsgüter, weiße Gegenstände in Händlerqualität und grauer Müll werden mit jedem Klick auf die Minikarten-Schaltfläche gelöscht. Wenn du einen Händler besuchst, wird alles Verkäufliche automatisch verkauft."
+	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Abgeschlossene Questgegenstände, niedrigstufige Verbrauchsgüter, weiße Gegenstände in Händlerqualität und grauer Müll verschwinden mit einem Klick auf die Minikarten-Schaltfläche, und alles Verkäufliche wird beim Händler automatisch verkauft. Schleppe nie wieder Händlermüll mit dir herum."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 
@@ -147,18 +149,36 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "Accountweit"
+L["OPTIONS_LIST_ADD_ID"] = "Über Gegenstands-ID hinzufügen"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"Gib eine Gegenstands-ID ein und drücke die Eingabetaste. Du kannst auch mit Umschalt auf einen Gegenstandslink im Chat klicken, um ihn hier einzufügen."
+L["OPTIONS_LIST_ADD_ID_INVALID"] =
+	"Gib eine Gegenstands-ID ein oder klicke mit Umschalt auf einen Gegenstandslink im Chat."
+L["OPTIONS_LIST_REMOVE"] = "Entfernen"
+L["OPTIONS_LIST_EMPTY"] = "Diese Liste ist leer."
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"Gegenstände auf einer Ignorierliste werden nie gelöscht und nie verkauft. Die accountweite Liste schützt einen Gegenstand auf jedem Charakter, die eigene Liste eines Charakters nur auf diesem Charakter."
-L["OPTIONS_IGNORE_GLOBAL"] = "Accountweit"
-L["OPTIONS_IGNORE_ADD_ID"] = "Über Gegenstands-ID hinzufügen"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"Gib eine Gegenstands-ID ein und drücke die Eingabetaste. Du kannst auch mit Umschalt auf einen Gegenstandslink im Chat klicken, um ihn hier einzufügen."
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
-	"Gib eine Gegenstands-ID ein oder klicke mit Umschalt auf einen Gegenstandslink im Chat."
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Verschiebt diesen Gegenstand auf die accountweite Liste, damit er auf jedem Charakter geschützt ist."
-L["OPTIONS_IGNORE_REMOVE"] = "Entfernen"
-L["OPTIONS_IGNORE_EMPTY"] = "Diese Liste ist leer."
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"Gegenstände auf einer Löschliste gelten immer als Ramsch, unabhängig von ihrem Wert: Sie werden über die Minikarten-Schaltfläche gelöscht oder bei einem Händler verkauft. Die accountweite Liste gilt auf jedem Charakter, die eigene Liste eines Charakters nur auf diesem Charakter. Eine Ignorierliste hat immer Vorrang, ein Gegenstand auf beiden Listen bleibt also unangetastet."
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
+	"Verschiebt diesen Gegenstand auf die accountweite Liste, damit er auf jedem Charakter gelöscht wird."
+L["OPTIONS_ERASE_RESTORE"] = "Standard wiederherstellen"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"Die Löschliste dieses Charakters leeren und nur die Gegenstände zurückholen, mit denen Magic Eraser startet? Alles, was du selbst hinzugefügt hast, wird entfernt."

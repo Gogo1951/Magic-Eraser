@@ -47,6 +47,7 @@ L["BANK_RETRIEVED"] = "%s objetos (%s espacios) sacados de tu banco, valor %s."
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser eliminará esto."
 L["TOOLTIP_IGNORED"] = "Protegido por tu lista de ignorados."
+L["TOOLTIP_ON_ERASE_LIST"] = "Marcado por tu lista de eliminación."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -80,6 +81,7 @@ L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
 L["IGNORE_LIST"] = "Lista de ignorados"
 L["TAB_IGNORE_LIST"] = "Lista de ignorados"
+L["TAB_ERASE_LIST"] = "Lista de eliminación"
 L["ENABLED"] = "Activado"
 L["DISABLED"] = "Desactivado"
 
@@ -88,7 +90,7 @@ L["DISABLED"] = "Desactivado"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Limpia tus bolsas al instante. Los objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris se eliminan con cada clic en el botón del minimapa. Cuando visitas a un comerciante, todo lo que se puede vender se vende automáticamente."
+	"Elimina la basura y libera espacio en las bolsas al instante. Los objetos de misiones completadas, consumibles de bajo nivel, objetos blancos de calidad de vendedor y basura gris se van con un solo clic en el botón del minimapa, y todo lo vendible se vende solo en el comerciante. No vuelvas a cargar con basura de vendedor."
 L["OPTIONS_ENABLE_WELCOME"] = "Habilitar mensaje de bienvenida"
 L["OPTIONS_ENABLE_MINIMAP"] = "Habilitar botón del minimapa"
 
@@ -147,17 +149,35 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "Global"
+L["OPTIONS_LIST_ADD_ID"] = "Añadir por ID de objeto"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"Escribe un ID de objeto y pulsa Intro. También puedes hacer Mayús+clic en un enlace de objeto del chat para insertarlo aquí."
+L["OPTIONS_LIST_ADD_ID_INVALID"] = "Escribe un ID de objeto, o haz Mayús+clic en un enlace de objeto del chat."
+L["OPTIONS_LIST_REMOVE"] = "Quitar"
+L["OPTIONS_LIST_EMPTY"] = "Esta lista está vacía."
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"Los objetos de una Lista de ignorados nunca se eliminan ni se venden. La lista Global protege un objeto en todos los personajes, y la lista propia de un personaje lo protege solo en ese personaje."
-L["OPTIONS_IGNORE_GLOBAL"] = "Global"
-L["OPTIONS_IGNORE_ADD_ID"] = "Añadir por ID de objeto"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"Escribe un ID de objeto y pulsa Intro. También puedes hacer Mayús+clic en un enlace de objeto del chat para insertarlo aquí."
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Escribe un ID de objeto, o haz Mayús+clic en un enlace de objeto del chat."
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Mueve este objeto a la lista Global, para que esté protegido en todos los personajes."
-L["OPTIONS_IGNORE_REMOVE"] = "Quitar"
-L["OPTIONS_IGNORE_EMPTY"] = "Esta lista está vacía."
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"Los objetos de una Lista de eliminación siempre se tratan como basura, sea cual sea su valor: se eliminan con el botón del minimapa, o se venden al visitar a un comerciante. La lista Global se aplica en todos los personajes, y la lista propia de un personaje solo en ese personaje. Una Lista de ignorados siempre tiene prioridad, así que un objeto que esté en ambas se deja intacto."
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
+	"Mueve este objeto a la lista Global, para que se elimine en todos los personajes."
+L["OPTIONS_ERASE_RESTORE"] = "Restaurar valores predeterminados"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"¿Vaciar la Lista de eliminación de este personaje y dejar solo los objetos con los que Magic Eraser empieza? Se quita todo lo que hayas añadido tú."

@@ -444,14 +444,26 @@ function ns:BuildEraserContextReport()
 		CountKeys(ns:GetIgnoreList()),
 		CountKeys(ns:GetGlobalIgnoreList())
 	)
+	--[[
+	    Both scopes again, and the seed marker with them: "why is Fish Oil not on
+	    my list" is answered by whether this character was ever seeded, which the
+	    counts alone cannot say.
+	]]
+	lines[#lines + 1] = string.format(
+		"Erase list: character=%d, global=%d, seeded=%s",
+		CountKeys(ns:GetEraseList()),
+		CountKeys(ns:GetGlobalEraseList()),
+		tostring((ns.db and ns.db.profile.eraseListSeeded) and true or false)
+	)
 	lines[#lines + 1] = string.format(
 		"Databases: quest=%d, consumables=%d, equipment=%d",
 		CountKeys(ns.AllowedDeleteQuestItems),
 		CountKeys(ns.AllowedDeleteConsumables),
 		CountKeys(ns.AllowedDeleteEquipment)
 	)
-	local reagents = ns.ClassReagentExclusions and ns.ClassReagentExclusions[class]
-	lines[#lines + 1] = string.format("Class reagent exclusions (%s): %d", tostring(class), CountKeys(reagents))
+	-- Seed data only. Nothing filters on this at scan time; see ns.ClassReagents.
+	local reagents = ns.ClassReagents and ns.ClassReagents[class]
+	lines[#lines + 1] = string.format("Class reagents (%s): %d", tostring(class), CountKeys(reagents))
 
 	lines[#lines + 1] = ""
 	local item = ns:FindItemToDelete()
@@ -548,10 +560,19 @@ end
 
 --[[
     Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
-    player can paste their exact configuration. A profile's ignoreList is replaced
-    with a length summary rather than printing every itemId (see DATA -- large
-    lists are described, not reproduced).
+    player can paste their exact configuration. Every player-managed item list is
+    replaced with a length summary rather than printing each itemId: these lists
+    are described by their size, never reproduced row by row, so a long one
+    cannot bury the settings a bug report is actually about.
+
+    Keyed by name because both lists exist in two scopes -- the profile's and its
+    account-wide twin in global -- and the recursion meets each of them.
 ]]
+local SUMMARIZED_LIST_KEYS = {
+	ignoreList = true,
+	eraseList = true,
+}
+
 local function SummarizeList(entry)
 	local count = CountKeys(entry)
 	return string.format("{ %d %s }", count, count == 1 and "entry" or "entries")
@@ -563,7 +584,7 @@ local function SummarizeForDump(value)
 	end
 	local copy = {}
 	for key, entry in pairs(value) do
-		if key == "ignoreList" and type(entry) == "table" then
+		if SUMMARIZED_LIST_KEYS[key] and type(entry) == "table" then
 			copy[key] = SummarizeList(entry)
 		else
 			copy[key] = SummarizeForDump(entry)
