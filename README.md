@@ -10,11 +10,11 @@ TL;DR: Your bag space is valuable. Reclaim it with Magic Eraser.
 
 🧹 **One-Click Cleanup** // The mini-map button wears the icon of your lowest-value junk. Left-click and it's gone, with no "Are you sure?" dialog unless you ask for one.
 
-🏦 **Bank Retrieval** // Open your bank and the junk you stashed in there walks itself back into your bags, ready to erase or sell.
+🔔 **Quest Item Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
 
 📊 **Clutter Report** // Hover the button to see how many bag slots your junk is squatting on and exactly what the pile is worth.
 
-🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
+🏦 **Bank Retrieval** // Open your bank and the junk you stashed in there walks itself back into your bags, ready to erase or sell.
 
 🦺 **Safety First** // The trash list is hand-curated and human-reviewed: no name-matching, no heuristics, no surprise deletions. Your bag tooltips flag what's on the chopping block, and Ignore List items are never touched.
 
