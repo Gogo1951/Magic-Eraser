@@ -73,13 +73,14 @@ local function BuildScopeArgs(scopeKey)
 			removeDesc = L["OPTIONS_IGNORE_REMOVE"],
 			empty = L["OPTIONS_IGNORE_EMPTY"],
 		},
-		-- The Global pane has nowhere to promote to, so its item cell absorbs
-		-- that column and the remove icon stays put as scopes are picked.
+		--[[
+		    The Global pane has nowhere to promote to, so its item cell absorbs
+		    that column and the remove icon stays put as scopes are picked.
+		]]
 		actionColumn = (not isGlobalScope) and PromoteColumn() or nil,
 	})
 
-	args.descIntro = ns.OptionsDesc(L["OPTIONS_IGNORE_DESCRIPTION"], 1)
-	args.spacerAdd = ns.OptionsSpacer(2)
+	args.spacerTop = ns.OptionsSpacer(2)
 
 	return args
 end
@@ -94,12 +95,23 @@ local function ScopeGroup(name, order, scopeKey)
 end
 
 function ns.BuildIgnoreListOptions()
-	local args = {}
+	--[[
+	    The description lives on the root group, not in the scope panes: a tree
+	    group renders its own non-group args once, full width, between the panel
+	    title and the tree, so the copy reads once above the whole panel instead
+	    of repeating in every pane.
+	]]
+	local args = {
+		descIntro = ns.OptionsDesc(L["OPTIONS_IGNORE_DESCRIPTION"], 1),
+		spacerIntro = ns.OptionsSpacer(2),
+	}
 
-	-- Keyed by scope, not by position: the tree remembers the selected node by
-	-- its arg key, so a key that moved when a profile appeared or dropped out of
-	-- the list would silently reselect a different character.
-	args[ns.IGNORE_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_IGNORE_GLOBAL"], 1, ns.IGNORE_SCOPE_GLOBAL)
+	--[[
+	    Keyed by scope, not by position: the tree remembers the selected node by
+	    its arg key, so a key that moved when a profile appeared or dropped out of
+	    the list would silently reselect a different character.
+	]]
+	args[ns.IGNORE_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_IGNORE_GLOBAL"], 3, ns.IGNORE_SCOPE_GLOBAL)
 
 	if ns.db then
 		local profiles = ns.db:GetProfiles()

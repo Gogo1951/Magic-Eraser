@@ -28,7 +28,10 @@ L["CURSOR_TOO_FAST"] = "¡Más despacio! Estás haciendo clic más rápido de lo
 L["ERASED_ITEM"] = "%s%s eliminado."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s eliminado, valor %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminado, de una misión que has completado."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s eliminado, de una misión que tu personaje no puede aceptar."
 L["QUEST_ITEM_READY"] = "¡%s ahora se puede eliminar de forma segura!"
+L["QUEST_STARTER_UNAVAILABLE"] =
+	"%s se puede eliminar de forma segura, de una misión que tu personaje no puede aceptar."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendido, valor %s."
@@ -99,6 +102,14 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Por objeto"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Solo resumen"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Valor máximo a eliminar"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
+	"Nunca elimina un objeto o montón que valga más que el límite que definas abajo."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Habilitar valor máximo a eliminar"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Nunca eliminar nada que valga más de"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d de oro"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"

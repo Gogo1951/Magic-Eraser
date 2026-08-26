@@ -28,7 +28,9 @@ L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物�
 L["ERASED_ITEM"] = "已刪除 %s%s。"
 L["ERASED_ITEM_WITH_VALUE"] = "已刪除 %s%s，價值 %s。"
 L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，來自你已完成的任務。"
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "已刪除 %s%s，來自你的角色無法接受的任務。"
 L["QUEST_ITEM_READY"] = "%s 現在可以安全刪除了！"
+L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全刪除，來自你的角色無法接受的任務。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，價值 %s。"
@@ -98,6 +100,13 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "啟用自動售賣"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "逐項"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "僅彙總"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "刪除的最高價值"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "永不刪除價值超過你在下方所設上限的物品或整組物品。"
+L["OPTIONS_ENABLE_VALUE_CAP"] = "啟用刪除的最高價值"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "永不刪除價值超過"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "銀行取回"

@@ -28,24 +28,34 @@ local GetColor = ns.GetColor
     notice, red (OFF) for the will-erase warning.
 ]]
 --[[
-    True only when the tooltip is anchored to one of the player's carried bag
-    slots (bags 0..NUM_BAG_SLOTS) -- never a merchant, bank, or chat-link tooltip.
-    Used by the TooltipDataProcessor path, which fires for every item tooltip and
-    so needs this filter; the SetBagItem path is already bag-scoped by its own
-    args. Modern container item buttons expose GetBagID(); the default frames fall
-    back to their ContainerFrame name and the parent frame's bag id.
+    The bag and slot the tooltip is anchored to, or nil unless the anchor is one
+    of the player's carried bag slots (bags 0..NUM_BAG_SLOTS) -- never a
+    merchant, bank, or chat-link tooltip. Used by the TooltipDataProcessor path,
+    which fires for every item tooltip and so needs this filter; the SetBagItem
+    path is already bag-scoped by its own args. Modern container item buttons
+    expose GetBagID(); the default frames fall back to their ContainerFrame name
+    and the parent frame's bag id. The slot is the button's own id either way.
+
+    The slot half is what the value cap needs: the cap is judged on the stack,
+    so the tooltip has to know which stack it is looking at rather than just
+    which bag.
 ]]
-local function IsCarriedBagSlot(tooltip)
+local function GetCarriedBagSlot(tooltip)
 	local owner = tooltip:GetOwner()
 	if not owner then
-		return false
+		return nil
+	end
+
+	local slot = owner.GetID and owner:GetID()
+	if type(slot) ~= "number" then
+		return nil
 	end
 
 	local getBagID = owner.GetBagID
 	if type(getBagID) == "function" then
 		local ok, bag = pcall(getBagID, owner)
-		if ok and type(bag) == "number" then
-			return bag >= 0 and bag <= NUM_BAG_SLOTS
+		if ok and type(bag) == "number" and bag >= 0 and bag <= NUM_BAG_SLOTS then
+			return bag, slot
 		end
 	end
 
@@ -53,15 +63,30 @@ local function IsCarriedBagSlot(tooltip)
 	if name and name:find("ContainerFrame", 1, true) then
 		local parent = owner.GetParent and owner:GetParent()
 		local bag = parent and parent.GetID and parent:GetID()
-		if type(bag) == "number" then
-			return bag >= 0 and bag <= NUM_BAG_SLOTS
+		if type(bag) == "number" and bag >= 0 and bag <= NUM_BAG_SLOTS then
+			return bag, slot
 		end
 	end
 
-	return false
+	return nil
 end
 
-local function AddEraserWarning(tooltip, itemId)
+--[[
+    The stack sitting in one bag slot, for the value cap's comparison. The item
+    id is re-checked against the slot rather than trusted, so a slot we resolved
+    wrongly falls back to a single item and the cap is judged on the unit price
+    -- protecting less than it should, never more, which is the safe direction
+    for a guard the player switched on deliberately.
+]]
+local function GetBagStackCount(bag, slot, itemId)
+	local info = bag and C_Container and C_Container.GetContainerItemInfo(bag, slot)
+	if info and info.itemID == itemId then
+		return info.stackCount or 1
+	end
+	return 1
+end
+
+local function AddEraserWarning(tooltip, itemId, stackCount)
 	if tooltip ~= GameTooltip or not (ns.db and ns.db.global.tooltipWarningEnabled) then
 		return
 	end
@@ -89,6 +114,14 @@ local function AddEraserWarning(tooltip, itemId)
 		return
 	end
 
+	--[[
+	    Over the player's Maximum Value to Erase, the eraser leaves it alone, so
+	    the tooltip says nothing rather than promising an erase that never comes.
+	]]
+	if ns:IsOverValueCap((sellPrice or 0) * (stackCount or 1)) then
+		return
+	end
+
 	if ns:GetItemDeleteReason(itemId, rarity, sellPrice) then
 		tooltip:AddLine(" ")
 		tooltip:AddLine(ns.BrandPrefix .. GetColor("OFF") .. L["TOOLTIP_WILL_ERASE"] .. "|r")
@@ -98,11 +131,15 @@ end
 
 function ns.SetupTooltipHooks()
 	if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
-		-- Modern data-driven hook. Fires for any item tooltip, so gate to bag slots
-		-- (data.id is the itemID; see Enum.TooltipDataType.Item).
+		--[[
+		    Modern data-driven hook. Fires for any item tooltip, so gate to bag
+		    slots (data.id is the itemID; see Enum.TooltipDataType.Item).
+		]]
 		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
-			if IsCarriedBagSlot(tooltip) then
-				AddEraserWarning(tooltip, data and data.id)
+			local bag, slot = GetCarriedBagSlot(tooltip)
+			if bag then
+				local itemId = data and data.id
+				AddEraserWarning(tooltip, itemId, GetBagStackCount(bag, slot, itemId))
 			end
 		end)
 	else
@@ -125,7 +162,7 @@ function ns.SetupTooltipHooks()
 				return
 			end
 			local info = C_Container and C_Container.GetContainerItemInfo(bag, slot)
-			if AddEraserWarning(tooltip, info and info.itemID) then
+			if AddEraserWarning(tooltip, info and info.itemID, info and info.stackCount) then
 				tooltip:Show()
 			end
 		end)

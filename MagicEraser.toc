@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically.
+## Notes: Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
 ## Author: Gogo1951
 
 ## Category-enUS: Inventory
@@ -23,8 +23,6 @@
 ## X-Wago-ID: aNebBj62
 
 ## SavedVariables: MagicEraserDB
-# MIGRATION (remove after 2026-08-15): drop MagicEraserCharDB once the AceDB migration window closes
-## SavedVariablesPerCharacter: MagicEraserCharDB
 
 # Includes
 Includes/Libraries/LibStub/LibStub.lua
@@ -57,6 +55,7 @@ Locales/zhTW.lua
 Data/Data.lua
 Data/Default-Settings.lua
 Data/Quest-Items.lua
+Data/Quest-Starting-Items.lua
 Data/Consumables.lua
 Data/Equipment.lua
 

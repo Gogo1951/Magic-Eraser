@@ -28,7 +28,10 @@ L["CURSOR_TOO_FAST"] = "Doucement ! Vous cliquez plus vite que le jeu ne peut su
 L["ERASED_ITEM"] = "%s%s supprimé."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s supprimé, valeur %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s supprimé, provenant d'une quête que vous avez terminée."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s supprimé, provenant d'une quête que votre personnage ne peut pas accepter."
 L["QUEST_ITEM_READY"] = "%s peut maintenant être supprimé en toute sécurité !"
+L["QUEST_STARTER_UNAVAILABLE"] =
+	"%s peut être supprimé en toute sécurité, provenant d'une quête que votre personnage ne peut pas accepter."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
@@ -99,6 +102,14 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "Activer la Vente auto"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Activer les messages de Vente auto"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Par objet"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Résumé uniquement"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Valeur maximale à supprimer"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
+	"Ne supprime jamais un objet ou une pile valant plus que la limite définie ci-dessous."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Activer la valeur maximale à supprimer"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Ne jamais supprimer ce qui vaut plus de"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"
