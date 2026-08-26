@@ -28,7 +28,11 @@ L["CURSOR_TOO_FAST"] = "천천히! 게임이 아이템을 삭제하는 것보다
 L["ERASED_ITEM"] = "%s%s 삭제됨."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s 삭제됨, 가치 %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s 삭제됨, 완료한 퀘스트의 아이템입니다."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
+	"%s%s 삭제됨, 캐릭터가 수락할 수 없는 퀘스트의 아이템입니다."
 L["QUEST_ITEM_READY"] = "%s 이제 안전하게 삭제할 수 있습니다!"
+L["QUEST_STARTER_UNAVAILABLE"] =
+	"%s 안전하게 삭제할 수 있습니다. 캐릭터가 수락할 수 없는 퀘스트의 아이템입니다."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
@@ -99,6 +103,14 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "자동 판매 활성화"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "자동 판매 메시지 활성화"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "항목별"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "요약만"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "삭제할 최대 가치"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
+	"아래에서 설정한 한도보다 가치가 높은 아이템이나 묶음은 삭제하지 않습니다."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "삭제할 최대 가치 활성화"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "다음 가치를 초과하면 삭제 안 함"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d 골드"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "은행에서 가져오기"

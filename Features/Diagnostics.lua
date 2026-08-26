@@ -435,8 +435,10 @@ function ns:BuildEraserContextReport()
 	lines[#lines + 1] =
 		string.format("Bank retrieval: %s", (ns.db and ns.db.global.bankRetrievalEnabled) and "enabled" or "disabled")
 
-	-- Both scopes, because protection is additive: an unexpectedly skipped item
-	-- may be on either list, and the character's own list alone would not say so.
+	--[[
+	    Both scopes, because protection is additive: an unexpectedly skipped item
+	    may be on either list, and the character's own list alone would not say so.
+	]]
 	lines[#lines + 1] = string.format(
 		"Ignore list: character=%d, global=%d",
 		CountKeys(ns:GetIgnoreList()),
@@ -548,8 +550,7 @@ end
     Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
     player can paste their exact configuration. A profile's ignoreList is replaced
     with a length summary rather than printing every itemId (see DATA -- large
-    lists are described, not reproduced); a legacy keyed ignoreLists, if a profile
-    still carries one mid-migration, is summarized per character.
+    lists are described, not reproduced).
 ]]
 local function SummarizeList(entry)
 	local count = CountKeys(entry)
@@ -564,12 +565,6 @@ local function SummarizeForDump(value)
 	for key, entry in pairs(value) do
 		if key == "ignoreList" and type(entry) == "table" then
 			copy[key] = SummarizeList(entry)
-		elseif key == "ignoreLists" and type(entry) == "table" then
-			local perChar = {}
-			for charKey, list in pairs(entry) do
-				perChar[charKey] = SummarizeList(list)
-			end
-			copy[key] = perChar
 		else
 			copy[key] = SummarizeForDump(entry)
 		end

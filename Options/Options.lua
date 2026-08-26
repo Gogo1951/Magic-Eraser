@@ -20,15 +20,20 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 function ns:RegisterOptionsPanels()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.General, ns.BuildGeneralOptions())
-	-- AddToBlizOptions returns (frame, categoryID). The ID is what Settings.OpenToCategory
-	-- expects; relying on the display name matching the ID is fragile -- the library only
-	-- aliases the ID to the name on clients without C_SettingsUtil.OpenSettingsPanel (Era),
-	-- so on TBC Anniversary a name-based lookup returns nil. Capture the real references here.
+	--[[
+	    AddToBlizOptions returns (frame, categoryID). The ID is what
+	    Settings.OpenToCategory expects; relying on the display name matching the
+	    ID is fragile -- the library only aliases the ID to the name on clients
+	    without C_SettingsUtil.OpenSettingsPanel (Era), so on TBC Anniversary a
+	    name-based lookup returns nil. Capture the real references here.
+	]]
 	ns.GeneralPanel, ns.GeneralCategoryID = AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
 
-	-- The builder function, not a built table: the Ignore List panel's rows are
-	-- the ignore lists themselves, so AceConfig re-invokes it on every open and
-	-- every NotifyChange and the panel never renders a stale list.
+	--[[
+	    The builder function, not a built table: the Ignore List panel's rows are
+	    the ignore lists themselves, so AceConfig re-invokes it on every open and
+	    every NotifyChange and the panel never renders a stale list.
+	]]
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], ns.AddonTitle)
 
@@ -55,8 +60,10 @@ end
 --------------------------------------------------------------------------------
 
 function ns:OpenOptionsPanel()
-	-- Combat first: the Settings panel is protected there, so every route below is
-	-- blocked and the player would get an ADDON_ACTION_BLOCKED error instead.
+	--[[
+	    Combat first: the Settings panel is protected there, so every route below
+	    is blocked and the player would get an ADDON_ACTION_BLOCKED error instead.
+	]]
 	if InCombatLockdown() then
 		ns:PrintMessage(L["CHAT_OPTIONS_IN_COMBAT"])
 		return
