@@ -48,6 +48,7 @@ L["BANK_RETRIEVED"] = "은행에서 %s개 아이템 (%s칸) 꺼냄, 가치 %s."
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser가 이 아이템을 삭제합니다."
 L["TOOLTIP_IGNORED"] = "무시 목록으로 보호됨."
+L["TOOLTIP_ON_ERASE_LIST"] = "삭제 목록으로 표시됨."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -81,6 +82,7 @@ L["AUTO_VEND_DESCRIPTION"] =
 	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
 L["IGNORE_LIST"] = "무시 목록"
 L["TAB_IGNORE_LIST"] = "무시 목록"
+L["TAB_ERASE_LIST"] = "삭제 목록"
 L["ENABLED"] = "활성화"
 L["DISABLED"] = "비활성화"
 
@@ -89,7 +91,7 @@ L["DISABLED"] = "비활성화"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"가방을 즉시 정리하세요. 완료된 퀘스트 아이템, 저레벨 소모품, 상인 품질의 흰색 아이템, 회색 잡동사니가 미니맵 버튼을 클릭할 때마다 삭제됩니다. 상인을 방문하면 판매 가능한 것은 모두 자동으로 판매됩니다."
+	"잡동사니를 삭제하고 가방 공간을 즉시 확보하세요. 완료된 퀘스트 아이템, 저레벨 소모품, 상인 품질의 흰색 아이템, 회색 잡동사니가 미니맵 버튼 한 번으로 사라지고, 판매 가능한 것은 상인에게 자동으로 판매됩니다. 다시는 상인용 잡동사니를 짊어지지 마세요."
 L["OPTIONS_ENABLE_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 
@@ -148,18 +150,36 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "전체"
+L["OPTIONS_LIST_ADD_ID"] = "아이템 ID로 추가"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"아이템 ID를 입력하고 Enter 키를 누르세요. 대화창의 아이템 링크를 Shift+클릭해 여기에 넣을 수도 있습니다."
+L["OPTIONS_LIST_ADD_ID_INVALID"] =
+	"아이템 ID를 입력하거나, 대화창의 아이템 링크를 Shift+클릭하세요."
+L["OPTIONS_LIST_REMOVE"] = "제거"
+L["OPTIONS_LIST_EMPTY"] = "이 목록은 비어 있습니다."
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"무시 목록에 있는 아이템은 삭제되지도 판매되지도 않습니다. 전체 목록은 모든 캐릭터에서 아이템을 보호하고, 캐릭터별 목록은 해당 캐릭터에서만 보호합니다."
-L["OPTIONS_IGNORE_GLOBAL"] = "전체"
-L["OPTIONS_IGNORE_ADD_ID"] = "아이템 ID로 추가"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"아이템 ID를 입력하고 Enter 키를 누르세요. 대화창의 아이템 링크를 Shift+클릭해 여기에 넣을 수도 있습니다."
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] =
-	"아이템 ID를 입력하거나, 대화창의 아이템 링크를 Shift+클릭하세요."
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"이 아이템을 전체 목록으로 옮겨 모든 캐릭터에서 보호합니다."
-L["OPTIONS_IGNORE_REMOVE"] = "제거"
-L["OPTIONS_IGNORE_EMPTY"] = "이 목록은 비어 있습니다."
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"삭제 목록에 있는 아이템은 가치와 상관없이 항상 잡동사니로 취급되어, 미니맵 버튼으로 삭제되거나 상인에게 판매됩니다. 전체 목록은 모든 캐릭터에 적용되고, 캐릭터별 목록은 해당 캐릭터에만 적용됩니다. 무시 목록이 항상 우선하므로, 두 목록에 모두 있는 아이템은 그대로 둡니다."
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
+	"이 아이템을 전체 목록으로 옮겨 모든 캐릭터에서 삭제합니다."
+L["OPTIONS_ERASE_RESTORE"] = "기본값 복원"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"이 캐릭터의 삭제 목록을 비우고 Magic Eraser가 처음에 넣어 주는 아이템만 되돌릴까요? 직접 추가한 항목은 모두 제거됩니다."

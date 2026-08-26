@@ -106,7 +106,7 @@ end
 
 --[[
     One list looked up by the scope key the Ignore List panel uses: the global
-    sentinel (ns.IGNORE_SCOPE_GLOBAL), the profile the player is on right now, or
+    sentinel (ns.LIST_SCOPE_GLOBAL), the profile the player is on right now, or
     any other AceDB profile on the account.
 
     The current profile resolves through ns.db.profile rather than the raw saved
@@ -123,7 +123,7 @@ function ns:GetIgnoreListForScope(scopeKey, createIfMissing)
 		return nil
 	end
 
-	if scopeKey == ns.IGNORE_SCOPE_GLOBAL then
+	if scopeKey == ns.LIST_SCOPE_GLOBAL then
 		return ns:GetGlobalIgnoreList()
 	end
 
@@ -207,7 +207,7 @@ function ns:SetIgnoredInScope(scopeKey, itemId, isIgnored)
 
 	ignoreList[itemId] = isIgnored and true or nil
 
-	if isIgnored and scopeKey == ns.IGNORE_SCOPE_GLOBAL then
+	if isIgnored and scopeKey == ns.LIST_SCOPE_GLOBAL then
 		ClearFromAllProfiles(itemId)
 	end
 

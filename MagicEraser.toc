@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
+## Notes: Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
 ## Author: Gogo1951
 
 ## Category-enUS: Inventory
@@ -64,6 +64,7 @@ Features/Core.lua
 Features/Utilities.lua
 Features/Announcements.lua
 Features/Ignore-List.lua
+Features/Erase-List.lua
 Features/Eraser.lua
 Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
@@ -74,6 +75,7 @@ Features/Minimap-Button.lua
 Options/Options-Utilities.lua
 Options/Options-General.lua
 Options/Options-Ignore-List.lua
+Options/Options-Erase-List.lua
 Options/Options-Profiles.lua
 Options/Options-Diagnostics.lua
 Options/Options.lua

@@ -46,6 +46,7 @@ L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser will erase this."
 L["TOOLTIP_IGNORED"] = "Protected by your Ignore List."
+L["TOOLTIP_ON_ERASE_LIST"] = "Flagged by your Erase List."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -79,6 +80,7 @@ L["AUTO_VEND_DESCRIPTION"] =
 	"Automatically sell items flagged as clutter by Magic Eraser when you open a merchant window."
 L["IGNORE_LIST"] = "Ignore List"
 L["TAB_IGNORE_LIST"] = "Ignore List"
+L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
 L["DISABLED"] = "Disabled"
 
@@ -87,7 +89,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again."
+	"Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
@@ -144,16 +146,33 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "Global"
+L["OPTIONS_LIST_ADD_ID"] = "Add by Item ID"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"Type an item ID and press Enter. You can also shift-click an item link in chat to drop it in here."
+L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or shift-click an item link in chat."
+L["OPTIONS_LIST_REMOVE"] = "Remove"
+L["OPTIONS_LIST_EMPTY"] = "This list is empty."
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"Items on an Ignore List are never erased and never sold. The Global list protects an item on every character, and a character's own list protects it on that character only."
-L["OPTIONS_IGNORE_GLOBAL"] = "Global"
-L["OPTIONS_IGNORE_ADD_ID"] = "Add by Item ID"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"Type an item ID and press Enter. You can also shift-click an item link in chat to drop it in here."
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Type an item ID, or shift-click an item link in chat."
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so it is protected on every character."
-L["OPTIONS_IGNORE_REMOVE"] = "Remove"
-L["OPTIONS_IGNORE_EMPTY"] = "This list is empty."
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"Items on an Erase List are always treated as junk, whatever they are worth: erased by the mini-map button, or sold when you are at a merchant. The Global list applies on every character, and a character's own list applies on that character only. An Ignore List always wins, so an item on both is left alone."
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so it is erased on every character."
+L["OPTIONS_ERASE_RESTORE"] = "Restore Defaults"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"Clear this character's Erase List and put back only the items Magic Eraser starts you with? Anything you added yourself is removed."

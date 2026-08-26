@@ -2,19 +2,19 @@ local _, ns = ...
 local L = ns.L
 
 --------------------------------------------------------------------------------
--- Ignore List Panel
+-- Erase List Panel
 --------------------------------------------------------------------------------
 
 --[[
-    Every ignore list on the account, one scope per list. childGroups = "tree"
-    splits the panel in two: the tree on the left is the scope list (the
-    account-wide Global list, then the characters), and the pane on the right is
-    the selected scope's items. Each scope group closes over its own scope key,
-    so the add box and the row buttons in a pane always act on the list the
-    player is looking at, including another character's.
+    Every erase list on the account, one scope per list, laid out exactly like
+    the Ignore List panel: childGroups = "tree" splits the panel in two, with the
+    scope list on the left (the account-wide Global list, then the characters)
+    and the selected scope's items on the right. Each scope group closes over its
+    own scope key, so the add box and the row buttons in a pane always act on the
+    list the player is looking at, including another character's.
 
     Registered as a builder function rather than a built table (see
-    Options/Options.lua): the rows here are the ignore lists themselves, so
+    Options/Options.lua): the rows here are the erase lists themselves, so
     AceConfig re-invokes this on every open and every NotifyChange and the panel
     is always current.
 
@@ -24,28 +24,32 @@ local L = ns.L
     rather than the full row width, because the tree sidebar takes its share of
     the panel first.
 
-    There is no drop target. The game closes the bags and the bank when the
-    options interface opens, so there is no way to have an item on the cursor and
-    this panel in front of you at the same time; typing or shift-clicking an id
-    into the add box is the only path that can actually work.
+    There is no drop target, for the same reason the Ignore List has none: the
+    game closes the bags and the bank when the options interface opens, so there
+    is no way to have an item on the cursor and this panel in front of you at the
+    same time.
 ]]
 
 --[[
     Promote, not copy. Only the account-wide add is issued here:
-    ns:SetIgnoredInScope clears a newly globalized item off every character's
+    ns:SetOnEraseListInScope clears a newly globalized item off every character's
     list itself, so the row leaves this pane, leaves any other character who
-    happened to hold the same item, and turns up under Global instead. Protection
-    only ever widens doing it this way, because the global list already covers
-    everyone it just left.
+    happened to hold the same item, and turns up under Global instead.
+
+    Note which way this widens. On the Ignore List, promoting only ever protects
+    more. Here it erases more, on every character including one the item was
+    deliberately never seeded for -- a Shaman and their fishing reagents being
+    the case that exists today. The button's description says "every character"
+    outright so that is a decision rather than a discovery.
 ]]
 local function PromoteColumn()
 	return {
 		type = "execute",
 		name = L["OPTIONS_LIST_GLOBAL"],
-		desc = L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"],
+		desc = L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"],
 		width = ns.OPTIONS_PROMOTE_WIDTH,
 		func = function(itemId)
-			ns:SetIgnoredInScope(ns.LIST_SCOPE_GLOBAL, itemId, true)
+			ns:SetOnEraseListInScope(ns.LIST_SCOPE_GLOBAL, itemId, true)
 		end,
 	}
 end
@@ -53,25 +57,38 @@ end
 local function BuildScopeArgs(scopeKey)
 	local isGlobalScope = scopeKey == ns.LIST_SCOPE_GLOBAL
 
+	--[[
+	    Only the character being played gets Restore Defaults. ns:SeedEraseList
+	    reads that character's own class and writes ns.db.profile, so it cannot
+	    re-seed another character's list, and the Global scope ships no defaults
+	    to restore in the first place.
+	]]
+	local isCurrentProfile = ns.db and scopeKey == ns.db:GetCurrentProfile()
+
 	local args = ns:BuildItemListOptions({
 		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
 		startOrder = 3,
-		notifyKey = ns.OPTIONS_REGISTRY.IgnoreList,
+		notifyKey = ns.OPTIONS_REGISTRY.EraseList,
 		getSourceTable = function()
-			return ns:GetIgnoreListForScope(scopeKey)
+			return ns:GetEraseListForScope(scopeKey)
 		end,
 		onAdd = function(itemId)
-			ns:SetIgnoredInScope(scopeKey, itemId, true)
+			ns:SetOnEraseListInScope(scopeKey, itemId, true)
 		end,
 		onRemove = function(itemId)
-			ns:SetIgnoredInScope(scopeKey, itemId, false)
+			ns:SetOnEraseListInScope(scopeKey, itemId, false)
 		end,
+		onRestore = isCurrentProfile and function()
+			ns:RestoreEraseListDefaults()
+		end or nil,
 		labels = {
 			addName = L["OPTIONS_LIST_ADD_ID"],
 			addHelp = L["OPTIONS_LIST_ADD_ID_DESCRIPTION"],
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
+			restoreName = L["OPTIONS_ERASE_RESTORE"],
+			restoreConfirm = L["OPTIONS_ERASE_RESTORE_CONFIRM"],
 		},
 		--[[
 		    The Global pane has nowhere to promote to, so its item cell absorbs
@@ -94,7 +111,7 @@ local function ScopeGroup(name, order, scopeKey)
 	}
 end
 
-function ns.BuildIgnoreListOptions()
+function ns.BuildEraseListOptions()
 	--[[
 	    The description lives on the root group, not in the scope panes: a tree
 	    group renders its own non-group args once, full width, between the panel
@@ -102,7 +119,7 @@ function ns.BuildIgnoreListOptions()
 	    of repeating in every pane.
 	]]
 	local args = {
-		descIntro = ns.OptionsDesc(L["OPTIONS_IGNORE_DESCRIPTION"], 1),
+		descIntro = ns.OptionsDesc(L["OPTIONS_ERASE_DESCRIPTION"], 1),
 		spacerIntro = ns.OptionsSpacer(2),
 	}
 
@@ -122,14 +139,14 @@ function ns.BuildIgnoreListOptions()
 
 		for _, profileName in ipairs(profiles) do
 			--[[
-			    A character with nothing ignored is noise in the tree, so it is
-			    left out -- except for the character playing right now, whose
-			    list has to be reachable to put a first item in it. Profile names
-			    are character keys ("Name - Realm") and are never localized, so
-			    they are shown as-is and sorted as plain strings.
+			    A character with an empty list is noise in the tree, so it is left
+			    out -- except for the character playing right now, whose list has
+			    to be reachable to put a first item in it. Profile names are
+			    character keys ("Name - Realm") and are never localized, so they
+			    are shown as-is and sorted as plain strings.
 			]]
-			local ignoreList = ns:GetIgnoreListForScope(profileName)
-			if profileName == currentProfile or (ignoreList and next(ignoreList) ~= nil) then
+			local eraseList = ns:GetEraseListForScope(profileName)
+			if profileName == currentProfile or (eraseList and next(eraseList) ~= nil) then
 				args[profileName] = ScopeGroup(profileName, order, profileName)
 				order = order + 1
 			end
@@ -138,7 +155,7 @@ function ns.BuildIgnoreListOptions()
 
 	return {
 		type = "group",
-		name = L["TAB_IGNORE_LIST"],
+		name = L["TAB_ERASE_LIST"],
 		childGroups = "tree",
 		args = args,
 	}

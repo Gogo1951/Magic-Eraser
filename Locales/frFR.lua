@@ -47,6 +47,7 @@ L["BANK_RETRIEVED"] = "%s objets (%s emplacements) retirés de votre banque, val
 
 L["TOOLTIP_WILL_ERASE"] = "Magic Eraser va supprimer ceci."
 L["TOOLTIP_IGNORED"] = "Protégé par votre liste d'ignorés."
+L["TOOLTIP_ON_ERASE_LIST"] = "Marqué par votre liste de suppression."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -80,6 +81,7 @@ L["AUTO_VEND_DESCRIPTION"] =
 	"Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
 L["IGNORE_LIST"] = "Liste d'ignorés"
 L["TAB_IGNORE_LIST"] = "Liste d'ignorés"
+L["TAB_ERASE_LIST"] = "Liste de suppression"
 L["ENABLED"] = "Activé"
 L["DISABLED"] = "Désactivé"
 
@@ -88,7 +90,7 @@ L["DISABLED"] = "Désactivé"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Nettoyez vos sacs en un instant. Les objets de quête terminés, les consommables de bas niveau, les objets blancs de qualité vendeur et la camelote grise sont supprimés à chaque clic sur le bouton de la minicarte. Lorsque vous visitez un marchand, tout ce qui peut l'être est vendu automatiquement."
+	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Les objets de quête terminés, les consommables de bas niveau, les objets blancs de qualité vendeur et la camelote grise partent d'un seul clic sur le bouton de la minicarte, et tout ce qui est vendable se vend tout seul chez le marchand. Ne transportez plus jamais de camelote."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 
@@ -147,17 +149,35 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
+-- Options: Item Lists
+--------------------------------------------------------------------------------
+
+-- Shared by every player-managed item list panel; never names the list itself.
+L["OPTIONS_LIST_GLOBAL"] = "Global"
+L["OPTIONS_LIST_ADD_ID"] = "Ajouter par ID d'objet"
+L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
+	"Saisissez un ID d'objet et appuyez sur Entrée. Vous pouvez aussi Maj+cliquer sur un lien d'objet dans la discussion pour l'insérer ici."
+L["OPTIONS_LIST_ADD_ID_INVALID"] = "Saisissez un ID d'objet, ou Maj+cliquez sur un lien d'objet dans la discussion."
+L["OPTIONS_LIST_REMOVE"] = "Retirer"
+L["OPTIONS_LIST_EMPTY"] = "Cette liste est vide."
+
+--------------------------------------------------------------------------------
 -- Options: Ignore List
 --------------------------------------------------------------------------------
 
 L["OPTIONS_IGNORE_DESCRIPTION"] =
 	"Les objets d'une Liste d'ignorés ne sont jamais supprimés ni vendus. La liste globale protège un objet sur tous vos personnages, et la liste propre à un personnage le protège uniquement sur celui-ci."
-L["OPTIONS_IGNORE_GLOBAL"] = "Global"
-L["OPTIONS_IGNORE_ADD_ID"] = "Ajouter par ID d'objet"
-L["OPTIONS_IGNORE_ADD_ID_DESCRIPTION"] =
-	"Saisissez un ID d'objet et appuyez sur Entrée. Vous pouvez aussi Maj+cliquer sur un lien d'objet dans la discussion pour l'insérer ici."
-L["OPTIONS_IGNORE_ADD_ID_INVALID"] = "Saisissez un ID d'objet, ou Maj+cliquez sur un lien d'objet dans la discussion."
 L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
 	"Déplace cet objet vers la liste globale, afin qu'il soit protégé sur tous vos personnages."
-L["OPTIONS_IGNORE_REMOVE"] = "Retirer"
-L["OPTIONS_IGNORE_EMPTY"] = "Cette liste est vide."
+
+--------------------------------------------------------------------------------
+-- Options: Erase List
+--------------------------------------------------------------------------------
+
+L["OPTIONS_ERASE_DESCRIPTION"] =
+	"Les objets d'une Liste de suppression sont toujours traités comme du rebut, quelle que soit leur valeur : supprimés avec le bouton de la minicarte, ou vendus lorsque vous consultez un marchand. La liste globale s'applique sur tous vos personnages, et la liste propre à un personnage uniquement sur celui-ci. Une Liste d'ignorés l'emporte toujours, un objet présent sur les deux est donc laissé intact."
+L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
+	"Déplace cet objet vers la liste globale, afin qu'il soit supprimé sur tous vos personnages."
+L["OPTIONS_ERASE_RESTORE"] = "Restaurer les valeurs par défaut"
+L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
+	"Vider la Liste de suppression de ce personnage et ne remettre que les objets fournis au départ par Magic Eraser ? Tout ce que vous avez ajouté vous-même est retiré."

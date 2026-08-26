@@ -26,6 +26,7 @@ Magic-Eraser/
 │   ├── Utilities.lua             Color accessor, currency and number formatting, free-slot count
 │   ├── Announcements.lua         Branded player-only print; the add-on sends no cross-player chat
 │   ├── Ignore-List.lua           Both ignore lists, plus the per-scope reads and writes
+│   ├── Erase-List.lua            Both erase lists, their per-scope writes, and the class-reagent seed
 │   ├── Eraser.lua                Scan, evaluate, rank, erase, and the quest-item alerts
 │   ├── Bag-Warnings.lua          Free-slot countdown and the shared bag-window gate
 │   ├── Bank-Retrieval.lua        Pulls flagged items out of the bank within a free-slot budget
@@ -44,6 +45,7 @@ Magic-Eraser/
 │   ├── Options-Utilities.lua     Widget helpers, item-cache warming, the shared item-list builder
 │   ├── Options-General.lua       Root panel, and the sub-option row builder it defines
 │   ├── Options-Ignore-List.lua   One tree node per ignore list on the account
+│   ├── Options-Erase-List.lua    One tree node per erase list on the account
 │   ├── Options-Profiles.lua      Stock AceDBOptions-3.0 table, returned unmodified
 │   ├── Options-Diagnostics.lua   Diagnostic Tools panel, registered last
 │   └── Options.lua               Registration, ns:OpenOptionsPanel, the /eraser command
@@ -93,9 +95,9 @@ The two automatic features face combat differently, and the difference is the wi
 
 The pipeline lives in `Eraser.lua`:
 
-1. **Scan.** `FindItemToDelete` walks bags 0 to 4 via `C_Container.GetContainerItemInfo`, skipping items on either ignore list and in the class reagent exclusions.
-2. **Evaluate.** `GetItemDeleteReason` returns `"quest"`, `"questIneligible"`, `"consumable"`, `"equipment"`, `"gray"`, or `nil` (see *Eraser Categories*). A reason is then filtered through `ns:IsOverValueCap` (see *Maximum Value to Erase*), which drops the item from the scan entirely: no candidate, no Clutter Report line.
-3. **Rank.** `isBetterDeletionCandidate` ranks by total stack value first; ties break by `ns.DeletePriority` (`quest` and `questIneligible` 1, `gray` 2, `consumable` and `equipment` 3), so the cheapest item wins and a completed quest item breaks a value tie.
+1. **Scan.** `FindItemToDelete` walks bags 0 to 4 via `C_Container.GetContainerItemInfo`, skipping items on either ignore list. That gate is what makes the Ignore List beat the Erase List: an ignored item never reaches the predicate at all.
+2. **Evaluate.** `GetItemDeleteReason` returns `"manual"`, `"quest"`, `"questIneligible"`, `"consumable"`, `"equipment"`, `"gray"`, or `nil` (see *Eraser Categories*). A reason is then filtered through `ns:IsOverValueCap(totalValue, deleteReason)` (see *Maximum Value to Erase*), which drops the item from the scan entirely: no candidate, no Clutter Report line. `"manual"` is exempt from that filter.
+3. **Rank.** `isBetterDeletionCandidate` ranks by total stack value first; ties break by `ns.DeletePriority` (`manual` 0, `quest` and `questIneligible` 1, `gray` 2, `consumable` and `equipment` 3), so the cheapest item wins and, at equal value, a hand-listed item beats a rule-matched one.
 4. **Erase.** `RunEraser`, optionally behind a safety confirmation, calls `PerformErase`: `PickupContainerItem`, then `GetCursorInfo` verification, then `DeleteCursorItem`. It plays a sound, prints the outcome line, invalidates the cache, and refreshes the display after 0.2s.
 
 The same single scan populates the tooltip's Clutter Report totals (`cachedReclaimSlots` / `Items` / `Value`) as a side effect, read back through `ns:GetReclaimSummary`. Slots counts one per qualifying bag slot; items counts stacked quantity.
@@ -114,11 +116,11 @@ Options panels that list item ids have a fourth path: `ns.WarmItemCache` in `Opt
 
 ### Per-Character Profiles
 
-`Core.lua` creates the database **without** AceDB's shared-Default flag (`AceDB:New("MagicEraserDB", ns.DATABASE_DEFAULTS)`), so every character lands on its own `"Name - Realm"` profile. That profile holds exactly one thing, the character's ignore list, as a flat `profile.ignoreList`, which makes the per-character list per-character for free with no keying inside a shared profile.
+`Core.lua` creates the database **without** AceDB's shared-Default flag (`AceDB:New("MagicEraserDB", ns.DATABASE_DEFAULTS)`), so every character lands on its own `"Name - Realm"` profile. That profile holds the character's two item lists as flat `profile.ignoreList` and `profile.eraseList` tables, plus the `profile.eraseListSeeded` marker, which makes all three per-character for free with no keying inside a shared profile.
 
-Everything else lives in `global`: account-wide, identical on every character, and untouched by profile switches. That split is deliberate. Settings should not vary per character, but a character's ignore list should, and expressing "per character" as an actual AceDB profile means the stock Profiles panel behaves normally: the picker shows the real character, and Copy From or switching moves one character's list rather than swapping a whole hidden set at once.
+Everything else lives in `global`: account-wide, identical on every character, and untouched by profile switches. That split is deliberate. Settings should not vary per character, but a character's item lists should, and expressing "per character" as an actual AceDB profile means the stock Profiles panel behaves normally: the picker shows the real character, and Copy From or switching moves one character's lists rather than swapping a whole hidden set at once.
 
-All three profile callbacks, `OnProfileChanged`, `OnProfileReset` and `OnProfileCopied`, are hooked to `ns:OnProfileSwitched`, because under this model they all mean the same thing: the list the erase candidate is computed from just changed. It re-runs `ns:RefreshDisplay` and fires `NotifyChange` for the Ignore List panel so an open panel repaints against the new list. Nothing re-applies `global` after a reset, because a reset never touches it.
+All three profile callbacks, `OnProfileChanged`, `OnProfileReset` and `OnProfileCopied`, are hooked to `ns:OnProfileSwitched`, because under this model they all mean the same thing: the lists the erase candidate is computed from just changed. It re-runs `ns:SeedEraseList` (a switch can land on a never-seeded profile, and a reset clears the marker), then `ns:RefreshDisplay`, then fires `NotifyChange` for both list panels so an open panel repaints against the new lists. Nothing re-applies `global` after a reset, because a reset never touches it.
 
 ### Colors
 
@@ -131,11 +133,15 @@ Note that the palette keys `ON` and `OFF` are *colors*, unrelated to the locale 
 `GetItemDeleteReason` is an ordered fall-through, so an item appearing in two databases is classified by the first match:
 
 ```lua
+if ns:IsOnEraseList(itemId) then return "manual" end               -- the player said so; leaves early
+
 if questStarterDatabase[itemId] or questItemDatabase[itemId] then  -- masks, then completion
 elseif consumableDatabase[itemId] then                             -- outgrown, per its use level
 elseif equipmentDatabase[itemId] then                              -- curated white, if still white
 elseif rarity == 0 and sellPrice > 0 then                          -- generic gray fallback
 ```
+
+**The Erase List sits outside the chain, not in it.** A listed item has to match whatever its rarity and whatever the databases say, so it returns before the first `if` rather than joining as another branch. A white trade good matches nothing below (not quest, not consumable, not equipment, and the gray fallback needs rarity 0), which is exactly the gap the list exists to close. See *Erase Lists*.
 
 **The two quest tables share one branch.** Most starter items also appear in `Quest-Items.lua`, and only the starter entry carries the race and class masks, so an `elseif` would shadow the gate that makes the wrong-faction case erasable at all. Quest data is `itemId → { questId, ... }`, and an item is erasable if **any** listed quest is flagged complete, which handles one drop tied to multiple quests across a chain. Because this branch is checked first, a gray-quality quest item is protected until its quest is done rather than being swept up by the gray fallback.
 
@@ -162,7 +168,7 @@ When both the master toggle and the matching per-reason toggle are on, `RunErase
 
 Auto-Vend lives in `Auto-Vend.lua` and uses a scan-then-process pattern rather than selling inside the scan:
 
-1. `ScanAndVend` walks bags, applies the same ignore-list and class-reagent filters as the eraser, and queues every item with a positive `sellPrice` and a non-nil `GetItemDeleteReason`. The queue is sorted by total stack value ascending, so the cheapest items sell first.
+1. `ScanAndVend` walks bags, applies the same ignore-list gate as the eraser, and queues every item with a positive `sellPrice` and a non-nil `GetItemDeleteReason`, Erase List entries included. The queue is sorted by total stack value ascending, so the cheapest items sell first.
 2. `ProcessSellQueue` advances one item per 0.1s tick and re-reads the slot before selling, because bag positions shift after a sale.
 
 **Visit state versus pass state.** These are two different lifetimes and conflating them loses sales. `BeginVisit`, called from `ns:OnMerchantShow` whether or not a pass can start immediately, bumps `visitGeneration` and clears what the *visit* owns: `announcedSales`, `pendingSales`, and the summary totals. `StartPass` resets only what a *pass* owns (`isSelling`, `sellIndex`, `scanRetries`, `vendPasses`) and runs `ScanAndVend`. The split matters on the combat resume: `ns:OnCombatEnded` calls `StartPass`, never `BeginVisit`, because the merchant window never closed, so a sale attempted moments before combat interrupted the queue is still in `pendingSales` and still owed an announcement. Restarting the visit there would silently drop those sales from both the per-item lines and the closing summary. `ProcessSellQueue`'s combat branch drops only `sellQueue`, for the same reason.
@@ -177,11 +183,13 @@ Items with `sellPrice == 0`, which is most quest items, are filtered at scan tim
 
 ## Maximum Value to Erase
 
-`ns:IsOverValueCap` in `Eraser.lua` is the whole feature. Off unless `valueCapEnabled` is set; on, it answers true for any total worth more than `valueCapGold * ns.COPPER_PER_GOLD`, and an item it answers true for stops being an erase candidate.
+`ns:IsOverValueCap(totalValue, deleteReason)` in `Eraser.lua` is the whole feature. Off unless `valueCapEnabled` is set; on, it answers true for any total worth more than `valueCapGold * ns.COPPER_PER_GOLD`, and an item it answers true for stops being an erase candidate.
 
 **Stack value, not unit price.** The comparison takes `sellPrice * stackCount`, because the stack is what the eraser would actually destroy. Forty grays at two silver each is precisely the pile the cap exists for, and no single one of them ever looks like enough to guard.
 
-**Two callers, both on the erase path.** `FindItemToDelete` gates its candidate on it, which covers the mini-map pick, `RunEraser` and the Clutter Report totals in one place, since all three come off that single scan. `AddEraserWarning` gates the tooltip line on it separately, so a bag tooltip never promises an erase the eraser will not perform.
+**Two callers, both on the erase path.** `FindItemToDelete` gates its candidate on it, which covers the mini-map pick, `RunEraser` and the Clutter Report totals in one place, since all three come off that single scan. `AddEraserWarning` gates the tooltip line on it separately, so a bag tooltip never promises an erase the eraser will not perform. Both pass the delete reason through, which is the only reason the parameter exists.
+
+**`"manual"` is never capped.** The exemption lives inside `ns:IsOverValueCap` rather than at its call sites, so the rule is stated once. Everything else the cap guards is the add-on picking an item out by rule, and a rule can be wrong about what the player values; an Erase List entry is not a guess. Capping one would leave a player watching a list they built do nothing, with no tooltip line and no chat message to explain why.
 
 **Auto-Vend and Bank Retrieval never consult it, by design.** The cap exists to stop the player losing gold; selling an over-cap stack hands them that gold, so the features that move an item rather than destroy it keep working on it. An over-cap stack therefore still sells at a merchant and still walks home from the bank.
 
@@ -220,11 +228,40 @@ The mini-map button's right-click (toggle) and middle-click (clear) act on the *
 
 **Promote, not copy.** The panel's per-character rows carry a Global button that only ever issues the account-wide add; `ns:SetIgnoredInScope` then calls `ClearFromAllProfiles`, dropping the item from every character's list. Protection only widens doing it this way, because the global list already covers everyone it just left, and the item ends up living in exactly one place instead of cluttering panes with rows that can no longer change any outcome. Removing from the account-wide list deliberately does *not* put the item back on anyone: there is no record of who held it.
 
-`ns.IGNORE_SCOPE_GLOBAL` is the literal `"**global**"`. Every other scope key is an AceDB profile name (`"Name - Realm"`, never localized), so the account-wide list needs a key no profile can collide with, and the asterisks are something the profile picker's name box would never produce.
+`ns.LIST_SCOPE_GLOBAL` is the literal `"**global**"`, shared by both list panels. Every other scope key is an AceDB profile name (`"Name - Realm"`, never localized), so the account-wide list needs a key no profile can collide with, and the asterisks are something the profile picker's name box would never produce. One constant serves both panels because a scope key is only ever resolved against one list at a time.
+
+## Erase Lists
+
+The Ignore List in reverse, and deliberately the same shape: two lists, membership **additive**, `ns:IsOnEraseList` answering true if either holds the item.
+
+- **Per-character**, `ns.db.profile.eraseList`.
+- **Account-wide**, `ns.db.global.eraseList`.
+
+An item on either list returns `"manual"` from `ns:GetItemDeleteReason` **before** the category chain runs, so it is erased and sold whatever its rarity and whether or not any curated database carries it. That is the point of the feature: the four `Data/` tables are regenerated from SQL queries over a world DB, so an item no query can express has no durable home in them. `Features/Erase-List.lua` mirrors `Ignore-List.lua` accessor for accessor, with `ns:GetEraseListForScope` and `ns:SetOnEraseListInScope` doing the same jobs under the same reasoning, including `ClearFromAllProfiles` on a promote.
+
+**The Ignore List always wins**, and not by a check inside the erase list. All three scanners gate on `ns:IsIgnored` before they ever call the predicate, and `Item-Tooltips.lua` returns its protected line first, so an ignored item never reaches the erase list at all. Each of those four gates carries a comment saying so; a new caller that skips the gate would silently invert the rule.
+
+**No mini-map binding.** All five click combinations are taken, so the Erase List is edited from its panel only. There is no `ToggleErase` or `ClearEraseList`, and consequently no out-of-panel writer that has to fire its own `NotifyChange`: the shared item-list builder covers every edit path this list has.
+
+### The Class-Reagent Seed
+
+`ns.ClassReagents` in `Data/Data.lua` maps a class token to the items only that class needs. `ns:SeedEraseList` is its **only** reader: on a character's first login it copies every *other* class's reagents onto that character's list. Shiny Fish Scales (17057) and Fish Oil (17058) are the Shaman's, so every non-Shaman starts with both listed and a Shaman starts with neither.
+
+Nothing filters on `ns.ClassReagents` at scan time, which is the behavioral change from the old `ns.ClassReagentExclusions`: a Shaman who deliberately lists Fish Oil is now obeyed rather than silently overridden, and the panel can never show a row that does nothing.
+
+`profile.eraseListSeeded` records that the seed ran. It has to be stored rather than inferred: an empty list cannot distinguish *the player cleared it* from *never seeded*, so without the marker every login would restore exactly what the player just removed. It is profile-scoped, so Reset Profile clears the marker with the list and the character seeds again. The seed runs from both `ns:OnPlayerLogin` and `ns:OnProfileSwitched`, because a switch can land on a never-seeded profile and a reset clears the marker mid-session. A Copy From carries the source profile's marker and so does not re-seed, which is correct: the player asked for that list verbatim.
+
+Three items are skipped rather than seeded, each because the row could not change an outcome: reagents this character's own class also uses (an id shared by two classes would otherwise be seeded onto a class that needs it), anything already ignored, and anything already listed.
+
+**Restore Defaults.** `ns:RestoreEraseListDefaults` wipes the current character's list, clears `profile.eraseListSeeded`, and calls `ns:SeedEraseList` again — a wipe and re-seed, so the player's own additions go with it, which is what the `confirmText` warns about. Clearing the marker first is load-bearing: the seed returns early while it is set. It is also the reason the button is scoped to the character being played and appears on no other pane — the seed reads that character's own class and writes `ns.db.profile`, so it cannot re-seed another profile, and the Global scope ships no defaults at all.
+
+It is the only caller passing `onRestore` to `ns:BuildItemListOptions`, which is why that callback is optional rather than part of the builder's shape: a list built from nothing has nothing to restore, so the row would only offer to empty it.
 
 ## Item Tooltip Warnings
 
-`Features/Item-Tooltips.lua` appends a single branded line to a carried-bag item's tooltip: a red will-erase warning (`L["TOOLTIP_WILL_ERASE"]`) when Magic Eraser would erase it, or a white protection notice (`L["TOOLTIP_IGNORED"]`) when an ignore list is shielding it. Protection wins over any erase verdict. The rest of the verdict comes from the very rules the eraser's scan uses (class-reagent exclusions, `ns:GetItemDeleteReason`, `ns:IsOverValueCap`), so the line appears only when the item truly would be erased, level gate, quest-completion check and value cap included. Purely read-only, and gated on `tooltipWarningEnabled`.
+`Features/Item-Tooltips.lua` appends a single branded line to a carried-bag item's tooltip: a white protection notice (`L["TOOLTIP_IGNORED"]`) when an ignore list is shielding it, a red Erase List line (`L["TOOLTIP_ON_ERASE_LIST"]`) when the player listed it themselves, or the red generic warning (`L["TOOLTIP_WILL_ERASE"]`) when a rule matched it. Protection is checked first and wins over any erase verdict. The rest of the verdict comes from the very rules the eraser's scan uses (`ns:GetItemDeleteReason`, `ns:IsOverValueCap`), so the line appears only when the item truly would be erased, level gate, quest-completion check and value cap included. Purely read-only, and gated on `tooltipWarningEnabled`.
+
+The verdict is read *before* the cap here, where the scan reads it after. Same outcome either way, since the cap only ever suppresses; this order just lets the `"manual"` exemption be decided inside `ns:IsOverValueCap` instead of at two call sites.
 
 There are two hook paths because the tooltip API differs across the flavors we target, and only one is ever active, so the line is never doubled:
 
@@ -272,7 +309,7 @@ Shift + Middle-Click is checked first in `OnClick`, before any feature button, a
 - **Event Log**, the dispatcher tap: a 500-entry ring buffer capping 8 args at 255 bytes each, pipes escaped *after* the length cut so item links paste as plain text and a cut can never leave a dangling pipe. `ns.DIAGNOSTIC_EVENT_EXCLUDE` is deliberately empty, since the log only ever sees events the add-on registers and none of them is a firehose.
 - **Event Registration**, every `ns.EVENT_NAMES` entry tested for `C_EventUtils.IsEventValid` and a register/unregister round-trip on a probe frame with no handler attached.
 - **API Endpoints**, `ns.DIAGNOSTIC_API_CHECKS`, kept one-to-one with the APIs the add-on calls or guards; existence and shape checks only. Every modern/legacy pair the add-on guards on is listed as both halves. **A `[FAIL]` on one half of a pair is the report working, not a defect**: the pair is what tells a bug report which branch that client took, so the failing half is the one carrying the answer and is never dropped. The tooltip pair is the worked example, `[FAIL]` on Era and `[PASS]` on TBC Anniversary, which is the measurement behind the two hook paths in *Item Tooltip Warnings*.
-- **Eraser Context**, player level and class, the Auto-Vend and Bank Retrieval toggles, both ignore-list counts, database sizes, class-reagent count, and the live candidate.
+- **Eraser Context**, player level and class, the Auto-Vend and Bank Retrieval toggles, both ignore-list counts, both erase-list counts with the seed marker, database sizes, class-reagent count, and the live candidate.
 - **Display Context**, screen size, UI scale, and the mini-map button's saved placement; answers "the button is gone or off-screen".
 - **Other Add-ons**, every installed add-on with version and loadable state.
 - **Saved Variables**, `MagicEraserDB` dumped to a depth cap of 8, with any `ignoreList` replaced by a count summary rather than every itemId.
@@ -282,7 +319,7 @@ All diagnostics strings live in `ns.DiagnosticsStrings` as plain English and are
 
 ## Options and Profiles
 
-`ns:RegisterOptionsPanels`, called from `OnPlayerLogin` once `ns.db` exists because the Ignore List and Profiles builders both need the database, registers four AceConfig tables from `ns.OPTIONS_REGISTRY` and nests them under Magic Eraser in Blizzard options, in order: **General** (root), **Ignore List**, **Profiles**, **Diagnostic Tools**. Each child passes `ns.AddonTitle` as its third `AddToBlizOptions` argument. Panel content lives in the per-panel builder files; `Options.lua` is registration only. Widget constructors (`ns.OptionsHeader`, `ns.OptionsDesc`, `ns.OptionsSpacer`, `ns.OptionsRowLabel`) are shared from `Options-Utilities.lua`, and `ns.OptionsHeader` takes an optional third `hidden` argument for gated sections. The **Profiles** panel is the stock `AceDBOptions-3.0` table returned unmodified.
+`ns:RegisterOptionsPanels`, called from `OnPlayerLogin` once `ns.db` exists because the Ignore List, Erase List and Profiles builders all need the database, registers five AceConfig tables from `ns.OPTIONS_REGISTRY` and nests them under Magic Eraser in Blizzard options, in order: **General** (root), **Ignore List**, **Erase List**, **Profiles**, **Diagnostic Tools**. Each child passes `ns.AddonTitle` as its third `AddToBlizOptions` argument. Panel content lives in the per-panel builder files; `Options.lua` is registration only. Widget constructors (`ns.OptionsHeader`, `ns.OptionsDesc`, `ns.OptionsSpacer`, `ns.OptionsRowLabel`) are shared from `Options-Utilities.lua`, and `ns.OptionsHeader` takes an optional third `hidden` argument for gated sections. The **Profiles** panel is the stock `AceDBOptions-3.0` table returned unmodified.
 
 Widths come from the layout grid in `Data/Data.lua`, not from numbers typed at the call site. AceConfig renders a widget's own name above it, so a captioned control is built as two args, an `ns.OptionsRowLabel` cell at `ns.OPTIONS_LABEL_WIDTH` and then the control with `name = ""` at `ns.OPTIONS_CONTROL_WIDTH` ordered immediately after, and the pair flows onto one line because the two widths sum to `ns.OPTIONS_ROW_WIDTH`. A row whose control needs more room passes its own label width and gives the control the remainder, so every row still ends where every other row ends. The rest of the grid sizes the item-list columns (`ns.OPTIONS_REMOVE_ICON_WIDTH`, `ns.OPTIONS_PROMOTE_WIDTH`), the sub-option indent (`ns.OPTIONS_SUB_INDENT_WIDTH`, matched to the checkbox's visible square rather than its 24px texture footprint), and the tree pair (`ns.OPTIONS_TREE_WIDTH` and `ns.OPTIONS_TREE_ROW_WIDTH`, which move together because the sidebar costs the item pane exactly what it gains).
 
@@ -290,22 +327,22 @@ Sub-options are built by the file-local `SubRow` and `SubLabel` in `Options-Gene
 
 The Ignore List panel is registered as the **builder function itself**, not a built table: its rows are the ignore lists, so AceConfig re-invokes it on every open and every `NotifyChange` and the panel can never render a stale list. It uses `childGroups = "tree"`, keyed by scope rather than by position, because the tree remembers the selected node by its arg key and a key that moved when a profile appeared or dropped out would silently reselect a different character. Character scopes with nothing ignored are left out of the tree entirely, except the one being played, whose list has to stay reachable to put a first item in it. There is no drop target, deliberately: the game closes the bags when the Options Interface opens, so typing an id or shift-clicking a link into the add box is the only path that can actually work. The panel's description sits on the **root group**, not in the scope panes, because a tree group renders its own non-group args once, full width, between the panel title and the tree, so the copy reads once above the whole panel instead of repeating in every pane.
 
-Each scope's pane comes from `ns:BuildItemListOptions`, the shared item-list builder in `Options/Options-Utilities.lua`, so this list adds and removes the way every other player-managed list does: an add box that parses an id or a shift-clicked link and clears itself, name-sorted rows drawn by the `ItemLink` AceGUI widget (icon, colored link, the item's own tooltip on hover), and a one-click unconfirmed remove icon. Restore Defaults is absent because the ignore lists ship no defaults to restore. The per-character panes pass the promote button as the builder's `actionColumn`; the Global pane passes none and its item cell absorbs that column, so the remove icon holds its position as scopes are picked. Panes spend `ns.OPTIONS_TREE_ROW_WIDTH` rather than the full row width, because the tree sidebar takes its share of the panel first, and that sidebar is widened from AceGUI's 175px default to `ns.OPTIONS_TREE_WIDTH` in `Options.lua`, since 175px truncates the longer `"Name - Realm"` scope keys. AceGUI fills `treewidth` in only when the key is absent, so seeding the status table wins while a player's own drag still overrides it.
+Each scope's pane comes from `ns:BuildItemListOptions`, the shared item-list builder in `Options/Options-Utilities.lua`, so this list adds and removes the way every other player-managed list does: an add box that parses an id or a shift-clicked link and clears itself, name-sorted rows drawn by the `ItemLink` AceGUI widget (icon, colored link, the item's own tooltip on hover), and a one-click unconfirmed remove icon. Restore Defaults is absent here because the ignore lists ship no defaults to restore; the builder emits that row only for a caller passing `onRestore`, which today is the Erase List's own character pane. The per-character panes pass the promote button as the builder's `actionColumn`; the Global pane passes none and its item cell absorbs that column, so the remove icon holds its position as scopes are picked. Panes spend `ns.OPTIONS_TREE_ROW_WIDTH` rather than the full row width, because the tree sidebar takes its share of the panel first, and that sidebar is widened from AceGUI's 175px default to `ns.OPTIONS_TREE_WIDTH` in `Options.lua`, since 175px truncates the longer `"Name - Realm"` scope keys. AceGUI fills `treewidth` in only when the key is absent, so seeding the status table wins while a player's own drag still overrides it.
 
 `/eraser` opens the Options Interface. Registration is in `Options.lua` (`SLASH_MAGICERASER1` plus `SlashCmdList.MAGICERASER`), and the handler does nothing but call the opener. Past the combat gate described in *Combat Lockdown*, `AddToBlizOptions` returns `(frame, categoryID)` and **both are captured** at the root panel's registration; `ns:OpenOptionsPanel` routes `Settings.OpenToCategory(<captured categoryID>)` first, falls back to `InterfaceOptionsFrame_OpenToCategory(<captured frame>)` called twice, and reaches `AceConfigDialog:Open` only as a last resort. Never look the category up by display name: AceConfigDialog only aliases the category ID to the panel's name on clients lacking `C_SettingsUtil.OpenSettingsPanel`, so a name lookup returns `nil` on TBC Anniversary and the panel opens as a floating standalone window instead of docking into Blizzard's settings.
 
 ## Saved Variables
 
-Magic Eraser declares one SavedVariables global, `MagicEraserDB`, and hands it to AceDB-3.0 in `ns:OnPlayerLogin`. It holds every setting the player can change plus both ignore lists. There is no second table and no `SavedVariablesPerCharacter` line.
+Magic Eraser declares one SavedVariables global, `MagicEraserDB`, and hands it to AceDB-3.0 in `ns:OnPlayerLogin`. It holds every setting the player can change plus all four item lists. There is no second table and no `SavedVariablesPerCharacter` line.
 
-**Model: Per-Character.** `AceDB:New` deliberately omits the shared-Default third argument, so each character gets its own `"Name - Realm"` profile. **Reset Profile therefore clears only the active character's ignore list, and every account-wide setting survives it.** That is the fact to check before adding a setting: user settings go in `global`, and only state that genuinely differs per character belongs in `profile`.
+**Model: Per-Character.** `AceDB:New` deliberately omits the shared-Default third argument, so each character gets its own `"Name - Realm"` profile. **Reset Profile therefore clears only the active character's two item lists and its seed marker, and every account-wide setting survives it.** That is the fact to check before adding a setting: user settings go in `global`, and only state that genuinely differs per character belongs in `profile`.
 
-- **`global`** (account-wide) holds every user setting, the account-wide `ignoreList`, and the LibDBIcon placement table.
-- **`profile`** (per character) holds `ignoreList` alone, that character's flat set of protected item ids.
+- **`global`** (account-wide) holds every user setting, the account-wide `ignoreList` and `eraseList`, and the LibDBIcon placement table.
+- **`profile`** (per character) holds `ignoreList` and `eraseList`, that character's flat sets of protected and always-erase item ids, plus the boolean `eraseListSeeded`.
 
 Defaults come from `ns.DATABASE_DEFAULTS` and are applied by AceDB-3.0 when a scope is first accessed, and explicit user values, including `false`, are never overridden. Note that scalar and table defaults are physically copied into the saved table (`copyDefaults` via `rawset`); only `*` and `**` wildcard defaults resolve through metatables, and this add-on defines none.
 
-There is no refill-on-empty logic and nothing needs one. The curated item databases (`AllowedDeleteQuestItems`, `AllowedDeleteQuestStartingItems`, `AllowedDeleteConsumables`, `AllowedDeleteEquipment`) are static Lua tables shipped in `Data/`, not saved variables, so they can never be emptied at runtime. The two saved lists that *can* be emptied are the ignore lists, where empty is exactly what the player asked for.
+There is no refill-on-empty logic and nothing needs one. The curated item databases (`AllowedDeleteQuestItems`, `AllowedDeleteQuestStartingItems`, `AllowedDeleteConsumables`, `AllowedDeleteEquipment`) are static Lua tables shipped in `Data/`, not saved variables, so they can never be emptied at runtime. The saved lists that *can* be emptied are the ignore and erase lists, where empty is exactly what the player asked for. The erase lists are seeded once per character rather than refilled, guarded by `profile.eraseListSeeded`; see *The Class-Reagent Seed*.
 
 The add-on carries no migration code. A key that is retired is cleaned up explicitly (`ns.db.global.oldField = nil`) rather than left behind a migration marker.
 
@@ -315,7 +352,8 @@ The add-on carries no migration code. A key that is retired is cleaned up explic
 2. **Equipment.** Append `[itemId] = true` to `Data/Equipment.lua` with a name comment, in the **WEAPONS** or **ARMOR** block and then the right expansion block inside it. White vendor trash, no level gate, soulbound included. A weapon qualifies on `class = 2` with `dmg_max1 > 0` and a subclass that is not a profession tool (14 and 20); armor on `class = 4`, a worn subclass (1 to 6), and `armor > 0`. The file carries both queries. Remember that the runtime branch also requires the live client to report the item as white, so a row that turned green in a later expansion simply does nothing on the client where it is green.
 3. **Quest item.** Append `[itemId] = { questId, ... }` to `Data/Quest-Items.lua`. List the quest that **takes** the item at turn-in (`ReqItemId` in `quest_template`), never the one that hands it out (`SrcItemId` / `ReqSourceId`): an item given by one quest and turned in on a later one would otherwise be erased while the player still needs it. The eraser fires when any listed quest is complete, so two genuinely different quests in one chain still erase at the first; a repeated quest title is a faction or class variant and is safe to list in full.
 4. **Quest-starting item.** Append `[itemId] = { questId, racesMask, classesMask }` to `Data/Quest-Starting-Items.lua`. These hand the player a quest rather than being consumed by one, so they are erasable for two independent reasons: the quest is flagged complete, or `RequiredRaces` / `RequiredClasses` exclude this character, which needs no quest state at all and fires the moment the item drops. Omit both masks when the quest is unrestricted; a nil or `0` mask means "no gate", never "nobody qualifies". Bit values live in `ns.RaceBits` and `ns.ClassBits` in `Data/Data.lua`, keyed by the tokens `UnitRace` and `UnitClass` return (Undead is `Scourge`). Poor and common quality only, since several quest starters are epics and legendaries.
-5. **Class reagent exclusion.** Add to `ns.ClassReagentExclusions[CLASS_TOKEN]` in `Data/Data.lua`. Excluded items are never erased, vendored, or retrieved from the bank, regardless of database membership.
+5. **Class reagent.** Add to `ns.ClassReagents[CLASS_TOKEN]` in `Data/Data.lua`. This is seed data, not a filter: `ns:SeedEraseList` puts every *other* class's reagents on a character's Erase List the first time it plays, and nothing reads the table at scan time. A row added here therefore only reaches characters that have not yet been seeded, so an addition after release wants a bumped seed rather than a silent edit. See *The Class-Reagent Seed*.
+6. **Neither of the above.** Anything a player wants gone that no query can express belongs on their own Erase List, not in a `Data/` table. Hand-added rows in a SQL-regenerated file do not survive the next regeneration, which is the failure that produced the Erase List: 17057 and 17058 sat in `Equipment.lua` for three weeks and left with a refresh that took the file from 996 entries to 1023.
 
 Most of `Quest-Starting-Items.lua` also appears in `Quest-Items.lua`. That overlap is deliberate; see *Eraser Categories* for why the two tables share one branch.
 
@@ -333,7 +371,7 @@ That is the whole registration. The dispatcher, the Diagnostic Tools event log a
 
 ## Adding a New Setting
 
-1. Add the key and its default to `ns.DATABASE_DEFAULTS.global` in `Data/Default-Settings.lua`. Settings are account-wide; only the per-character ignore list belongs in `profile`.
+1. Add the key and its default to `ns.DATABASE_DEFAULTS.global` in `Data/Default-Settings.lua`. Settings are account-wide; only the per-character item lists and the Erase List seed marker belong in `profile`.
 2. Add the widget to `ns.BuildGeneralOptions` in `Options/Options-General.lua`, reading and writing `ns.db.global.<key>` directly. AceDB applies the default when the scope is first accessed, so there is nothing to initialize.
 3. If the setting changes what the eraser would pick, pair `ns:InvalidateCache()` with `ns:RefreshDisplay()` in its `set`, the way both Maximum Value to Erase controls do. Without it the mini-map button keeps wearing a stale icon until the next bag update.
 4. Add the label strings to `Locales/enUS.lua`; the Localization pass carries them into the other ten locales.
@@ -350,7 +388,7 @@ WoW ships a fixed locale set, and every supported locale file already exists in 
 - **Placeholders.** `%s` and `%d` count, type and order must match `enUS` per key in every locale, or the string crashes at runtime. This is the highest-value invariant when editing strings. The multi-placeholder lines are the ones to watch: `SOLD_SUMMARY`, `BANK_RETRIEVED`, `ERASED_ITEM_WITH_VALUE`, `ERASED_ITEM_FROM_QUEST` and `ERASED_ITEM_QUEST_UNAVAILABLE`.
 - **Spanish.** `esES.lua` and `esMX.lua` are two separate, self-contained files; identical strings in both is correct and expected.
 - **Values that equal English** are legitimate only where there is nothing to translate: the add-on title, brand names (CurseForge, GitHub, Discord, Wago), the `/eraser` literal, and native vocabulary verified per case (`OPTIONS_IGNORE_GLOBAL` is "Global" in esES, esMX, frFR and ptBR because *global* is native there, while deDE, itIT, koKR, ruRU, zhCN and zhTW translate it). Anything else left in English is a bug.
-- **Not localized:** `ns.DiagnosticsStrings` (developer-facing), the AceConfig registry names in `ns.OPTIONS_REGISTRY`, `ns.IGNORE_SCOPE_GLOBAL`, and AceDB profile names, which are `"Name - Realm"` character keys.
+- **Not localized:** `ns.DiagnosticsStrings` (developer-facing), the AceConfig registry names in `ns.OPTIONS_REGISTRY`, `ns.LIST_SCOPE_GLOBAL`, and AceDB profile names, which are `"Name - Realm"` character keys.
 - **Overflow.** Magic Eraser sends no chat and writes no macros, so neither output ceiling applies here. The practical constraint is visual: watch translated strings in width-constrained slots, chiefly the mini-map tooltip's double-lines and the options-panel toggle labels.
 
 ## Common Pitfalls
@@ -366,14 +404,15 @@ WoW ships a fixed locale set, and every supported locale file already exists in 
 - **Consumable eligibility is level-dependent**: `GetItemDeleteReason` reads `UnitLevel`, so the candidate must refresh on `PLAYER_LEVEL_UP`. A bag update is not guaranteed after a ding.
 - **A reopened window restarting a timer chain**: Bank Retrieval's `isRetrieving` flag alone cannot stop a stale chain, because reopening sets it back to true. Any new timed pass needs a generation counter checked inside every timer, as `passGeneration` does.
 - **Opening the options panel by name**: `Settings.GetCategory(<title>)` returns nil on clients that have the Settings API, so the panel opens as a floating window. Route by the captured `categoryID` from `AddToBlizOptions`.
-- **Registering a list-driven panel as a built table**: the Ignore List panel must be registered as its builder *function*, or AceConfig renders whatever the list looked like at login forever.
-- **Editing an ignore list from outside the options panel**: an open Ignore List panel will not notice. The mini-map mutators fire `NotifyChange` themselves, and any new out-of-panel writer must do the same.
+- **Registering a list-driven panel as a built table**: the Ignore List and Erase List panels must be registered as their builder *functions*, or AceConfig renders whatever the list looked like at login forever.
+- **Editing an item list from outside its options panel**: an open panel will not notice. The mini-map ignore mutators fire `NotifyChange` themselves, and any new out-of-panel writer must do the same. The Erase List has no such writer today, which is the only reason it needs no equivalent.
 - **Mutating the shared AceDBOptions args table**: `AceDBOptions-3.0:GetOptionsTable` hands every database the *same* module-level `args` table, so adding a button or a confirm to it leaks that change into every other Ace3 add-on's Profiles panel, and a closure-bound `func` will act on the wrong add-on's database. Leave the returned table unmodified.
 - **Bypassing the dispatcher**: register events only by adding to `ns.EVENT_NAMES` plus an `ns:OnXxx` handler. A feature that creates its own event frame escapes the diagnostics event-log tap.
 - **Auto-Vend and `sellPrice == 0`**: filtered at scan time. Quest items are not vendorable, so the eraser keeps them rather than the vendor swallowing them.
 - **New Auto-Vend chat must use `PrintVendMessage`**: calling `ns:PrintMessage` directly from the vend path ignores the **Enable Auto-Vend Messages** toggle.
-- **Settings are `global`, the per-character ignore list is `profile`**: new user settings go in `ns.db.global` via a `ns.DATABASE_DEFAULTS.global` default. Putting a setting in `profile` silently makes it per-character, and Reset Profile would then wipe it while every setting in `global` survived.
-- **Checking only one ignore list**: protection is additive. Use `ns:IsIgnored`, never a direct read of either table, or an item protected account-wide gets erased on a character whose own list is empty.
+- **Settings are `global`, the per-character item lists are `profile`**: new user settings go in `ns.db.global` via a `ns.DATABASE_DEFAULTS.global` default. Putting a setting in `profile` silently makes it per-character, and Reset Profile would then wipe it while every setting in `global` survived.
+- **Checking only one list of a pair**: membership is additive on both features. Use `ns:IsIgnored` and `ns:IsOnEraseList`, never a direct read of one table, or an item handled account-wide gets the wrong answer on a character whose own list is empty.
+- **Adding a scanner that skips the `ns:IsIgnored` gate**: that gate is the *only* thing making the Ignore List beat the Erase List. `ns:GetItemDeleteReason` returns `"manual"` for a listed item without consulting the ignore lists at all, so a caller that reaches the predicate directly would erase an item the player explicitly protected.
 - **Server silently drops bulk sells**: do not assume one `ScanAndVend` pass clears the bags. The multi-pass loop (`MAX_VEND_PASSES`) exists because `UseContainerItem` sells are dropped under load, so keep the re-scan-between-passes structure.
 
 ## Contributing

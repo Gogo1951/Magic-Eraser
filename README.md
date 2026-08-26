@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
+Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
 
 <img width="250" src="https://github.com/user-attachments/assets/d30470c9-4585-4288-aec3-b04e34b44afc" />
 
@@ -14,7 +14,7 @@ Delete junk and free up bag space instantly. Completed quest items, low-level co
 
 🔔 **Quest Alerts** // Turn in a quest and get an instant heads-up about any quest item that's now safe to erase, plus the ones your race or class can never use.
 
-🦺 **Safety First** // The trash list is hand-curated and human-reviewed: no name-matching, no heuristics, no surprise deletions. Your bag tooltips flag what's on the chopping block, and class reagents and Ignore List items are never touched.
+🦺 **Safety First** // The trash list is hand-curated and human-reviewed: no name-matching, no heuristics, no surprise deletions. Your bag tooltips flag what's on the chopping block, and Ignore List items are never touched.
 
 ## Setup
 
@@ -32,7 +32,9 @@ Magic Eraser watches your bags and picks out the lowest-value match from four ca
 
 A quest item counts as spent once you've handed the quest in. An item that *starts* a quest your character can never take is dead weight the moment it drops, so a Paladin-only Tome of Divinity sitting in a Rogue's bags is fair game right away.
 
-When two items are worth the same, category priority breaks the tie: quest items first, then gray trash, then consumables and equipment. Anything on your Ignore List or flagged as a class-specific reagent is skipped, so Shamans never lose their Fish Oil or Shiny Fish Scales.
+When two items are worth the same, category priority breaks the tie: anything on your Erase List first, then quest items, then gray trash, then consumables and equipment. Anything on your Ignore List is skipped entirely.
+
+Class reagents are handled by the Erase List rather than by a rule. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every character that is not a Shaman starts with both already on its Erase List, and a Shaman starts with neither. Nothing overrides you either way: a Shaman who wants them gone can add them, and anyone else can take them off.
 
 ### Mini-map Button
 
@@ -55,6 +57,14 @@ Every flagged item sells automatically the moment you open a merchant, and it's 
 Right-click the mini-map button to protect whatever item is currently flagged, and middle-click to wipe that list and start over. Anything on it is never erased and never sold.
 
 There are two lists, and they stack. Each character keeps its own, and there's a Global list that protects an item on every character at once. Manage both from **Options > AddOns > Magic Eraser > Ignore List**, where you can add items by ID or by shift-clicking an item link straight from chat, promote a character's entry to Global, or remove anything you've changed your mind about.
+
+### Erase List
+
+The Ignore List in reverse, for the junk only you know is junk. Anything on an Erase List is always erased and always sold, whatever it is worth and whatever category it does or does not fall into, so it covers the things no rule can guess: your alt's leftover crafting mats, a quest reward you will never wear, a stack of reagents for a profession you dropped.
+
+It works the same way the Ignore List does, from **Options > AddOns > Magic Eraser > Erase List**. Two lists that stack, one per character plus a Global list, the same add box, and the same promote button. Two differences worth knowing: your Ignore List always wins, so an item on both is left alone, and Maximum Value to Erase does not apply here, because you already said you wanted this one gone.
+
+The character you're playing also gets a **Restore Defaults** button, which empties that character's list and puts back the class reagents it started with. It asks first, because anything you added yourself goes with it. Only the character you're on has one, since only that character's class is known.
 
 ### Options
 
