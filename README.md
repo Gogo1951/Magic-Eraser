@@ -2,7 +2,7 @@
 
 Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again.
 
-<img width="360" src="https://github.com/user-attachments/assets/8d4393ce-2afd-47b2-a9bc-b67bc4c3b97e" />
+<img width="250" src="https://github.com/user-attachments/assets/d30470c9-4585-4288-aec3-b04e34b44afc" />
 
 ## Features
 
@@ -46,8 +46,6 @@ When two items are worth the same, category priority breaks the tie: quest items
 
 Hover the button and the tooltip lays out the whole picture: the item you're about to erase and what it's worth, whether Auto-Vend is on, everything you've told it to spare, and a Clutter Report totalling the bag slots and gold still sitting in the trash pile.
 
-<img width="360" src="https://github.com/user-attachments/assets/252363c9-2a5f-4874-b875-09cefd9a0dba" />
-
 ### Auto-Vend
 
 Every flagged item sells automatically the moment you open a merchant, and it's on by default. Chat gives you one summary line as the window closes; switch to Line Item and every sale is announced as it happens, with that summary still landing at the end. Turn the messages off entirely if you'd rather it worked in silence. If you opened the merchant mid-fight, the sale waits politely until combat ends. Toggle the whole thing with Shift+Right-click on the mini-map button or from the Options Interface.
@@ -58,13 +56,11 @@ Right-click the mini-map button to protect whatever item is currently flagged, a
 
 There are two lists, and they stack. Each character keeps its own, and there's a Global list that protects an item on every character at once. Manage both from **Options > AddOns > Magic Eraser > Ignore List**, where you can add items by ID or by shift-clicking an item link straight from chat, promote a character's entry to Global, or remove anything you've changed your mind about.
 
-<img width="360" src="https://github.com/user-attachments/assets/0e746c9a-a9f2-4761-ba43-dc13df016c8d" />
-
 ### Options
 
 Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`. From there you can toggle the welcome message and the mini-map button, tune Auto-Vend and its chat output, cap the value of what gets erased, switch Bank Retrieval and bag tooltips on or off, set up confirmations and bag-space warnings, and manage profiles.
 
-<img width="800" src="https://github.com/user-attachments/assets/45d78b67-4f45-4dd6-a4ef-0d017f560a20" />
+<img width="800" src="https://github.com/user-attachments/assets/303e0441-0002-4714-ba65-076bfa394e54" />
 
 ## Testing & Localization Status
 
