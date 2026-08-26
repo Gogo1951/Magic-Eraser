@@ -368,6 +368,7 @@ ns.AllowedDeleteQuestItems = {
 	[11804] = { 4491 }, -- Spraggle's Canteen
 	[17115] = { 6661 }, -- Squirrel Token
 	[17116] = { 6662 }, -- Squirrel Token
+	[10444] = { 3449 }, -- Standard Issue Flare Gun
 	[20604] = { 8373 }, -- Stink Bomb Cleaner
 	[16782] = { 6922 }, -- Strange Water Globe
 	[4506] = { 682 }, -- Stromgarde Badge
