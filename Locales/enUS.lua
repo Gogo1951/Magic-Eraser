@@ -28,7 +28,9 @@ L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can eras
 L["ERASED_ITEM"] = "Erased %s%s."
 L["ERASED_ITEM_WITH_VALUE"] = "Erased %s%s, worth %s."
 L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, from a quest you have completed."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "Erased %s%s, from a quest your character cannot take."
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
+L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased, from a quest your character cannot take."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
@@ -85,7 +87,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Clean up your bags instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash are erased with each click of the mini-map button. When you visit a merchant, anything that can be is sold automatically."
+	"Delete junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Never haul vendor trash again."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
@@ -99,6 +101,13 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Line Item"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Maximum Value to Erase"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Never erase an item or stack worth more than the limit you set below."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Enable Maximum Value to Erase"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Never Erase Anything Worth More Than"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"

@@ -30,7 +30,11 @@ L["CURSOR_TOO_FAST"] =
 L["ERASED_ITEM"] = "%s%s удалён."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s удалён, стоимость %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s удалён, из выполненного вами задания."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
+	"%s%s удалён, из задания, которое ваш персонаж не может взять."
 L["QUEST_ITEM_READY"] = "%s теперь можно безопасно удалить!"
+L["QUEST_STARTER_UNAVAILABLE"] =
+	"%s можно безопасно удалить: это предмет из задания, которое ваш персонаж не может взять."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s продан, стоимость %s."
@@ -103,6 +107,14 @@ L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить автопродажу"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Включить сообщения автопродажи"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "По предметам"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Только сводка"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Максимальная стоимость для удаления"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
+	"Никогда не удаляет предмет или стопку дороже заданного ниже предела."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Включить максимальную стоимость для удаления"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Не удалять ничего дороже"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d золота"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"

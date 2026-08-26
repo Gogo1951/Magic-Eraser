@@ -186,11 +186,13 @@ local function ProcessSellQueue()
 	if currentItemInfo and currentItemInfo.itemID == item.itemId and not ns:IsIgnored(item.itemId) then
 		UseContainerItem(item.bag, item.slot)
 
-		-- Record the attempt but do not announce yet: ConfirmSales counts this
-		-- sale only once it sees the item leave the slot, so a merchant that
-		-- silently accepts the call without buying (a dead corpse vendor) never
-		-- produces a phantom "Sold" line. Skip a slot already confirmed on an
-		-- earlier pass; a re-attempt of a still-present item just refreshes it.
+		--[[
+		    Record the attempt but do not announce yet: ConfirmSales counts this
+		    sale only once it sees the item leave the slot, so a merchant that
+		    silently accepts the call without buying (a dead corpse vendor) never
+		    produces a phantom "Sold" line. Skip a slot already confirmed on an
+		    earlier pass; a re-attempt of a still-present item just refreshes it.
+		]]
 		local saleKey = string.format("%d:%d:%d", item.bag, item.slot, item.itemId)
 		if not announcedSales[saleKey] then
 			pendingSales[saleKey] = {
@@ -216,9 +218,11 @@ function ScanAndVend()
 		return
 	end
 
-	-- Confirm the previous pass before rebuilding the queue. This runs 0.3s
-	-- after that pass's last UseContainerItem (the hand-off below), long enough
-	-- for sold slots to have emptied.
+	--[[
+	    Confirm the previous pass before rebuilding the queue. This runs 0.3s
+	    after that pass's last UseContainerItem (the hand-off below), long enough
+	    for sold slots to have emptied.
+	]]
 	ConfirmSales()
 
 	local isDataMissing = false

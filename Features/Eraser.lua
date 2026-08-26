@@ -76,6 +76,52 @@ function ns:IsQuestCompleted(questId)
 	return false
 end
 
+--[[
+    A quest-starting item is spent for one of two reasons, and the second needs
+    no quest state at all: either the quest it hands out is already flagged
+    complete, or this character's race or class can never take that quest, which
+    makes the item dead weight from the moment it drops. A Goldshire Gift
+    Voucher on a Tauren is the cheap case, a Paladin-only Tome of Divinity on a
+    Rogue the other.
+
+    Masks come from quest_template and are omitted from the data when the quest
+    is unrestricted, so a nil or 0 mask always means "no gate here" rather than
+    "nobody qualifies".
+]]
+local playerRaceBit, playerClassBit
+
+local function GetPlayerBits()
+	if not playerRaceBit then
+		local _, raceToken = UnitRace("player")
+		local _, classToken = UnitClass("player")
+		playerRaceBit = (raceToken and ns.RaceBits[raceToken]) or 0
+		playerClassBit = (classToken and ns.ClassBits[classToken]) or 0
+	end
+	return playerRaceBit, playerClassBit
+end
+
+local function IsGatedOut(mask, playerBit)
+	return mask and mask ~= 0 and bit.band(mask, playerBit) == 0
+end
+
+function ns:GetQuestStarterReason(itemId)
+	local entry = (ns.AllowedDeleteQuestStartingItems or {})[itemId]
+	if not entry then
+		return nil
+	end
+
+	local raceBit, classBit = GetPlayerBits()
+	if IsGatedOut(entry[2], raceBit) or IsGatedOut(entry[3], classBit) then
+		return "questIneligible"
+	end
+
+	if self:IsQuestCompleted(entry[1]) then
+		return "quest"
+	end
+
+	return nil
+end
+
 --------------------------------------------------------------------------------
 -- Scanning & Evaluation
 --------------------------------------------------------------------------------
@@ -104,11 +150,23 @@ end
 function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	local playerLevel = UnitLevel("player")
 	local questItemDatabase = ns.AllowedDeleteQuestItems or {}
+	local questStarterDatabase = ns.AllowedDeleteQuestStartingItems or {}
 	local consumableDatabase = ns.AllowedDeleteConsumables or {}
 	local equipmentDatabase = ns.AllowedDeleteEquipment or {}
 
-	if questItemDatabase[itemId] then
-		for _, questId in ipairs(questItemDatabase[itemId]) do
+	--[[
+	    Starters are checked alongside quest items rather than after them: most
+	    of them appear in both tables, and only the starter entry carries the
+	    race and class masks, so an elseif here would shadow the gate that makes
+	    the wrong-faction case erasable at all. Either table matching also stops
+	    the item falling through to the gray-trash rule below.
+	]]
+	if questStarterDatabase[itemId] or questItemDatabase[itemId] then
+		local starterReason = self:GetQuestStarterReason(itemId)
+		if starterReason then
+			return starterReason
+		end
+		for _, questId in ipairs(questItemDatabase[itemId] or {}) do
 			if self:IsQuestCompleted(questId) then
 				return "quest"
 			end
@@ -119,12 +177,47 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 			return "consumable"
 		end
 	elseif equipmentDatabase[itemId] then
-		return "equipment"
+		--[[
+		    The table is derived from a WotLK world DB, but the add-on runs on
+		    Era, TBC and WotLK clients, and item quality drifted between them:
+		    Bronze Mace and most of the low-level crafted gear are white in Era
+		    and green by WotLK. Trusting the table alone would erase a green item
+		    on the client where it is green. Gating on the live rarity instead
+		    makes the data expansion-proof in both directions -- the client the
+		    player is actually on decides, and a row that is wrong for one
+		    flavor simply does nothing there.
+		]]
+		if rarity == 1 then
+			return "equipment"
+		end
 	elseif rarity == 0 and (sellPrice or 0) > 0 then
 		return "gray"
 	end
 
 	return nil
+end
+
+--[[
+    Maximum Value to Erase. Off by default; switched on, anything worth more than
+    the cap stops being an erase candidate, so it is never picked by the mini-map
+    button, never counted in the Clutter Report, and never warned about in a bag
+    tooltip.
+
+    Judged on the stack's total value rather than the unit price, because the
+    stack is what the eraser would actually destroy -- forty grays at two silver
+    each is exactly the pile worth guarding, and each one alone never looks like
+    much.
+
+    Auto-Vend and Bank Retrieval deliberately do not consult this. The cap exists
+    to stop the player losing gold, and selling an over-cap stack hands them that
+    gold instead, so the two features that move an item rather than destroy it
+    keep working on it.
+]]
+function ns:IsOverValueCap(totalValue)
+	if not (ns.db and ns.db.global.valueCapEnabled) then
+		return false
+	end
+	return (totalValue or 0) > (ns.db.global.valueCapGold or 0) * ns.COPPER_PER_GOLD
 end
 
 local function isBetterDeletionCandidate(candidate, current)
@@ -169,7 +262,7 @@ function ns:FindItemToDelete()
 						local totalValue = (sellPrice or 0) * count
 						local deleteReason = self:GetItemDeleteReason(itemId, rarity, sellPrice)
 
-						if deleteReason then
+						if deleteReason and not ns:IsOverValueCap(totalValue) then
 							-- Slots counts one per qualifying slot; items counts stacked quantity.
 							reclaimSlots = reclaimSlots + 1
 							reclaimItems = reclaimItems + count
@@ -224,11 +317,12 @@ end
     Safety Guard. Maps each delete reason to its opt-in confirmation toggle. When
     the guard is on and the matching per-reason toggle is set, erasing that item
     pops a confirmation first. "White vendor-quality" maps to the curated
-    equipment reason; the four reasons GetItemDeleteReason returns line up 1:1
-    with the four toggles.
+    equipment reason, and the five reasons GetItemDeleteReason returns map onto
+    four toggles because quest and questIneligible share safetyQuest.
 ]]
 local SAFETY_REASON_KEYS = {
 	quest = "safetyQuest",
+	questIneligible = "safetyQuest",
 	consumable = "safetyConsumable",
 	equipment = "safetyWhite",
 	gray = "safetyGray",
@@ -297,6 +391,8 @@ function ns:PerformErase(item)
 		local message
 		if item.deleteReason == "quest" then
 			message = format(L["ERASED_ITEM_FROM_QUEST"], item.link, stackString)
+		elseif item.deleteReason == "questIneligible" then
+			message = format(L["ERASED_ITEM_QUEST_UNAVAILABLE"], item.link, stackString)
 		elseif item.value > 0 then
 			message = format(L["ERASED_ITEM_WITH_VALUE"], item.link, stackString, ns:FormatCurrency(item.value))
 		else
@@ -322,8 +418,70 @@ end
 -- Quest-Item Alerts
 --------------------------------------------------------------------------------
 
+--[[
+    Quest starters announce themselves on the way in rather than waiting for the
+    player to notice: the whole point of the race and class gate is that the item
+    is dead the moment it drops, which is not something a tooltip alone tells you
+    while you are still looting.
+
+    BAG_UPDATE_DELAYED fires a burst at login, so everything already in the bags
+    is seeded as "already announced" and only an item that arrives while playing
+    speaks up. Same reasoning as SeedBagSpaceBaseline in Core.lua. The seen set is
+    keyed by item id and lives for the session, so moving a stack between bags or
+    opening a merchant cannot make the same item announce twice.
+]]
+local announcedStarters = {}
+
+local ALERT_KEYS = {
+	quest = "QUEST_ITEM_READY",
+	questIneligible = "QUEST_STARTER_UNAVAILABLE",
+}
+
+local function ScanQuestStarters(announce)
+	local starterDatabase = ns.AllowedDeleteQuestStartingItems
+	if not starterDatabase then
+		return
+	end
+
+	for bag = 0, 4 do
+		local slotCount = GetContainerNumSlots(bag) or 0
+		for slot = 1, slotCount do
+			local itemInfo = GetContainerItemInfo(bag, slot)
+			local itemId = itemInfo and itemInfo.itemID
+
+			--[[
+			    The cheap table lookup gates everything: an item that starts no
+			    quest never reaches the race, class or quest-state checks.
+			]]
+			if itemId and starterDatabase[itemId] and not announcedStarters[itemId] then
+				local reason = ns:GetQuestStarterReason(itemId)
+				if reason then
+					announcedStarters[itemId] = true
+					if announce then
+						ns:PrintMessage(format(L[ALERT_KEYS[reason]], itemInfo.hyperlink))
+					end
+				end
+			end
+		end
+	end
+end
+
+--[[
+    Called once from OnPlayerLogin, before the login BAG_UPDATE_DELAYED burst can
+    reach CheckQuestStarters.
+]]
+function ns:SeedQuestStarterAlerts()
+	ScanQuestStarters(false)
+end
+
+function ns:CheckQuestStarters()
+	ScanQuestStarters(true)
+end
+
 function ns:OnQuestTurnedIn(questId)
 	C_Timer.After(1.0, function()
+		ns:CheckQuestStarters()
+
 		local questItemDatabase = ns.AllowedDeleteQuestItems or {}
 		local alertedItems = {}
 
