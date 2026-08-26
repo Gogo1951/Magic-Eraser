@@ -150,6 +150,8 @@ ORDER BY faction, section, name;
 ]]
 ns.AllowedDeleteQuestStartingItems = {
 
+	-- [itemId] = { questId, racesMask, classesMask }, -- Item Name
+
 	--------------------------------------------------------------------------------
 	-- 01. World of Warcraft
 	--------------------------------------------------------------------------------
