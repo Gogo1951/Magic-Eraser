@@ -12,18 +12,18 @@ local GetTime = GetTime
 --------------------------------------------------------------------------------
 
 --[[
-    Free-slot count at the last bag-space warning, so we don't reprint the same
-    number twice in a row. BAG_UPDATE_DELAYED can fire more than once for a single
-    purchase, and the 0.1s debounce only coalesces ones close together; this keeps
-    the countdown to one line per slot lost. Reset when free climbs back above the
-    threshold so re-entering the warning zone warns again. Runtime-only.
+    Free-slot count at the last check, and the baseline every warning is measured
+    against: the countdown prints only when the count is lower than this reading,
+    so freeing a slot inside the warning zone stays quiet and a repeated
+    BAG_UPDATE_DELAYED for one purchase reads the same count twice and says
+    nothing. Runtime-only.
 
     Primed at login to the free count we log in with via ns:SeedBagSpaceBaseline
     (from Core's OnPlayerLogin), so the login-time BAG_UPDATE_DELAYED burst is
     "already known" and does not warn about bag space you arrived with -- only a
     slot lost while playing does.
 ]]
-local lastNudgeFree = nil
+local lastSeenFree = nil
 
 --[[
     Bag-space warnings stay quiet until GetTime() reaches this deadline, set on
@@ -57,10 +57,11 @@ end
     login-time BAG_UPDATE_DELAYED burst is treated as "already known" and does not
     fire a warning on load -- only a slot lost while playing does. Called from
     ns:OnPlayerLogin in Core. A nil count (containers not ready) simply leaves the
-    baseline armed, which is the same state we start in.
+    baseline unset, which is the same state we start in: the first real reading
+    takes it and the countdown measures drops from there.
 ]]
 function ns:SeedBagSpaceBaseline()
-	lastNudgeFree = ns:CountFreeBagSlots()
+	lastSeenFree = ns:CountFreeBagSlots()
 end
 
 --[[
@@ -77,18 +78,21 @@ end
     Bag-space warning. Purely a free-space alert -- it never deletes and does not
     care whether there is anything erasable. Shared by the debounced bag update
     (which gates it on no bag window being open) and the merchant, mailbox and
-    bank close handlers (which fire it once the churn has settled). The
-    lastNudgeFree dedup means the close-fire only prints when the count actually
-    changed from the last line shown, so opening and closing a window without
-    touching the bags stays quiet.
+    bank close handlers (which fire it once the churn has settled).
+
+    It warns on a drop and only on a drop: the count has to be lower than the
+    previous reading and at or below the threshold. Freeing a slot inside the
+    warning zone is therefore silent, which is what keeps a "nearly full" line
+    from landing at the moment the player made room, and opening and closing a
+    window without touching the bags stays quiet for the same reason.
+
+    The baseline is taken before the remaining guards, so a tick that prints
+    nothing -- held after a loading screen, or above the threshold -- still
+    tracks the bags and cannot leave a stale reading behind for a later check to
+    measure a phantom drop against.
 ]]
 function ns:CheckBagsFullNudge()
 	if not (ns.db and ns.db.global.bagsFullNudgeEnabled) then
-		return
-	end
-
-	-- Idle for a moment after each loading screen while the bags repopulate.
-	if GetTime() < bagWarningsHeldUntil then
 		return
 	end
 
@@ -98,20 +102,31 @@ function ns:CheckBagsFullNudge()
 		return
 	end
 
-	if free > ns.db.global.bagsFullThreshold then
-		lastNudgeFree = nil
-	elseif free ~= lastNudgeFree then
-		lastNudgeFree = free
-		local message
-		if free == 0 then
-			message = L["BAGS_FULL"]
-		elseif free == 1 then
-			message = L["BAGS_FULL_NUDGE_ONE"]
-		else
-			message = string.format(L["BAGS_FULL_NUDGE"], free)
-		end
-		ns:PrintMessage(message)
+	local previousFree = lastSeenFree
+	lastSeenFree = free
+
+	-- Idle for a moment after each loading screen while the bags repopulate.
+	if GetTime() < bagWarningsHeldUntil then
+		return
 	end
+
+	if free > ns.db.global.bagsFullThreshold then
+		return
+	end
+
+	if previousFree == nil or free >= previousFree then
+		return
+	end
+
+	local message
+	if free == 0 then
+		message = L["BAGS_FULL"]
+	elseif free == 1 then
+		message = L["BAGS_FULL_NUDGE_ONE"]
+	else
+		message = string.format(L["BAGS_FULL_NUDGE"], free)
+	end
+	ns:PrintMessage(message)
 end
 
 --[[
