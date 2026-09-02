@@ -264,7 +264,7 @@ function ns:FindItemToDelete()
 	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
 	local isDataMissing = false
 
-	for bag = 0, 4 do
+	for bag = 0, ns.LAST_BAG_INDEX do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)
@@ -473,7 +473,7 @@ local function ScanQuestStarters(announce)
 		return
 	end
 
-	for bag = 0, 4 do
+	for bag = 0, ns.LAST_BAG_INDEX do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)
@@ -515,7 +515,7 @@ function ns:OnQuestTurnedIn(questId)
 		local questItemDatabase = ns.AllowedDeleteQuestItems or {}
 		local alertedItems = {}
 
-		for bag = 0, 4 do
+		for bag = 0, ns.LAST_BAG_INDEX do
 			local slotCount = GetContainerNumSlots(bag) or 0
 			for slot = 1, slotCount do
 				local itemInfo = GetContainerItemInfo(bag, slot)

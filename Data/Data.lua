@@ -163,6 +163,23 @@ ns.ClassReagents = {
 }
 
 --------------------------------------------------------------------------------
+-- Carried Bag Range
+--------------------------------------------------------------------------------
+
+--[[
+    The highest carried-bag container index: the backpack is 0 and the
+    equippable bags run up from there, so every bag scan walks 0 through this.
+    The fallback covers a client that never defined the global, which a bare
+    comparison against it would error on rather than simply skip.
+
+    Every bag scan and every bag-range test in the add-on reads this, so the
+    range is stated once -- the eraser's scans, the vendor scan, the free-slot
+    count, the bank's first bank-bag index, and the item tooltip's
+    is-this-a-carried-bag check.
+]]
+ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
+
+--------------------------------------------------------------------------------
 -- Race & Class Bits
 --------------------------------------------------------------------------------
 
