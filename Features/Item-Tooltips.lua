@@ -30,7 +30,7 @@ local GetColor = ns.GetColor
 ]]
 --[[
     The bag and slot the tooltip is anchored to, or nil unless the anchor is one
-    of the player's carried bag slots (bags 0..NUM_BAG_SLOTS) -- never a
+    of the player's carried bag slots (0 through ns.LAST_BAG_INDEX) -- never a
     merchant, bank, or chat-link tooltip. Used by the TooltipDataProcessor path,
     which fires for every item tooltip and so needs this filter; the SetBagItem
     path is already bag-scoped by its own args. Modern container item buttons
@@ -55,7 +55,7 @@ local function GetCarriedBagSlot(tooltip)
 	local getBagID = owner.GetBagID
 	if type(getBagID) == "function" then
 		local ok, bag = pcall(getBagID, owner)
-		if ok and type(bag) == "number" and bag >= 0 and bag <= NUM_BAG_SLOTS then
+		if ok and type(bag) == "number" and bag >= 0 and bag <= ns.LAST_BAG_INDEX then
 			return bag, slot
 		end
 	end
@@ -64,7 +64,7 @@ local function GetCarriedBagSlot(tooltip)
 	if name and name:find("ContainerFrame", 1, true) then
 		local parent = owner.GetParent and owner:GetParent()
 		local bag = parent and parent.GetID and parent:GetID()
-		if type(bag) == "number" and bag >= 0 and bag <= NUM_BAG_SLOTS then
+		if type(bag) == "number" and bag >= 0 and bag <= ns.LAST_BAG_INDEX then
 			return bag, slot
 		end
 	end
@@ -167,7 +167,7 @@ function ns.SetupTooltipHooks()
 		    added a line so the tooltip grows to include it.
 		]]
 		hooksecurefunc(GameTooltip, "SetBagItem", function(tooltip, bag, slot)
-			if type(bag) ~= "number" or bag < 0 or bag > NUM_BAG_SLOTS then
+			if type(bag) ~= "number" or bag < 0 or bag > ns.LAST_BAG_INDEX then
 				return
 			end
 			local info = C_Container and C_Container.GetContainerItemInfo(bag, slot)

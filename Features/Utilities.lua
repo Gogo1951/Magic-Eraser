@@ -71,8 +71,7 @@ end
 local GetContainerNumFreeSlots = C_Container.GetContainerNumFreeSlots
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 
--- Blizzard's count of equippable bag slots; bag 0 is the backpack.
-local BAG_SLOTS = NUM_BAG_SLOTS or 4
+local BAG_SLOTS = ns.LAST_BAG_INDEX
 
 --[[
     Free general-purpose bag slots, or nil when the container API has no data yet.
