@@ -16,7 +16,7 @@ local sellIndex = 0
 
 local vendPending = false
 
--- Bounded retry for cold item-data misses; reset on each MERCHANT_SHOW.
+-- Bounded retry for cold item-data misses; reset on each pass start (StartPass).
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
 
@@ -26,7 +26,9 @@ local scanRetries = 0
     succession (leaving one or two junk items behind on large batches). Each
     re-scan rebuilds the queue from the live bag state, so only items that did
     not actually sell get re-queued. Bounded so a genuinely unsellable-but-
-    flagged item can never loop forever; reset on each MERCHANT_SHOW.
+    flagged item can never loop forever; reset on each pass start (StartPass),
+    which is a merchant opening or the pass resuming after combat, so a
+    combat-deferred visit gets a full run of passes rather than a spent one.
 ]]
 
 local MAX_VEND_PASSES = 4
@@ -255,7 +257,7 @@ function ScanAndVend(generation)
 	wipe(sellQueue)
 	sellIndex = 0
 
-	for bag = 0, 4 do
+	for bag = 0, ns.LAST_BAG_INDEX do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)

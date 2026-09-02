@@ -51,6 +51,9 @@ ns.DiagnosticsStrings = {
 	API_BUTTON = "Test WoW API Endpoints",
 	ERASER_TITLE = "Eraser Context",
 	ERASER_BUTTON = "Show Eraser Context",
+	VALIDATE_TITLE = "Validate Data: %s",
+	VALIDATE_BUTTON = "Validate %s",
+	VALIDATE_HINT = "Checks every item id a data file ships against this client and exports what the client knows about each one as tab-separated text, ready to paste into a spreadsheet. STATUS reads OK, NOT ON CLIENT for an id this client does not recognize, or NOT LOADED when the client knows the id but never answered with its data. A large file takes a few seconds; the box shows progress until the export replaces it.",
 	DISPLAY_TITLE = "Display Context",
 	DISPLAY_BUTTON = "Show Display Context",
 	ADDONS_TITLE = "Other Add-ons",
@@ -77,6 +80,7 @@ function ns:SetDiagnosticsEnabled(value)
 	ns.diagnostics.enabled = value and true or false
 	if not ns.diagnostics.enabled then
 		ns:StopEventLog()
+		ns:StopDataValidation()
 	end
 end
 
@@ -266,6 +270,30 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
+		"C_AddOns.GetAddOnInfo",
+		function()
+			return type(C_AddOns) == "table" and type(C_AddOns.GetAddOnInfo) == "function"
+		end,
+	},
+	{
+		"GetAddOnInfo (legacy)",
+		function()
+			return type(GetAddOnInfo) == "function"
+		end,
+	},
+	{
+		"C_AddOns.GetNumAddOns",
+		function()
+			return type(C_AddOns) == "table" and type(C_AddOns.GetNumAddOns) == "function"
+		end,
+	},
+	{
+		"GetNumAddOns (legacy)",
+		function()
+			return type(GetNumAddOns) == "function"
+		end,
+	},
+	{
 		"Settings.OpenToCategory",
 		function()
 			return type(Settings) == "table" and type(Settings.OpenToCategory) == "function"
@@ -320,9 +348,21 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
+		"C_Item.DoesItemExistByID",
+		function()
+			return type(C_Item) == "table" and type(C_Item.DoesItemExistByID) == "function"
+		end,
+	},
+	{
 		"GetItemInfo",
 		function()
 			return type(GetItemInfo) == "function"
+		end,
+	},
+	{
+		"GetItemInfoInstant",
+		function()
+			return type(GetItemInfoInstant) == "function"
 		end,
 	},
 	{
@@ -456,8 +496,9 @@ function ns:BuildEraserContextReport()
 		tostring((ns.db and ns.db.profile.eraseListSeeded) and true or false)
 	)
 	lines[#lines + 1] = string.format(
-		"Databases: quest=%d, consumables=%d, equipment=%d",
+		"Databases: quest=%d, questStarting=%d, consumables=%d, equipment=%d",
 		CountKeys(ns.AllowedDeleteQuestItems),
+		CountKeys(ns.AllowedDeleteQuestStartingItems),
 		CountKeys(ns.AllowedDeleteConsumables),
 		CountKeys(ns.AllowedDeleteEquipment)
 	)
@@ -479,6 +520,336 @@ function ns:BuildEraserContextReport()
 	end
 
 	return table.concat(lines, "\n")
+end
+
+--------------------------------------------------------------------------------
+-- Validate Data
+--------------------------------------------------------------------------------
+
+--[[
+    One entry per data file, and one gated Validate Data section per entry in
+    Options/Options-Diagnostics.lua. Each source names the static table on ns,
+    its kind, and how to reach the id in a row. Every table Magic Eraser ships
+    is keyed by item id, so the row's key is the id. Adding a data file adds an
+    entry here, and the panel and the validator pick it up with no second list.
+]]
+local function KeyIsId(key)
+	return key
+end
+
+ns.DIAGNOSTIC_DATA_SOURCES = {
+	-- { file, sources = { { table, kind, rowId } } }
+	{
+		file = "Quest-Items.lua",
+		sources = { { table = "AllowedDeleteQuestItems", kind = "item", rowId = KeyIsId } },
+	},
+	{
+		file = "Quest-Starting-Items.lua",
+		sources = { { table = "AllowedDeleteQuestStartingItems", kind = "item", rowId = KeyIsId } },
+	},
+	{
+		file = "Consumables.lua",
+		sources = { { table = "AllowedDeleteConsumables", kind = "item", rowId = KeyIsId } },
+	},
+	{
+		file = "Equipment.lua",
+		sources = { { table = "AllowedDeleteEquipment", kind = "item", rowId = KeyIsId } },
+	},
+}
+
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+
+--[[
+    Item data loads asynchronously, so a run works in batches across frames
+    rather than stalling the client on a thousand lookups at once, and an id the
+    server never answers for is flagged after a bounded number of polls instead
+    of holding the run open forever.
+]]
+local VALIDATE_BATCH_SIZE = 100
+local VALIDATE_TICK_SECONDS = 0.1
+local VALIDATE_RETRY_SECONDS = 0.5
+local VALIDATE_MAX_RETRIES = 20
+
+local ITEM_INFO_RETURNS = 17
+local ITEM_INFO_INSTANT_RETURNS = 7
+
+local ITEM_COLUMNS = {
+	"STATUS",
+	"SOURCE",
+	"ITEM_ID",
+	"NAME",
+	"LINK",
+	"QUALITY",
+	"ITEM_LEVEL",
+	"MIN_LEVEL",
+	"TYPE",
+	"SUBTYPE",
+	"STACK_COUNT",
+	"EQUIP_LOC",
+	"TEXTURE",
+	"SELL_PRICE",
+	"CLASS_ID",
+	"SUBCLASS_ID",
+	"BIND_TYPE",
+	"EXPANSION_ID",
+	"SET_ID",
+	"CRAFTING_REAGENT",
+	"INSTANT_ITEM_ID",
+	"INSTANT_TYPE",
+	"INSTANT_SUBTYPE",
+	"INSTANT_EQUIP_LOC",
+	"INSTANT_ICON",
+	"INSTANT_CLASS_ID",
+	"INSTANT_SUBCLASS_ID",
+}
+
+local STATUS_OK = "OK"
+local STATUS_NOT_ON_CLIENT = "NOT ON CLIENT"
+local STATUS_NOT_LOADED = "NOT LOADED"
+
+local validations = {}
+
+function ns.DataValidationField(fileIndex)
+	return "validateReport" .. fileIndex
+end
+
+local function PublishValidation(fileIndex, text)
+	ns.diagnostics[ns.DataValidationField(fileIndex)] = text
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.Diagnostics)
+end
+
+--[[
+    One TSV cell. A tab or newline inside a value would break the row, and a
+    raw pipe would render an item link as a clickable swatch instead of the
+    copyable text a spreadsheet needs.
+]]
+local function CellText(value)
+	if value == nil then
+		return ""
+	end
+	local text = tostring(value):gsub("[\t\r\n]", " ")
+	return (text:gsub("|", "||"))
+end
+
+local function AppendReturns(cells, count, ...)
+	for index = 1, count do
+		cells[#cells + 1] = CellText((select(index, ...)))
+	end
+end
+
+local function BuildItemRow(status, sourceName, itemId)
+	local cells = { status, sourceName, tostring(itemId) }
+	AppendReturns(cells, ITEM_INFO_RETURNS, GetItemInfo(itemId))
+	if type(GetItemInfoInstant) == "function" then
+		AppendReturns(cells, ITEM_INFO_INSTANT_RETURNS, GetItemInfoInstant(itemId))
+	else
+		for _ = 1, ITEM_INFO_INSTANT_RETURNS do
+			cells[#cells + 1] = ""
+		end
+	end
+	return table.concat(cells, "\t")
+end
+
+--[[
+    Whether this client's item database knows the id at all, which is a
+    different question from whether the item's data is cached. Modern clients
+    answer it directly; older ones answer through GetItemInfoInstant, which
+    reads the local database with no server round-trip. Nil means the client
+    cannot say, and the run falls back to the load budget alone.
+]]
+local function ItemExistsOnClient(itemId)
+	if C_Item and type(C_Item.DoesItemExistByID) == "function" then
+		return C_Item.DoesItemExistByID(itemId) and true or false
+	end
+	if type(GetItemInfoInstant) == "function" then
+		return GetItemInfoInstant(itemId) ~= nil
+	end
+	return nil
+end
+
+local function CollectIds(entry)
+	local ids = {}
+	for _, source in ipairs(entry.sources) do
+		local rows = ns[source.table]
+		if type(rows) == "table" then
+			for key, row in pairs(rows) do
+				local id = source.rowId(key, row)
+				if type(id) == "number" then
+					ids[#ids + 1] = { id = id, source = source.table }
+				end
+			end
+		end
+	end
+	table.sort(ids, function(a, b)
+		if a.id == b.id then
+			return a.source < b.source
+		end
+		return a.id < b.id
+	end)
+	return ids
+end
+
+local function ResolveRow(run, index, status)
+	local entry = run.ids[index]
+	run.rows[index] = BuildItemRow(status, entry.source, entry.id)
+	run.resolved = run.resolved + 1
+	run.counts[status] = run.counts[status] + 1
+end
+
+local function ProgressText(run)
+	return table.concat({
+		GetClientHeader(),
+		"",
+		string.format("Validated %s / %s ...", ns:FormatCommaNumber(run.resolved), ns:FormatCommaNumber(#run.ids)),
+	}, "\n")
+end
+
+--[[
+    Every timer a run schedules carries the generation it was created under and
+    drops out once a newer one exists, so a second click on the button, or the
+    panel being switched off, retires the old chain rather than leaving two runs
+    writing the same box.
+]]
+local function ScheduleValidation(fileIndex, run, delay, step)
+	local generation = run.generation
+	C_Timer.After(delay, function()
+		if run.generation == generation then
+			step(fileIndex, run)
+		end
+	end)
+end
+
+--[[
+    The report is the standard client header plus a one-line tally, a blank
+    line, then one TSV block: a column header naming every field, then one row
+    per id in id order. Flagged rows keep their id and source table so the bad
+    entry is copyable straight out of the sheet.
+]]
+local function FinishValidation(fileIndex, run)
+	local lines = {
+		GetClientHeader(),
+		string.format(
+			"%s // %s ids // %s %s // %s %s // %s %s",
+			run.file,
+			ns:FormatCommaNumber(#run.ids),
+			ns:FormatCommaNumber(run.counts[STATUS_OK]),
+			STATUS_OK,
+			ns:FormatCommaNumber(run.counts[STATUS_NOT_ON_CLIENT]),
+			STATUS_NOT_ON_CLIENT,
+			ns:FormatCommaNumber(run.counts[STATUS_NOT_LOADED]),
+			STATUS_NOT_LOADED
+		),
+		"",
+		table.concat(ITEM_COLUMNS, "\t"),
+	}
+	for index = 1, #run.ids do
+		lines[#lines + 1] = run.rows[index]
+	end
+
+	run.finished = true
+	run.ids = {}
+	run.rows = {}
+	run.pending = {}
+	PublishValidation(fileIndex, table.concat(lines, "\n"))
+end
+
+local PollValidation
+
+--[[
+    The first sweep. An id the client does not know is flagged on the spot, a
+    cached id is exported on the spot, and everything else is requested from
+    the server and left for the polls below.
+]]
+local function SweepValidation(fileIndex, run)
+	local last = math.min(run.cursor + VALIDATE_BATCH_SIZE, #run.ids)
+	for index = run.cursor + 1, last do
+		local itemId = run.ids[index].id
+		if ItemExistsOnClient(itemId) == false then
+			ResolveRow(run, index, STATUS_NOT_ON_CLIENT)
+		elseif GetItemInfo(itemId) then
+			ResolveRow(run, index, STATUS_OK)
+		else
+			if C_Item and C_Item.RequestLoadItemDataByID then
+				C_Item.RequestLoadItemDataByID(itemId)
+			end
+			run.pending[#run.pending + 1] = index
+		end
+	end
+	run.cursor = last
+
+	if run.cursor < #run.ids then
+		PublishValidation(fileIndex, ProgressText(run))
+		ScheduleValidation(fileIndex, run, VALIDATE_TICK_SECONDS, SweepValidation)
+	elseif #run.pending > 0 then
+		PublishValidation(fileIndex, ProgressText(run))
+		ScheduleValidation(fileIndex, run, VALIDATE_RETRY_SECONDS, PollValidation)
+	else
+		FinishValidation(fileIndex, run)
+	end
+end
+
+function PollValidation(fileIndex, run)
+	run.retries = run.retries + 1
+	local stillPending = {}
+	for _, index in ipairs(run.pending) do
+		if GetItemInfo(run.ids[index].id) then
+			ResolveRow(run, index, STATUS_OK)
+		elseif run.retries >= VALIDATE_MAX_RETRIES then
+			ResolveRow(run, index, STATUS_NOT_LOADED)
+		else
+			stillPending[#stillPending + 1] = index
+		end
+	end
+	run.pending = stillPending
+
+	if #run.pending > 0 then
+		PublishValidation(fileIndex, ProgressText(run))
+		ScheduleValidation(fileIndex, run, VALIDATE_RETRY_SECONDS, PollValidation)
+	else
+		FinishValidation(fileIndex, run)
+	end
+end
+
+function ns:StartDataValidation(fileIndex)
+	local entry = ns.DIAGNOSTIC_DATA_SOURCES[fileIndex]
+	if not entry then
+		return
+	end
+
+	local run = validations[fileIndex] or { generation = 0 }
+	validations[fileIndex] = run
+
+	run.generation = run.generation + 1
+	run.file = entry.file
+	run.ids = CollectIds(entry)
+	run.rows = {}
+	run.pending = {}
+	run.counts = { [STATUS_OK] = 0, [STATUS_NOT_ON_CLIENT] = 0, [STATUS_NOT_LOADED] = 0 }
+	run.cursor = 0
+	run.resolved = 0
+	run.retries = 0
+	run.finished = false
+
+	PublishValidation(fileIndex, ProgressText(run))
+	SweepValidation(fileIndex, run)
+end
+
+--[[
+    Called when the panel is switched off, so a disabled panel has nothing
+    ticking. The bumped generation retires every pending timer, and a run cut
+    off mid-way drops its progress text rather than leaving a stale "Validated
+    300 / 1,240" in the box for the next time the panel is enabled.
+]]
+function ns:StopDataValidation()
+	for fileIndex, run in pairs(validations) do
+		run.generation = run.generation + 1
+		if not run.finished then
+			run.ids = {}
+			run.rows = {}
+			run.pending = {}
+			ns.diagnostics[ns.DataValidationField(fileIndex)] = nil
+		end
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -521,7 +892,8 @@ function ns:BuildAddOnReport()
 	local lines = { GetClientHeader(), "" }
 	local getInfo = (C_AddOns and C_AddOns.GetAddOnInfo) or GetAddOnInfo
 	local getMeta = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata
-	local count = (C_AddOns and C_AddOns.GetNumAddOns and C_AddOns.GetNumAddOns()) or GetNumAddOns()
+	local getCount = (C_AddOns and C_AddOns.GetNumAddOns) or GetNumAddOns
+	local count = getCount()
 	for index = 1, count do
 		local name, _, _, loadable = getInfo(index)
 		local version = getMeta(index, "Version") or "?"

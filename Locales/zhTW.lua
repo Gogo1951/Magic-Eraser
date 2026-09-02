@@ -28,9 +28,9 @@ L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物�
 L["ERASED_ITEM"] = "已刪除 %s%s。"
 L["ERASED_ITEM_WITH_VALUE"] = "已刪除 %s%s，價值 %s。"
 L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，來自你已完成的任務。"
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "已刪除 %s%s，來自你的角色無法接受的任務。"
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "已刪除 %s%s，它會開啟你的角色無法接受的任務。"
 L["QUEST_ITEM_READY"] = "%s 現在可以安全刪除了！"
-L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全刪除，來自你的角色無法接受的任務。"
+L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全刪除。它會開啟你的角色無法接受的任務。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，價值 %s。"
@@ -44,7 +44,7 @@ L["BANK_RETRIEVED"] = "已從銀行取出 %s 件物品（%s 個格子），價�
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser 將刪除此物品。"
+L["TOOLTIP_WILL_ERASE"] = "將被刪除。"
 L["TOOLTIP_IGNORED"] = "受你的忽略清單保護。"
 L["TOOLTIP_ON_ERASE_LIST"] = "已被你的刪除清單標記。"
 
@@ -77,7 +77,6 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
 
 L["AUTO_VEND"] = "自動售賣"
 L["AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為雜物的物品。"
-L["IGNORE_LIST"] = "忽略清單"
 L["TAB_IGNORE_LIST"] = "忽略清單"
 L["TAB_ERASE_LIST"] = "刪除清單"
 L["ENABLED"] = "已啟用"
@@ -88,7 +87,7 @@ L["DISABLED"] = "已停用"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"刪除雜物，瞬間騰出背包空間。已完成的任務物品、低等級消耗品、可售賣給商人的白色物品以及灰色垃圾，點一下小地圖按鈕就會消失，能賣的東西還會在商人處自動售出。再也不用背著一身垃圾到處跑。"
+	"刪除雜物，瞬間騰出背包空間。一鍵清理已完成的任務物品、已經用不上的消耗品、可賣給商人的雜物和灰色物品。人工審核的雜物清單保證安全，自動售賣則會在你下次遇到商人時賣掉其餘物品。"
 L["OPTIONS_ENABLE_WELCOME"] = "啟用歡迎訊息"
 L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
 
@@ -120,7 +119,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"當 Magic Eraser 會刪除某件背包物品，或忽略清單正在保護它時，為該物品的提示加入一行說明。"
-L["OPTIONS_ENABLE_TOOLTIPS"] = "為背包內物品啟用提示"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "啟用物品提示"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空間警告"

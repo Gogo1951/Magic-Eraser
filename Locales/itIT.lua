@@ -29,10 +29,10 @@ L["CURSOR_TOO_FAST"] = "Piano! Stai cliccando più velocemente di quanto il gioc
 L["ERASED_ITEM"] = "%s%s eliminato."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s eliminato, valore %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminato, da una missione che hai completato."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s eliminato, da una missione che il tuo personaggio non può accettare."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s eliminato, che avvia una missione che il tuo personaggio non può accettare."
 L["QUEST_ITEM_READY"] = "%s ora può essere eliminato in sicurezza!"
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s può essere eliminato in sicurezza, da una missione che il tuo personaggio non può accettare."
+	"%s può essere eliminato in sicurezza. Avvia una missione che il tuo personaggio non può accettare."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s venduto, valore %s."
@@ -46,7 +46,7 @@ L["BANK_RETRIEVED"] = "%s oggetti (%s slot) prelevati dalla tua banca, valore %s
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser eliminerà questo oggetto."
+L["TOOLTIP_WILL_ERASE"] = "Verrà eliminato."
 L["TOOLTIP_IGNORED"] = "Protetto dalla tua lista ignorati."
 L["TOOLTIP_ON_ERASE_LIST"] = "Contrassegnato dalla tua lista eliminazione."
 
@@ -80,7 +80,6 @@ L["MINIMAP_OPTIONS"] = "Opzioni di Magic Eraser"
 L["AUTO_VEND"] = "Vendita automatica"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automaticamente gli oggetti segnalati come spazzatura da Magic Eraser quando apri la finestra di un mercante."
-L["IGNORE_LIST"] = "Lista ignorati"
 L["TAB_IGNORE_LIST"] = "Lista ignorati"
 L["TAB_ERASE_LIST"] = "Lista eliminazione"
 L["ENABLED"] = "Attivato"
@@ -91,7 +90,7 @@ L["DISABLED"] = "Disattivato"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina la spazzatura e libera spazio nelle borse all'istante. Oggetti di missioni completate, consumabili di basso livello, oggetti bianchi di qualità dal mercante e spazzatura grigia se ne vanno con un solo clic sul pulsante della minimappa, e tutto ciò che è vendibile si vende da solo dal mercante. Non trascinarti mai più dietro la spazzatura."
+	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi con un solo clic oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi. Una lista di spazzatura curata a mano tiene tutto al sicuro, mentre la Vendita automatica vende il resto dal prossimo mercante."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
 
@@ -123,7 +122,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "Descrizioni oggetti"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Aggiunge una riga alla descrizione di un oggetto nelle tue borse quando Magic Eraser lo eliminerebbe, o quando la tua lista ignorati lo sta proteggendo."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita descrizioni per gli oggetti nelle borse"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita descrizioni oggetti"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avvisi di spazio nelle borse"
