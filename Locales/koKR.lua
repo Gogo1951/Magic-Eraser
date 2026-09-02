@@ -29,10 +29,10 @@ L["ERASED_ITEM"] = "%s%s 삭제됨."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s 삭제됨, 가치 %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s 삭제됨, 완료한 퀘스트의 아이템입니다."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
-	"%s%s 삭제됨, 캐릭터가 수락할 수 없는 퀘스트의 아이템입니다."
+	"%s%s 삭제됨, 캐릭터가 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
 L["QUEST_ITEM_READY"] = "%s 이제 안전하게 삭제할 수 있습니다!"
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s 안전하게 삭제할 수 있습니다. 캐릭터가 수락할 수 없는 퀘스트의 아이템입니다."
+	"%s 안전하게 삭제할 수 있습니다. 캐릭터가 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
@@ -46,7 +46,7 @@ L["BANK_RETRIEVED"] = "은행에서 %s개 아이템 (%s칸) 꺼냄, 가치 %s."
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser가 이 아이템을 삭제합니다."
+L["TOOLTIP_WILL_ERASE"] = "삭제됩니다."
 L["TOOLTIP_IGNORED"] = "무시 목록으로 보호됨."
 L["TOOLTIP_ON_ERASE_LIST"] = "삭제 목록으로 표시됨."
 
@@ -80,7 +80,6 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser 옵션"
 L["AUTO_VEND"] = "자동 판매"
 L["AUTO_VEND_DESCRIPTION"] =
 	"상인 창을 열 때 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 판매합니다."
-L["IGNORE_LIST"] = "무시 목록"
 L["TAB_IGNORE_LIST"] = "무시 목록"
 L["TAB_ERASE_LIST"] = "삭제 목록"
 L["ENABLED"] = "활성화"
@@ -91,7 +90,7 @@ L["DISABLED"] = "비활성화"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"잡동사니를 삭제하고 가방 공간을 즉시 확보하세요. 완료된 퀘스트 아이템, 저레벨 소모품, 상인 품질의 흰색 아이템, 회색 잡동사니가 미니맵 버튼 한 번으로 사라지고, 판매 가능한 것은 상인에게 자동으로 판매됩니다. 다시는 상인용 잡동사니를 짊어지지 마세요."
+	"잡동사니를 삭제하고 가방 공간을 즉시 확보하세요. 완료된 퀘스트 아이템, 이제는 필요 없는 소모품, 상인에게 팔 잡동사니, 회색 아이템을 클릭 한 번으로 정리하세요. 엄선된 잡동사니 목록이 안전을 보장하고, 자동 판매가 나머지를 다음 상인에게 판매합니다."
 L["OPTIONS_ENABLE_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 
@@ -124,7 +123,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "아이템 툴팁"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Magic Eraser가 삭제할 아이템이거나 무시 목록이 보호 중인 아이템일 때, 가방 속 아이템 툴팁에 한 줄을 추가합니다."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "가방 속 아이템 툴팁 활성화"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "아이템 툴팁 활성화"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "가방 공간 경고"

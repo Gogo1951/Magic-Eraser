@@ -28,10 +28,11 @@ L["CURSOR_TOO_FAST"] = "Langsamer! Du klickst schneller, als das Spiel Gegenstä
 L["ERASED_ITEM"] = "%s%s gelöscht."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s gelöscht, Wert %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s gelöscht, aus einer von dir abgeschlossenen Quest."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s gelöscht, aus einer Quest, die dein Charakter nicht annehmen kann."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
+	"%s%s gelöscht, Startgegenstand einer Quest, die dein Charakter nicht annehmen kann."
 L["QUEST_ITEM_READY"] = "%s kann jetzt sicher gelöscht werden!"
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s kann sicher gelöscht werden, aus einer Quest, die dein Charakter nicht annehmen kann."
+	"%s kann sicher gelöscht werden. Der Gegenstand startet eine Quest, die dein Charakter nicht annehmen kann."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
@@ -45,7 +46,7 @@ L["BANK_RETRIEVED"] = "%s Gegenstände (%s Plätze) aus deiner Bank geholt, Wert
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser wird dies löschen."
+L["TOOLTIP_WILL_ERASE"] = "Wird gelöscht."
 L["TOOLTIP_IGNORED"] = "Durch deine Ignorierliste geschützt."
 L["TOOLTIP_ON_ERASE_LIST"] = "Durch deine Löschliste markiert."
 
@@ -79,7 +80,6 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
 L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
-L["IGNORE_LIST"] = "Ignorierliste"
 L["TAB_IGNORE_LIST"] = "Ignorierliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
@@ -90,7 +90,7 @@ L["DISABLED"] = "Deaktiviert"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Abgeschlossene Questgegenstände, niedrigstufige Verbrauchsgüter, weiße Gegenstände in Händlerqualität und grauer Müll verschwinden mit einem Klick auf die Minikarten-Schaltfläche, und alles Verkäufliche wird beim Händler automatisch verkauft. Schleppe nie wieder Händlermüll mit dir herum."
+	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume abgeschlossene Questgegenstände, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick weg. Eine kuratierte Ramschliste sorgt für Sicherheit, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 
@@ -123,7 +123,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "Gegenstands-Tooltips"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Fügt dem Tooltip eines Gegenstands in deinen Taschen eine Zeile hinzu, wenn Magic Eraser ihn löschen würde oder deine Ignorierliste ihn schützt."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltips für Gegenstände in Taschen aktivieren"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Gegenstands-Tooltips aktivieren"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"

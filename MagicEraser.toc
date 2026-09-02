@@ -1,6 +1,9 @@
 ## Title: Magic Eraser
-## Notes: Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically.
+## Notes: Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with one click. A curated junk list keeps it safe, while Auto-Vend sells the rest at your next merchant.
 ## Author: Gogo1951
+
+## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
+## X-License: MIT
 
 ## Category-enUS: Inventory
 ## Category-deDE: Inventar
@@ -13,9 +16,6 @@
 ## Category-ruRU: Инвентарь
 ## Category-zhCN: 物品栏
 ## Category-zhTW: 物品欄
-
-## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
-## X-License: MIT
 
 ## Interface: 11509, 20506
 ## Version: @project-version@
