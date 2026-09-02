@@ -2,9 +2,29 @@ local _, ns = ...
 
 --[[
 
-Quest items are keyed to the quest that TAKES the item at TURN-IN, never the
-quest that hands it out. An item given by one quest and turned in on a later
-one is erased while the player still needs it if the granting quest is used.
+THE RULE: key each row to the quest whose completion makes the item safe to
+erase, which is the LATEST quest that could still need it. Eraser.lua fires on
+the first listed quest that is flagged complete, and the two ways to be wrong
+are not symmetric: erasing an item the player still needs is unrecoverable,
+while erasing it a few minutes late costs nothing.
+
+  In a linear chain that is the quest that TAKES the item at turn-in, never
+  the one that hands it out; keyed to the granting quest, an item turned in
+  on a later quest is erased while the player still needs it.
+
+  Where mutually exclusive sibling quests converge on a final quest, key to
+  the converging quest and list no sibling, so one id covers every branch.
+  Black Dragonflight Molt (10575) is keyed to 4024, not its sibling 4023:
+  finishing 4023 is what spawns the dragon the molt drops from.
+
+  Where the quest that hands the item out is itself the last step, key to it
+  and not the step before it, which would erase the item as it is handed over.
+
+Quest ids do not imply chain order (4121 comes after 4122), so confirm the
+order from each quest's own page rather than from an id sequence or a
+previous/next widget. The two queries in this file find CANDIDATES and prove
+which items can still be in a bag once their quest is done; they never
+produce rows to paste.
 
 THE TEST FOR A ROW EARNING ITS PLACE: can the item still be in the bag after
 its quest is done? A row fires on quest-complete, so if the item is gone by
@@ -26,11 +46,13 @@ SECOND QUERY below is the anti-join that finds them.
 CMaNGOS WotLK world DB, MySQL 8. Roles in quest_template:
   SrcItemId        handed to you when you ACCEPT
   ReqSourceId1..4  extra items handed to you when you ACCEPT
-  ReqItemId1..6    taken from you when you TURN IN   <- the id we key on
+  ReqItemId1..6    taken from you when you TURN IN   <- the usual key, see THE RULE
 
 late_handin = 1 marks a turn-in quest that is not also the granting quest.
-Rows with 2+ hand-in quests need an eye: same quest title repeated is a
-faction or class variant and is safe, but two genuinely different quests in
+Rows with 2+ hand-in quests need an eye: same quest title repeated is usually
+a faction or class variant and safe to list in full, but it is also what
+converging siblings look like (A Taste of Flame is 4022, 4023 and 4024), so
+check the chain before listing them all; and two genuinely different quests in
 one chain still erase at the first, because Eraser.lua fires on the first
 listed quest that is flagged complete.
 
@@ -287,7 +309,6 @@ ORDER BY confidence, section, it.name;
 
 ]]
 
--- { [itemId] = { questId, ... } }
 ns.AllowedDeleteQuestItems = {
 
 	-- [itemId] = { questId, ... }, -- Item Name
@@ -440,7 +461,7 @@ ns.AllowedDeleteQuestItems = {
 	[10834] = { 3602 }, -- Felhound Tracker Kit
 	[18501] = { 5526 }, -- Felvine Shard
 	[13157] = { 5206 }, -- Fetid Skull
-	[8523] = { 243 }, -- Field Testing Kit
+	[8523] = { 654 }, -- Field Testing Kit
 	[12347] = { 4763 }, -- Filled Cleansing Bowl
 	[5868] = { 1197 }, -- Filled Etched Phial
 	[1362] = { 140 }, -- Final Clue to Sander's Treasure
@@ -496,7 +517,7 @@ ns.AllowedDeleteQuestItems = {
 	[5099] = { 883 }, -- Hoof of Lakota'mani
 	[10327] = { 881 }, -- Horn of Echeyakee
 	[9530] = { 3062 }, -- Horn of Hatetalon
-	[18598] = { 1468 }, -- Human Orphan Whistle
+	[18598] = { 171 }, -- Human Orphan Whistle
 	[20765] = { 8482 }, -- Incriminating Documents
 	[20798] = { 8489 }, -- Intact Arcane Converter
 	[12220] = { 1016 }, -- Intact Elemental Bracer
@@ -512,7 +533,7 @@ ns.AllowedDeleteQuestItems = {
 	[5838] = { 1136 }, -- Kodo Skin Scroll
 	[12472] = { 974 }, -- Krakle's Thermometer
 	[14542] = { 5762 }, -- Kravel's Crate
-	[21984] = { 8970 }, -- Left Piece of Lord Valthalak's Amulet
+	[21984] = { 8989, 8990, 8991, 8992 }, -- Left Piece of Lord Valthalak's Amulet
 	[3898] = { 578 }, -- Library Scrip
 	[14544] = { 5727 }, -- Lieutenant's Insignia
 	[11136] = { 3913 }, -- Linken's Tempered Sword
@@ -640,7 +661,7 @@ ns.AllowedDeleteQuestItems = {
 	[2154] = { 227 }, -- The Story of Morgan Ladimore
 	[20415] = { 8303 }, -- The War of the Shifting Sands
 	[17684] = { 7028 }, -- Theradric Crystal Carving
-	[11286] = { 4122 }, -- Thorium Shackles
+	[11286] = { 4121 }, -- Thorium Shackles
 	[7587] = { 1838 }, -- Thun'grim's Instructions
 	[5415] = { 758 }, -- Thunderhorn Cleansing Totem
 	[5168] = { 918, 922 }, -- Timberling Seed

@@ -50,226 +50,262 @@ local function ReportOutput(field, order)
 	}
 end
 
+--[[
+    One section per entry in ns.DIAGNOSTIC_DATA_SOURCES, so a new data file
+    reaches the panel by adding its manifest row and nothing here. Each section
+    has its own run button and output box; the run publishes its own progress,
+    so the button does not Refresh. The hint prints once, below the last.
+]]
+local function AddValidateDataSections(args, startOrder)
+	local order = startOrder
+	for index, entry in ipairs(ns.DIAGNOSTIC_DATA_SOURCES) do
+		args["headerValidate" .. index] = SectionHeader(string.format(D.VALIDATE_TITLE, entry.file), order)
+		args["buttonValidate" .. index] = {
+			type = "execute",
+			name = string.format(D.VALIDATE_BUTTON, entry.file),
+			order = order + 1,
+			hidden = Hidden,
+			func = function()
+				ns:StartDataValidation(index)
+			end,
+		}
+		args["outputValidate" .. index] = ReportOutput(ns.DataValidationField(index), order + 2)
+		order = order + 3
+	end
+	args.descValidateHint = {
+		type = "description",
+		name = GetColor("HELP") .. D.VALIDATE_HINT .. "|r",
+		fontSize = "medium",
+		order = order,
+		hidden = Hidden,
+	}
+end
+
 function ns.BuildDiagnosticsOptions()
+	local args = {
+		descWarning = ns.OptionsDesc(D.WARNING, 1),
+		spaceEnable = ns.OptionsSpacer(2),
+		toggleEnable = {
+			type = "toggle",
+			name = D.ENABLE,
+			width = "full",
+			order = 3,
+			get = function()
+				return DiagnosticsOn()
+			end,
+			set = function(_, value)
+				ns:SetDiagnosticsEnabled(value)
+				Refresh()
+			end,
+		},
+
+		-- Event Log
+		headerEventLog = SectionHeader(D.EVENT_LOG_TITLE, 5),
+		buttonStartLog = {
+			type = "execute",
+			name = D.EVENT_LOG_START,
+			order = 6,
+			hidden = Hidden,
+			func = function()
+				ns:StartEventLog()
+				Refresh()
+			end,
+		},
+		buttonStopLog = {
+			type = "execute",
+			name = D.EVENT_LOG_STOP,
+			order = 7,
+			hidden = Hidden,
+			func = function()
+				ns:StopEventLog()
+				Refresh()
+			end,
+		},
+		buttonShowLog = {
+			type = "execute",
+			name = D.EVENT_LOG_SHOW,
+			order = 8,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.eventLogReport = ns:BuildEventLogReport()
+				Refresh()
+			end,
+		},
+		outputEventLog = ReportOutput("eventLogReport", 9),
+		descEventLogHint = {
+			type = "description",
+			name = GetColor("HELP") .. D.EVENT_LOG_HINT .. "|r",
+			fontSize = "medium",
+			order = 10,
+			hidden = Hidden,
+		},
+
+		-- Event Registration
+		headerEvents = SectionHeader(D.EVENTS_TITLE, 13),
+		buttonEvents = {
+			type = "execute",
+			name = D.EVENTS_BUTTON,
+			order = 14,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.eventsReport = ns:RunEventChecks()
+				Refresh()
+			end,
+		},
+		outputEvents = ReportOutput("eventsReport", 15),
+
+		-- API Endpoints
+		headerApi = SectionHeader(D.API_TITLE, 20),
+		buttonApi = {
+			type = "execute",
+			name = D.API_BUTTON,
+			order = 21,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.apiReport = ns:RunApiChecks()
+				Refresh()
+			end,
+		},
+		outputApi = ReportOutput("apiReport", 22),
+
+		-- Eraser Context
+		headerEraser = SectionHeader(D.ERASER_TITLE, 25),
+		buttonEraser = {
+			type = "execute",
+			name = D.ERASER_BUTTON,
+			order = 26,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.eraserReport = ns:BuildEraserContextReport()
+				Refresh()
+			end,
+		},
+		outputEraser = ReportOutput("eraserReport", 27),
+
+		-- Validate Data sections are added below, from order 30.
+
+		-- Display Context
+		headerDisplay = SectionHeader(D.DISPLAY_TITLE, 50),
+		buttonDisplay = {
+			type = "execute",
+			name = D.DISPLAY_BUTTON,
+			order = 51,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.displayReport = ns:BuildDisplayContextReport()
+				Refresh()
+			end,
+		},
+		outputDisplay = ReportOutput("displayReport", 52),
+
+		-- Other Add-ons
+		headerAddons = SectionHeader(D.ADDONS_TITLE, 55),
+		buttonAddons = {
+			type = "execute",
+			name = D.ADDONS_BUTTON,
+			order = 56,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.addOnReport = ns:BuildAddOnReport()
+				Refresh()
+			end,
+		},
+		outputAddons = ReportOutput("addOnReport", 57),
+
+		-- Saved Variables
+		headerSaved = SectionHeader(D.SAVED_TITLE, 60),
+		buttonSaved = {
+			type = "execute",
+			name = D.SAVED_BUTTON,
+			order = 61,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.savedReport = ns:BuildSavedVariablesReport()
+				Refresh()
+			end,
+		},
+		outputSaved = ReportOutput("savedReport", 62),
+
+		-- Library Versions
+		headerLibs = SectionHeader(D.LIBS_TITLE, 65),
+		buttonLibs = {
+			type = "execute",
+			name = D.LIBS_BUTTON,
+			order = 66,
+			hidden = Hidden,
+			func = function()
+				ns.diagnostics.libraryReport = ns:BuildLibraryReport()
+				Refresh()
+			end,
+		},
+		outputLibs = ReportOutput("libraryReport", 67),
+
+		-- Taint Log
+		headerTaint = SectionHeader(D.TAINT_TITLE, 70),
+		descTaintState = {
+			type = "description",
+			name = function()
+				return GetColor("HELP") .. string.format(D.TAINT_STATE, ns:GetTaintLogState()) .. "|r"
+			end,
+			fontSize = "medium",
+			order = 71,
+			hidden = Hidden,
+		},
+		buttonTaintOn = {
+			type = "execute",
+			name = D.TAINT_ON,
+			order = 72,
+			hidden = Hidden,
+			func = function()
+				ns:SetTaintLog(true)
+				Refresh()
+			end,
+		},
+		buttonTaintOff = {
+			type = "execute",
+			name = D.TAINT_OFF,
+			order = 73,
+			hidden = Hidden,
+			func = function()
+				ns:SetTaintLog(false)
+				Refresh()
+			end,
+		},
+		descTaintHint = {
+			type = "description",
+			name = GetColor("HELP") .. D.TAINT_HINT .. "|r",
+			fontSize = "medium",
+			order = 74,
+			hidden = Hidden,
+		},
+
+		-- External Tools (point at mature tools rather than reimplement them)
+		headerTools = SectionHeader(D.TOOLS_TITLE, 80),
+		descToolsErrors = {
+			type = "description",
+			name = GetColor("HELP")
+				.. string.format(D.TOOLS_ERRORS, GetColor("INFO") .. "/console scriptErrors 1|r" .. GetColor("HELP"))
+				.. "|r",
+			fontSize = "medium",
+			order = 81,
+			hidden = Hidden,
+		},
+		descToolsEtrace = {
+			type = "description",
+			name = GetColor("HELP")
+				.. string.format(D.TOOLS_ETRACE, GetColor("INFO") .. "/etrace|r" .. GetColor("HELP"))
+				.. "|r",
+			fontSize = "medium",
+			order = 82,
+			hidden = Hidden,
+		},
+	}
+
+	AddValidateDataSections(args, 30)
+
 	return {
 		type = "group",
 		name = D.TAB,
-		args = {
-			descWarning = ns.OptionsDesc(D.WARNING, 1),
-			spaceEnable = ns.OptionsSpacer(2),
-			toggleEnable = {
-				type = "toggle",
-				name = D.ENABLE,
-				width = "full",
-				order = 3,
-				get = function()
-					return DiagnosticsOn()
-				end,
-				set = function(_, value)
-					ns:SetDiagnosticsEnabled(value)
-					Refresh()
-				end,
-			},
-
-			-- Event Log
-			headerEventLog = SectionHeader(D.EVENT_LOG_TITLE, 5),
-			buttonStartLog = {
-				type = "execute",
-				name = D.EVENT_LOG_START,
-				order = 6,
-				hidden = Hidden,
-				func = function()
-					ns:StartEventLog()
-					Refresh()
-				end,
-			},
-			buttonStopLog = {
-				type = "execute",
-				name = D.EVENT_LOG_STOP,
-				order = 7,
-				hidden = Hidden,
-				func = function()
-					ns:StopEventLog()
-					Refresh()
-				end,
-			},
-			buttonShowLog = {
-				type = "execute",
-				name = D.EVENT_LOG_SHOW,
-				order = 8,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.eventLogReport = ns:BuildEventLogReport()
-					Refresh()
-				end,
-			},
-			outputEventLog = ReportOutput("eventLogReport", 9),
-			descEventLogHint = {
-				type = "description",
-				name = GetColor("HELP") .. D.EVENT_LOG_HINT .. "|r",
-				fontSize = "medium",
-				order = 10,
-				hidden = Hidden,
-			},
-
-			-- Event Registration
-			headerEvents = SectionHeader(D.EVENTS_TITLE, 13),
-			buttonEvents = {
-				type = "execute",
-				name = D.EVENTS_BUTTON,
-				order = 14,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.eventsReport = ns:RunEventChecks()
-					Refresh()
-				end,
-			},
-			outputEvents = ReportOutput("eventsReport", 15),
-
-			-- API Endpoints
-			headerApi = SectionHeader(D.API_TITLE, 20),
-			buttonApi = {
-				type = "execute",
-				name = D.API_BUTTON,
-				order = 21,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.apiReport = ns:RunApiChecks()
-					Refresh()
-				end,
-			},
-			outputApi = ReportOutput("apiReport", 22),
-
-			-- Eraser Context
-			headerEraser = SectionHeader(D.ERASER_TITLE, 25),
-			buttonEraser = {
-				type = "execute",
-				name = D.ERASER_BUTTON,
-				order = 26,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.eraserReport = ns:BuildEraserContextReport()
-					Refresh()
-				end,
-			},
-			outputEraser = ReportOutput("eraserReport", 27),
-
-			-- Display Context
-			headerDisplay = SectionHeader(D.DISPLAY_TITLE, 30),
-			buttonDisplay = {
-				type = "execute",
-				name = D.DISPLAY_BUTTON,
-				order = 31,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.displayReport = ns:BuildDisplayContextReport()
-					Refresh()
-				end,
-			},
-			outputDisplay = ReportOutput("displayReport", 32),
-
-			-- Other Add-ons
-			headerAddons = SectionHeader(D.ADDONS_TITLE, 35),
-			buttonAddons = {
-				type = "execute",
-				name = D.ADDONS_BUTTON,
-				order = 36,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.addOnReport = ns:BuildAddOnReport()
-					Refresh()
-				end,
-			},
-			outputAddons = ReportOutput("addOnReport", 37),
-
-			-- Saved Variables
-			headerSaved = SectionHeader(D.SAVED_TITLE, 40),
-			buttonSaved = {
-				type = "execute",
-				name = D.SAVED_BUTTON,
-				order = 41,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.savedReport = ns:BuildSavedVariablesReport()
-					Refresh()
-				end,
-			},
-			outputSaved = ReportOutput("savedReport", 42),
-
-			-- Library Versions
-			headerLibs = SectionHeader(D.LIBS_TITLE, 50),
-			buttonLibs = {
-				type = "execute",
-				name = D.LIBS_BUTTON,
-				order = 51,
-				hidden = Hidden,
-				func = function()
-					ns.diagnostics.libraryReport = ns:BuildLibraryReport()
-					Refresh()
-				end,
-			},
-			outputLibs = ReportOutput("libraryReport", 52),
-
-			-- Taint Log
-			headerTaint = SectionHeader(D.TAINT_TITLE, 60),
-			descTaintState = {
-				type = "description",
-				name = function()
-					return GetColor("HELP") .. string.format(D.TAINT_STATE, ns:GetTaintLogState()) .. "|r"
-				end,
-				fontSize = "medium",
-				order = 61,
-				hidden = Hidden,
-			},
-			buttonTaintOn = {
-				type = "execute",
-				name = D.TAINT_ON,
-				order = 62,
-				hidden = Hidden,
-				func = function()
-					ns:SetTaintLog(true)
-					Refresh()
-				end,
-			},
-			buttonTaintOff = {
-				type = "execute",
-				name = D.TAINT_OFF,
-				order = 63,
-				hidden = Hidden,
-				func = function()
-					ns:SetTaintLog(false)
-					Refresh()
-				end,
-			},
-			descTaintHint = {
-				type = "description",
-				name = GetColor("HELP") .. D.TAINT_HINT .. "|r",
-				fontSize = "medium",
-				order = 64,
-				hidden = Hidden,
-			},
-
-			-- External Tools (point at mature tools rather than reimplement them)
-			headerTools = SectionHeader(D.TOOLS_TITLE, 70),
-			descToolsErrors = {
-				type = "description",
-				name = GetColor("HELP") .. string.format(
-					D.TOOLS_ERRORS,
-					GetColor("INFO") .. "/console scriptErrors 1|r" .. GetColor("HELP")
-				) .. "|r",
-				fontSize = "medium",
-				order = 71,
-				hidden = Hidden,
-			},
-			descToolsEtrace = {
-				type = "description",
-				name = GetColor("HELP")
-					.. string.format(D.TOOLS_ETRACE, GetColor("INFO") .. "/etrace|r" .. GetColor("HELP"))
-					.. "|r",
-				fontSize = "medium",
-				order = 72,
-				hidden = Hidden,
-			},
-		},
+		args = args,
 	}
 end

@@ -13,13 +13,14 @@ local UseContainerItem = C_Container.UseContainerItem
     The bank on both flavors this add-on ships on is BANK_CONTAINER plus the
     purchasable bank bags, which sit directly above the carried bags in the
     container index space. There is no reagent bank on Classic Era or TBC
-    Anniversary, so nothing else is scanned. Built once at load from the same
-    Blizzard globals the container API is indexed by, with the same fallbacks
-    Bag-Warnings uses, so a missing constant can never quietly scan nothing.
+    Anniversary, so nothing else is scanned. Built once at load, starting one
+    past the shared carried-bag range (ns.LAST_BAG_INDEX in Data/Data.lua) and
+    falling back on the bank's own constants the same way, so a missing global
+    can never quietly scan nothing.
 ]]
 local BANK_CONTAINERS = {}
 do
-	local carriedBags = NUM_BAG_SLOTS or 4
+	local carriedBags = ns.LAST_BAG_INDEX
 	BANK_CONTAINERS[1] = BANK_CONTAINER or -1
 	for bag = carriedBags + 1, carriedBags + (NUM_BANKBAGSLOTS or 6) do
 		BANK_CONTAINERS[#BANK_CONTAINERS + 1] = bag
@@ -77,18 +78,29 @@ end
 
 --[[
     How many bank slots this pass may empty into the bags: every free
-    general-purpose bag slot except the cushion the player already set as their
-    Free-Slot Threshold, so retrieval stops short of the bag-space warning it
-    would otherwise cause. A nil count means the container API has not answered
-    yet, which is not the same as zero free slots (see ns:CountFreeBagSlots), so
-    it yields no budget and the pass simply does not run.
+    general-purpose bag slot, less the cushion the player set as their Free-Slot
+    Threshold -- but only while Bag-Space Warnings are actually on.
+
+    The cushion exists for one reason, to stop retrieval walking the bags into
+    the bag-space warning it would otherwise cause. With that warning switched
+    off there is no warning to stop short of and nothing to reserve, and the
+    Free-Slot Threshold slider is a sub-option of the Bag-Space Warnings toggle
+    that is hidden while the toggle is off -- so reserving there would let a
+    setting the player cannot see hold back a feature they can.
+
+    A nil count means the container API has not answered yet, which is not the
+    same as zero free slots (see ns:CountFreeBagSlots), so it yields no budget
+    and the pass simply does not run.
 ]]
 local function GetMoveBudget()
 	local free = ns:CountFreeBagSlots()
 	if not free then
 		return 0
 	end
-	return free - ((ns.db and ns.db.global.bagsFullThreshold) or 0)
+	if not (ns.db and ns.db.global.bagsFullNudgeEnabled) then
+		return free
+	end
+	return free - (ns.db.global.bagsFullThreshold or 0)
 end
 
 --------------------------------------------------------------------------------

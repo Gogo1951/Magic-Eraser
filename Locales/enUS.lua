@@ -28,9 +28,9 @@ L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can eras
 L["ERASED_ITEM"] = "Erased %s%s."
 L["ERASED_ITEM_WITH_VALUE"] = "Erased %s%s, worth %s."
 L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, from a quest you have completed."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "Erased %s%s, from a quest your character cannot take."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "Erased %s%s, which starts a quest your character cannot take."
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
-L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased, from a quest your character cannot take."
+L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased. It starts a quest your character cannot take."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
@@ -52,7 +52,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Flagged by your Erase List."
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
-L["LOWEST_VALUE_ITEM"] = "Lowest Value Item"
+L["LOWEST_VALUE_ITEM"] = "Lowest-Value Item"
 L["CLUTTER_REPORT"] = "Clutter Report"
 L["CLUTTER_ITEMS"] = "(%s Items)"
 L["CLUTTER_SLOTS"] = "%s Bag Slots"
@@ -88,7 +88,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Completed quest items, low-level consumables, vendor-quality whites, and gray trash go with one click of the mini-map button, and anything sellable auto-sells at the merchant. Clean bags, automatically."
+	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with one click. A curated junk list keeps it safe, while Auto-Vend sells the rest at your next merchant."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
@@ -120,7 +120,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Add a line to an item's tooltip in your bags when Magic Eraser would erase it, or when your Ignore List is protecting it."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltips for In-Bag Items"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Item Tooltips"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
@@ -170,7 +170,7 @@ L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so
 --------------------------------------------------------------------------------
 
 L["OPTIONS_ERASE_DESCRIPTION"] =
-	"Items on an Erase List are always treated as junk, whatever they are worth: erased by the mini-map button, or sold when you are at a merchant. The Global list applies on every character, and a character's own list applies on that character only. An Ignore List always wins, so an item on both is left alone."
+	"Items on an Erase List are always treated as clutter, whatever they are worth: erased by the mini-map button, or sold when you are at a merchant. The Global list applies on every character, and a character's own list applies on that character only. An Ignore List always wins, so an item on both is left alone."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] = "Move this item to the Global list, so it is erased on every character."
 L["OPTIONS_ERASE_RESTORE"] = "Restore Defaults"
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =

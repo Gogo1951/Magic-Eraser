@@ -28,10 +28,11 @@ L["CURSOR_TOO_FAST"] = "Doucement ! Vous cliquez plus vite que le jeu ne peut su
 L["ERASED_ITEM"] = "%s%s supprimé."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s supprimé, valeur %s."
 L["ERASED_ITEM_FROM_QUEST"] = "%s%s supprimé, provenant d'une quête que vous avez terminée."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s supprimé, provenant d'une quête que votre personnage ne peut pas accepter."
+L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
+	"%s%s supprimé, qui démarre une quête que votre personnage ne peut pas accepter."
 L["QUEST_ITEM_READY"] = "%s peut maintenant être supprimé en toute sécurité !"
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s peut être supprimé en toute sécurité, provenant d'une quête que votre personnage ne peut pas accepter."
+	"%s peut être supprimé en toute sécurité. Il démarre une quête que votre personnage ne peut pas accepter."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
@@ -45,7 +46,7 @@ L["BANK_RETRIEVED"] = "%s objets (%s emplacements) retirés de votre banque, val
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Magic Eraser va supprimer ceci."
+L["TOOLTIP_WILL_ERASE"] = "Sera supprimé."
 L["TOOLTIP_IGNORED"] = "Protégé par votre liste d'ignorés."
 L["TOOLTIP_ON_ERASE_LIST"] = "Marqué par votre liste de suppression."
 
@@ -79,7 +80,6 @@ L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
 L["AUTO_VEND"] = "Vente auto"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
-L["IGNORE_LIST"] = "Liste d'ignorés"
 L["TAB_IGNORE_LIST"] = "Liste d'ignorés"
 L["TAB_ERASE_LIST"] = "Liste de suppression"
 L["ENABLED"] = "Activé"
@@ -90,7 +90,7 @@ L["DISABLED"] = "Désactivé"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Les objets de quête terminés, les consommables de bas niveau, les objets blancs de qualité vendeur et la camelote grise partent d'un seul clic sur le bouton de la minicarte, et tout ce qui est vendable se vend tout seul chez le marchand. Ne transportez plus jamais de camelote."
+	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez en un seul clic les objets de quête terminés, les consommables devenus inutiles, la camelote de vendeur et les objets gris. Une liste de rebut sélectionnée à la main garantit la sécurité, tandis que la Vente auto écoule le reste chez votre prochain marchand."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 
@@ -123,7 +123,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_TOOLTIP_HEADER"] = "Infobulles d'objets"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Ajoute une ligne à l'infobulle d'un objet de vos sacs lorsque Magic Eraser va le supprimer, ou lorsque votre liste d'ignorés le protège."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les infobulles pour les objets dans les sacs"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les infobulles d'objets"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Alertes d'espace de sac"
