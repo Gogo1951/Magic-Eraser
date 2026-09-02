@@ -24,6 +24,7 @@ read_globals = {
 	"GetCVar",
 	"GetCursorInfo",
 	"GetItemInfo",
+	"GetItemInfoInstant",
 	"GetItemQualityColor",
 	"GetLocale",
 	"GetNumAddOns",
