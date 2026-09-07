@@ -194,14 +194,14 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 		end
 	elseif equipmentDatabase[itemId] then
 		--[[
-		    The table is derived from a WotLK world DB, but the add-on runs on
-		    Era, TBC and WotLK clients, and item quality drifted between them:
-		    Bronze Mace and most of the low-level crafted gear are white in Era
-		    and green by WotLK. Trusting the table alone would erase a green item
-		    on the client where it is green. Gating on the live rarity instead
-		    makes the data expansion-proof in both directions -- the client the
-		    player is actually on decides, and a row that is wrong for one
-		    flavor simply does nothing there.
+		    The table is derived from a WotLK world DB, while the add-on ships
+		    on Classic Era and TBC Anniversary, and item quality drifted across
+		    those expansions: Bronze Mace and most of the low-level crafted gear
+		    are white in Era and green by WotLK. Trusting the table alone would
+		    erase a green item on the client where it is green. Gating on the
+		    live rarity instead makes the data expansion-proof in both
+		    directions: the client the player is actually on decides, and a row
+		    that is wrong for one flavor simply does nothing there.
 		]]
 		if rarity == 1 then
 			return "equipment"
@@ -454,11 +454,17 @@ end
     is dead the moment it drops, which is not something a tooltip alone tells you
     while you are still looting.
 
-    BAG_UPDATE_DELAYED fires a burst at login, so everything already in the bags
-    is seeded as "already announced" and only an item that arrives while playing
-    speaks up. Same reasoning as SeedBagSpaceBaseline in Core.lua. The seen set is
-    keyed by item id and lives for the session, so moving a stack between bags or
+    BAG_UPDATE_DELAYED fires a burst at login, so ns:SeedQuestStarterAlerts marks
+    the starters already erasable at login and only one that becomes erasable
+    while playing speaks up. A starter held but not yet erasable is left unmarked
+    on purpose, so finishing its quest later still alerts. Same reasoning as
+    SeedBagSpaceBaseline in Core.lua.
+
+    Keyed by item id and living for the session, so moving a stack between bags or
     opening a merchant cannot make the same item announce twice.
+    ns:OnQuestTurnedIn reads the same set before its own walk: every starter also
+    carries a row in AllowedDeleteQuestItems under the same quest id, so without
+    that check a starter still in the bags at turn-in would announce twice.
 ]]
 local announcedStarters = {}
 
@@ -522,7 +528,12 @@ function ns:OnQuestTurnedIn(questId)
 				if itemInfo then
 					local itemId = itemInfo.itemID
 
-					if questItemDatabase[itemId] and not alertedItems[itemId] then
+					--[[
+					    Skip anything the starter scan above already spoke for.
+					    Nearly every quest starter also has a row here under the
+					    same quest id, so without this the one line arrives twice.
+					]]
+					if questItemDatabase[itemId] and not alertedItems[itemId] and not announcedStarters[itemId] then
 						for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
 							if trackedQuestId == questId then
 								ns:PrintMessage(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
