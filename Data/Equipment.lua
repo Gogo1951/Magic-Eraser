@@ -2,7 +2,6 @@ local _, ns = ...
 
 --[[
 
-============================================================================
 Magic Eraser :: white weapons  (CMaNGOS WotLK world DB, MySQL 8)
 
 Regenerates the WEAPONS half of ns.AllowedDeleteEquipment below. Quality = 1,
@@ -49,7 +48,6 @@ clean rule separates those from real cloth, so they come through.
 section is an item-id heuristic, fine for grouping inside the Lua file but
 not exact: Blood Elf and Draenei starter gear carries sub-22500 ids while
 being TBC content. Re-bucket by eye if a row looks wrong.
-============================================================================
 
 WITH quest_touched AS (
   -- Every item any quest hands out or takes back, in one set. Deliberately no
@@ -118,7 +116,6 @@ FROM eq
 ORDER BY section, name;
 
 
-============================================================================
 Magic Eraser :: white armor  (CMaNGOS WotLK world DB, MySQL 8)
 
 Regenerates Data/Equipment-Armor.lua. Quality = 1, soulbound included, minus
@@ -163,7 +160,6 @@ clean rule separates those from real cloth, so they come through.
 section is an item-id heuristic, fine for grouping inside the Lua file but
 not exact: Blood Elf and Draenei starter gear carries sub-22500 ids while
 being TBC content. Re-bucket by eye if a row looks wrong.
-============================================================================
 
 WITH quest_touched AS (
   -- Every item any quest hands out or takes back, in one set. Deliberately no

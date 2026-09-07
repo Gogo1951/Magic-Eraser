@@ -27,7 +27,7 @@ L["BAGS_FULL_NUDGE_ONE"] = "Vos sacs sont presque pleins. Il vous reste 1 emplac
 L["CURSOR_TOO_FAST"] = "Doucement ! Vous cliquez plus vite que le jeu ne peut supprimer les objets."
 L["ERASED_ITEM"] = "%s%s supprimé."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s supprimé, valeur %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s supprimé, provenant d'une quête que vous avez terminée."
+L["ERASED_ITEM_FROM_QUEST"] = "%s%s supprimé, restant d'une quête que vous avez terminée."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
 	"%s%s supprimé, qui démarre une quête que votre personnage ne peut pas accepter."
 L["QUEST_ITEM_READY"] = "%s peut maintenant être supprimé en toute sécurité !"
@@ -36,11 +36,11 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
-L["SOLD_SUMMARY"] = "%s objets (%s emplacements) vendus, valeur %s."
+L["SOLD_SUMMARY"] = "%s objets (%s emplacements de sac) vendus, valeur %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La vente automatique s'effectuera à la fin du combat."
 
 -- Bank Retrieval
-L["BANK_RETRIEVED"] = "%s objets (%s emplacements) retirés de votre banque, valeur %s."
+L["BANK_RETRIEVED"] = "%s objets (%s emplacements de sac) retirés de votre banque, valeur %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +57,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Marqué par votre liste de suppression."
 L["LOWEST_VALUE_ITEM"] = "Objet de plus faible valeur"
 L["CLUTTER_REPORT"] = "Rapport de rebut"
 L["CLUTTER_ITEMS"] = "(%s objets)"
-L["CLUTTER_SLOTS"] = "%s emplacements"
+L["CLUTTER_SLOTS"] = "%s emplacements de sac"
 L["NO_VALUE"] = "Aucune valeur"
 L["LEFT_CLICK"] = "Clic gauche"
 L["RIGHT_CLICK"] = "Clic droit"
@@ -80,6 +80,7 @@ L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
 L["AUTO_VEND"] = "Vente auto"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vend automatiquement les objets signalés comme rebut par Magic Eraser à l'ouverture d'une fenêtre de marchand."
+L["TAB_SAFETY"] = "Fonctions de sécurité"
 L["TAB_IGNORE_LIST"] = "Liste d'ignorés"
 L["TAB_ERASE_LIST"] = "Liste de suppression"
 L["ENABLED"] = "Activé"
@@ -97,13 +98,57 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
 L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cet addon."
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cette extension."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Activer la Vente auto"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Activer les messages de Vente auto"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Par objet"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Résumé uniquement"
+
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "Commentaires et assistance"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"Presque tous les objets que vous supprimez peuvent être récupérés via le service de restauration d'objets de Blizzard, une erreur ici est donc rarement définitive. Ces réglages méritent tout de même votre attention : c'est ici que vous décidez à quel point Magic Eraser est prudent, et à quel point il vous tient informé."
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "Avertissements d'infobulle"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Ajoute une ligne à l'infobulle d'un objet de vos sacs lorsque Magic Eraser va le supprimer, ou lorsque votre liste d'ignorés le protège."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les avertissements d'infobulle"
+
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Retire automatiquement de votre banque les objets signalés comme rebut par Magic Eraser lorsque vous l'ouvrez, afin que vous puissiez les supprimer."
+
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Aide à la suppression manuelle"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'Par défaut, les objets de qualité Rare ou supérieure vous obligent à taper "Supprimer" avant de pouvoir vous en débarrasser. Cela devient un simple Oui ou Non, pour les objets que vous choisissez ci-dessous.'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer l'aide à la suppression manuelle"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "S'applique à"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "Tous les objets"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Sans valeur de vente"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Confirmation de suppression depuis la minicarte"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Demander avant de supprimer les types d'objets cochés ci-dessous."
+L["OPTIONS_ENABLE_SAFETY"] = "Activer la confirmation de suppression depuis la minicarte"
+L["OPTIONS_SAFETY_QUEST"] = "Pour les objets de quête terminés"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "Pour les consommables devenus inutiles"
+L["OPTIONS_SAFETY_WHITE"] = "Pour les objets blancs de qualité vendeur"
+L["OPTIONS_SAFETY_GRAY"] = "Pour la camelote de vendeur grise"
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Valeur maximale à supprimer"
@@ -113,40 +158,12 @@ L["OPTIONS_ENABLE_VALUE_CAP"] = "Activer la valeur maximale à supprimer"
 L["OPTIONS_VALUE_CAP_LIMIT"] = "Ne jamais supprimer ce qui vaut plus de"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 
--- Bank Retrieval
-L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
-L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Retire automatiquement de votre banque les objets signalés comme rebut par Magic Eraser lorsque vous l'ouvrez, afin que vous puissiez les supprimer."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Infobulles d'objets"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Ajoute une ligne à l'infobulle d'un objet de vos sacs lorsque Magic Eraser va le supprimer, ou lorsque votre liste d'ignorés le protège."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les infobulles d'objets"
-
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Décompte dans la fenêtre de discussion à mesure que vos emplacements libres descendent vers le seuil défini ci-dessous."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Activer les alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Seuil d'emplacements libres"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "Confirmations de suppression"
-L["OPTIONS_SAFETY_DESCRIPTION"] = "Demander avant de supprimer les types d'objets cochés ci-dessous."
-L["OPTIONS_ENABLE_SAFETY"] = "Activer les confirmations de suppression"
-L["OPTIONS_SAFETY_QUEST"] = "Pour les objets de quête terminés"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "Pour les consommables de bas niveau"
-L["OPTIONS_SAFETY_WHITE"] = "Pour les objets blancs de qualité vendeur"
-L["OPTIONS_SAFETY_GRAY"] = "Pour les objets gris de qualité vendeur"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "Commentaires et assistance"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

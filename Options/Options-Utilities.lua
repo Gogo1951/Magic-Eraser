@@ -45,6 +45,72 @@ function ns.OptionsRowLabel(text, order, width)
 end
 
 --------------------------------------------------------------------------------
+-- Sub-Option Rows
+--------------------------------------------------------------------------------
+
+--[[
+    A sub-option is a control that only means anything while the toggle above it
+    is on, and it is marked two ways at once.
+
+    The row leads with a blank indent cell, which moves the checkbox itself.
+    Padding the label instead would indent only the caption -- AceConfig pins a
+    checkbox at the left edge of its own widget -- leaving the box lined up with
+    its parent's and the words drifting away from it.
+
+    ns.OptionsSubLabel then colors the caption HELP silver against the parent's
+    white, so the row reads as subordinate rather than merely shifted. Silver is
+    the palette's secondary-text role and is well clear of the dimmer gray AceGUI
+    paints a genuinely disabled label.
+
+    The whole row is wrapped in an inline group with no name, which AceConfig
+    renders as a bare SimpleGroup -- no border, no title, no padding -- at "fill"
+    width. That wrapper is load-bearing, not decoration. Laid out flat, the
+    indent and its control are just two more widgets in the panel's flow, kept
+    together only by their widths happening to fill the line; the pair after them
+    then packs onto whatever space is left and its indent stops indenting
+    anything. A fill widget always gets a line to itself, so one group per
+    sub-option pins one row per sub-option no matter what the pane is doing.
+
+    Inside the group the controls need slack rather than an exact fit: a row
+    summing to the full pane width sits on the wrap boundary, where a pass that
+    measures a control before its width is applied tips the control onto its own
+    line and strands the indent above it.
+
+    hidden goes on the group and never on the members; hung off the controls
+    individually, the indent is left behind on its own line when the section
+    collapses. Lives here rather than in one panel file because every feature
+    fragment composed into the General panel builds sub-rows.
+]]
+function ns.OptionsSubRow(order, hidden, controls)
+	local args = {
+		indent = {
+			type = "description",
+			name = " ",
+			width = ns.OPTIONS_SUB_INDENT_WIDTH,
+			order = 1,
+		},
+	}
+
+	for index, control in ipairs(controls) do
+		control.order = index + 1
+		args["control" .. index] = control
+	end
+
+	return {
+		type = "group",
+		name = "",
+		inline = true,
+		order = order,
+		hidden = hidden,
+		args = args,
+	}
+end
+
+function ns.OptionsSubLabel(text)
+	return GetColor("HELP") .. text .. "|r"
+end
+
+--------------------------------------------------------------------------------
 -- Item Cache Warming
 --------------------------------------------------------------------------------
 
@@ -251,7 +317,14 @@ function ns:BuildItemListOptions(spec)
 		order = order + 1
 	end
 
-	args.addItemLabel = ns.OptionsRowLabel(labels.addName, order)
+	--[[
+	    Spends this panel's own budget rather than the default label width. A tree
+	    panel passes a shorter rowWidth than ns.OPTIONS_ROW_WIDTH (its sidebar eats
+	    the difference), so a label sized to the full-panel grid would push the box
+	    beside it onto its own line. Taking the remainder after the control keeps
+	    the pair on one line and ending where the rows below it end.
+	]]
+	args.addItemLabel = ns.OptionsRowLabel(labels.addName, order, rowWidth - ns.OPTIONS_CONTROL_WIDTH)
 	order = order + 1
 
 	--[[
