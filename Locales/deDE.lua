@@ -27,7 +27,7 @@ L["BAGS_FULL_NUDGE_ONE"] = "Deine Taschen sind fast voll. Du hast noch 1 freien 
 L["CURSOR_TOO_FAST"] = "Langsamer! Du klickst schneller, als das Spiel Gegenstände löschen kann."
 L["ERASED_ITEM"] = "%s%s gelöscht."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s gelöscht, Wert %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s gelöscht, aus einer von dir abgeschlossenen Quest."
+L["ERASED_ITEM_FROM_QUEST"] = "%s%s gelöscht, übrig geblieben von einer von dir abgeschlossenen Quest."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
 	"%s%s gelöscht, Startgegenstand einer Quest, die dein Charakter nicht annehmen kann."
 L["QUEST_ITEM_READY"] = "%s kann jetzt sicher gelöscht werden!"
@@ -36,11 +36,11 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
-L["SOLD_SUMMARY"] = "%s Gegenstände (%s Plätze) verkauft, Wert %s."
+L["SOLD_SUMMARY"] = "%s Gegenstände (%s Taschenplätze) verkauft, Wert %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 
 -- Bank Retrieval
-L["BANK_RETRIEVED"] = "%s Gegenstände (%s Plätze) aus deiner Bank geholt, Wert %s."
+L["BANK_RETRIEVED"] = "%s Gegenstände (%s Taschenplätze) aus deiner Bank geholt, Wert %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +57,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Durch deine Löschliste markiert."
 L["LOWEST_VALUE_ITEM"] = "Gegenstand mit geringstem Wert"
 L["CLUTTER_REPORT"] = "Ramsch-Bericht"
 L["CLUTTER_ITEMS"] = "(%s Gegenstände)"
-L["CLUTTER_SLOTS"] = "%s Plätze"
+L["CLUTTER_SLOTS"] = "%s Taschenplätze"
 L["NO_VALUE"] = "Kein Wert"
 L["LEFT_CLICK"] = "Linksklick"
 L["RIGHT_CLICK"] = "Rechtsklick"
@@ -80,6 +80,7 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
 L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, wenn du ein Händlerfenster öffnest."
+L["TAB_SAFETY"] = "Sicherheitsfunktionen"
 L["TAB_IGNORE_LIST"] = "Ignorierliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
@@ -105,6 +106,50 @@ L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Auto-Verkauf-Nachrichten aktivieren"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Einzelposten"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Nur Zusammenfassung"
 
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "Feedback & Unterstützung"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"Fast jeden gelöschten Gegenstand kannst du über Blizzards Gegenstandswiederherstellung zurückholen, ein Fehler ist hier also selten endgültig. Diese Einstellungen lohnen trotzdem einen Blick: Hier entscheidest du, wie vorsichtig Magic Eraser ist und wie viel er dir dabei mitteilt."
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "Tooltip-Warnungen"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Fügt dem Tooltip eines Gegenstands in deinen Taschen eine Zeile hinzu, wenn Magic Eraser ihn löschen würde oder deine Ignorierliste ihn schützt."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltip-Warnungen aktivieren"
+
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Holt automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, aus deiner Bank, wenn du sie öffnest, damit du sie löschen kannst."
+
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Hilfe beim manuellen Löschen"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'Standardmäßig musst du bei Gegenständen ab Selten erst "Löschen" eintippen, bevor du sie wegwerfen kannst. Das wird hier zu einem einfachen Ja oder Nein, für die unten gewählten Gegenstände.'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Hilfe beim manuellen Löschen aktivieren"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Gilt für"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Ohne Verkaufswert"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Minikarten-Löschbestätigung"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Vor dem Löschen der unten markierten Gegenstandstypen nachfragen."
+L["OPTIONS_ENABLE_SAFETY"] = "Minikarten-Löschbestätigung aktivieren"
+L["OPTIONS_SAFETY_QUEST"] = "Für Gegenstände abgeschlossener Quests"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "Für ausgediente Verbrauchsgüter"
+L["OPTIONS_SAFETY_WHITE"] = "Für weiße Gegenstände in Händlerqualität"
+L["OPTIONS_SAFETY_GRAY"] = "Für grauen Händlermüll"
+
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Maximaler Wert zum Löschen"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
@@ -113,40 +158,12 @@ L["OPTIONS_ENABLE_VALUE_CAP"] = "Maximalen Wert zum Löschen aktivieren"
 L["OPTIONS_VALUE_CAP_LIMIT"] = "Niemals etwas löschen, das mehr wert ist als"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
--- Bank Retrieval
-L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
-L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Holt automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, aus deiner Bank, wenn du sie öffnest, damit du sie löschen kannst."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Gegenstands-Tooltips"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Fügt dem Tooltip eines Gegenstands in deinen Taschen eine Zeile hinzu, wenn Magic Eraser ihn löschen würde oder deine Ignorierliste ihn schützt."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Gegenstands-Tooltips aktivieren"
-
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Zählt im Chat herunter, während deine freien Taschenplätze auf den unten festgelegten Schwellenwert sinken."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Taschenplatz-Warnungen aktivieren"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "Lösch-Bestätigungen"
-L["OPTIONS_SAFETY_DESCRIPTION"] = "Vor dem Löschen der unten markierten Gegenstandstypen nachfragen."
-L["OPTIONS_ENABLE_SAFETY"] = "Lösch-Bestätigungen aktivieren"
-L["OPTIONS_SAFETY_QUEST"] = "Für Gegenstände abgeschlossener Quests"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "Für niedrigstufige Verbrauchsgüter"
-L["OPTIONS_SAFETY_WHITE"] = "Für weiße Gegenstände in Händlerqualität"
-L["OPTIONS_SAFETY_GRAY"] = "Für graue Gegenstände in Händlerqualität"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "Feedback & Unterstützung"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

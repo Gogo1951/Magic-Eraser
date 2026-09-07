@@ -31,6 +31,7 @@ ns.Links = {
 ]]
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
+	Safety = ADDON_NAME .. "_Safety",
 	IgnoreList = ADDON_NAME .. "_IgnoreList",
 	EraseList = ADDON_NAME .. "_EraseList",
 	Profiles = ADDON_NAME .. "_Profiles",
@@ -47,8 +48,8 @@ ns.OPTIONS_REGISTRY = {
     cell, then the control with name = "" ordered immediately after. The two flow
     onto one line because their widths add up to exactly one row.
 ]]
-ns.OPTIONS_ROW_WIDTH = 2.6
-ns.OPTIONS_LABEL_WIDTH = 1.3
+ns.OPTIONS_ROW_WIDTH = 3.4
+ns.OPTIONS_LABEL_WIDTH = 2.1
 ns.OPTIONS_CONTROL_WIDTH = ns.OPTIONS_ROW_WIDTH - ns.OPTIONS_LABEL_WIDTH
 
 -- The item lists' remove column, sized to its icon rather than a caption.

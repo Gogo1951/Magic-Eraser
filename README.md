@@ -6,15 +6,15 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 ## Features
 
-🧹 **One-Click Cleanup** // Erase the cheapest junk in your bags with a single click. The mini-map button always shows you what's next, with no confirmation unless you want one.
+🧹 **One-Click Cleanup** // Erase the cheapest junk in your bags with a single click. The mini-map button always shows you what's about to be erased.
 
-📜 **Completed Quest Items** // Finished a quest? Get rid of the item you no longer need. These forgotten quest items can clog your bags forever, and a curated list knows when they're safe to erase.
+💰 **Auto-Vend** // The best way to keep your bags clean is to convert grays to gold. Junk items are automatically sold whenever you visit a merchant.
 
-🔔 **Smart Junk Alerts** // A hand-curated list identifies clutter that's safe to erase: completed quest items, impossible quest starters, outgrown food and drink, vendor-quality whites, and gray trash. Tooltips tell you what's on the chopping block before anything goes.
+🔔 **Smart Junk Alerts** // A curated list identifies clutter that's safe to erase: dead-end quest starters, outgrown food and drink, vendor-quality whites, and gray trash.
 
-💰 **Auto-Vend** // Flagged items are automatically sold the next time you visit a merchant. Erase what should disappear and sell what still has value, without sorting through your bags by hand.
+📜 **Completed Quest Items** // Get alerts when it's safe to erase completed quest items. They have no value and take up precious bag space.
 
-🛡️ **Curated & Safe** // No name-matching, no guesswork, and no surprise deletions. Every trash list is human-reviewed, your Ignore List always wins, and nothing is erased during combat.
+🛡️ **Curated & Safe** // No surprise deletions.
 
 ## Setup
 
@@ -22,7 +22,7 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 2. Log in. The mini-map button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Middle-click to open the Options Interface.
 4. Auto-Vend and Bank Retrieval are on out of the box, so the rest pays for itself the next time you talk to a merchant.
-5. *"Cleanest bags on the server!"*
+5. *"If it doesn't spark joy, it doesn't make the bags."*
 
 ## How It Works
 
@@ -58,40 +58,15 @@ Hover the button and the tooltip lays out the whole picture: the item you're abo
 
 Every flagged item sells automatically the moment you open a merchant, and it's on by default.
 
-- One summary line lands in chat as the merchant window closes.
-- Switch to Line Item and every sale is announced as it happens, with that summary still arriving at the end.
-- Turn the messages off entirely if you'd rather it worked in silence.
-- Open a merchant mid-fight and the sale waits politely until combat ends.
-- Toggle the whole thing with Shift+Right-click on the mini-map button, or from the Options Interface.
-
-### Your Two Lists
-
-The Ignore List protects; the Erase List condemns. Both work the same way, and both stack: each character keeps its own, plus a Global list that applies everywhere at once.
-
-- **Ignore List** // Never erased, never sold. Right-click the mini-map button to protect whatever is currently flagged, middle-click to wipe this character's list and start over.
-- **Erase List** // Always erased and always sold, whatever it is worth and whatever category it does or does not fall into. This is for the junk only you know is junk: an alt's leftover mats, a quest reward you will never wear, reagents for a profession you dropped.
-- **Managing them** // Add items by ID or by shift-clicking an item link straight from chat, and promote any character's entry to Global with one click.
-- **Ignore always wins** // An item on both lists is left alone.
-- **No cap on the Erase List** // Maximum Value to Erase does not apply to it, because you already said you wanted that one gone.
-- **Restore Defaults** // The character you are playing gets a button that empties its Erase List and puts back the class reagents it started with. It asks first, because anything you added goes with it.
-
 ### Options
 
 Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`.
 
-- **General** // The welcome message, the mini-map button, and every setting in the table below.
+- **General** // The welcome message, the mini-map button, and Auto-Vend.
+- **Safety Features** // How careful the add-on is: what it asks about first, what it refuses to touch, what it warns you about, and how it handles the game's own delete prompt.
 - **Ignore List** and **Erase List** // One pane per character, plus the Global list.
 - **Profiles** // Standard profile switching, copying, and reset.
 - **Diagnostic Tools** // Reports to paste into a bug report. Off until you switch it on, and it never runs on its own.
-
-| Setting                 | Default | What it does                                                                                                                            |
-| ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Auto-Vend               | On      | Sells flagged items at any merchant, with chat output as a summary line or line by line.                                               |
-| Maximum Value to Erase  | Off     | Never erase a stack worth more than the cap you pick, from 1 to 21 gold. Auto-Vend, Bank Retrieval, and your Erase List ignore the cap. |
-| Bank Retrieval          | On      | Pulls flagged items out of the bank into your free bag slots, leaving your Free-Slot Threshold untouched.                               |
-| Item Tooltips           | On      | Adds a line to in-bag items Magic Eraser would erase, or that your Ignore List protects.                                                 |
-| Bag-Space Warnings      | Off     | Counts down in chat as your free slots drop to the threshold you set, from 1 to 10.                                                     |
-| Eraser Confirmations    | Off     | Asks before erasing the item types you check: quest items, consumables, whites, or grays.                                               |
 
 <img width="800" src="https://github.com/user-attachments/assets/303e0441-0002-4714-ba65-076bfa394e54" />
 
@@ -122,7 +97,7 @@ Please reach out if you would like to be involved!
 
 🟢 Pairs With // jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 
-🟢 Pairs With // Gogo1951's [Connoisseur](https://www.curseforge.com/wow/addons/consumable-connoisseur)
+🟢 Pairs With // Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/consumable-connoisseur)
 
 🟢 Pairs With // Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
 

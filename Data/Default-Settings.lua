@@ -53,6 +53,8 @@ ns.DATABASE_DEFAULTS = {
 		safetyConsumable = false,
 		safetyWhite = false,
 		safetyGray = false,
+		manualDeleteAutoFillEnabled = true,
+		manualDeleteNoValueOnly = true,
 		minimap = {},
 	},
 }

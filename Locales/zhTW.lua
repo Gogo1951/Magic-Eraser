@@ -27,18 +27,18 @@ L["BAGS_FULL_NUDGE_ONE"] = "你的背包快滿了。還剩 1 個空格。"
 L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物品的速度。"
 L["ERASED_ITEM"] = "已刪除 %s%s。"
 L["ERASED_ITEM_WITH_VALUE"] = "已刪除 %s%s，價值 %s。"
-L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，來自你已完成的任務。"
+L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，這是你已完成任務的遺留物品。"
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "已刪除 %s%s，它會開啟你的角色無法接受的任務。"
 L["QUEST_ITEM_READY"] = "%s 現在可以安全刪除了！"
 L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全刪除。它會開啟你的角色無法接受的任務。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，價值 %s。"
-L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 個格子），價值 %s。"
+L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 個背包格子），價值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "戰鬥結束後將執行自動售賣。"
 
 -- Bank Retrieval
-L["BANK_RETRIEVED"] = "已從銀行取出 %s 件物品（%s 個格子），價值 %s。"
+L["BANK_RETRIEVED"] = "已從銀行取出 %s 件物品（%s 個背包格子），價值 %s。"
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -55,7 +55,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "已被你的刪除清單標記。"
 L["LOWEST_VALUE_ITEM"] = "最低價值物品"
 L["CLUTTER_REPORT"] = "雜物報告"
 L["CLUTTER_ITEMS"] = "(%s 件物品)"
-L["CLUTTER_SLOTS"] = "%s 個格子"
+L["CLUTTER_SLOTS"] = "%s 個背包格子"
 L["NO_VALUE"] = "無價值"
 L["LEFT_CLICK"] = "左鍵點擊"
 L["RIGHT_CLICK"] = "右鍵點擊"
@@ -77,6 +77,7 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
 
 L["AUTO_VEND"] = "自動售賣"
 L["AUTO_VEND_DESCRIPTION"] = "開啟商人視窗時自動出售被 Magic Eraser 標記為雜物的物品。"
+L["TAB_SAFETY"] = "安全功能"
 L["TAB_IGNORE_LIST"] = "忽略清單"
 L["TAB_ERASE_LIST"] = "刪除清單"
 L["ENABLED"] = "已啟用"
@@ -102,12 +103,25 @@ L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "啟用自動售賣訊息"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "逐項"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "僅彙總"
 
--- Maximum Value to Erase
-L["OPTIONS_VALUE_CAP_HEADER"] = "刪除的最高價值"
-L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "永不刪除價值超過你在下方所設上限的物品或整組物品。"
-L["OPTIONS_ENABLE_VALUE_CAP"] = "啟用刪除的最高價值"
-L["OPTIONS_VALUE_CAP_LIMIT"] = "永不刪除價值超過"
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "回饋與支援"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"你刪除的物品幾乎都能透過暴雪的物品恢復服務找回，所以這裡的失誤很少是無法挽回的。不過這些設定仍然值得一看：Magic Eraser 有多謹慎、又會告訴你多少，都在這裡決定。"
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "物品提示警告"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"當 Magic Eraser 會刪除某件背包物品，或忽略清單正在保護它時，為該物品的提示加入一行說明。"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "啟用物品提示警告"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "銀行取回"
@@ -115,11 +129,30 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "啟用銀行取回"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"開啟銀行時自動取出被 Magic Eraser 標記為雜物的物品，方便你刪除它們。"
 
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "物品提示"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"當 Magic Eraser 會刪除某件背包物品，或忽略清單正在保護它時，為該物品的提示加入一行說明。"
-L["OPTIONS_ENABLE_TOOLTIPS"] = "啟用物品提示"
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "手動刪除輔助"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'預設情況下，稀有及以上品質的物品需要你先輸入"刪除"才能丟棄。對於你在下方選擇的物品，這會變成簡單的是或否確認。'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "啟用手動刪除輔助"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "適用於"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "無出售價值"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "小地圖刪除確認"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "在刪除下方勾選的物品類型前先詢問。"
+L["OPTIONS_ENABLE_SAFETY"] = "啟用小地圖刪除確認"
+L["OPTIONS_SAFETY_QUEST"] = "對已完成任務的物品"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "對已經用不上的消耗品"
+L["OPTIONS_SAFETY_WHITE"] = "對可售賣的白色物品"
+L["OPTIONS_SAFETY_GRAY"] = "對可賣給商人的灰色雜物"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "刪除的最高價值"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "永不刪除價值超過你在下方所設上限的物品或整組物品。"
+L["OPTIONS_ENABLE_VALUE_CAP"] = "啟用刪除的最高價值"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "永不刪除價值超過"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空間警告"
@@ -127,22 +160,6 @@ L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"當背包空格減少到你在下方設定的閾值時，在聊天框中倒數提醒。"
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "啟用背包空間警告"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格閾值"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "刪除確認"
-L["OPTIONS_SAFETY_DESCRIPTION"] = "在刪除下方勾選的物品類型前先詢問。"
-L["OPTIONS_ENABLE_SAFETY"] = "啟用刪除確認"
-L["OPTIONS_SAFETY_QUEST"] = "對已完成任務的物品"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "對低等級消耗品"
-L["OPTIONS_SAFETY_WHITE"] = "對可售賣的白色物品"
-L["OPTIONS_SAFETY_GRAY"] = "對可售賣的灰色物品"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "回饋與支援"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

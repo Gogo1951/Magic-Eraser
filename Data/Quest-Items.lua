@@ -134,7 +134,6 @@ WHERE it.name NOT LIKE '%Test%'
   AND it.name NOT LIKE 'OLD %'
 ORDER BY lingers, late_handin DESC, section, it.name;
 
-============================================================================
 SECOND QUERY :: items a quest hands out that no quest ever takes back
 
 The query above joins granted to handed_in, so it only ever sees items a
@@ -209,7 +208,6 @@ If ReqSpellCast is named differently on your schema, check with
   SHOW COLUMNS FROM quest_template LIKE '%Spell%';
 and for the bag guard,
   SHOW COLUMNS FROM item_template LIKE '%ontainer%';
-============================================================================
 
 SET SESSION group_concat_max_len = 16384;
 
@@ -307,6 +305,24 @@ WHERE NOT EXISTS (SELECT 1 FROM taken t WHERE t.item = g.item)
   AND it.name NOT LIKE '%(old%'
 ORDER BY confidence, section, it.name;
 
+SUPERSEDED ITEMS :: a third shape, and neither query above can find it
+
+An item no quest ever consumes, retired by a better one a quest pays out.
+Argent Dawn Commission (12846) is keyed to 5213 The Active Agent, a quest that
+neither hands the Commission out nor takes it back. It pays Seal of the Dawn
+or Rune of the Dawn, and both collect scourgestones in the Commission's place
+while carrying real stats, so finishing it leaves the badge with no job.
+
+Both queries drop the item by construction. The first joins granted to
+handed_in and nothing in the game ever takes a Commission at a turn-in; the
+second cuts it at any_repeatable = 0, because the quests that hand it out
+(5401, 5405, 5503) are repeatable. Those repeatable quests are also why
+erasing one early costs so little: the player takes another.
+
+Rows of this shape are keyed by hand and by eye, never by a query. An audit
+that diffs this table against either query reports them as orphans, and that
+is expected rather than a finding.
+
 ]]
 
 ns.AllowedDeleteQuestItems = {
@@ -337,6 +353,7 @@ ns.AllowedDeleteQuestItems = {
 	[1361] = { 139 }, -- Another Clue to Sander's Treasure
 	[21136] = { 8729 }, -- Arcanite Buoy
 	[18706] = { 7838 }, -- Arena Master
+	[12846] = { 5213 }, -- Argent Dawn Commission
 	[3668] = { 522 }, -- Assassin's Contract
 	[12564] = { 4881 }, -- Assassination Note
 	[12650] = { 105, 211 }, -- Attuned Dampener
