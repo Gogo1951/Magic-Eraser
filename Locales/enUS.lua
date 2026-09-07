@@ -27,7 +27,7 @@ L["BAGS_FULL_NUDGE_ONE"] = "Your bags are nearly full. You have 1 slot remaining
 L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can erase items."
 L["ERASED_ITEM"] = "Erased %s%s."
 L["ERASED_ITEM_WITH_VALUE"] = "Erased %s%s, worth %s."
-L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, from a quest you have completed."
+L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, left over from a quest you have completed."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "Erased %s%s, which starts a quest your character cannot take."
 L["QUEST_ITEM_READY"] = "%s can now be safely erased!"
 L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased. It starts a quest your character cannot take."
@@ -78,6 +78,7 @@ L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
 L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Automatically sell items flagged as clutter by Magic Eraser when you open a merchant window."
+L["TAB_SAFETY"] = "Safety Features"
 L["TAB_IGNORE_LIST"] = "Ignore List"
 L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
@@ -103,12 +104,25 @@ L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Enable Auto-Vend Messages"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Line Item"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary Only"
 
--- Maximum Value to Erase
-L["OPTIONS_VALUE_CAP_HEADER"] = "Maximum Value to Erase"
-L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Never erase an item or stack worth more than the limit you set below."
-L["OPTIONS_ENABLE_VALUE_CAP"] = "Enable Maximum Value to Erase"
-L["OPTIONS_VALUE_CAP_LIMIT"] = "Never Erase Anything Worth More Than"
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "Feedback & Support"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"Nearly every item you erase can be brought back through Blizzard's item restoration service, so a mistake here is rarely permanent. These settings are still worth a look: they are where you decide how cautious Magic Eraser is, and how much it tells you along the way."
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "Tooltip Warnings"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Add a line to an item's tooltip in your bags when Magic Eraser would erase it, or when your Ignore List is protecting it."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltip Warnings"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
@@ -116,33 +130,36 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Automatically pull items flagged as clutter by Magic Eraser out of your bank when you open it, so you can erase them."
 
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Item Tooltips"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Add a line to an item's tooltip in your bags when Magic Eraser would erase it, or when your Ignore List is protecting it."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Item Tooltips"
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Manual Delete Assistance"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'By default, Rare and better items make you type "Delete" before you can toss them. This turns that into a simple Yes or No, for the items you choose below.'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Manual Delete Assistance"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Applies To"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "No Sale Value"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Mini-map Eraser Confirmation"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Ask before erasing the item types you check below."
+L["OPTIONS_ENABLE_SAFETY"] = "Enable Mini-map Eraser Confirmation"
+L["OPTIONS_SAFETY_QUEST"] = "For Completed Quest Items"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "For Outgrown Consumable Items"
+L["OPTIONS_SAFETY_WHITE"] = "For White Vendor-Quality Items"
+L["OPTIONS_SAFETY_GRAY"] = "For Gray Vendor-Trash Items"
+
+-- Maximum Value to Erase
+L["OPTIONS_VALUE_CAP_HEADER"] = "Maximum Value to Erase"
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Never erase an item or stack worth more than the limit you set below."
+L["OPTIONS_ENABLE_VALUE_CAP"] = "Enable Maximum Value to Erase"
+L["OPTIONS_VALUE_CAP_LIMIT"] = "Never Erase Anything Worth More Than"
+L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat as your free bag slots drop to the threshold you set below."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Enable Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "Eraser Confirmations"
-L["OPTIONS_SAFETY_DESCRIPTION"] = "Ask before erasing the item types you check below."
-L["OPTIONS_ENABLE_SAFETY"] = "Enable Eraser Confirmations"
-L["OPTIONS_SAFETY_QUEST"] = "For Completed Quest Items"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "For Low-Level Consumable Items"
-L["OPTIONS_SAFETY_WHITE"] = "For White Vendor-Quality Items"
-L["OPTIONS_SAFETY_GRAY"] = "For Gray Vendor-Quality Items"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "Feedback & Support"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists
@@ -152,8 +169,8 @@ L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_LIST_GLOBAL"] = "Global"
 L["OPTIONS_LIST_ADD_ID"] = "Add by Item ID"
 L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
-	"Type an item ID and press Enter. You can also shift-click an item link in chat to drop it in here."
-L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or shift-click an item link in chat."
+	"Type an item ID and press Enter. You can also Shift-click an item link in chat to drop it in here."
+L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or Shift-click an item link in chat."
 L["OPTIONS_LIST_REMOVE"] = "Remove"
 L["OPTIONS_LIST_EMPTY"] = "This list is empty."
 
