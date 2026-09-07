@@ -2,7 +2,6 @@ local _, ns = ...
 
 --[[
 
-============================================================================
 Magic Eraser :: items that START a quest, non-repeatable
 
 Target: CMaNGOS WotLK (mangos-wotlk) world DB, MySQL 8. One statement.
@@ -60,7 +59,6 @@ Race bits: Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32,
            Alliance = 1101, Horde = 690, 0 = no restriction
 Class bits: Warrior 1, Paladin 2, Hunter 4, Rogue 8, Priest 16,
             DeathKnight 32, Shaman 64, Mage 128, Warlock 256, Druid 1024
-============================================================================
 
 WITH starter AS (
   SELECT it.entry AS item, it.name, it.Quality, it.class, it.subclass,
