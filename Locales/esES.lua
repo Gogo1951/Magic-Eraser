@@ -27,7 +27,7 @@ L["BAGS_FULL_NUDGE_ONE"] = "Tus bolsas están casi llenas. Te queda 1 espacio."
 L["CURSOR_TOO_FAST"] = "¡Más despacio! Estás haciendo clic más rápido de lo que el juego puede eliminar objetos."
 L["ERASED_ITEM"] = "%s%s eliminado."
 L["ERASED_ITEM_WITH_VALUE"] = "%s%s eliminado, valor %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminado, de una misión que has completado."
+L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminado, sobrante de una misión que has completado."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s eliminado, que inicia una misión que tu personaje no puede aceptar."
 L["QUEST_ITEM_READY"] = "¡%s ahora se puede eliminar de forma segura!"
 L["QUEST_STARTER_UNAVAILABLE"] =
@@ -35,11 +35,11 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendido, valor %s."
-L["SOLD_SUMMARY"] = "%s objetos (%s espacios) vendidos, valor %s."
+L["SOLD_SUMMARY"] = "%s objetos (%s espacios de bolsa) vendidos, valor %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-venta venderá los objetos al terminar el combate."
 
 -- Bank Retrieval
-L["BANK_RETRIEVED"] = "%s objetos (%s espacios) sacados de tu banco, valor %s."
+L["BANK_RETRIEVED"] = "%s objetos (%s espacios de bolsa) sacados de tu banco, valor %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -56,7 +56,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Marcado por tu lista de eliminación."
 L["LOWEST_VALUE_ITEM"] = "Objeto de menor valor"
 L["CLUTTER_REPORT"] = "Informe de basura"
 L["CLUTTER_ITEMS"] = "(%s objetos)"
-L["CLUTTER_SLOTS"] = "%s espacios"
+L["CLUTTER_SLOTS"] = "%s espacios de bolsa"
 L["NO_VALUE"] = "Sin valor"
 L["LEFT_CLICK"] = "Clic izquierdo"
 L["RIGHT_CLICK"] = "Clic derecho"
@@ -79,6 +79,7 @@ L["MINIMAP_OPTIONS"] = "Opciones de Magic Eraser"
 L["AUTO_VEND"] = "Auto-venta"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende automáticamente los objetos marcados como basura por Magic Eraser al abrir una ventana de comerciante."
+L["TAB_SAFETY"] = "Funciones de seguridad"
 L["TAB_IGNORE_LIST"] = "Lista de ignorados"
 L["TAB_ERASE_LIST"] = "Lista de eliminación"
 L["ENABLED"] = "Activado"
@@ -96,13 +97,57 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Habilitar botón del minimapa"
 -- /Commands
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
 L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este complemento."
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este add-on."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"
 L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Habilitar mensajes de Auto-venta"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Por objeto"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Solo resumen"
+
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "Comentarios y soporte"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"Casi cualquier objeto que elimines se puede recuperar mediante el servicio de restauración de objetos de Blizzard, así que un error aquí rara vez es permanente. Aun así, merece la pena revisar estos ajustes: aquí decides lo cauteloso que es Magic Eraser y cuánto te cuenta por el camino."
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "Avisos en las descripciones"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Añade una línea a la descripción de un objeto en tus bolsas cuando Magic Eraser vaya a eliminarlo, o cuando tu lista de ignorados lo esté protegiendo."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Habilitar avisos en las descripciones"
+
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Saca automáticamente de tu banco los objetos marcados como basura por Magic Eraser al abrirlo, para que puedas eliminarlos."
+
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Ayuda al eliminar a mano"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'Por defecto, los objetos de calidad Rara o superior te obligan a escribir "Borrar" antes de poder deshacerte de ellos. Esto lo convierte en un simple Sí o No, para los objetos que elijas abajo.'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Habilitar ayuda al eliminar a mano"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Se aplica a"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "Todos los objetos"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Sin valor de venta"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Confirmación al eliminar desde el minimapa"
+L["OPTIONS_SAFETY_DESCRIPTION"] = "Preguntar antes de eliminar los tipos de objeto que marques abajo."
+L["OPTIONS_ENABLE_SAFETY"] = "Habilitar confirmación al eliminar desde el minimapa"
+L["OPTIONS_SAFETY_QUEST"] = "Para objetos de misiones completadas"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "Para consumibles que ya has superado"
+L["OPTIONS_SAFETY_WHITE"] = "Para objetos blancos de calidad de vendedor"
+L["OPTIONS_SAFETY_GRAY"] = "Para basura de vendedor gris"
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Valor máximo a eliminar"
@@ -112,40 +157,12 @@ L["OPTIONS_ENABLE_VALUE_CAP"] = "Habilitar valor máximo a eliminar"
 L["OPTIONS_VALUE_CAP_LIMIT"] = "Nunca eliminar nada que valga más de"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d de oro"
 
--- Bank Retrieval
-L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
-L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Saca automáticamente de tu banco los objetos marcados como basura por Magic Eraser al abrirlo, para que puedas eliminarlos."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Descripciones de objetos"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Añade una línea a la descripción de un objeto en tus bolsas cuando Magic Eraser vaya a eliminarlo, o cuando tu lista de ignorados lo esté protegiendo."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Habilitar descripciones de objetos"
-
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Cuenta atrás en el chat a medida que tus espacios libres bajan hasta el umbral que definas abajo."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Habilitar avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Umbral de espacios libres"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "Confirmaciones de eliminación"
-L["OPTIONS_SAFETY_DESCRIPTION"] = "Preguntar antes de eliminar los tipos de objeto que marques abajo."
-L["OPTIONS_ENABLE_SAFETY"] = "Habilitar confirmaciones de eliminación"
-L["OPTIONS_SAFETY_QUEST"] = "Para objetos de misiones completadas"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "Para consumibles de bajo nivel"
-L["OPTIONS_SAFETY_WHITE"] = "Para objetos blancos de calidad de vendedor"
-L["OPTIONS_SAFETY_GRAY"] = "Para objetos grises de calidad de vendedor"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "Comentarios y soporte"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

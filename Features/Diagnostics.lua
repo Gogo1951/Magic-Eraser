@@ -251,9 +251,8 @@ end
     FAIL on one half is the report working rather than a defect: the pair is what
     tells a bug report which branch that client actually took. Reading the
     tooltip pair as PASS legacy plus FAIL modern is how you know the SetBagItem
-    hook is the live path there, and the option-opener pair answers the same
-    question for ns:OpenOptionsPanel's routing. Never drop the half that fails on
-    the client in front of you -- that is the half carrying the answer.
+    hook is the live path there. Never drop the half that fails on the client in
+    front of you -- that is the half carrying the answer.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
 	-- { label, testFunction }
@@ -297,12 +296,6 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"Settings.OpenToCategory",
 		function()
 			return type(Settings) == "table" and type(Settings.OpenToCategory) == "function"
-		end,
-	},
-	{
-		"InterfaceOptionsFrame_OpenToCategory (legacy)",
-		function()
-			return type(InterfaceOptionsFrame_OpenToCategory) == "function"
 		end,
 	},
 	{
@@ -399,6 +392,55 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"StaticPopup_Show",
 		function()
 			return type(StaticPopup_Show) == "function"
+		end,
+	},
+	{
+		"StaticPopup_FindVisible",
+		function()
+			return type(StaticPopup_FindVisible) == "function"
+		end,
+	},
+	--[[
+	    Manual Delete Assistance reads two client strings and calls four methods on
+	    the delete dialog. A client missing any of them leaves the feature silently
+	    inert -- the prompt still asks for the typed word -- so each is a row here
+	    and the report says which one was absent. StaticPopup1 is a global frame on
+	    both flavors, so the probe needs no dialog open.
+	]]
+	{
+		"DELETE_GOOD_ITEM",
+		function()
+			return type(DELETE_GOOD_ITEM) == "string"
+		end,
+	},
+	{
+		"DELETE_ITEM_CONFIRM_STRING",
+		function()
+			return type(DELETE_ITEM_CONFIRM_STRING) == "string"
+		end,
+	},
+	{
+		"StaticPopup1.GetEditBox",
+		function()
+			return type(StaticPopup1) == "table" and type(StaticPopup1.GetEditBox) == "function"
+		end,
+	},
+	{
+		"StaticPopup1.GetButton1",
+		function()
+			return type(StaticPopup1) == "table" and type(StaticPopup1.GetButton1) == "function"
+		end,
+	},
+	{
+		"StaticPopup1.GetTextFontString",
+		function()
+			return type(StaticPopup1) == "table" and type(StaticPopup1.GetTextFontString) == "function"
+		end,
+	},
+	{
+		"StaticPopup1.Resize",
+		function()
+			return type(StaticPopup1) == "table" and type(StaticPopup1.Resize) == "function"
 		end,
 	},
 	{

@@ -66,6 +66,7 @@ Features/Announcements.lua
 Features/Ignore-List.lua
 Features/Erase-List.lua
 Features/Eraser.lua
+Features/Manual-Delete.lua
 Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
@@ -73,7 +74,14 @@ Features/Item-Tooltips.lua
 Features/Diagnostics.lua
 Features/Minimap-Button.lua
 Options/Options-Utilities.lua
+Options/Options-Auto-Vend.lua
+Options/Options-Eraser.lua
+Options/Options-Bank-Retrieval.lua
+Options/Options-Item-Tooltips.lua
+Options/Options-Bag-Warnings.lua
+Options/Options-Manual-Delete.lua
 Options/Options-General.lua
+Options/Options-Safety.lua
 Options/Options-Ignore-List.lua
 Options/Options-Erase-List.lua
 Options/Options-Profiles.lua

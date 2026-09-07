@@ -10,9 +10,9 @@ local D = ns.DiagnosticsStrings
     Registration only -- panel content lives in the per-panel builder files.
     Called from ns:OnPlayerLogin once ns.db exists, because the Ignore List,
     Erase List and Profiles builders need the AceDB database. Child order is
-    General (root) -> Ignore List -> Erase List -> Profiles -> the Diagnostic
-    Tools panel last; each panel's third AddToBlizOptions argument is the
-    parent's display name (ns.AddonTitle) so all five nest under Magic Eraser.
+    General (root) -> Safety -> Ignore List -> Erase List -> Profiles -> the
+    Diagnostic Tools panel last; each panel's third AddToBlizOptions argument is
+    the parent's display name (ns.AddonTitle) so all six nest under Magic Eraser.
     The Profiles display name comes already localized from AceDBOptions-3.0.
 ]]
 local AceConfig = LibStub("AceConfig-3.0")
@@ -28,6 +28,14 @@ function ns:RegisterOptionsPanels()
 	    name-based lookup returns nil. Capture the real references here.
 	]]
 	ns.GeneralPanel, ns.GeneralCategoryID = AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
+
+	--[[
+	    Safety sits directly under the root panel, ahead of the two list panels:
+	    it is configuration, they are data. A built table rather than a builder
+	    function, because nothing on it is drawn from a live list.
+	]]
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Safety, ns.BuildSafetyOptions())
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Safety, L["TAB_SAFETY"], ns.AddonTitle)
 
 	--[[
 	    The builder function, not a built table: the Ignore List panel's rows are
@@ -79,12 +87,6 @@ function ns:OpenOptionsPanel()
 
 	if Settings and Settings.OpenToCategory and ns.GeneralCategoryID then
 		Settings.OpenToCategory(ns.GeneralCategoryID)
-		return
-	end
-	if InterfaceOptionsFrame_OpenToCategory and ns.GeneralPanel then
-		InterfaceOptionsFrame_OpenToCategory(ns.GeneralPanel)
-		-- Called twice for Classic compatibility.
-		InterfaceOptionsFrame_OpenToCategory(ns.GeneralPanel)
 		return
 	end
 	AceConfigDialog:Open(ns.OPTIONS_REGISTRY.General)

@@ -27,31 +27,32 @@ L["BAGS_FULL_NUDGE"] = "Ваши сумки почти полны. Свобод�
 L["BAGS_FULL_NUDGE_ONE"] = "Ваши сумки почти полны. Свободна 1 ячейка."
 L["CURSOR_TOO_FAST"] =
 	"Помедленнее! Вы кликаете быстрее, чем игра успевает удалять предметы."
-L["ERASED_ITEM"] = "%s%s удалён."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s удалён, стоимость %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s удалён, из выполненного вами задания."
+L["ERASED_ITEM"] = "Удалено: %s%s."
+L["ERASED_ITEM_WITH_VALUE"] = "Удалено: %s%s, стоимость %s."
+L["ERASED_ITEM_FROM_QUEST"] =
+	"Удалено: %s%s, осталось от выполненного вами задания."
 L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
-	"%s%s удалён: начинает задание, которое ваш персонаж не может взять."
+	"Удалено: %s%s, начинает задание, которое ваш персонаж не может взять."
 L["QUEST_ITEM_READY"] = "%s теперь можно безопасно удалить!"
 L["QUEST_STARTER_UNAVAILABLE"] =
 	"%s можно безопасно удалить: этот предмет начинает задание, которое ваш персонаж не может взять."
 
 -- Auto-Vend
-L["SOLD_ITEM"] = "%s%s продан, стоимость %s."
-L["SOLD_SUMMARY"] = "Продано предметов: %s (%s ячеек), стоимость %s."
+L["SOLD_ITEM"] = "Продано: %s%s, стоимость %s."
+L["SOLD_SUMMARY"] = "Продано предметов: %s (%s ячеек сумок), стоимость %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Автопродажа сработает после окончания боя."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] =
-	"Из банка извлечено предметов: %s (%s ячеек), стоимость %s."
+	"Из банка извлечено предметов: %s (%s ячеек сумок), стоимость %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
 --------------------------------------------------------------------------------
 
-L["TOOLTIP_WILL_ERASE"] = "Будет удалён."
-L["TOOLTIP_IGNORED"] = "Защищён вашим списком игнорируемых."
-L["TOOLTIP_ON_ERASE_LIST"] = "Отмечен вашим списком удаления."
+L["TOOLTIP_WILL_ERASE"] = "Будет удалено."
+L["TOOLTIP_IGNORED"] = "Под защитой вашего списка игнорируемых."
+L["TOOLTIP_ON_ERASE_LIST"] = "Отмечено вашим списком удаления."
 
 --------------------------------------------------------------------------------
 -- Minimap Button Tooltip
@@ -60,7 +61,7 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Отмечен вашим списком удал�
 L["LOWEST_VALUE_ITEM"] = "Предмет наименьшей ценности"
 L["CLUTTER_REPORT"] = "Отчёт о хламе"
 L["CLUTTER_ITEMS"] = "(%s предметов)"
-L["CLUTTER_SLOTS"] = "%s ячеек"
+L["CLUTTER_SLOTS"] = "%s ячеек сумок"
 L["NO_VALUE"] = "Без ценности"
 L["LEFT_CLICK"] = "Левый клик"
 L["RIGHT_CLICK"] = "Правый клик"
@@ -84,6 +85,7 @@ L["MINIMAP_OPTIONS"] = "Настройки Magic Eraser"
 L["AUTO_VEND"] = "Автопродажа"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Автоматически продаёт предметы, отмеченные Magic Eraser как хлам, при открытии окна торговца."
+L["TAB_SAFETY"] = "Функции безопасности"
 L["TAB_IGNORE_LIST"] = "Список игнорируемых"
 L["TAB_ERASE_LIST"] = "Список удаления"
 L["ENABLED"] = "Включено"
@@ -109,6 +111,51 @@ L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"] = "Включить сообщения а
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "По предметам"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Только сводка"
 
+-- Feedback & Support
+L["OPTIONS_FEEDBACK"] = "Обратная связь и поддержка"
+L["OPTIONS_CURSEFORGE"] = "CurseForge"
+L["OPTIONS_GITHUB"] = "GitHub"
+L["OPTIONS_DISCORD"] = "Discord"
+L["OPTIONS_WAGO"] = "Wago"
+
+--------------------------------------------------------------------------------
+-- Options: Safety Panel
+--------------------------------------------------------------------------------
+
+L["TAB_SAFETY_DESCRIPTION"] =
+	"Почти любой удалённый предмет можно вернуть через службу восстановления предметов Blizzard, так что ошибка здесь редко бывает непоправимой. И всё же эти настройки стоит просмотреть: здесь вы решаете, насколько осторожен Magic Eraser и насколько подробно он вас об этом извещает."
+
+-- Tooltip Warnings
+L["OPTIONS_TOOLTIP_HEADER"] = "Предупреждения в подсказках"
+L["OPTIONS_TOOLTIP_DESCRIPTION"] =
+	"Добавляет строку в подсказку предмета в сумках, когда Magic Eraser собирается его удалить или когда его защищает список игнорируемых."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Включить предупреждения в подсказках"
+
+-- Bank Retrieval
+L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
+L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
+	"Автоматически извлекает из банка предметы, отмеченные Magic Eraser как хлам, когда вы его открываете, чтобы вы могли их удалить."
+
+-- Manual Delete Assistance
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Помощь при удалении вручную"
+L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
+	'По умолчанию предметы редкого и выше качества требуют ввести "Удалить", прежде чем от них можно избавиться. Здесь это превращается в простое Да или Нет, для выбранных ниже предметов.'
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Включить помощь при удалении вручную"
+L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Применяется к"
+L["OPTIONS_MANUAL_DELETE_ALL"] = "Все предметы"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Без цены продажи"
+
+-- Mini-map Eraser Confirmation
+L["OPTIONS_SAFETY_HEADER"] = "Подтверждение удаления с миникарты"
+L["OPTIONS_SAFETY_DESCRIPTION"] =
+	"Спрашивать перед удалением отмеченных ниже типов предметов."
+L["OPTIONS_ENABLE_SAFETY"] = "Включить подтверждение удаления с миникарты"
+L["OPTIONS_SAFETY_QUEST"] = "Для предметов выполненных заданий"
+L["OPTIONS_SAFETY_CONSUMABLE"] = "Для ставших ненужными расходников"
+L["OPTIONS_SAFETY_WHITE"] = "Для белых предметов торгового качества"
+L["OPTIONS_SAFETY_GRAY"] = "Для серого торгового хлама"
+
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Максимальная стоимость для удаления"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
@@ -117,41 +164,12 @@ L["OPTIONS_ENABLE_VALUE_CAP"] = "Включить максимальную ст�
 L["OPTIONS_VALUE_CAP_LIMIT"] = "Не удалять ничего дороже"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d золота"
 
--- Bank Retrieval
-L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
-L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Автоматически извлекает из банка предметы, отмеченные Magic Eraser как хлам, когда вы его открываете, чтобы вы могли их удалить."
-
--- Item Tooltips
-L["OPTIONS_TOOLTIP_HEADER"] = "Подсказки предметов"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Добавляет строку в подсказку предмета в сумках, когда Magic Eraser собирается его удалить или когда его защищает список игнорируемых."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Включить подсказки предметов"
-
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Ведёт обратный отсчёт в чате, пока свободные ячейки сумок снижаются до заданного ниже порога."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Включить предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Порог свободных ячеек"
-
--- Eraser Confirmations
-L["OPTIONS_SAFETY_HEADER"] = "Подтверждения удаления"
-L["OPTIONS_SAFETY_DESCRIPTION"] =
-	"Спрашивать перед удалением отмеченных ниже типов предметов."
-L["OPTIONS_ENABLE_SAFETY"] = "Включить подтверждения удаления"
-L["OPTIONS_SAFETY_QUEST"] = "Для предметов выполненных заданий"
-L["OPTIONS_SAFETY_CONSUMABLE"] = "Для низкоуровневых расходников"
-L["OPTIONS_SAFETY_WHITE"] = "Для белых предметов для продажи"
-L["OPTIONS_SAFETY_GRAY"] = "Для серых предметов для продажи"
-
--- Feedback & Support
-L["OPTIONS_FEEDBACK"] = "Обратная связь и поддержка"
-L["OPTIONS_CURSEFORGE"] = "CurseForge"
-L["OPTIONS_GITHUB"] = "GitHub"
-L["OPTIONS_DISCORD"] = "Discord"
-L["OPTIONS_WAGO"] = "Wago"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists
