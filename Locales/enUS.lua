@@ -143,14 +143,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltip Warnings"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Automatically pull items flagged as clutter by Magic Eraser out of your bank when you open it, so you can erase them."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Manual Delete Assistance"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'By default, Rare and better items make you type "Delete" before you can toss them. This turns that into a simple Yes or No, for the items you choose below.'
+	'By default, Rare and better items make you type "%s" before you can toss them. This turns that into a simple Yes or No, for the items you choose below.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Manual Delete Assistance"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Applies To"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
@@ -174,7 +174,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
-L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat as your free bag slots drop to the threshold you set below."
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat once your free bag slots drop to the threshold you set below."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Enable Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
 

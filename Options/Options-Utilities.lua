@@ -78,8 +78,10 @@ end
 
     hidden goes on the group and never on the members; hung off the controls
     individually, the indent is left behind on its own line when the section
-    collapses. Lives here rather than in one panel file because every feature
-    fragment composed into the General panel builds sub-rows.
+    collapses. Lives here rather than in one panel file because fragments on
+    both settings panels build sub-rows: Auto-Vend on the General panel, and
+    Manual Delete Assistance, the two Eraser sections and Bag-Space Warnings on
+    Safety Features.
 ]]
 function ns.OptionsSubRow(order, hidden, controls)
 	local args = {

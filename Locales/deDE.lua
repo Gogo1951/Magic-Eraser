@@ -145,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltip-Warnungen aktivieren"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Holt automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, aus deiner Bank, wenn du sie öffnest, damit du sie löschen kannst."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Hilfe beim manuellen Löschen"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Standardmäßig musst du bei Gegenständen ab Selten erst "Löschen" eintippen, bevor du sie wegwerfen kannst. Das wird hier zu einem einfachen Ja oder Nein, für die unten gewählten Gegenstände.'
+	'Standardmäßig musst du bei Gegenständen ab Selten erst "%s" eintippen, bevor du sie wegwerfen kannst. Das wird hier zu einem einfachen Ja oder Nein, für die unten gewählten Gegenstände.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Hilfe beim manuellen Löschen aktivieren"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Gilt für"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"
@@ -178,7 +178,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Zählt im Chat herunter, während deine freien Taschenplätze auf den unten festgelegten Schwellenwert sinken."
+	"Zählt im Chat herunter, sobald deine freien Taschenplätze auf den unten festgelegten Schwellenwert sinken."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Taschenplatz-Warnungen aktivieren"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
 

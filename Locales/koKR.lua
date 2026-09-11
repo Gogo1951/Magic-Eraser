@@ -145,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "툴팁 경고 활성화"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "은행에서 가져오기"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "은행에서 가져오기 활성화"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"은행을 열면 Magic Eraser가 잡동사니로 표시한 아이템을 자동으로 꺼내 삭제할 수 있게 합니다."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "은행에서 가져오기 활성화"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "수동 삭제 도우미"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'기본적으로 희귀 등급 이상의 아이템은 버리기 전에 "삭제"를 입력해야 합니다. 아래에서 선택한 아이템에 한해 이를 간단한 예/아니오 확인으로 바꿉니다.'
+	'기본적으로 희귀 등급 이상의 아이템은 버리기 전에 "%s"를 입력해야 합니다. 아래에서 선택한 아이템에 한해 이를 간단한 예/아니오 확인으로 바꿉니다.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "수동 삭제 도우미 활성화"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "적용 대상"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "모든 아이템"
@@ -178,7 +178,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d 골드"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "가방 공간 경고"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"남은 가방 칸이 아래에서 설정한 기준값까지 줄어드는 동안 대화창에 카운트다운합니다."
+	"남은 가방 칸이 아래에서 설정한 기준값까지 줄어들면 대화창에 카운트다운합니다."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "가방 공간 경고 활성화"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "빈 칸 기준값"
 

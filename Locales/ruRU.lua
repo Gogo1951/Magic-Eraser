@@ -152,14 +152,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Включить предупреждения в
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Автоматически извлекает из банка предметы, отмеченные Magic Eraser как хлам, когда вы его открываете, чтобы вы могли их удалить."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Помощь при удалении вручную"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'По умолчанию предметы редкого и выше качества требуют ввести "Удалить", прежде чем от них можно избавиться. Здесь это превращается в простое Да или Нет, для выбранных ниже предметов.'
+	'По умолчанию предметы редкого и выше качества требуют ввести "%s", прежде чем от них можно избавиться. Здесь это превращается в простое Да или Нет, для выбранных ниже предметов.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Включить помощь при удалении вручную"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Применяется к"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Все предметы"
@@ -186,7 +186,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d золота"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Ведёт обратный отсчёт в чате, пока свободные ячейки сумок снижаются до заданного ниже порога."
+	"Ведёт обратный отсчёт в чате, как только число свободных ячеек сумок опустится до заданного ниже порога."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Включить предупреждения о месте в сумках"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Порог свободных ячеек"
 

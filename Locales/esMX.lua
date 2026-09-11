@@ -144,14 +144,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Habilitar avisos en las descripciones"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Saca automáticamente de tu banco los objetos marcados como basura por Magic Eraser al abrirlo, para que puedas eliminarlos."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Ayuda al eliminar a mano"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Por defecto, los objetos de calidad Rara o superior te obligan a escribir "Borrar" antes de poder deshacerte de ellos. Esto lo convierte en un simple Sí o No, para los objetos que elijas abajo.'
+	'Por defecto, los objetos de calidad Rara o superior te obligan a escribir "%s" antes de poder deshacerte de ellos. Esto lo convierte en un simple Sí o No, para los objetos que elijas abajo.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Habilitar ayuda al eliminar a mano"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Se aplica a"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Todos los objetos"
@@ -177,7 +177,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d de oro"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Cuenta atrás en el chat a medida que tus espacios libres bajan hasta el umbral que definas abajo."
+	"Cuenta atrás en el chat en cuanto tus espacios libres bajen hasta el umbral que definas abajo."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Habilitar avisos de espacio en bolsas"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Umbral de espacios libres"
 

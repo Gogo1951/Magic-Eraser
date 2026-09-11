@@ -142,14 +142,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "启用物品提示警告"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "银行取回"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "启用银行取回"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"打开银行时自动取出被 Magic Eraser 标记为杂物的物品，方便你删除它们。"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "启用银行取回"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "手动删除辅助"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'默认情况下，稀有及以上品质的物品需要你先输入"删除"才能丢弃。对于你在下方选择的物品，这会变成简单的是或否确认。'
+	'默认情况下，稀有及以上品质的物品需要你先输入"%s"才能丢弃。对于你在下方选择的物品，这会变成简单的是或否确认。'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "启用手动删除辅助"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "适用于"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"
@@ -174,7 +174,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空间警告"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"当背包空格减少到你在下方设置的阈值时，在聊天框中倒数提醒。"
+	"一旦背包空格减少到你在下方设置的阈值，就会在聊天框中倒数提醒。"
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "启用背包空间警告"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格阈值"
 
