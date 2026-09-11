@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
 L["SOLD_SUMMARY"] = "%s개 아이템 (가방 %s칸) 판매됨, 가치 %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s개 아이템 (가방 1칸) 판매됨, 가치 %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1개 아이템 (가방 1칸) 판매됨, 가치 %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩니다."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "은행에서 %s개 아이템 (가방 %s칸) 꺼냄, 가치 %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "은행에서 %s개 아이템 (가방 1칸) 꺼냄, 가치 %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "은행에서 1개 아이템 (가방 1칸) 꺼냄, 가치 %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "삭제 목록으로 표시됨."
 L["LOWEST_VALUE_ITEM"] = "최저가 아이템"
 L["CLUTTER_REPORT"] = "잡동사니 보고서"
 L["CLUTTER_ITEMS"] = "(%s개)"
+L["CLUTTER_ITEMS_ONE"] = "(1개)"
 L["CLUTTER_SLOTS"] = "가방 %s칸"
+L["CLUTTER_SLOTS_ONE"] = "가방 1칸"
 L["NO_VALUE"] = "가치 없음"
 L["LEFT_CLICK"] = "좌클릭"
 L["RIGHT_CLICK"] = "우클릭"

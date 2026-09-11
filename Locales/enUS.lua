@@ -35,10 +35,14 @@ L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased. It starts a quest you
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
 L["SOLD_SUMMARY"] = "Sold %s items (%s bag slots), worth %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "Sold %s items (1 bag slot), worth %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "Sold 1 item (1 bag slot), worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "Pulled %s items (1 bag slot) out of your bank, worth %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "Pulled 1 item (1 bag slot) out of your bank, worth %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -55,7 +59,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Flagged by your Erase List."
 L["LOWEST_VALUE_ITEM"] = "Lowest-Value Item"
 L["CLUTTER_REPORT"] = "Clutter Report"
 L["CLUTTER_ITEMS"] = "(%s Items)"
+L["CLUTTER_ITEMS_ONE"] = "(1 Item)"
 L["CLUTTER_SLOTS"] = "%s Bag Slots"
+L["CLUTTER_SLOTS_ONE"] = "1 Bag Slot"
 L["NO_VALUE"] = "No Value"
 L["LEFT_CLICK"] = "Left-Click"
 L["RIGHT_CLICK"] = "Right-Click"
