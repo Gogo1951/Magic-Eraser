@@ -101,7 +101,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with one click. A curated junk list keeps it safe, while Auto-Vend sells the rest at your next merchant."
+	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
