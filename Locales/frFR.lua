@@ -145,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les avertissements d'infobulle"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Retire automatiquement de votre banque les objets signalés comme rebut par Magic Eraser lorsque vous l'ouvrez, afin que vous puissiez les supprimer."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Aide à la suppression manuelle"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Par défaut, les objets de qualité Rare ou supérieure vous obligent à taper "Supprimer" avant de pouvoir vous en débarrasser. Cela devient un simple Oui ou Non, pour les objets que vous choisissez ci-dessous.'
+	'Par défaut, les objets de qualité Rare ou supérieure vous obligent à taper "%s" avant de pouvoir vous en débarrasser. Cela devient un simple Oui ou Non, pour les objets que vous choisissez ci-dessous.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer l'aide à la suppression manuelle"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "S'applique à"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tous les objets"
@@ -178,7 +178,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Décompte dans la fenêtre de discussion à mesure que vos emplacements libres descendent vers le seuil défini ci-dessous."
+	"Décompte dans la fenêtre de discussion dès que vos emplacements libres descendent jusqu'au seuil défini ci-dessous."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Activer les alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Seuil d'emplacements libres"
 

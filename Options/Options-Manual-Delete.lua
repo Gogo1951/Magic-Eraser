@@ -1,6 +1,8 @@
 local _, ns = ...
 local L = ns.L
 
+local format = string.format
+
 local GetColor = ns.GetColor
 local SubRow, SubLabel = ns.OptionsSubRow, ns.OptionsSubLabel
 
@@ -33,7 +35,8 @@ function ns.BuildManualDeleteOptions(args)
 	args.spacerManualDelete0 = ns.OptionsSpacer(30)
 	args.headerManualDelete = ns.OptionsHeader(L["OPTIONS_MANUAL_DELETE_HEADER"], 31)
 	args.spacerManualDelete1 = ns.OptionsSpacer(32)
-	args.descManualDelete = ns.OptionsDesc(L["OPTIONS_MANUAL_DELETE_DESCRIPTION"], 33)
+	args.descManualDelete =
+		ns.OptionsDesc(format(L["OPTIONS_MANUAL_DELETE_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or ""), 33)
 	args.spacerManualDelete2 = ns.OptionsSpacer(34)
 
 	args.toggleManualDelete = {

@@ -145,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita avvisi nelle descrizioni"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Prelievo dalla banca"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Abilita prelievo dalla banca"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Preleva automaticamente dalla tua banca gli oggetti segnalati come spazzatura da Magic Eraser quando la apri, così puoi eliminarli."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Abilita prelievo dalla banca"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Assistenza all'eliminazione manuale"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Per impostazione predefinita, gli oggetti di qualità Rara o superiore ti obbligano a digitare "Elimina" prima di poterli buttare. Questo lo trasforma in un semplice Sì o No, per gli oggetti che scegli sotto.'
+	'Per impostazione predefinita, gli oggetti di qualità Rara o superiore ti obbligano a digitare "%s" prima di poterli buttare. Questo lo trasforma in un semplice Sì o No, per gli oggetti che scegli sotto.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Abilita assistenza all'eliminazione manuale"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Si applica a"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tutti gli oggetti"
@@ -177,7 +177,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d oro"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avvisi di spazio nelle borse"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Conta alla rovescia in chat mentre i tuoi slot liberi scendono verso la soglia impostata sotto."
+	"Conta alla rovescia in chat non appena i tuoi slot liberi scendono fino alla soglia impostata sotto."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Abilita avvisi di spazio nelle borse"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Soglia di slot liberi"
 

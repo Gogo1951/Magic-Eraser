@@ -462,9 +462,10 @@ end
 
     Keyed by item id and living for the session, so moving a stack between bags or
     opening a merchant cannot make the same item announce twice.
-    ns:OnQuestTurnedIn reads the same set before its own walk: every starter also
-    carries a row in AllowedDeleteQuestItems under the same quest id, so without
-    that check a starter still in the bags at turn-in would announce twice.
+    ns:OnQuestTurnedIn reads the same set before its own walk: nearly every
+    starter also carries a row in AllowedDeleteQuestItems under the same quest
+    id, so without that check a starter still in the bags at turn-in would
+    announce twice.
 ]]
 local announcedStarters = {}
 
