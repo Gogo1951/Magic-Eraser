@@ -74,6 +74,12 @@ L["LOADING_ITEM"] = "Chargement ID : %d"
 L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
 
 --------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Supprimer l'objet de plus faible valeur"
+
+--------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
@@ -99,6 +105,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cette extension."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Raccourcis clavier"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Fait exactement la même chose qu'un clic gauche sur le bouton de la minicarte. À utiliser à vos risques et périls : une touche pressée par erreur supprime tout aussi sûrement qu'une touche pressée exprès. Attribuez-lui une touche dans le menu du jeu, sous Raccourcis clavier, dans la section Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Activer la Vente auto"

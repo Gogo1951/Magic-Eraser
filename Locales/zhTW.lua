@@ -72,6 +72,12 @@ L["LOADING_ITEM"] = "載入中 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 選項"
 
 --------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "刪除最低價值物品"
+
+--------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
@@ -96,6 +102,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
 L["OPTIONS_COMMANDS_HEADER"] = "/指令"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "開啟本插件的選項介面。"
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "按鍵設定"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"作用與左鍵點擊小地圖按鈕完全相同。使用風險自負：誤按按鍵和刻意按下一樣會刪除物品。可在遊戲選單的按鍵設定中，於 Magic Eraser 分類下進行設定。"
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "啟用自動售賣"

@@ -73,6 +73,12 @@ L["LOADING_ITEM"] = "Cargando ID: %d"
 L["MINIMAP_OPTIONS"] = "Opciones de Magic Eraser"
 
 --------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Eliminar objeto de menor valor"
+
+--------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
@@ -98,6 +104,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Habilitar botón del minimapa"
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este add-on."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Asignación de teclas"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Hace exactamente lo mismo que hacer clic izquierdo en el botón del minimapa. Úsalo bajo tu propia responsabilidad: una pulsación accidental elimina igual que una intencionada. Asígnale una tecla en el menú del juego, en Asignación de teclas, dentro de la sección Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Habilitar Auto-venta"

@@ -74,6 +74,12 @@ L["LOADING_ITEM"] = "Lade ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
 
 --------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Gegenstand mit geringstem Wert löschen"
+
+--------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
@@ -99,6 +105,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 L["OPTIONS_COMMANDS_HEADER"] = "/Befehle"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Tastaturbelegung"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Macht genau dasselbe wie ein Linksklick auf die Minikarten-Schaltfläche. Nutzung auf eigene Gefahr: Ein versehentlicher Tastendruck löscht genauso sicher wie ein gewollter. Belegen kannst du die Taste im Spielmenü unter Tastaturbelegung, im Abschnitt Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"

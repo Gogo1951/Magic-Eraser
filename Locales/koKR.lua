@@ -74,6 +74,12 @@ L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 옵션"
 
 --------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "최저가 아이템 삭제"
+
+--------------------------------------------------------------------------------
 -- Shared Labels
 --------------------------------------------------------------------------------
 
@@ -99,6 +105,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "이 애드온의 설정 창을 엽니다."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "단축키 설정"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"미니맵 버튼을 좌클릭하는 것과 똑같이 동작합니다. 사용에 따른 책임은 본인에게 있습니다: 실수로 누른 키도 일부러 누른 키와 똑같이 삭제합니다. 게임 메뉴의 단축키 설정에서 Magic Eraser 항목에 키를 지정하세요."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "자동 판매 활성화"

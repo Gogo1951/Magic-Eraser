@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="MAGICERASER_ERASE" category="Magic Eraser">
+		MagicEraser_Erase()
+	</Binding>
+</Bindings>

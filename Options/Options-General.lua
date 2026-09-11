@@ -73,6 +73,19 @@ function ns.BuildGeneralOptions()
 			GetColor("INFO") .. L["OPTIONS_COMMAND"] .. "|r" .. "  " .. L["OPTIONS_COMMAND_DESCRIPTION"],
 			23
 		),
+
+		--[[
+		    A binding cannot be set from an AceConfig panel, so this section only
+		    points at the game's own Key Bindings list, naming the binding exactly as
+		    that list does.
+		]]
+		spacerKeyBindings0 = ns.OptionsSpacer(30),
+		headerKeyBindings = ns.OptionsHeader(L["OPTIONS_KEY_BINDINGS_HEADER"], 31),
+		spacerKeyBindings1 = ns.OptionsSpacer(32),
+		descKeyBindings = ns.OptionsDesc(
+			GetColor("INFO") .. L["BINDING_ERASE"] .. "|r" .. "  " .. L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"],
+			33
+		),
 	}
 
 	for _, builder in ipairs(FEATURE_SECTIONS) do
