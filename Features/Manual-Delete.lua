@@ -24,9 +24,10 @@ local SELL_PRICE_INDEX = 11
     differently: one can be typed into, the other can only be clicked.
 
     The eraser's own deletes never come through here. ns:PerformErase calls
-    DeleteCursorItem from a mini-map button click, so the client never asks --
-    which is exactly why the eraser carries its own confirmation instead, and
-    also the clue to the constraint below.
+    DeleteCursorItem only inside the player's own input (a mini-map click, a
+    press of the key binding, or the Yes on the eraser's confirmation dialog),
+    so the client never asks -- which is exactly why the eraser carries its
+    own confirmation instead, and also the clue to the constraint below.
 ]]
 local FILL_DIALOGS = { "DELETE_GOOD_ITEM", "DELETE_GOOD_QUEST_ITEM" }
 

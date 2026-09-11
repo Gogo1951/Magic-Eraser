@@ -32,17 +32,17 @@ end
     that governs how careful erasing is lives on the Safety panel.
 ]]
 function ns.BuildAutoVendOptions(args)
-	args.spacerAutoVend0 = ns.OptionsSpacer(30)
-	args.headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 31)
-	args.spacerAutoVend1 = ns.OptionsSpacer(32)
-	args.descAutoVend = ns.OptionsDesc(L["AUTO_VEND_DESCRIPTION"], 33)
-	args.spacerAutoVend2 = ns.OptionsSpacer(34)
+	args.spacerAutoVend0 = ns.OptionsSpacer(40)
+	args.headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 41)
+	args.spacerAutoVend1 = ns.OptionsSpacer(42)
+	args.descAutoVend = ns.OptionsDesc(L["AUTO_VEND_DESCRIPTION"], 43)
+	args.spacerAutoVend2 = ns.OptionsSpacer(44)
 
 	args.toggleAutoVend = {
 		type = "toggle",
 		name = L["OPTIONS_ENABLE_AUTO_VEND"],
 		width = "full",
-		order = 35,
+		order = 45,
 		get = function()
 			return ns.db and ns.db.global.autoVendEnabled
 		end,
@@ -51,7 +51,7 @@ function ns.BuildAutoVendOptions(args)
 		end,
 	}
 
-	args.rowAutoVendMessages = SubRow(36, AutoVendOff, {
+	args.rowAutoVendMessages = SubRow(46, AutoVendOff, {
 		{
 			type = "toggle",
 			name = SubLabel(L["OPTIONS_ENABLE_AUTO_VEND_MESSAGES"]),

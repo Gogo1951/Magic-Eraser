@@ -71,6 +71,7 @@ Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
 Features/Item-Tooltips.lua
+Features/Key-Bindings.lua
 Features/Diagnostics.lua
 Features/Minimap-Button.lua
 Options/Options-Utilities.lua
