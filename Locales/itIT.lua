@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s venduto, valore %s."
 L["SOLD_SUMMARY"] = "%s oggetti (%s slot borse) venduti, valore %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s oggetti (1 slot borsa) venduti, valore %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1 oggetto (1 slot borsa) venduto, valore %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La vendita automatica avverrà al termine del combattimento."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s oggetti (%s slot borse) prelevati dalla tua banca, valore %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "%s oggetti (1 slot borsa) prelevati dalla tua banca, valore %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "1 oggetto (1 slot borsa) prelevato dalla tua banca, valore %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Contrassegnato dalla tua lista eliminazione."
 L["LOWEST_VALUE_ITEM"] = "Oggetto di minor valore"
 L["CLUTTER_REPORT"] = "Rapporto spazzatura"
 L["CLUTTER_ITEMS"] = "(%s oggetti)"
+L["CLUTTER_ITEMS_ONE"] = "(1 oggetto)"
 L["CLUTTER_SLOTS"] = "%s slot borse"
+L["CLUTTER_SLOTS_ONE"] = "1 slot borsa"
 L["NO_VALUE"] = "Nessun valore"
 L["LEFT_CLICK"] = "Clic sinistro"
 L["RIGHT_CLICK"] = "Clic destro"
@@ -72,6 +78,12 @@ L["BAGS_CLEAN_CONGRATS"] = "Congratulazioni, le tue borse sono piene di cose uti
 L["BAGS_CLEAN_HINT"] = "Dovrai eliminare qualcosa manualmente se vuoi liberare più spazio."
 L["LOADING_ITEM"] = "Caricamento ID: %d"
 L["MINIMAP_OPTIONS"] = "Opzioni di Magic Eraser"
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Elimina oggetto di minor valore"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -99,6 +111,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
 L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Apre il pannello delle opzioni di questo add-on."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Assegnazione tasti"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Fa esattamente ciò che fa un clic sinistro sul pulsante della minimappa. Usalo a tuo rischio: un tasto premuto per sbaglio elimina con la stessa sicurezza di uno premuto apposta. Assegnagli un tasto nel menu di gioco, in Assegnazione tasti, nella sezione Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Abilita Vendita automatica"
@@ -128,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita avvisi nelle descrizioni"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Prelievo dalla banca"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Abilita prelievo dalla banca"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Preleva automaticamente dalla tua banca gli oggetti segnalati come spazzatura da Magic Eraser quando la apri, così puoi eliminarli."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Abilita prelievo dalla banca"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Assistenza all'eliminazione manuale"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Per impostazione predefinita, gli oggetti di qualità Rara o superiore ti obbligano a digitare "Elimina" prima di poterli buttare. Questo lo trasforma in un semplice Sì o No, per gli oggetti che scegli sotto.'
+	'Per impostazione predefinita, gli oggetti di qualità Rara o superiore ti obbligano a digitare "%s" prima di poterli buttare. Questo lo trasforma in un semplice Sì o No, per gli oggetti che scegli sotto.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Abilita assistenza all'eliminazione manuale"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Si applica a"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tutti gli oggetti"
@@ -160,7 +177,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d oro"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avvisi di spazio nelle borse"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Conta alla rovescia in chat mentre i tuoi slot liberi scendono verso la soglia impostata sotto."
+	"Conta alla rovescia in chat non appena i tuoi slot liberi scendono fino alla soglia impostata sotto."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Abilita avvisi di spazio nelle borse"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Soglia di slot liberi"
 
