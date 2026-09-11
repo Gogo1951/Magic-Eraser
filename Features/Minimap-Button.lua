@@ -76,8 +76,12 @@ local function RefreshTooltip(anchor)
 	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
 	if item then
 		local reclaimSlots, reclaimItems, reclaimValue = ns:GetReclaimSummary()
-		local slotsText = GetColor("TEXT") .. format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots)) .. "|r"
-		local itemsText = GetColor("MUTED") .. format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems)) .. "|r"
+		local slotsLabel = (reclaimSlots == 1) and L["CLUTTER_SLOTS_ONE"]
+			or format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots))
+		local itemsLabel = (reclaimItems == 1) and L["CLUTTER_ITEMS_ONE"]
+			or format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems))
+		local slotsText = GetColor("TEXT") .. slotsLabel .. "|r"
+		local itemsText = GetColor("MUTED") .. itemsLabel .. "|r"
 		tooltip:AddDoubleLine(
 			slotsText .. " " .. itemsText,
 			GetColor("TEXT") .. ns:FormatCurrency(reclaimValue) .. "|r"

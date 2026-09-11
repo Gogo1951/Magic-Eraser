@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
 L["SOLD_SUMMARY"] = "%s Gegenstände (%s Taschenplätze) verkauft, Wert %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) verkauft, Wert %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) verkauft, Wert %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s Gegenstände (%s Taschenplätze) aus deiner Bank geholt, Wert %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Durch deine Löschliste markiert."
 L["LOWEST_VALUE_ITEM"] = "Gegenstand mit geringstem Wert"
 L["CLUTTER_REPORT"] = "Ramsch-Bericht"
 L["CLUTTER_ITEMS"] = "(%s Gegenstände)"
+L["CLUTTER_ITEMS_ONE"] = "(1 Gegenstand)"
 L["CLUTTER_SLOTS"] = "%s Taschenplätze"
+L["CLUTTER_SLOTS_ONE"] = "1 Taschenplatz"
 L["NO_VALUE"] = "Kein Wert"
 L["LEFT_CLICK"] = "Linksklick"
 L["RIGHT_CLICK"] = "Rechtsklick"

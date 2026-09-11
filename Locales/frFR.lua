@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
 L["SOLD_SUMMARY"] = "%s objets (%s emplacements de sac) vendus, valeur %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s objets (1 emplacement de sac) vendus, valeur %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1 objet (1 emplacement de sac) vendu, valeur %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La vente automatique s'effectuera à la fin du combat."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s objets (%s emplacements de sac) retirés de votre banque, valeur %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "%s objets (1 emplacement de sac) retirés de votre banque, valeur %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "1 objet (1 emplacement de sac) retiré de votre banque, valeur %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Marqué par votre liste de suppression."
 L["LOWEST_VALUE_ITEM"] = "Objet de plus faible valeur"
 L["CLUTTER_REPORT"] = "Rapport de rebut"
 L["CLUTTER_ITEMS"] = "(%s objets)"
+L["CLUTTER_ITEMS_ONE"] = "(1 objet)"
 L["CLUTTER_SLOTS"] = "%s emplacements de sac"
+L["CLUTTER_SLOTS_ONE"] = "1 emplacement de sac"
 L["NO_VALUE"] = "Aucune valeur"
 L["LEFT_CLICK"] = "Clic gauche"
 L["RIGHT_CLICK"] = "Clic droit"

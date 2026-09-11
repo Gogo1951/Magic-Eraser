@@ -35,10 +35,14 @@ L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全删除。它会开启你的角�
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，价值 %s。"
 L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 个背包格子），价值 %s。"
+L["SOLD_SUMMARY_ONE_SLOT"] = "已出售 %s 件物品（1 个背包格子），价值 %s。"
+L["SOLD_SUMMARY_ONE_ITEM"] = "已出售 1 件物品（1 个背包格子），价值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "战斗结束后将执行自动售卖。"
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "已从银行取出 %s 件物品（%s 个背包格子），价值 %s。"
+L["BANK_RETRIEVED_ONE_SLOT"] = "已从银行取出 %s 件物品（1 个背包格子），价值 %s。"
+L["BANK_RETRIEVED_ONE_ITEM"] = "已从银行取出 1 件物品（1 个背包格子），价值 %s。"
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -55,7 +59,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "已被你的删除列表标记。"
 L["LOWEST_VALUE_ITEM"] = "最低价值物品"
 L["CLUTTER_REPORT"] = "杂物报告"
 L["CLUTTER_ITEMS"] = "(%s 件物品)"
+L["CLUTTER_ITEMS_ONE"] = "(1 件物品)"
 L["CLUTTER_SLOTS"] = "%s 个背包格子"
+L["CLUTTER_SLOTS_ONE"] = "1 个背包格子"
 L["NO_VALUE"] = "无价值"
 L["LEFT_CLICK"] = "左键点击"
 L["RIGHT_CLICK"] = "右键点击"

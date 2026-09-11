@@ -124,14 +124,24 @@ local function FinishPass()
 	pendingMove = nil
 
 	if movedSlots > 0 then
-		ns:PrintMessage(
-			string.format(
+		local message
+		if movedCount == 1 then
+			message = string.format(L["BANK_RETRIEVED_ONE_ITEM"], ns:FormatCurrency(movedValue))
+		elseif movedSlots == 1 then
+			message = string.format(
+				L["BANK_RETRIEVED_ONE_SLOT"],
+				ns:FormatCommaNumber(movedCount),
+				ns:FormatCurrency(movedValue)
+			)
+		else
+			message = string.format(
 				L["BANK_RETRIEVED"],
 				ns:FormatCommaNumber(movedCount),
 				ns:FormatCommaNumber(movedSlots),
 				ns:FormatCurrency(movedValue)
 			)
-		)
+		end
+		ns:PrintMessage(message)
 
 		ns:InvalidateCache()
 		ns:RefreshDisplay()
