@@ -35,10 +35,14 @@ L["QUEST_STARTER_UNAVAILABLE"] = "%s 可以安全删除。它会开启你的角�
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，价值 %s。"
 L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 个背包格子），价值 %s。"
+L["SOLD_SUMMARY_ONE_SLOT"] = "已出售 %s 件物品（1 个背包格子），价值 %s。"
+L["SOLD_SUMMARY_ONE_ITEM"] = "已出售 1 件物品（1 个背包格子），价值 %s。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "战斗结束后将执行自动售卖。"
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "已从银行取出 %s 件物品（%s 个背包格子），价值 %s。"
+L["BANK_RETRIEVED_ONE_SLOT"] = "已从银行取出 %s 件物品（1 个背包格子），价值 %s。"
+L["BANK_RETRIEVED_ONE_ITEM"] = "已从银行取出 1 件物品（1 个背包格子），价值 %s。"
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -55,7 +59,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "已被你的删除列表标记。"
 L["LOWEST_VALUE_ITEM"] = "最低价值物品"
 L["CLUTTER_REPORT"] = "杂物报告"
 L["CLUTTER_ITEMS"] = "(%s 件物品)"
+L["CLUTTER_ITEMS_ONE"] = "(1 件物品)"
 L["CLUTTER_SLOTS"] = "%s 个背包格子"
+L["CLUTTER_SLOTS_ONE"] = "1 个背包格子"
 L["NO_VALUE"] = "无价值"
 L["LEFT_CLICK"] = "左键点击"
 L["RIGHT_CLICK"] = "右键点击"
@@ -70,6 +76,12 @@ L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包里都是好东西！"
 L["BAGS_CLEAN_HINT"] = "如果需要更多空间，你需要手动删除一些物品。"
 L["LOADING_ITEM"] = "加载中 ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser 选项"
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "删除最低价值物品"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -96,6 +108,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "启用小地图按钮"
 L["OPTIONS_COMMANDS_HEADER"] = "/命令"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "打开本插件的选项界面。"
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "按键设置"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"作用与左键点击小地图按钮完全相同。使用风险自负：误按按键和有意按下一样会删除物品。可在游戏菜单的按键设置中，于 Magic Eraser 分类下进行设置。"
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "启用自动售卖"
@@ -125,14 +142,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "启用物品提示警告"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "银行取回"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "启用银行取回"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"打开银行时自动取出被 Magic Eraser 标记为杂物的物品，方便你删除它们。"
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "启用银行取回"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "手动删除辅助"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'默认情况下，稀有及以上品质的物品需要你先输入"删除"才能丢弃。对于你在下方选择的物品，这会变成简单的是或否确认。'
+	'默认情况下，稀有及以上品质的物品需要你先输入"%s"才能丢弃。对于你在下方选择的物品，这会变成简单的是或否确认。'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "启用手动删除辅助"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "适用于"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"
@@ -157,7 +174,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空间警告"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"当背包空格减少到你在下方设置的阈值时，在聊天框中倒数提醒。"
+	"一旦背包空格减少到你在下方设置的阈值，就会在聊天框中倒数提醒。"
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "启用背包空间警告"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格阈值"
 

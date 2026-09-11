@@ -1,27 +1,27 @@
 # Magic Eraser
 
-Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with one click. A curated junk list keeps it safe, while Auto-Vend sells the rest at your next merchant.
+Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
 
-**TL;DR:** Most junk cleaners delete grays. This goes further by clearing old quest items, outgrown consumables, and other curated clutter so your bags stay clean without the guesswork.
+TL;DR: Keep what matters. Get rid of the rest. Magic Eraser knows what's worth keeping, what's outgrown, and what's safe to erase, so your bags stay clean without the busywork.
 
 ## Features
 
-🧹 **One-Click Cleanup** // Erase the cheapest junk in your bags with a single click. The mini-map button always shows you what's about to be erased.
+🧹 **One-Click Cleanup** // The mini-map button shows the cheapest junk in your bags and tallies the rest. Left-click to erase it, or bind a key and skip the click entirely.
 
-💰 **Auto-Vend** // The best way to keep your bags clean is to convert grays to gold. Junk items are automatically sold whenever you visit a merchant.
+💰 **Auto-Vend & Bank Retrieval** // Flagged junk sells itself when you open a merchant, while junk hiding in your bank comes back to your bags to go along with it.
 
-🔔 **Smart Junk Alerts** // A curated list identifies clutter that's safe to erase: dead-end quest starters, outgrown food and drink, vendor-quality whites, and gray trash.
+🔔 **Smart Alerts** // Chat tells you when a quest item becomes safe to erase, while a tooltip line marks anything Magic Eraser is ready to remove.
 
-📜 **Completed Quest Items** // Get alerts when it's safe to erase completed quest items. They have no value and take up precious bag space.
+✍️ **Manual Delete Assistance** // No more typing DELETE. Deleting a Rare or better item that no vendor will buy now asks for a simple Yes or No, with an option to apply the same treatment to every item.
 
-🛡️ **Curated & Safe** // No surprise deletions.
+🦺 **Safety First** // Never touches anything green or better, white trade goods, or quest items you still need unless you explicitly list them. Your Ignore List protects anything you name.
 
 ## Setup
 
 1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
 2. Log in. The mini-map button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift+Middle-click to open the Options Interface.
-4. Auto-Vend and Bank Retrieval are on out of the box, so the rest pays for itself the next time you talk to a merchant.
+4. Auto-Vend and Bank Retrieval are on out of the box, so the rest sells itself at the next merchant and junk in your bank comes home to be dealt with.
 5. *"If it doesn't spark joy, it doesn't make the bags."*
 
 ## How It Works
@@ -30,17 +30,16 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 Only four kinds of clutter are ever in scope, and every list behind them is hand-curated:
 
-- **Spent quest items** // Left over from a quest you have already handed in.
+- **Spent quest items** // Left over from a quest you have already handed in. Nothing is touched until the last quest that needs the item is complete.
 - **Dead-end quest starters** // An item that starts a quest your race or class can never take is junk the moment it drops, so a Paladin-only Tome of Divinity in a Rogue's bags is fair game right away.
 - **Outgrown food and drink** // Ten levels past the point you could first use it. Starter bread and water go at level 5 rather than squatting in your bags until 11.
 - **Vendor-quality whites and gray trash** // Curated white gear, plus any gray with a sell price.
 
 A few rules keep the pick predictable:
 
-- The mini-map icon updates live to show what's next on the chopping block.
-- When two items are worth the same, priority breaks the tie: your Erase List first, then quest items, then gray trash, then consumables and gear.
-- Anything on your Ignore List is skipped entirely, and nothing is erased while you're in combat.
-- Class reagents are handled by the Erase List rather than by a rule. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every non-Shaman starts with both already listed and a Shaman starts with neither.
+- The cheapest stack goes first. When two are worth the same, priority breaks the tie: your Erase List first, then quest items, then gray trash, then consumables and gear.
+- Anything on your Ignore List is skipped everywhere, and nothing is erased while you're in combat.
+- Your Erase List flags what the curated data never will, whatever it's worth. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every non-Shaman starts with both already listed and a Shaman starts with neither.
 
 ### Mini-map Button
 
@@ -52,19 +51,33 @@ A few rules keep the pick predictable:
 | Shift+Right-click  | Toggle Auto-Vend on or off.                              |
 | Shift+Middle-click | Open the Options Interface.                              |
 
-Hover the button and the tooltip lays out the whole picture: the item you're about to erase and what it's worth, whether Auto-Vend is on, a Clutter Report totalling the bag slots and gold still sitting in the trash pile, and everything you've told it to spare.
+Hover the button and the tooltip lays out the whole picture:
 
-### Auto-Vend
+- The item you're about to erase and what it's worth.
+- Whether Auto-Vend is on.
+- A Clutter Report totalling the bag slots and gold still sitting in the trash pile.
+- Everything you've told it to spare on this character.
 
-Every flagged item sells automatically the moment you open a merchant, and it's on by default.
+### Key Bindings
+
+**Erase Lowest-Value Item** lives under Key Bindings in the game menu, in the Magic Eraser section, and does exactly what Left-clicking the mini-map button does. Use it at your own risk: the button shows you what's next before you click, a key doesn't, and a stray keypress erases just as surely as a deliberate one.
+
+### Auto-Vend & Bank Retrieval
+
+Both are on by default, both use the eraser's own junk rules, and both leave your Ignore List alone.
+
+- Auto-Vend sells every flagged item a vendor will buy the moment the merchant window opens, cheapest first. If a fight breaks out mid-sale, it waits for combat to end.
+- Quest items have no sale value, so they're left for the eraser.
+- Bank Retrieval pulls flagged items out of your bank when you open it, most valuable first, and never more than your free bag slots can hold.
+- A chat line sums up each visit: what sold or came home, how many bag slots it touched, and what it was worth.
 
 ### Options
 
 Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`.
 
-- **General** // The welcome message, the mini-map button, and Auto-Vend.
-- **Safety Features** // How careful the add-on is: what it asks about first, what it refuses to touch, what it warns you about, and how it handles the game's own delete prompt.
-- **Ignore List** and **Erase List** // One pane per character, plus the Global list.
+- **General** // The welcome message, the mini-map button, the key binding, and Auto-Vend, including whether it reports every sale or just a closing summary.
+- **Safety Features** // How careful the add-on is: tooltip warnings, Bank Retrieval, Manual Delete Assistance, a confirmation prompt per junk type, a maximum value to erase, and a bag-space countdown.
+- **Ignore List** and **Erase List** // One pane per character, plus a Global list that applies on every character.
 - **Profiles** // Standard profile switching, copying, and reset.
 - **Diagnostic Tools** // Reports to paste into a bug report. Off until you switch it on, and it never runs on its own.
 
@@ -101,7 +114,7 @@ Please reach out if you would like to be involved!
 
 🟢 Pairs With // Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
 
-🟡 Some Overlap // Kemayo's [BankStack](https://www.curseforge.com/wow/addons/bank-stack)
+🟡 Some Overlap // Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 
 🟡 Some Overlap // bouzrogue's [Grey Handling](https://www.curseforge.com/wow/addons/greyhandling)
 
@@ -109,7 +122,7 @@ Please reach out if you would like to be involved!
 
 🟡 Some Overlap // Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 
-🟡 Some Overlap // Stumper_Gaming's [QuickDelete](https://www.curseforge.com/wow/addons/quickdelete-hotkey-to-trash)
+🟡 Some Overlap // Sapu94's [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskill-master)
 
 🔴 Direct Alternative // moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
 

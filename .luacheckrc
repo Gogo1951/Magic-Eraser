@@ -58,7 +58,9 @@ read_globals = {
 	"wipe",
 }
 globals = {
+	"BINDING_NAME_MAGICERASER_ERASE",
 	"MagicEraserDB",
+	"MagicEraser_Erase",
 	"SLASH_MAGICERASER1",
 	"SlashCmdList",
 	"StaticPopupDialogs",

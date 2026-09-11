@@ -420,14 +420,24 @@ function ns:OnMerchantClosed()
 		    Messages toggle silences it like all other vend output.
 		]]
 		if summaryCount > 0 then
-			PrintVendMessage(
-				string.format(
+			local message
+			if summaryCount == 1 then
+				message = string.format(L["SOLD_SUMMARY_ONE_ITEM"], ns:FormatCurrency(summaryValue))
+			elseif summarySlots == 1 then
+				message = string.format(
+					L["SOLD_SUMMARY_ONE_SLOT"],
+					ns:FormatCommaNumber(summaryCount),
+					ns:FormatCurrency(summaryValue)
+				)
+			else
+				message = string.format(
 					L["SOLD_SUMMARY"],
 					ns:FormatCommaNumber(summaryCount),
 					ns:FormatCommaNumber(summarySlots),
 					ns:FormatCurrency(summaryValue)
 				)
-			)
+			end
+			PrintVendMessage(message)
 		end
 		summaryCount = 0
 		summarySlots = 0

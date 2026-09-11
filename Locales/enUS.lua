@@ -35,10 +35,14 @@ L["QUEST_STARTER_UNAVAILABLE"] = "%s can be safely erased. It starts a quest you
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
 L["SOLD_SUMMARY"] = "Sold %s items (%s bag slots), worth %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "Sold %s items (1 bag slot), worth %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "Sold 1 item (1 bag slot), worth %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "Pulled %s items (1 bag slot) out of your bank, worth %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "Pulled 1 item (1 bag slot) out of your bank, worth %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -55,7 +59,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Flagged by your Erase List."
 L["LOWEST_VALUE_ITEM"] = "Lowest-Value Item"
 L["CLUTTER_REPORT"] = "Clutter Report"
 L["CLUTTER_ITEMS"] = "(%s Items)"
+L["CLUTTER_ITEMS_ONE"] = "(1 Item)"
 L["CLUTTER_SLOTS"] = "%s Bag Slots"
+L["CLUTTER_SLOTS_ONE"] = "1 Bag Slot"
 L["NO_VALUE"] = "No Value"
 L["LEFT_CLICK"] = "Left-Click"
 L["RIGHT_CLICK"] = "Right-Click"
@@ -70,6 +76,12 @@ L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
 L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
 L["LOADING_ITEM"] = "Loading ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Erase Lowest-Value Item"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -89,7 +101,7 @@ L["DISABLED"] = "Disabled"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with one click. A curated junk list keeps it safe, while Auto-Vend sells the rest at your next merchant."
+	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 
@@ -97,6 +109,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Opens the Options Interface for this add-on."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Key Bindings"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Does exactly what Left-clicking the mini-map button does. Use at your own risk: a stray keypress erases just as surely as a deliberate one. Set it under Key Bindings in the game menu, in the Magic Eraser section."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
@@ -126,14 +143,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltip Warnings"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Automatically pull items flagged as clutter by Magic Eraser out of your bank when you open it, so you can erase them."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Manual Delete Assistance"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'By default, Rare and better items make you type "Delete" before you can toss them. This turns that into a simple Yes or No, for the items you choose below.'
+	'By default, Rare and better items make you type "%s" before you can toss them. This turns that into a simple Yes or No, for the items you choose below.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Manual Delete Assistance"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Applies To"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
@@ -157,7 +174,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
-L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat as your free bag slots drop to the threshold you set below."
+L["OPTIONS_BAGS_FULL_DESCRIPTION"] = "Count down in chat once your free bag slots drop to the threshold you set below."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Enable Bag-Space Warnings"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
 

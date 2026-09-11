@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
 L["SOLD_SUMMARY"] = "%s objets (%s emplacements de sac) vendus, valeur %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s objets (1 emplacement de sac) vendus, valeur %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1 objet (1 emplacement de sac) vendu, valeur %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La vente automatique s'effectuera à la fin du combat."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s objets (%s emplacements de sac) retirés de votre banque, valeur %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "%s objets (1 emplacement de sac) retirés de votre banque, valeur %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "1 objet (1 emplacement de sac) retiré de votre banque, valeur %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Marqué par votre liste de suppression."
 L["LOWEST_VALUE_ITEM"] = "Objet de plus faible valeur"
 L["CLUTTER_REPORT"] = "Rapport de rebut"
 L["CLUTTER_ITEMS"] = "(%s objets)"
+L["CLUTTER_ITEMS_ONE"] = "(1 objet)"
 L["CLUTTER_SLOTS"] = "%s emplacements de sac"
+L["CLUTTER_SLOTS_ONE"] = "1 emplacement de sac"
 L["NO_VALUE"] = "Aucune valeur"
 L["LEFT_CLICK"] = "Clic gauche"
 L["RIGHT_CLICK"] = "Clic droit"
@@ -72,6 +78,12 @@ L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes chos
 L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer plus d'espace."
 L["LOADING_ITEM"] = "Chargement ID : %d"
 L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Supprimer l'objet de plus faible valeur"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -99,6 +111,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cette extension."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Raccourcis clavier"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Fait exactement la même chose qu'un clic gauche sur le bouton de la minicarte. À utiliser à vos risques et périls : une touche pressée par erreur supprime tout aussi sûrement qu'une touche pressée exprès. Attribuez-lui une touche dans le menu du jeu, sous Raccourcis clavier, dans la section Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Activer la Vente auto"
@@ -128,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les avertissements d'infobulle"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Retire automatiquement de votre banque les objets signalés comme rebut par Magic Eraser lorsque vous l'ouvrez, afin que vous puissiez les supprimer."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Aide à la suppression manuelle"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Par défaut, les objets de qualité Rare ou supérieure vous obligent à taper "Supprimer" avant de pouvoir vous en débarrasser. Cela devient un simple Oui ou Non, pour les objets que vous choisissez ci-dessous.'
+	'Par défaut, les objets de qualité Rare ou supérieure vous obligent à taper "%s" avant de pouvoir vous en débarrasser. Cela devient un simple Oui ou Non, pour les objets que vous choisissez ci-dessous.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer l'aide à la suppression manuelle"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "S'applique à"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tous les objets"
@@ -161,7 +178,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Décompte dans la fenêtre de discussion à mesure que vos emplacements libres descendent vers le seuil défini ci-dessous."
+	"Décompte dans la fenêtre de discussion dès que vos emplacements libres descendent jusqu'au seuil défini ci-dessous."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Activer les alertes d'espace de sac"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Seuil d'emplacements libres"
 

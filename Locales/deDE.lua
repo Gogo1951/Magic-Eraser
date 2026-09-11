@@ -37,10 +37,14 @@ L["QUEST_STARTER_UNAVAILABLE"] =
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
 L["SOLD_SUMMARY"] = "%s Gegenstände (%s Taschenplätze) verkauft, Wert %s."
+L["SOLD_SUMMARY_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) verkauft, Wert %s."
+L["SOLD_SUMMARY_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) verkauft, Wert %s."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s Gegenstände (%s Taschenplätze) aus deiner Bank geholt, Wert %s."
+L["BANK_RETRIEVED_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
+L["BANK_RETRIEVED_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
 
 --------------------------------------------------------------------------------
 -- Item Tooltips
@@ -57,7 +61,9 @@ L["TOOLTIP_ON_ERASE_LIST"] = "Durch deine Löschliste markiert."
 L["LOWEST_VALUE_ITEM"] = "Gegenstand mit geringstem Wert"
 L["CLUTTER_REPORT"] = "Ramsch-Bericht"
 L["CLUTTER_ITEMS"] = "(%s Gegenstände)"
+L["CLUTTER_ITEMS_ONE"] = "(1 Gegenstand)"
 L["CLUTTER_SLOTS"] = "%s Taschenplätze"
+L["CLUTTER_SLOTS_ONE"] = "1 Taschenplatz"
 L["NO_VALUE"] = "Kein Wert"
 L["LEFT_CLICK"] = "Linksklick"
 L["RIGHT_CLICK"] = "Rechtsklick"
@@ -72,6 +78,12 @@ L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher 
 L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, um mehr Platz zu schaffen."
 L["LOADING_ITEM"] = "Lade ID: %d"
 L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+L["BINDING_ERASE"] = "Gegenstand mit geringstem Wert löschen"
 
 --------------------------------------------------------------------------------
 -- Shared Labels
@@ -99,6 +111,11 @@ L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 L["OPTIONS_COMMANDS_HEADER"] = "/Befehle"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
+
+-- Key Bindings
+L["OPTIONS_KEY_BINDINGS_HEADER"] = "Tastaturbelegung"
+L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
+	"Macht genau dasselbe wie ein Linksklick auf die Minikarten-Schaltfläche. Nutzung auf eigene Gefahr: Ein versehentlicher Tastendruck löscht genauso sicher wie ein gewollter. Belegen kannst du die Taste im Spielmenü unter Tastaturbelegung, im Abschnitt Magic Eraser."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"
@@ -128,14 +145,14 @@ L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltip-Warnungen aktivieren"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Holt automatisch Gegenstände, die von Magic Eraser als Ramsch markiert sind, aus deiner Bank, wenn du sie öffnest, damit du sie löschen kannst."
+L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
 
 -- Manual Delete Assistance
 L["OPTIONS_MANUAL_DELETE_HEADER"] = "Hilfe beim manuellen Löschen"
 L["OPTIONS_MANUAL_DELETE_DESCRIPTION"] =
-	'Standardmäßig musst du bei Gegenständen ab Selten erst "Löschen" eintippen, bevor du sie wegwerfen kannst. Das wird hier zu einem einfachen Ja oder Nein, für die unten gewählten Gegenstände.'
+	'Standardmäßig musst du bei Gegenständen ab Selten erst "%s" eintippen, bevor du sie wegwerfen kannst. Das wird hier zu einem einfachen Ja oder Nein, für die unten gewählten Gegenstände.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Hilfe beim manuellen Löschen aktivieren"
 L["OPTIONS_MANUAL_DELETE_SCOPE"] = "Gilt für"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"
@@ -161,7 +178,7 @@ L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
-	"Zählt im Chat herunter, während deine freien Taschenplätze auf den unten festgelegten Schwellenwert sinken."
+	"Zählt im Chat herunter, sobald deine freien Taschenplätze auf den unten festgelegten Schwellenwert sinken."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Taschenplatz-Warnungen aktivieren"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
 
