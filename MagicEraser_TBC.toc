@@ -17,7 +17,8 @@
 ## Category-zhCN: 物品栏
 ## Category-zhTW: 物品欄
 
-## Interface: 11509, 20506
+## Interface: 20506
+## X-Flavor: TBC
 ## Version: @project-version@
 ## X-Curse-Project-ID: 1146812
 ## X-Wago-ID: aNebBj62
@@ -52,6 +53,7 @@ Locales/zhCN.lua
 Locales/zhTW.lua
 
 # Data
+Data/Flavor.lua
 Data/Data.lua
 Data/Default-Settings.lua
 Data/Quest-Items.lua
