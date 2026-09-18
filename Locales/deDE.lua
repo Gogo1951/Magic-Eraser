@@ -103,7 +103,7 @@ L["DISABLED"] = "Deaktiviert"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume abgeschlossene Questgegenstände, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick weg. Eine kuratierte Ramschliste sorgt für Sicherheit, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
+	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume Gegenstände abgeschlossener Quests, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick auf die Minikarten-Schaltfläche weg. Eine kuratierte Ramschliste schützt, was du brauchst, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 
