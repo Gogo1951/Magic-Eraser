@@ -14,7 +14,7 @@ local _, ns = ...
     That last part is the reason the feature exists. The four databases in Data/
     are regenerated from SQL queries over a world DB, so an item those queries
     cannot express has no way into them that survives the next regeneration --
-    see ns.ClassReagents in Data/Data.lua for the case that proved it. A list
+    see ns.CLASS_REAGENTS in Data/Data.lua for the case that proved it. A list
     the player owns is not derived from anything, so nothing can drop rows out
     of it.
 
@@ -191,7 +191,7 @@ end
     Seed this character's list with every class reagent that belongs to some
     other class. Shiny Fish Scales and Fish Oil are the Shaman's Water Breathing
     and Water Walking reagents: junk in a Warrior's bags, and not junk at all in
-    a Shaman's. ns.ClassReagents carries which class owns which ids, and the
+    a Shaman's. ns.CLASS_REAGENTS carries which class owns which ids, and the
     seed is the only thing that acts on it -- nothing filters on it at scan time,
     so a Shaman who deliberately lists Fish Oil is obeyed rather than silently
     overridden.
@@ -224,10 +224,10 @@ function ns:SeedEraseList()
 	end
 
 	local _, playerClass = UnitClass("player")
-	local ownReagents = (ns.ClassReagents and ns.ClassReagents[playerClass]) or {}
+	local ownReagents = (ns.CLASS_REAGENTS and ns.CLASS_REAGENTS[playerClass]) or {}
 	local seeded = false
 
-	for classToken, reagents in pairs(ns.ClassReagents or {}) do
+	for classToken, reagents in pairs(ns.CLASS_REAGENTS or {}) do
 		if classToken ~= playerClass then
 			for itemId in pairs(reagents) do
 				if not (ownReagents[itemId] or ns:IsIgnored(itemId) or ns:IsOnEraseList(itemId)) then

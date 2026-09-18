@@ -1,6 +1,7 @@
 local _, ns = ...
 local L = ns.L
 local GetColor = ns.GetColor
+local GetItemInfo = ns.GetItemInfo
 
 --------------------------------------------------------------------------------
 -- Item Tooltip Warning
@@ -23,7 +24,7 @@ local GetColor = ns.GetColor
     re-fills the tooltip can't wipe our line. Only one path is ever active, so the
     line is never doubled.
 
-    Layout mirrors the add-on's chat output -- ns.BrandPrefix ("Magic Eraser //")
+    Layout mirrors the add-on's chat output -- ns.BRAND_PREFIX ("Magic Eraser //")
     plus a colored body -- under a one-line spacer, so it reads as a distinct
     footer near the bottom of the tooltip. White (TEXT) for the protected
     notice, red (OFF) for the will-erase warning.
@@ -80,7 +81,7 @@ end
     for a guard the player switched on deliberately.
 ]]
 local function GetBagStackCount(bag, slot, itemId)
-	local info = bag and C_Container and C_Container.GetContainerItemInfo(bag, slot)
+	local info = bag and C_Container.GetContainerItemInfo(bag, slot)
 	if info and info.itemID == itemId then
 		return info.stackCount or 1
 	end
@@ -98,7 +99,7 @@ local function AddEraserWarning(tooltip, itemId, stackCount)
 	-- Ignore List protection wins over any erase verdict, Erase List included.
 	if ns:IsIgnored(itemId) then
 		tooltip:AddLine(" ")
-		tooltip:AddLine(ns.BrandPrefix .. GetColor("TEXT") .. L["TOOLTIP_IGNORED"] .. "|r")
+		tooltip:AddLine(ns.BRAND_PREFIX .. GetColor("TEXT") .. L["TOOLTIP_IGNORED"] .. "|r")
 		return true
 	end
 
@@ -134,7 +135,7 @@ local function AddEraserWarning(tooltip, itemId, stackCount)
 	]]
 	local warning = (deleteReason == "manual") and L["TOOLTIP_ON_ERASE_LIST"] or L["TOOLTIP_WILL_ERASE"]
 	tooltip:AddLine(" ")
-	tooltip:AddLine(ns.BrandPrefix .. GetColor("OFF") .. warning .. "|r")
+	tooltip:AddLine(ns.BRAND_PREFIX .. GetColor("OFF") .. warning .. "|r")
 	return true
 end
 
@@ -170,7 +171,7 @@ function ns.SetupTooltipHooks()
 			if type(bag) ~= "number" or bag < 0 or bag > ns.LAST_BAG_INDEX then
 				return
 			end
-			local info = C_Container and C_Container.GetContainerItemInfo(bag, slot)
+			local info = C_Container.GetContainerItemInfo(bag, slot)
 			if AddEraserWarning(tooltip, info and info.itemID, info and info.stackCount) then
 				tooltip:Show()
 			end

@@ -14,8 +14,7 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 --------------------------------------------------------------------------------
 
 local function GetVersion()
-	local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or GetAddOnMetadata
-	local version = GetAddOnMetadata(ADDON_NAME, "Version")
+	local version = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version")
 	if not version or version:find("@") then
 		return "Dev"
 	end
@@ -86,7 +85,7 @@ function ns:OnPlayerLogin()
 	end
 
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
-	if LibDBIcon and ns.LDBObject then
+	if ns.LDBObject then
 		LibDBIcon:Register(ADDON_NAME, ns.LDBObject, ns.db.global.minimap)
 	end
 

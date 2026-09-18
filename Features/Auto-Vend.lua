@@ -4,6 +4,7 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local UseContainerItem = C_Container.UseContainerItem
+local GetItemInfo = ns.GetItemInfo
 
 local sellQueue = {}
 local isSelling = false
@@ -270,9 +271,7 @@ function ScanAndVend(generation)
 
 					if not name then
 						isDataMissing = true
-						if C_Item and C_Item.RequestLoadItemDataByID then
-							C_Item.RequestLoadItemDataByID(itemId)
-						end
+						C_Item.RequestLoadItemDataByID(itemId)
 					elseif sellPrice and sellPrice > 0 then
 						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 
