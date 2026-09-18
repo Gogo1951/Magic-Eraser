@@ -102,7 +102,7 @@ L["DISABLED"] = "Desativado"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Exclua o lixo e libere espaço nas bolsas instantaneamente. Limpe itens de missões concluídas, consumíveis que você já superou, lixo de vendedor e itens cinzas com um clique. Uma lista de lixo revisada a mão mantém tudo seguro, enquanto a Venda automática vende o resto no seu próximo mercador."
+	"Exclua o lixo e libere espaço nas bolsas instantaneamente. Limpe itens de missões concluídas, consumíveis que você já superou, lixo de vendedor e itens cinza com um clique no botão do minimapa. Uma lista de lixo revisada à mão protege o que você precisa, enquanto a Venda automática vende o resto ao próximo mercador que você visitar."
 L["OPTIONS_ENABLE_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_ENABLE_MINIMAP"] = "Ativar botão do minimapa"
 

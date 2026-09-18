@@ -103,7 +103,7 @@ L["DISABLED"] = "Désactivé"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez en un seul clic les objets de quête terminés, les consommables devenus inutiles, la camelote de vendeur et les objets gris. Une liste de rebut sélectionnée à la main garantit la sécurité, tandis que la Vente auto écoule le reste chez votre prochain marchand."
+	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez les objets de quêtes terminées, les consommables devenus inutiles, la camelote de vendeur et les objets gris d'un clic sur le bouton de la minicarte. Une liste de rebut sélectionnée à la main protège ce dont vous avez besoin, tandis que la Vente auto écoule le reste chez votre prochain marchand."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 
