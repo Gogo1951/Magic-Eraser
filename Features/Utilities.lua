@@ -24,6 +24,20 @@ function ns.GetColor(key)
 end
 
 --------------------------------------------------------------------------------
+-- Item Info
+--------------------------------------------------------------------------------
+
+--[[
+    WoW Forever's Retail engine has no bare GetItemInfo, GetItemInfoInstant or
+    GetItemQualityColor, so a bare call errors there. Each read resolves once
+    at load, C_Item first wherever the client ships it; every caller goes
+    through these rather than the globals.
+]]
+ns.GetItemInfo = C_Item.GetItemInfo or GetItemInfo
+ns.GetItemInfoInstant = C_Item.GetItemInfoInstant or GetItemInfoInstant
+ns.GetItemQualityColor = C_Item.GetItemQualityColor or GetItemQualityColor
+
+--------------------------------------------------------------------------------
 -- Formatting
 --------------------------------------------------------------------------------
 
@@ -41,9 +55,9 @@ function ns:FormatCurrency(rawValue)
 	local copper = value % 100
 	local parts = {}
 
-	local goldColor = ns.CurrencyColors.GOLD
-	local silverColor = ns.CurrencyColors.SILVER
-	local copperColor = ns.CurrencyColors.COPPER
+	local goldColor = ns.CURRENCY_COLORS.GOLD
+	local silverColor = ns.CURRENCY_COLORS.SILVER
+	local copperColor = ns.CURRENCY_COLORS.COPPER
 
 	if gold > 0 then
 		insert(parts, format(COLORS.TEXT .. "%s|r|cff%sg|r", ns:FormatCommaNumber(gold), goldColor))

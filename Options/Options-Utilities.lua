@@ -2,6 +2,7 @@ local _, ns = ...
 local L = ns.L
 
 local format = string.format
+local GetItemInfo = ns.GetItemInfo
 
 --------------------------------------------------------------------------------
 -- Shared Options Helpers
@@ -117,7 +118,7 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    GetItemInfo answers nil for an item the client has not cached yet, which is
+    ns.GetItemInfo answers nil for an item the client has not cached yet, which is
     the normal state for a list of item ids on a fresh login -- nothing has put
     those items in front of the player, so nothing has pulled their data. A panel
     that lists items renders those rows as L["LOADING_ITEM"] and hands the cold
@@ -144,9 +145,7 @@ function ns.WarmItemCache(itemIds, registryName)
 	end
 
 	for _, itemId in ipairs(itemIds) do
-		if C_Item and C_Item.RequestLoadItemDataByID then
-			C_Item.RequestLoadItemDataByID(itemId)
-		end
+		C_Item.RequestLoadItemDataByID(itemId)
 	end
 
 	if warmingPending[registryName] then
@@ -494,7 +493,7 @@ local function OnItemLinkEnter(frame)
 		return
 	end
 	--[[
-	    The bare "item:id" form rather than the link off GetItemInfo, so a row
+	    The bare "item:id" form rather than the link off ns.GetItemInfo, so a row
 	    still waiting on its item data gets a tooltip too -- and hovering it pulls
 	    the very data the row is waiting for.
 	]]

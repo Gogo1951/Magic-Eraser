@@ -103,7 +103,7 @@ function ns.BuildGeneralOptions()
 		width = LINK_URL_WIDTH,
 		order = 104,
 		get = function()
-			return ns.Links.DISCORD
+			return ns.LINKS.DISCORD
 		end,
 		set = function() end,
 	}
@@ -115,7 +115,7 @@ function ns.BuildGeneralOptions()
 		width = LINK_URL_WIDTH,
 		order = 107,
 		get = function()
-			return ns.Links.GITHUB
+			return ns.LINKS.GITHUB
 		end,
 		set = function() end,
 	}
@@ -128,7 +128,7 @@ function ns.BuildGeneralOptions()
 		width = LINK_URL_WIDTH,
 		order = 110,
 		get = function()
-			return ns.Links.CURSEFORGE
+			return ns.LINKS.CURSEFORGE
 		end,
 		set = function() end,
 	}
@@ -140,7 +140,7 @@ function ns.BuildGeneralOptions()
 		width = LINK_URL_WIDTH,
 		order = 113,
 		get = function()
-			return ns.Links.WAGO
+			return ns.LINKS.WAGO
 		end,
 		set = function() end,
 	}
@@ -160,7 +160,7 @@ function ns.BuildGeneralOptions()
 
 	return {
 		type = "group",
-		name = ns.AddonTitle,
+		name = ns.ADDON_TITLE,
 		args = args,
 	}
 end

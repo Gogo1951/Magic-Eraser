@@ -123,7 +123,7 @@ ORDER BY faction, section, name;
 
 --[[
     Items that hand you a quest when you right click them. Distinct from
-    AllowedDeleteQuestItems: those are consumed by a turn-in, these create the
+    ALLOWED_DELETE_QUEST_ITEMS: those are consumed by a turn-in, these create the
     quest in the first place, so they are safe to erase for two separate
     reasons.
 
@@ -146,7 +146,7 @@ ORDER BY faction, section, name;
     Poor and common quality only. Several quest starters are epics and
     legendaries and none of those belong here.
 ]]
-ns.AllowedDeleteQuestStartingItems = {
+ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 
 	-- [itemId] = { questId, racesMask, classesMask }, -- Item Name
 

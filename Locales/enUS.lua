@@ -113,7 +113,7 @@ L["OPTIONS_COMMAND_DESCRIPTION"] = "Opens the Options Interface for this add-on.
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Key Bindings"
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Does exactly what Left-clicking the mini-map button does. Use at your own risk: a stray keypress erases just as surely as a deliberate one. Set it under Key Bindings in the game menu, in the Magic Eraser section."
+	"Does exactly what left-clicking the mini-map button does. Use at your own risk: a stray keypress erases just as surely as a deliberate one. Set it under Key Bindings in the game menu, in the Magic Eraser section."
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Enable Auto-Vend"
