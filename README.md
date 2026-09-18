@@ -2,7 +2,7 @@
 
 Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
 
-TL;DR: Keep what matters. Get rid of the rest. Magic Eraser knows what's worth keeping, what's outgrown, and what's safe to erase, so your bags stay clean without the busywork.
+**TL;DR:** Magic Eraser finds the junk in your bags, erases it one click at a time, and sells the rest at your next merchant. Less bag Tetris, more room for loot.
 
 ## Features
 
@@ -20,7 +20,7 @@ TL;DR: Keep what matters. Get rid of the rest. Magic Eraser knows what's worth k
 
 1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
 2. Log in. The mini-map button shows the icon of the lowest-value junk currently in your bags.
-3. Left-click to erase it, right-click to spare it, or Shift+Middle-click to open the Options Interface.
+3. Left-click to erase it, right-click to spare it, or Shift + Middle-Click to open the Options Interface.
 4. Auto-Vend and Bank Retrieval are on out of the box, so the rest sells itself at the next merchant and junk in your bank comes home to be dealt with.
 5. *"If it doesn't spark joy, it doesn't make the bags."*
 
@@ -28,39 +28,31 @@ TL;DR: Keep what matters. Get rid of the rest. Magic Eraser knows what's worth k
 
 ### What Gets Erased
 
-Only four kinds of clutter are ever in scope, and every list behind them is hand-curated:
+Four kinds of clutter are in scope, plus anything on your Erase List. Every list behind them is hand-curated.
 
-- **Spent quest items** // Left over from a quest you have already handed in. Nothing is touched until the last quest that needs the item is complete.
-- **Dead-end quest starters** // An item that starts a quest your race or class can never take is junk the moment it drops, so a Paladin-only Tome of Divinity in a Rogue's bags is fair game right away.
-- **Outgrown food and drink** // Ten levels past the point you could first use it. Starter bread and water go at level 5 rather than squatting in your bags until 11.
-- **Vendor-quality whites and gray trash** // Curated white gear, plus any gray with a sell price.
-
-A few rules keep the pick predictable:
+| Clutter | When it goes |
+| --- | --- |
+| Spent quest items | Once you've handed in the last quest that needs the item. |
+| Dead-end quest starters | The moment it drops, when the quest is closed to your race or class. A Paladin-only Tome of Divinity in a Rogue's bags is fair game right away. |
+| Outgrown food and drink | Ten levels past the point you could first use it. Starter bread and water go at level 5 rather than squatting in your bags until 11. |
+| Vendor-quality whites and gray trash | Curated white gear, plus any gray with a sell price. |
 
 - The cheapest stack goes first. When two are worth the same, priority breaks the tie: your Erase List first, then quest items, then gray trash, then consumables and gear.
 - Anything on your Ignore List is skipped everywhere, and nothing is erased while you're in combat.
 - Your Erase List flags what the curated data never will, whatever it's worth. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every non-Shaman starts with both already listed and a Shaman starts with neither.
 
-### Mini-map Button
+### Mini-Map Button
 
-| Action             | Effect                                                   |
-| ------------------ | -------------------------------------------------------- |
-| Left-click         | Erase the lowest-value flagged item.                     |
-| Right-click        | Toggle the flagged item on this character's Ignore List. |
-| Middle-click       | Clear this character's Ignore List.                      |
-| Shift+Right-click  | Toggle Auto-Vend on or off.                              |
-| Shift+Middle-click | Open the Options Interface.                              |
+| Action | Effect |
+| --- | --- |
+| Left-Click | Erase the lowest-value flagged item. |
+| Right-Click | Add the flagged item to this character's Ignore List. |
+| Middle-Click | Clear this character's Ignore List. |
+| Shift + Right-Click | Toggle Auto-Vend on or off. |
+| Shift + Middle-Click | Open the Options Interface. |
 
-Hover the button and the tooltip lays out the whole picture:
-
-- The item you're about to erase and what it's worth.
-- Whether Auto-Vend is on.
-- A Clutter Report totalling the bag slots and gold still sitting in the trash pile.
-- Everything you've told it to spare on this character.
-
-### Key Bindings
-
-**Erase Lowest-Value Item** lives under Key Bindings in the game menu, in the Magic Eraser section, and does exactly what Left-clicking the mini-map button does. Use it at your own risk: the button shows you what's next before you click, a key doesn't, and a stray keypress erases just as surely as a deliberate one.
+- Hover the button to see the item you're about to erase and what it's worth, whether Auto-Vend is on, a Clutter Report totalling the bag slots and gold still sitting in the trash pile, and everything you've told it to spare on this character.
+- **Erase Lowest-Value Item** lives under Key Bindings in the game menu, in the Magic Eraser section, and does exactly what a left-click does. Use it at your own risk: the button shows you what's next before you click, a key doesn't, and a stray keypress erases just as surely as a deliberate one.
 
 ### Auto-Vend & Bank Retrieval
 
@@ -78,14 +70,18 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 - **General** // The welcome message, the mini-map button, the key binding, and Auto-Vend, including whether it reports every sale or just a closing summary.
 - **Safety Features** // How careful the add-on is: tooltip warnings, Bank Retrieval, Manual Delete Assistance, a confirmation prompt per junk type, a maximum value to erase, and a bag-space countdown.
 - **Ignore List** and **Erase List** // One pane per character, plus a Global list that applies on every character.
-- **Profiles** // Standard profile switching, copying, and reset.
+- **Profiles** // Copy one character's Ignore List and Erase List onto another, or reset a character back to its starting lists.
 - **Diagnostic Tools** // Reports to paste into a bug report. Off until you switch it on, and it never runs on its own.
+
+Every other setting is account-wide, so you set it once and every character follows.
 
 <img width="800" src="https://github.com/user-attachments/assets/303e0441-0002-4714-ba65-076bfa394e54" />
 
 ## Testing & Localization Status
 
 🟢 World of Warcraft Classic (🟡 Season of Discovery) // WoW 1.15.9
+
+🟢 World of Warcraft Forever // WoW 1.60.1
 
 🟢 Burning Crusade Anniversary // WoW 2.5.6
 
@@ -104,8 +100,6 @@ Please reach out if you would like to be involved!
 
 ## Related Add-ons
 
-🟢 Pairs With // Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
-
 🟢 Pairs With // plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 
 🟢 Pairs With // jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
@@ -114,9 +108,11 @@ Please reach out if you would like to be involved!
 
 🟢 Pairs With // Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
 
+🟢 Pairs With // Ketho17's [Vendor Price](https://www.curseforge.com/wow/addons/vendor-price)
+
 🟡 Some Overlap // Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 
-🟡 Some Overlap // bouzrogue's [Grey Handling](https://www.curseforge.com/wow/addons/greyhandling)
+🟡 Some Overlap // GeodesicDragon's [Free Bag Spaces](https://www.curseforge.com/wow/addons/free-bag-spaces)
 
 🟡 Some Overlap // Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
 

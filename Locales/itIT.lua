@@ -103,7 +103,7 @@ L["DISABLED"] = "Disattivato"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi con un solo clic oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi. Una lista di spazzatura curata a mano tiene tutto al sicuro, mentre la Vendita automatica vende il resto dal prossimo mercante."
+	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi con un clic sul pulsante della minimappa. Una lista di spazzatura curata a mano protegge ciò che ti serve, mentre la Vendita automatica vende il resto dal prossimo mercante."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
 

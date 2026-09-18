@@ -5,6 +5,7 @@ local _, ns = ...
 --------------------------------------------------------------------------------
 
 local ipairs, select = ipairs, select
+local GetItemInfo = ns.GetItemInfo
 
 local SELL_PRICE_INDEX = 11
 

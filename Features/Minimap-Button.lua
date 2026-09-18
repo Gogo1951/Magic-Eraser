@@ -4,6 +4,8 @@ local GetColor = ns.GetColor
 
 local format = string.format
 local insert = table.insert
+local GetItemInfo = ns.GetItemInfo
+local GetItemQualityColor = ns.GetItemQualityColor
 
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
@@ -19,7 +21,7 @@ local function RefreshTooltip(anchor)
 	tooltip:SetOwner(anchor, "ANCHOR_BOTTOMLEFT")
 	tooltip:ClearLines()
 
-	tooltip:AddDoubleLine(GetColor("TITLE") .. ns.AddonTitle .. "|r", GetColor("MUTED") .. ns.Version .. "|r")
+	tooltip:AddDoubleLine(GetColor("TITLE") .. ns.ADDON_TITLE .. "|r", GetColor("MUTED") .. ns.Version .. "|r")
 	tooltip:AddLine(" ")
 	tooltip:AddLine(" ")
 
@@ -115,9 +117,7 @@ local function RefreshTooltip(anchor)
 				insert(sortedItems, { name = name, quality = quality, icon = icon })
 			else
 				insert(loadingItems, itemId)
-				if C_Item and C_Item.RequestLoadItemDataByID then
-					C_Item.RequestLoadItemDataByID(itemId)
-				end
+				C_Item.RequestLoadItemDataByID(itemId)
 			end
 		end
 
@@ -163,19 +163,17 @@ function ns:RefreshDisplay()
 	if item and item.icon then
 		ns.LDBObject.icon = item.icon
 	else
-		ns.LDBObject.icon = ns.DefaultIcon
+		ns.LDBObject.icon = ns.DEFAULT_ICON
 	end
 
-	if LibDBIcon then
-		local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
-		if button then
-			if button.icon then
-				button.icon:SetTexture(ns.LDBObject.icon)
-			end
+	local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
+	if button then
+		if button.icon then
+			button.icon:SetTexture(ns.LDBObject.icon)
+		end
 
-			if GameTooltip:GetOwner() == button then
-				RefreshTooltip(button)
-			end
+		if GameTooltip:GetOwner() == button then
+			RefreshTooltip(button)
 		end
 	end
 end
@@ -184,46 +182,44 @@ end
 -- LDB Data Object
 --------------------------------------------------------------------------------
 
-if LibDataBroker then
-	ns.LDBObject = LibDataBroker:NewDataObject(ADDON_NAME, {
-		type = "data source",
-		text = ns.AddonTitle,
-		icon = ns.DefaultIcon,
+ns.LDBObject = LibDataBroker:NewDataObject(ADDON_NAME, {
+	type = "data source",
+	text = ns.ADDON_TITLE,
+	icon = ns.DEFAULT_ICON,
 
-		OnClick = function(self, button)
-			if IsShiftKeyDown() and button == "MiddleButton" then
-				ns:OpenOptionsPanel()
+	OnClick = function(self, button)
+		if IsShiftKeyDown() and button == "MiddleButton" then
+			ns:OpenOptionsPanel()
+			return
+		end
+
+		if IsShiftKeyDown() and button == "RightButton" then
+			if not ns.db then
 				return
 			end
-
-			if IsShiftKeyDown() and button == "RightButton" then
-				if not ns.db then
-					return
-				end
-				ns.db.global.autoVendEnabled = not ns.db.global.autoVendEnabled
-				AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
-				RefreshTooltip(self)
-				return
-			end
-
-			if button == "LeftButton" then
-				ns:RunEraser()
-			elseif button == "RightButton" then
-				local item = ns:FindItemToDelete()
-				if item then
-					ns:ToggleIgnore(item.itemId)
-				end
-			elseif button == "MiddleButton" then
-				ns:ClearIgnoreList()
-			end
-		end,
-
-		OnEnter = function(self)
+			ns.db.global.autoVendEnabled = not ns.db.global.autoVendEnabled
+			AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
 			RefreshTooltip(self)
-		end,
+			return
+		end
 
-		OnLeave = function()
-			GameTooltip:Hide()
-		end,
-	})
-end
+		if button == "LeftButton" then
+			ns:RunEraser()
+		elseif button == "RightButton" then
+			local item = ns:FindItemToDelete()
+			if item then
+				ns:ToggleIgnore(item.itemId)
+			end
+		elseif button == "MiddleButton" then
+			ns:ClearIgnoreList()
+		end
+	end,
+
+	OnEnter = function(self)
+		RefreshTooltip(self)
+	end,
+
+	OnLeave = function()
+		GameTooltip:Hide()
+	end,
+})

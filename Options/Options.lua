@@ -12,7 +12,7 @@ local D = ns.DiagnosticsStrings
     Erase List and Profiles builders need the AceDB database. Child order is
     General (root) -> Safety -> Ignore List -> Erase List -> Profiles -> the
     Diagnostic Tools panel last; each panel's third AddToBlizOptions argument is
-    the parent's display name (ns.AddonTitle) so all six nest under Magic Eraser.
+    the parent's display name (ns.ADDON_TITLE) so all six nest under Magic Eraser.
     The Profiles display name comes already localized from AceDBOptions-3.0.
 ]]
 local AceConfig = LibStub("AceConfig-3.0")
@@ -27,7 +27,8 @@ function ns:RegisterOptionsPanels()
 	    without C_SettingsUtil.OpenSettingsPanel (Era), so on TBC Anniversary a
 	    name-based lookup returns nil. Capture the real references here.
 	]]
-	ns.GeneralPanel, ns.GeneralCategoryID = AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.AddonTitle)
+	ns.GeneralPanel, ns.GeneralCategoryID =
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.ADDON_TITLE)
 
 	--[[
 	    Safety sits directly under the root panel, ahead of the two list panels:
@@ -35,7 +36,7 @@ function ns:RegisterOptionsPanels()
 	    function, because nothing on it is drawn from a live list.
 	]]
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Safety, ns.BuildSafetyOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Safety, L["TAB_SAFETY"], ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Safety, L["TAB_SAFETY"], ns.ADDON_TITLE)
 
 	--[[
 	    The builder function, not a built table: the Ignore List panel's rows are
@@ -43,7 +44,7 @@ function ns:RegisterOptionsPanels()
 	    every NotifyChange and the panel never renders a stale list.
 	]]
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], ns.ADDON_TITLE)
 
 	--[[
 	    Widen the Ignore List tree. AceGUI defaults it to 175px, which truncates
@@ -57,7 +58,7 @@ function ns:RegisterOptionsPanels()
 
 	-- The Erase List is the same panel in reverse, so it gets the same treatment.
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.EraseList, ns.BuildEraseListOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], ns.ADDON_TITLE)
 
 	local eraseStatus = AceConfigDialog:GetStatusTable(ns.OPTIONS_REGISTRY.EraseList)
 	eraseStatus.groups = eraseStatus.groups or {}
@@ -65,10 +66,10 @@ function ns:RegisterOptionsPanels()
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Profiles, profilesOptions.name, ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Profiles, profilesOptions.name, ns.ADDON_TITLE)
 
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Diagnostics, ns.BuildDiagnosticsOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Diagnostics, D.TAB, ns.AddonTitle)
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Diagnostics, D.TAB, ns.ADDON_TITLE)
 end
 
 --------------------------------------------------------------------------------
