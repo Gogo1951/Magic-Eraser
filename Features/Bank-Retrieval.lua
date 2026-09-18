@@ -8,15 +8,15 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local UseContainerItem = C_Container.UseContainerItem
+local GetItemInfo = ns.GetItemInfo
 
 --[[
-    The bank on both flavors this add-on ships on is BANK_CONTAINER plus the
-    purchasable bank bags, which sit directly above the carried bags in the
-    container index space. There is no reagent bank on Classic Era or TBC
-    Anniversary, so nothing else is scanned. Built once at load, starting one
-    past the shared carried-bag range (ns.LAST_BAG_INDEX in Data/Data.lua) and
-    falling back on the bank's own constants the same way, so a missing global
-    can never quietly scan nothing.
+    The bank this scans is BANK_CONTAINER plus the purchasable bank bags,
+    assumed to sit directly above the carried bags in the container index space;
+    nothing else is scanned. Built once at load, starting one past the shared
+    carried-bag range (ns.LAST_BAG_INDEX in Data/Data.lua) and falling back on
+    the bank's own constants the same way, so a missing global can never quietly
+    scan nothing.
 ]]
 local BANK_CONTAINERS = {}
 do
@@ -271,9 +271,7 @@ local function ScanBank(generation)
 
 					if not name then
 						isDataMissing = true
-						if C_Item and C_Item.RequestLoadItemDataByID then
-							C_Item.RequestLoadItemDataByID(itemId)
-						end
+						C_Item.RequestLoadItemDataByID(itemId)
 					else
 						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 

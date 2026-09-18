@@ -5,14 +5,14 @@ ns.L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 -- Identity
 --------------------------------------------------------------------------------
 
-ns.AddonTitle = ns.L["ADDON_TITLE"]
-ns.DefaultIcon = "Interface/Icons/inv_misc_bag_07_green"
+ns.ADDON_TITLE = ns.L["ADDON_TITLE"]
+ns.DEFAULT_ICON = "Interface/Icons/inv_misc_bag_07_green"
 
 --------------------------------------------------------------------------------
 -- Links
 --------------------------------------------------------------------------------
 
-ns.Links = {
+ns.LINKS = {
 	CURSEFORGE = "https://www.curseforge.com/wow/addons/magic-eraser",
 	GITHUB = "https://github.com/Gogo1951/Magic-Eraser",
 	DISCORD = "https://discord.gg/eh8hKq992Q",
@@ -129,7 +129,7 @@ ns.PALETTE = {
 	MUTED = "808080", -- Dark Gray: Meta-data, Version Numbers
 }
 
-ns.CurrencyColors = {
+ns.CURRENCY_COLORS = {
 	GOLD = "FFD700",
 	SILVER = "C7C7CF",
 	COPPER = "EDA55F",
@@ -156,7 +156,7 @@ ns.CurrencyColors = {
     row does not survive the next regeneration. An id no query can express
     belongs in a file no query rewrites.
 ]]
-ns.ClassReagents = {
+ns.CLASS_REAGENTS = {
 	SHAMAN = {
 		[17057] = true, -- Shiny Fish Scales
 		[17058] = true, -- Fish Oil
@@ -193,7 +193,7 @@ ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
     Keyed by the tokens UnitRace and UnitClass return, not by localized names.
     Undead's race token is "Scourge", which is why it reads oddly here.
 ]]
-ns.RaceBits = {
+ns.RACE_BITS = {
 	Human = 1,
 	Orc = 2,
 	Dwarf = 4,
@@ -207,7 +207,7 @@ ns.RaceBits = {
 	Draenei = 1024,
 }
 
-ns.ClassBits = {
+ns.CLASS_BITS = {
 	WARRIOR = 1,
 	PALADIN = 2,
 	HUNTER = 4,
@@ -230,7 +230,7 @@ ns.ClassBits = {
     rule, and a rule should never win a tie against an item the player listed by
     hand.
 ]]
-ns.DeletePriority = {
+ns.DELETE_PRIORITY = {
 	manual = 0,
 	quest = 1,
 	questIneligible = 1,

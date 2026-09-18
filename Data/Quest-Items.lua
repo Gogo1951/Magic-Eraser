@@ -325,7 +325,7 @@ is expected rather than a finding.
 
 ]]
 
-ns.AllowedDeleteQuestItems = {
+ns.ALLOWED_DELETE_QUEST_ITEMS = {
 
 	-- [itemId] = { questId, ... }, -- Item Name
 

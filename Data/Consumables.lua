@@ -61,7 +61,7 @@ ORDER BY z.grp, z.ord, z.nm;
 
 ]]
 
-ns.AllowedDeleteConsumables = {
+ns.ALLOWED_DELETE_CONSUMABLES = {
 
 	-- [itemId] = {Item Use Level}, -- Item Name
 

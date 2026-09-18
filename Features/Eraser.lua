@@ -8,6 +8,7 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local PickupContainerItem = C_Container.PickupContainerItem
+local GetItemInfo = ns.GetItemInfo
 local format, ipairs = string.format, ipairs
 
 --------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ local cachedReclaimValue = 0
 
 --[[
     Cold item-data misses reschedule a rescan. Without a cap, an item whose
-    GetItemInfo never resolves would reschedule forever; without a pending
+    item info never resolves would reschedule forever; without a pending
     guard, concurrent cold-cache triggers would stack timers. So: cap the
     reschedules, allow only one pending retry, and reset the counter on every
     fresh scan trigger -- any InvalidateCache that is not itself a retry.
@@ -70,10 +71,7 @@ end
 --------------------------------------------------------------------------------
 
 function ns:IsQuestCompleted(questId)
-	if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
-		return C_QuestLog.IsQuestFlaggedCompleted(questId)
-	end
-	return false
+	return C_QuestLog.IsQuestFlaggedCompleted(questId)
 end
 
 --[[
@@ -94,8 +92,8 @@ local function GetPlayerBits()
 	if not playerRaceBit then
 		local _, raceToken = UnitRace("player")
 		local _, classToken = UnitClass("player")
-		playerRaceBit = (raceToken and ns.RaceBits[raceToken]) or 0
-		playerClassBit = (classToken and ns.ClassBits[classToken]) or 0
+		playerRaceBit = (raceToken and ns.RACE_BITS[raceToken]) or 0
+		playerClassBit = (classToken and ns.CLASS_BITS[classToken]) or 0
 	end
 	return playerRaceBit, playerClassBit
 end
@@ -105,7 +103,7 @@ local function IsGatedOut(mask, playerBit)
 end
 
 function ns:GetQuestStarterReason(itemId)
-	local entry = (ns.AllowedDeleteQuestStartingItems or {})[itemId]
+	local entry = (ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {})[itemId]
 	if not entry then
 		return nil
 	end
@@ -133,7 +131,7 @@ end
     until 11 -- by 5 the player has already replaced them.
 
     The use level is read from Data/Consumables.lua ([itemId] = { useLevel }),
-    never from GetItemInfo's requiredLevel: static data answers on a cold item
+    never from the item info's requiredLevel: static data answers on a cold item
     cache and does not shift between client versions (Style Guide → DATA: STATIC
     OVER API).
 ]]
@@ -165,10 +163,10 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	end
 
 	local playerLevel = UnitLevel("player")
-	local questItemDatabase = ns.AllowedDeleteQuestItems or {}
-	local questStarterDatabase = ns.AllowedDeleteQuestStartingItems or {}
-	local consumableDatabase = ns.AllowedDeleteConsumables or {}
-	local equipmentDatabase = ns.AllowedDeleteEquipment or {}
+	local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
+	local questStarterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {}
+	local consumableDatabase = ns.ALLOWED_DELETE_CONSUMABLES or {}
+	local equipmentDatabase = ns.ALLOWED_DELETE_EQUIPMENT or {}
 
 	--[[
 	    Starters are checked alongside quest items rather than after them: most
@@ -195,7 +193,7 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	elseif equipmentDatabase[itemId] then
 		--[[
 		    The table is derived from a WotLK world DB, while the add-on ships
-		    on Classic Era and TBC Anniversary, and item quality drifted across
+		    on earlier expansions' clients, and item quality drifted across
 		    those expansions: Bronze Mace and most of the low-level crafted gear
 		    are white in Era and green by WotLK. Trusting the table alone would
 		    erase a green item on the client where it is green. Gating on the
@@ -250,7 +248,7 @@ local function isBetterDeletionCandidate(candidate, current)
 		return true
 	end
 	if candidate.value == current.value then
-		return ns.DeletePriority[candidate.deleteReason] < ns.DeletePriority[current.deleteReason]
+		return ns.DELETE_PRIORITY[candidate.deleteReason] < ns.DELETE_PRIORITY[current.deleteReason]
 	end
 	return false
 end
@@ -278,9 +276,7 @@ function ns:FindItemToDelete()
 
 					if not name then
 						isDataMissing = true
-						if C_Item and C_Item.RequestLoadItemDataByID then
-							C_Item.RequestLoadItemDataByID(itemId)
-						end
+						C_Item.RequestLoadItemDataByID(itemId)
 					else
 						local count = itemInfo.stackCount or 1
 						local totalValue = (sellPrice or 0) * count
@@ -463,7 +459,7 @@ end
     Keyed by item id and living for the session, so moving a stack between bags or
     opening a merchant cannot make the same item announce twice.
     ns:OnQuestTurnedIn reads the same set before its own walk: nearly every
-    starter also carries a row in AllowedDeleteQuestItems under the same quest
+    starter also carries a row in ALLOWED_DELETE_QUEST_ITEMS under the same quest
     id, so without that check a starter still in the bags at turn-in would
     announce twice.
 ]]
@@ -475,7 +471,7 @@ local ALERT_KEYS = {
 }
 
 local function ScanQuestStarters(announce)
-	local starterDatabase = ns.AllowedDeleteQuestStartingItems
+	local starterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS
 	if not starterDatabase then
 		return
 	end
@@ -519,7 +515,7 @@ function ns:OnQuestTurnedIn(questId)
 	C_Timer.After(1.0, function()
 		ns:CheckQuestStarters()
 
-		local questItemDatabase = ns.AllowedDeleteQuestItems or {}
+		local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
 		local alertedItems = {}
 
 		for bag = 0, ns.LAST_BAG_INDEX do

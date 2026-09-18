@@ -4,7 +4,7 @@ local _, ns = ...
 
 Magic Eraser :: white weapons  (CMaNGOS WotLK world DB, MySQL 8)
 
-Regenerates the WEAPONS half of ns.AllowedDeleteEquipment below. Quality = 1,
+Regenerates the WEAPONS half of ns.ALLOWED_DELETE_EQUIPMENT below. Quality = 1,
 soulbound included, minus vanity, tools and developer junk. The armor query
 that regenerates the ARMOR half follows this one in the same file.
 
@@ -256,7 +256,7 @@ ORDER BY section, name;
       Haliscan Pantaloons    formal wear
       Formal Draenic Robe    formal wear
 ]]
-ns.AllowedDeleteEquipment = {
+ns.ALLOWED_DELETE_EQUIPMENT = {
 
 	-- [itemId] = true, -- Item Name
 
