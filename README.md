@@ -22,7 +22,7 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 2. Log in. The mini-map button shows the icon of the lowest-value junk currently in your bags.
 3. Left-click to erase it, right-click to spare it, or Shift + Middle-Click to open the Options Interface.
 4. Auto-Vend and Bank Retrieval are on out of the box, so the rest sells itself at the next merchant and junk in your bank comes home to be dealt with.
-5. _"But wait, there's more bag space!"_
+5. _"But wait, there's more... bag space!"_
 
 ## How It Works
 
@@ -122,9 +122,9 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 
 * plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
-* Gogo1951's [Connoisseur](https://www.curseforge.com/wow/addons/consumable-connoisseur)
+* Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/consumable-connoisseur)
 * Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
-* Ketho17's [Vendor Price](https://www.curseforge.com/wow/addons/vendor-price)
+* Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 
 ### 🟡 Overlaps
 
