@@ -1,7 +1,7 @@
 local _, ns = ...
 local L = ns.L
 local GetColor = ns.GetColor
-local GetItemInfo = ns.GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 
 --------------------------------------------------------------------------------
 -- Item Tooltip Warning
@@ -13,8 +13,8 @@ local GetItemInfo = ns.GetItemInfo
     List, or a protection notice when the Ignore List is shielding it. The
     verdict comes from the very rules the eraser's scan uses (ns:IsIgnored and
     ns:GetItemDeleteReason), in the same order, so the line shows only when the
-    item truly would be erased -- the consumable level gate and quest-completion
-    check included. Purely read-only.
+    item truly would be erased -- the consumable and ammo level gates and the
+    quest-completion check included. Purely read-only.
 
     Two hook paths, because the tooltip API differs across the flavors we target:
     modern clients expose the data-driven TooltipDataProcessor; others lack it and
@@ -31,7 +31,7 @@ local GetItemInfo = ns.GetItemInfo
 ]]
 --[[
     The bag and slot the tooltip is anchored to, or nil unless the anchor is one
-    of the player's carried bag slots (0 through ns.LAST_BAG_INDEX) -- never a
+    of the player's carried bag slots (ns.CARRIED_BAGS) -- never a
     merchant, bank, or chat-link tooltip. Used by the TooltipDataProcessor path,
     which fires for every item tooltip and so needs this filter; the SetBagItem
     path is already bag-scoped by its own args. Modern container item buttons
@@ -56,7 +56,7 @@ local function GetCarriedBagSlot(tooltip)
 	local getBagID = owner.GetBagID
 	if type(getBagID) == "function" then
 		local ok, bag = pcall(getBagID, owner)
-		if ok and type(bag) == "number" and bag >= 0 and bag <= ns.LAST_BAG_INDEX then
+		if ok and ns.IS_CARRIED_BAG[bag] then
 			return bag, slot
 		end
 	end
@@ -65,7 +65,7 @@ local function GetCarriedBagSlot(tooltip)
 	if name and name:find("ContainerFrame", 1, true) then
 		local parent = owner.GetParent and owner:GetParent()
 		local bag = parent and parent.GetID and parent:GetID()
-		if type(bag) == "number" and bag >= 0 and bag <= ns.LAST_BAG_INDEX then
+		if ns.IS_CARRIED_BAG[bag] then
 			return bag, slot
 		end
 	end
@@ -89,7 +89,7 @@ local function GetBagStackCount(bag, slot, itemId)
 end
 
 local function AddEraserWarning(tooltip, itemId, stackCount)
-	if tooltip ~= GameTooltip or not (ns.db and ns.db.global.tooltipWarningEnabled) then
+	if tooltip ~= GameTooltip or not (ns.db and ns.db.profile.tooltipWarningEnabled) then
 		return
 	end
 	if not itemId then
@@ -160,15 +160,16 @@ function ns.SetupTooltipHooks()
 		    (see below), we wrap OTHER add-ons' hooks/wrappers -- TSM replaces the
 		    tooltip setters with prehook/orig/posthook wrappers on these clients --
 		    landing outermost, so our line is added last and survives their rebuilds.
-		    Bag-scoped: the bag arg is the container, and bank bags (5..11) are
-		    excluded by the range check, so no owner sniffing is needed.
+		    Bag-scoped: the bag arg is the container, and anything not in
+		    ns.IS_CARRIED_BAG, bank bags included, is excluded, so no owner
+		    sniffing is needed.
 
 		    Running outermost means the tooltip has already been sized and shown, so
 		    AddLine alone would render our line outside the frame. Re-Show() when we
 		    added a line so the tooltip grows to include it.
 		]]
 		hooksecurefunc(GameTooltip, "SetBagItem", function(tooltip, bag, slot)
-			if type(bag) ~= "number" or bag < 0 or bag > ns.LAST_BAG_INDEX then
+			if not ns.IS_CARRIED_BAG[bag] then
 				return
 			end
 			local info = C_Container.GetContainerItemInfo(bag, slot)

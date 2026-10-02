@@ -8,7 +8,7 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local PickupContainerItem = C_Container.PickupContainerItem
-local GetItemInfo = ns.GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 local format, ipairs = string.format, ipairs
 
 --------------------------------------------------------------------------------
@@ -67,183 +67,10 @@ local function ScheduleScanRetry()
 end
 
 --------------------------------------------------------------------------------
--- Quest State
+-- Scanning
 --------------------------------------------------------------------------------
 
-function ns:IsQuestCompleted(questId)
-	return C_QuestLog.IsQuestFlaggedCompleted(questId)
-end
-
---[[
-    A quest-starting item is spent for one of two reasons, and the second needs
-    no quest state at all: either the quest it hands out is already flagged
-    complete, or this character's race or class can never take that quest, which
-    makes the item dead weight from the moment it drops. A Goldshire Gift
-    Voucher on a Tauren is the cheap case, a Paladin-only Tome of Divinity on a
-    Rogue the other.
-
-    Masks come from quest_template and are omitted from the data when the quest
-    is unrestricted, so a nil or 0 mask always means "no gate here" rather than
-    "nobody qualifies".
-]]
-local playerRaceBit, playerClassBit
-
-local function GetPlayerBits()
-	if not playerRaceBit then
-		local _, raceToken = UnitRace("player")
-		local _, classToken = UnitClass("player")
-		playerRaceBit = (raceToken and ns.RACE_BITS[raceToken]) or 0
-		playerClassBit = (classToken and ns.CLASS_BITS[classToken]) or 0
-	end
-	return playerRaceBit, playerClassBit
-end
-
-local function IsGatedOut(mask, playerBit)
-	return mask and mask ~= 0 and bit.band(mask, playerBit) == 0
-end
-
-function ns:GetQuestStarterReason(itemId)
-	local entry = (ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {})[itemId]
-	if not entry then
-		return nil
-	end
-
-	local raceBit, classBit = GetPlayerBits()
-	if IsGatedOut(entry[2], raceBit) or IsGatedOut(entry[3], classBit) then
-		return "questIneligible"
-	end
-
-	if self:IsQuestCompleted(entry[1]) then
-		return "quest"
-	end
-
-	return nil
-end
-
---------------------------------------------------------------------------------
--- Scanning & Evaluation
---------------------------------------------------------------------------------
-
---[[
-    The player level at which a consumable counts as outgrown. Normally ten
-    levels past the item's own use level; the starter food and drink usable below
-    level 5 are the exception, and go at 5 flat rather than lingering in the bags
-    until 11 -- by 5 the player has already replaced them.
-
-    The use level is read from Data/Consumables.lua ([itemId] = { useLevel }),
-    never from the item info's requiredLevel: static data answers on a cold item
-    cache and does not shift between client versions (Style Guide → DATA: STATIC
-    OVER API).
-]]
-local CONSUMABLE_OUTGROWN_DELTA = 10
-local CONSUMABLE_STARTER_LEVEL = 5
-
-local function GetConsumableEraseLevel(useLevel)
-	if useLevel < CONSUMABLE_STARTER_LEVEL then
-		return CONSUMABLE_STARTER_LEVEL
-	end
-	return useLevel + CONSUMABLE_OUTGROWN_DELTA
-end
-
-function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
-	--[[
-	    The Erase List first, and outside the chain below rather than a branch in
-	    it: a listed item is the player's own instruction, so it matches whatever
-	    its rarity and whatever the curated databases do or do not say about it.
-	    That is the entire point of the list. A white trade good matches no branch
-	    below -- not quest, not consumable, not equipment, and the gray fallback
-	    needs rarity 0 -- so this is the only way one can ever be erased.
-
-	    The Ignore List still wins, and not by a check here. All three scanners
-	    gate on ns:IsIgnored before calling this, and Item-Tooltips.lua returns its
-	    protected line first, so an ignored item never reaches this line at all.
-	]]
-	if ns:IsOnEraseList(itemId) then
-		return "manual"
-	end
-
-	local playerLevel = UnitLevel("player")
-	local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
-	local questStarterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {}
-	local consumableDatabase = ns.ALLOWED_DELETE_CONSUMABLES or {}
-	local equipmentDatabase = ns.ALLOWED_DELETE_EQUIPMENT or {}
-
-	--[[
-	    Starters are checked alongside quest items rather than after them: most
-	    of them appear in both tables, and only the starter entry carries the
-	    race and class masks, so an elseif here would shadow the gate that makes
-	    the wrong-faction case erasable at all. Either table matching also stops
-	    the item falling through to the gray-trash rule below.
-	]]
-	if questStarterDatabase[itemId] or questItemDatabase[itemId] then
-		local starterReason = self:GetQuestStarterReason(itemId)
-		if starterReason then
-			return starterReason
-		end
-		for _, questId in ipairs(questItemDatabase[itemId] or {}) do
-			if self:IsQuestCompleted(questId) then
-				return "quest"
-			end
-		end
-	elseif consumableDatabase[itemId] then
-		local useLevel = consumableDatabase[itemId][1] or 1
-		if playerLevel >= GetConsumableEraseLevel(useLevel) then
-			return "consumable"
-		end
-	elseif equipmentDatabase[itemId] then
-		--[[
-		    The table is derived from a WotLK world DB, while the add-on ships
-		    on earlier expansions' clients, and item quality drifted across
-		    those expansions: Bronze Mace and most of the low-level crafted gear
-		    are white in Era and green by WotLK. Trusting the table alone would
-		    erase a green item on the client where it is green. Gating on the
-		    live rarity instead makes the data expansion-proof in both
-		    directions: the client the player is actually on decides, and a row
-		    that is wrong for one flavor simply does nothing there.
-		]]
-		if rarity == 1 then
-			return "equipment"
-		end
-	elseif rarity == 0 and (sellPrice or 0) > 0 then
-		return "gray"
-	end
-
-	return nil
-end
-
---[[
-    Maximum Value to Erase. Off by default; switched on, anything worth more than
-    the cap stops being an erase candidate, so it is never picked by the mini-map
-    button, never counted in the Clutter Report, and never warned about in a bag
-    tooltip.
-
-    Judged on the stack's total value rather than the unit price, because the
-    stack is what the eraser would actually destroy -- forty grays at two silver
-    each is exactly the pile worth guarding, and each one alone never looks like
-    much.
-
-    Auto-Vend and Bank Retrieval deliberately do not consult this. The cap exists
-    to stop the player losing gold, and selling an over-cap stack hands them that
-    gold instead, so the two features that move an item rather than destroy it
-    keep working on it.
-
-    An Erase List entry is never capped either, which is why the delete reason is
-    passed in. Everything else the cap guards is the add-on picking an item out by
-    rule, and a rule can be wrong about what the player values; a listed item is
-    not a guess. Capping one would leave the player watching a list they built do
-    nothing, with no line in the tooltip and no message in chat to say why.
-]]
-function ns:IsOverValueCap(totalValue, deleteReason)
-	if deleteReason == "manual" then
-		return false
-	end
-	if not (ns.db and ns.db.global.valueCapEnabled) then
-		return false
-	end
-	return (totalValue or 0) > (ns.db.global.valueCapGold or 0) * ns.COPPER_PER_GOLD
-end
-
-local function isBetterDeletionCandidate(candidate, current)
+local function IsBetterDeletionCandidate(candidate, current)
 	if candidate.value < current.value then
 		return true
 	end
@@ -253,16 +80,16 @@ local function isBetterDeletionCandidate(candidate, current)
 	return false
 end
 
-function ns:FindItemToDelete()
-	if isCacheValid then
-		return cachedItem
-	end
-
-	local best = nil
-	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
+--[[
+    One walk of the carried bags, handing each erasable stack to visit. Shared
+    by the cached single-best scan below and the ranked queue the Your Current
+    Bags panel draws, so the two can never disagree about what counts. Returns
+    true when some item's data was still loading.
+]]
+local function ForEachCandidate(visit)
 	local isDataMissing = false
 
-	for bag = 0, ns.LAST_BAG_INDEX do
+	for _, bag in ipairs(ns.CARRIED_BAGS) do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)
@@ -280,14 +107,10 @@ function ns:FindItemToDelete()
 					else
 						local count = itemInfo.stackCount or 1
 						local totalValue = (sellPrice or 0) * count
-						local deleteReason = self:GetItemDeleteReason(itemId, rarity, sellPrice)
+						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 
 						if deleteReason and not ns:IsOverValueCap(totalValue, deleteReason) then
-							-- Slots counts one per qualifying slot; items counts stacked quantity.
-							reclaimSlots = reclaimSlots + 1
-							reclaimItems = reclaimItems + count
-							reclaimValue = reclaimValue + totalValue
-							local candidate = {
+							visit({
 								link = itemInfo.hyperlink,
 								itemId = itemId,
 								count = count,
@@ -296,16 +119,34 @@ function ns:FindItemToDelete()
 								bag = bag,
 								slot = slot,
 								deleteReason = deleteReason,
-							}
-							if not best or isBetterDeletionCandidate(candidate, best) then
-								best = candidate
-							end
+							})
 						end
 					end
 				end
 			end
 		end
 	end
+
+	return isDataMissing
+end
+
+function ns:FindItemToDelete()
+	if isCacheValid then
+		return cachedItem
+	end
+
+	local best = nil
+	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
+
+	local isDataMissing = ForEachCandidate(function(candidate)
+		-- Slots counts one per qualifying slot; items counts stacked quantity.
+		reclaimSlots = reclaimSlots + 1
+		reclaimItems = reclaimItems + candidate.count
+		reclaimValue = reclaimValue + candidate.value
+		if not best or IsBetterDeletionCandidate(candidate, best) then
+			best = candidate
+		end
+	end)
 
 	if isDataMissing then
 		ScheduleScanRetry()
@@ -329,46 +170,65 @@ function ns:GetReclaimSummary()
 	return cachedReclaimSlots or 0, cachedReclaimItems or 0, cachedReclaimValue or 0
 end
 
+--[[
+    Every erasable stack in the bags, in the order the eraser would take them,
+    for the Your Current Bags panel. Not cached: the panel asks only while it is
+    on screen, and the mini-map's single-best scan keeps its own cache. The first
+    entry is always the one FindItemToDelete picks, because both rank through
+    IsBetterDeletionCandidate; bag position breaks the last tie so the order
+    holds still between repaints.
+]]
+function ns:GetEraseQueue()
+	local queue = {}
+	ForEachCandidate(function(candidate)
+		queue[#queue + 1] = candidate
+	end)
+	table.sort(queue, function(a, b)
+		if IsBetterDeletionCandidate(a, b) then
+			return true
+		end
+		if IsBetterDeletionCandidate(b, a) then
+			return false
+		end
+		if a.bag ~= b.bag then
+			return a.bag < b.bag
+		end
+		return a.slot < b.slot
+	end)
+	return queue
+end
+
 --------------------------------------------------------------------------------
 -- Deletion
 --------------------------------------------------------------------------------
 
 --[[
-    Safety Guard. Maps each delete reason to its opt-in confirmation toggle. When
-    the guard is on and the matching per-reason toggle is set, erasing that item
-    pops a confirmation first. "White vendor-quality" maps to the curated
-    equipment reason, and quest and questIneligible share safetyQuest.
+    Ask First. A kind the player set to Ask First pops a confirmation before the
+    erase, from the mini-map button, the key binding and the Your Current Bags
+    panel alike, since all three enter through ns:RunEraser.
 
-    "manual" is deliberately absent, so an Erase List entry never confirms: an
-    unmapped reason falls through to false below, and asking the player to
-    approve erasing an item they typed in themselves is friction that tells them
-    nothing they did not already know. A mistyped id is caught earlier and better
-    -- the Erase List panel renders every row as the real item link, icon and
-    tooltip included, so a wrong id shows the wrong item's name on sight.
+    An Erase List entry never asks (ns:GetEraseAction answers Erase for
+    "manual"): asking the player to approve erasing an item they typed in
+    themselves is friction that tells them nothing they did not already know. A
+    mistyped id is caught earlier and better -- the Erase List panel renders
+    every row as the real item link, icon and tooltip included, so a wrong id
+    shows the wrong item's name on sight.
 ]]
-local SAFETY_REASON_KEYS = {
-	quest = "safetyQuest",
-	questIneligible = "safetyQuest",
-	consumable = "safetyConsumable",
-	equipment = "safetyWhite",
-	gray = "safetyGray",
-}
-
 function ns:NeedsSafetyConfirm(item)
-	if not (item and ns.db and ns.db.global.safetyEnabled) then
+	if not item then
 		return false
 	end
-	local key = SAFETY_REASON_KEYS[item.deleteReason]
-	return (key and ns.db.global[key]) and true or false
+	return ns:GetEraseAction(item.deleteReason) == ns.ERASE_ACTION_ASK
 end
 
 --[[
     Confirmation dialog for guarded erases. The candidate is passed as the
     dialog's data so each showing acts on the exact item the player saw, and
-    PerformErase re-validates the slot before deleting. preferredIndex = 3 avoids
-    tainting the shared dialog stack.
+    PerformErase erases only if the slot still holds that exact stack and the
+    cursor then picks up the same item. preferredIndex = 3 avoids tainting the
+    shared dialog stack.
 ]]
-StaticPopupDialogs["MAGICERASER_CONFIRM_ERASE"] = {
+StaticPopupDialogs["MAGICERASER_CONFIRM_ERASE"] = { -- luacheck: ignore 122
 	text = L["CONFIRM_ERASE"],
 	button1 = YES,
 	button2 = NO,
@@ -385,15 +245,45 @@ StaticPopupDialogs["MAGICERASER_CONFIRM_ERASE"] = {
 }
 
 --[[
-    Actually erase the item: pick it up and delete it from the cursor. The
-    cursor's item id is re-checked against the candidate so a slot that shifted
-    (e.g. while a confirmation was open) aborts instead of deleting the wrong
-    thing. Re-guards combat because a safety confirmation can span the moment
-    combat begins.
+    Whether the slot still holds exactly the stack the candidate describes, and
+    that stack is still erasable. A confirmation can stay open while looting
+    grows the pile or the player protects the item, and Yes must then erase
+    nothing rather than more than the player agreed to.
+]]
+local function IsCandidateCurrent(item)
+	local info = GetContainerItemInfo(item.bag, item.slot)
+	if not info or info.itemID ~= item.itemId or (info.stackCount or 1) ~= item.count then
+		return false
+	end
+	if ns:IsIgnored(item.itemId) then
+		return false
+	end
+	local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(item.itemId)
+	if not name then
+		return false
+	end
+	local deleteReason = ns:GetItemDeleteReason(item.itemId, rarity, sellPrice)
+	return deleteReason ~= nil and not ns:IsOverValueCap((sellPrice or 0) * item.count, deleteReason)
+end
+
+--[[
+    Actually erase the item: pick it up and delete it from the cursor. Two
+    checks stand in front of the delete: the slot must still hold the stack the
+    candidate describes (IsCandidateCurrent), and the cursor's item id must match
+    it once picked up, so a slot that shifted aborts instead of deleting the
+    wrong thing. Re-guards combat because a safety confirmation can span the
+    moment combat begins.
 ]]
 function ns:PerformErase(item)
 	if InCombatLockdown() then
 		self:PrintMessage(L["COMBAT_LOCKOUT"])
+		return
+	end
+
+	if not IsCandidateCurrent(item) then
+		self:PrintMessage(L["ERASE_CANDIDATE_CHANGED"])
+		ns:InvalidateCache()
+		ns:RefreshDisplay()
 		return
 	end
 
@@ -441,114 +331,6 @@ function ns:PerformErase(item)
 end
 
 --------------------------------------------------------------------------------
--- Quest-Item Alerts
---------------------------------------------------------------------------------
-
---[[
-    Quest starters announce themselves on the way in rather than waiting for the
-    player to notice: the whole point of the race and class gate is that the item
-    is dead the moment it drops, which is not something a tooltip alone tells you
-    while you are still looting.
-
-    BAG_UPDATE_DELAYED fires a burst at login, so ns:SeedQuestStarterAlerts marks
-    the starters already erasable at login and only one that becomes erasable
-    while playing speaks up. A starter held but not yet erasable is left unmarked
-    on purpose, so finishing its quest later still alerts. Same reasoning as
-    SeedBagSpaceBaseline in Core.lua.
-
-    Keyed by item id and living for the session, so moving a stack between bags or
-    opening a merchant cannot make the same item announce twice.
-    ns:OnQuestTurnedIn reads the same set before its own walk: nearly every
-    starter also carries a row in ALLOWED_DELETE_QUEST_ITEMS under the same quest
-    id, so without that check a starter still in the bags at turn-in would
-    announce twice.
-]]
-local announcedStarters = {}
-
-local ALERT_KEYS = {
-	quest = "QUEST_ITEM_READY",
-	questIneligible = "QUEST_STARTER_UNAVAILABLE",
-}
-
-local function ScanQuestStarters(announce)
-	local starterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS
-	if not starterDatabase then
-		return
-	end
-
-	for bag = 0, ns.LAST_BAG_INDEX do
-		local slotCount = GetContainerNumSlots(bag) or 0
-		for slot = 1, slotCount do
-			local itemInfo = GetContainerItemInfo(bag, slot)
-			local itemId = itemInfo and itemInfo.itemID
-
-			--[[
-			    The cheap table lookup gates everything: an item that starts no
-			    quest never reaches the race, class or quest-state checks.
-			]]
-			if itemId and starterDatabase[itemId] and not announcedStarters[itemId] then
-				local reason = ns:GetQuestStarterReason(itemId)
-				if reason then
-					announcedStarters[itemId] = true
-					if announce then
-						ns:PrintMessage(format(L[ALERT_KEYS[reason]], itemInfo.hyperlink))
-					end
-				end
-			end
-		end
-	end
-end
-
---[[
-    Called once from OnPlayerLogin, before the login BAG_UPDATE_DELAYED burst can
-    reach CheckQuestStarters.
-]]
-function ns:SeedQuestStarterAlerts()
-	ScanQuestStarters(false)
-end
-
-function ns:CheckQuestStarters()
-	ScanQuestStarters(true)
-end
-
-function ns:OnQuestTurnedIn(questId)
-	C_Timer.After(1.0, function()
-		ns:CheckQuestStarters()
-
-		local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
-		local alertedItems = {}
-
-		for bag = 0, ns.LAST_BAG_INDEX do
-			local slotCount = GetContainerNumSlots(bag) or 0
-			for slot = 1, slotCount do
-				local itemInfo = GetContainerItemInfo(bag, slot)
-				if itemInfo then
-					local itemId = itemInfo.itemID
-
-					--[[
-					    Skip anything the starter scan above already spoke for.
-					    Nearly every quest starter also has a row here under the
-					    same quest id, so without this the one line arrives twice.
-					]]
-					if questItemDatabase[itemId] and not alertedItems[itemId] and not announcedStarters[itemId] then
-						for _, trackedQuestId in ipairs(questItemDatabase[itemId]) do
-							if trackedQuestId == questId then
-								ns:PrintMessage(format(L["QUEST_ITEM_READY"], itemInfo.hyperlink))
-								alertedItems[itemId] = true
-								break
-							end
-						end
-					end
-				end
-			end
-		end
-
-		ns:InvalidateCache()
-		ns:RefreshDisplay()
-	end)
-end
-
---------------------------------------------------------------------------------
 -- Erasing
 --------------------------------------------------------------------------------
 
@@ -568,7 +350,7 @@ function ns:RunEraser()
 
 	if ns:NeedsSafetyConfirm(item) then
 		local stackString = (item.count > 1) and format(" x%d", item.count) or ""
-		StaticPopup_Show("MAGICERASER_CONFIRM_ERASE", item.link, stackString, item)
+		StaticPopup_Show("MAGICERASER_CONFIRM_ERASE", ns:StripLinkBrackets(item.link), stackString, item)
 	else
 		ns:PerformErase(item)
 	end

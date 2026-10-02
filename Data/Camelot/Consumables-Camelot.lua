@@ -1,6 +1,8 @@
 local _, ns = ...
 
---[[ 
+--[[
+Source: copied from Data/Vanilla/ until Validate Data passes on this client;
+its rows came from the CMaNGOS WotLK world DB via the query below.
 
 WITH regen AS (
   SELECT Id,
@@ -60,11 +62,8 @@ FROM (
 ORDER BY z.grp, z.ord, z.nm;
 
 ]]
-
+-- [itemId] = {Item Use Level}, -- Item Name
 ns.ALLOWED_DELETE_CONSUMABLES = {
-
-	-- [itemId] = {Item Use Level}, -- Item Name
-
 	-- Food
 	[33254] = { 65 }, -- Afrazi Forest Strider Drumstick
 	[44607] = { 75 }, -- Aged Dalaran Sharp

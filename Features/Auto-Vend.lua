@@ -4,7 +4,7 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local UseContainerItem = C_Container.UseContainerItem
-local GetItemInfo = ns.GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 
 local sellQueue = {}
 local isSelling = false
@@ -12,7 +12,7 @@ local sellIndex = 0
 
 --[[
     Set when a vend pass is deferred because we are in combat (UseContainerItem
-    is protected). OnCombatEnded resumes it once PLAYER_REGEN_ENABLED fires.
+    is protected). ns:ResumeDeferredVend resumes it once combat ends.
 ]]
 
 local vendPending = false
@@ -72,8 +72,8 @@ local pendingSales = {}
 
 --[[
     Per-visit totals for summary mode. Accrued for every newly announced sale
-    regardless of the Verbose/Summary setting, so flipping the dropdown
-    mid-visit still produces a correct closing line. summarySlots counts one per
+    whichever chat report is chosen, so changing the dropdown mid-visit still
+    produces a correct closing line. summarySlots counts one per
     sale (each sold stack empties one bag slot). Visit scoped alongside
     announcedSales, and flushed in OnMerchantClosed.
 ]]
@@ -83,13 +83,13 @@ local summarySlots = 0
 local summaryValue = 0
 
 --[[
-    Single guard for all Auto-Vend chat output. Disabling Auto-Vend messages
-    silences the deferred-combat notice, the per-item sale lines, and the
+    Single guard for all Auto-Vend chat output. No Chat Report silences the
+    deferred-combat notice, the per-item sale lines, and the
     per-visit summary line alike.
 ]]
 
 local function PrintVendMessage(message)
-	if ns.db and ns.db.global.autoVendMessagesEnabled then
+	if ns.db and ns.db.profile.autoVendMessagesEnabled then
 		ns:PrintMessage(message)
 	end
 end
@@ -125,7 +125,7 @@ local function ConfirmSales()
 				summaryCount = summaryCount + sale.count
 				summarySlots = summarySlots + 1
 				summaryValue = summaryValue + sale.value
-				if not (ns.db and ns.db.global.autoVendSummaryEnabled) then
+				if not (ns.db and ns.db.profile.autoVendSummaryEnabled) then
 					local stackString = (sale.count > 1) and string.format(" x%d", sale.count) or ""
 					PrintVendMessage(
 						string.format(L["SOLD_ITEM"], sale.link, stackString, ns:FormatCurrency(sale.value))
@@ -166,8 +166,8 @@ local function ProcessSellQueue(generation)
 
 	--[[
         UseContainerItem below is protected and forbidden in combat. If we
-        entered combat mid-queue, stop now; OnCombatEnded starts a fresh pass
-        once PLAYER_REGEN_ENABLED fires, rebuilding the queue from live bag state
+        entered combat mid-queue, stop now; ns:ResumeDeferredVend starts a fresh
+        pass once combat ends, rebuilding the queue from live bag state
         because slots may have shifted. Only the queue is dropped: pendingSales
         keeps the already-attempted sales so the resumed pass can still confirm
         and announce them.
@@ -258,7 +258,7 @@ function ScanAndVend(generation)
 	wipe(sellQueue)
 	sellIndex = 0
 
-	for bag = 0, ns.LAST_BAG_INDEX do
+	for _, bag in ipairs(ns.CARRIED_BAGS) do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)
@@ -357,7 +357,7 @@ end
 ]]
 
 function ns:OnMerchantShow()
-	if not (ns.db and ns.db.global.autoVendEnabled) then
+	if not (ns.db and ns.db.profile.autoVendEnabled) then
 		return
 	end
 
@@ -413,10 +413,10 @@ function ns:OnMerchantClosed()
 
 		--[[
 		    The per-visit summary prints one closing line whenever anything sold,
-		    in both message modes: Summary Only shows it alone, and Line Item
-		    shows it beneath the per-item lines. This deferred flush is the flush
-		    point. Routed through PrintVendMessage so the Enable Auto-Vend
-		    Messages toggle silences it like all other vend output.
+		    under both chat reports: Summary in Chat shows it alone, and Every
+		    Sale in Chat shows it beneath the per-item lines. This deferred
+		    flush is the flush point. Routed through PrintVendMessage so No Chat
+		    Report silences it like all other vend output.
 		]]
 		if summaryCount > 0 then
 			local message
@@ -454,21 +454,21 @@ function ns:OnMerchantClosed()
 end
 
 --[[
-    PLAYER_REGEN_ENABLED. Selling is deferred while in combat (UseContainerItem
-    is protected), so once combat ends we resume the deferred pass -- but only if
-    the merchant window is still open. Fires on every combat end, so the
-    vendPending guard keeps it free when nothing is waiting.
+    Called from Core's PLAYER_REGEN_ENABLED handler. Selling is deferred while in
+    combat (UseContainerItem is protected), so once combat ends we resume the
+    deferred pass -- but only if the merchant window is still open. Runs on every
+    combat end, so the vendPending guard keeps it free when nothing is waiting.
 
     A pass, not a visit: the merchant window never closed, so the sales already
     attempted are still this visit's and are still owed an announcement.
 ]]
-function ns:OnCombatEnded()
+function ns:ResumeDeferredVend()
 	if not vendPending then
 		return
 	end
 	vendPending = false
 
-	if ns.db and ns.db.global.autoVendEnabled and MerchantFrame and MerchantFrame:IsShown() then
+	if ns.db and ns.db.profile.autoVendEnabled and MerchantFrame and MerchantFrame:IsShown() then
 		StartPass()
 	end
 end

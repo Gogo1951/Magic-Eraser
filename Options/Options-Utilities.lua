@@ -2,7 +2,7 @@ local _, ns = ...
 local L = ns.L
 
 local format = string.format
-local GetItemInfo = ns.GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 
 --------------------------------------------------------------------------------
 -- Shared Options Helpers
@@ -23,8 +23,8 @@ function ns.OptionsDesc(text, order)
 	return { type = "description", name = text, fontSize = "medium", order = order }
 end
 
-function ns.OptionsSpacer(order)
-	return { type = "description", name = " ", order = order }
+function ns.OptionsSpacer(order, hidden)
+	return { type = "description", name = " ", order = order, hidden = hidden }
 end
 
 --[[
@@ -79,10 +79,11 @@ end
 
     hidden goes on the group and never on the members; hung off the controls
     individually, the indent is left behind on its own line when the section
-    collapses. Lives here rather than in one panel file because fragments on
-    both settings panels build sub-rows: Auto-Vend on the General panel, and
-    Manual Delete Assistance, the two Eraser sections and Bag-Space Warnings on
-    Safety Features.
+    collapses. Lives here with the other row builders, though only Bag-Space
+    Warnings on Alerts & Tooltips builds one today. A row no switch gates,
+    like the Erasing panel's kind rows, is a plain caption and control
+    instead, with no indent and no gray; a switch with one setting of its own
+    takes the caption's place, with the dropdown beside it.
 ]]
 function ns.OptionsSubRow(order, hidden, controls)
 	local args = {
@@ -114,15 +115,97 @@ function ns.OptionsSubLabel(text)
 end
 
 --------------------------------------------------------------------------------
+-- Feature Switches
+--------------------------------------------------------------------------------
+
+--[[
+    A feature's on/off switch, built once and used twice: on the feature's own
+    page, and in the Features section of the root panel, so the two are always
+    the same setting with the same caption and tooltip. Reads and writes
+    ns.db.profile[settingKey]; onSet runs after the write for a switch whose
+    change has to reach something beyond the saved value.
+
+    Both copies read the live setting on every draw, so flipping one and then
+    opening the other page never shows a stale box.
+]]
+function ns.OptionsFeatureToggle(settingKey, nameKey, descKey, order, width, onSet)
+	return {
+		type = "toggle",
+		name = L[nameKey],
+		desc = L[descKey],
+		width = width or "full",
+		order = order,
+		get = function()
+			return ns.db and ns.db.profile[settingKey]
+		end,
+		set = function(_, value)
+			ns.db.profile[settingKey] = value
+			if onSet then
+				onSet(value)
+			end
+		end,
+	}
+end
+
+--------------------------------------------------------------------------------
+-- Example Lines
+--------------------------------------------------------------------------------
+
+--[[
+    One line showing what a chat-printing feature actually says, built from the
+    real locale string it prints, under the switch that controls it. getText
+    returns the message body (without the brand prefix, which is added here, as
+    ns:PrintMessage adds it); a function rather than a string so an example that
+    follows a dropdown redraws with it. hidden works as on any other widget.
+    Callers put an ns.OptionsSpacer with the same hidden above the first
+    example, so the example sits one blank line below the control it shows.
+]]
+ns.EXAMPLE_ITEM_LINK = "|cffffffff" .. L["OPTIONS_EXAMPLE_ITEM"] .. "|r"
+
+function ns.OptionsExample(getText, order, hidden)
+	return {
+		type = "description",
+		name = function()
+			return GetColor("HELP")
+				.. format(L["OPTIONS_EXAMPLE"], ns.BRAND_PREFIX .. GetColor("TEXT") .. getText() .. "|r")
+				.. "|r"
+		end,
+		fontSize = "medium",
+		order = order,
+		hidden = hidden,
+	}
+end
+
+--[[
+    A silver line that only shows when something elsewhere changes this page's
+    feature, such as Bag-Space Warnings holding bag slots back from Bank
+    Retrieval. getText may return nil, which hides it.
+]]
+function ns.OptionsStatusLine(getText, order)
+	return {
+		type = "description",
+		name = function()
+			local text = getText()
+			return text and (GetColor("HELP") .. text .. "|r") or ""
+		end,
+		fontSize = "medium",
+		order = order,
+		hidden = function()
+			return getText() == nil
+		end,
+	}
+end
+
+--------------------------------------------------------------------------------
 -- Item Cache Warming
 --------------------------------------------------------------------------------
 
 --[[
-    ns.GetItemInfo answers nil for an item the client has not cached yet, which is
-    the normal state for a list of item ids on a fresh login -- nothing has put
-    those items in front of the player, so nothing has pulled their data. A panel
-    that lists items renders those rows as L["LOADING_ITEM"] and hands the cold
-    ids here.
+    C_Item.GetItemInfo answers nil for an item the client has not cached yet,
+    which is the normal state for a list of item ids on a fresh login -- nothing
+    has put those items in front of the player, so nothing has pulled their
+    data. A panel that lists items renders those rows as L["LOADING_ITEM"] and
+    hands the cold ids here.
 
     RequestLoadItemDataByID asks the server for each one, then a bounded poll
     repaints the panel as answers land. NotifyChange fires only when the cold
@@ -246,9 +329,9 @@ function ns:GetItemDisplayName(itemId)
 	local _, itemLink, _, _, _, _, _, _, _, icon = GetItemInfo(itemId)
 
 	if itemLink and icon then
-		return format("|T%s:16|t %s", icon, itemLink)
+		return format("|T%s:16|t %s", icon, ns:StripLinkBrackets(itemLink))
 	elseif itemLink then
-		return itemLink
+		return ns:StripLinkBrackets(itemLink)
 	end
 
 	return GetColor("MUTED") .. format(L["LOADING_ITEM"], itemId) .. "|r"
@@ -269,12 +352,18 @@ end
       onRestore: optional function() putting the list back to its defaults
       notifyKey: AceConfigRegistry name to NotifyChange on every mutation
       labels: { addName, addHelp, addInvalid, removeDesc, empty }
-        plus { restoreName, restoreConfirm } when onRestore is supplied
+        plus { restoreName, restoreDesc, restoreConfirm } when onRestore is
+        supplied
       rowWidth: optional total row budget, default ns.OPTIONS_ROW_WIDTH
       startOrder: optional first order, so a panel can seat its own head above
       actionColumn: optional extra cell per row, either
         { type = "execute", name, desc, width, func = function(itemId) }
         or { type = "select", desc, values, sorting, width, get, set }
+      getRowTag: optional function(itemId) returning a short word to show in
+        silver beside the item, or nil for none
+      addFromBags: optional true to put an Add from Bags picker above the add
+        box, listing what the player carries that isn't on the list yet
+        (labels then carry fromBagsName and fromBagsDesc)
 
     Restore Defaults appears only for a list that ships defaults, which is why
     onRestore is optional rather than part of the shape: a list the player built
@@ -293,29 +382,62 @@ end
 local REMOVE_ICON = "Interface/Buttons/UI-GroupLoot-Pass-Up"
 local REMOVE_ICON_SIZE = 16
 
+-- A row tag is one short word, so it gets a fixed slice of the item's share.
+local ROW_TAG_WIDTH = 0.55
+
+--[[
+    The Add from Bags picker's choices: one entry per distinct item in the
+    carried bags that the list doesn't hold yet, as icon and link, sorted by
+    name. Built on every repaint, which the list panels get after each edit; an
+    item looted while the panel stays open shows up on the next one. The game
+    closes the bags when the options open, so this is the only way to pick an
+    item without knowing its id.
+]]
+local function GetCarriedItemChoices(sourceTable)
+	local values, sorting, seen = {}, {}, {}
+
+	for _, bag in ipairs(ns.CARRIED_BAGS) do
+		for slot = 1, (C_Container.GetContainerNumSlots(bag) or 0) do
+			local info = C_Container.GetContainerItemInfo(bag, slot)
+			local itemId = info and info.itemID
+			if itemId and not seen[itemId] and not (sourceTable and sourceTable[itemId]) then
+				seen[itemId] = true
+				values[itemId] = ns:GetItemDisplayName(itemId)
+				sorting[#sorting + 1] = itemId
+			end
+		end
+	end
+
+	ns:SortItemIdentifiersByName(sorting)
+	return values, sorting
+end
+
 function ns:BuildItemListOptions(spec)
 	local labels = spec.labels
 	local rowWidth = spec.rowWidth or ns.OPTIONS_ROW_WIDTH
 	local args = {}
 	local order = spec.startOrder or 1
 
+	--[[
+	    Restore Defaults goes last, under the rows, at normal width: the top of a
+	    list is for finding and adding, and a rarely used reset shouldn't be the
+	    first thing there. Ordered far past any row so it lands last however
+	    long the list is.
+	]]
 	if spec.onRestore then
+		args.spacerRestore = ns.OptionsSpacer(9998)
 		args.restoreDefaults = {
 			type = "execute",
 			name = labels.restoreName,
-			width = "double",
+			desc = labels.restoreDesc,
 			confirm = true,
 			confirmText = labels.restoreConfirm,
-			order = order,
+			order = 9999,
 			func = function()
 				spec.onRestore()
 				AceConfigRegistry:NotifyChange(spec.notifyKey)
 			end,
 		}
-		order = order + 1
-
-		args.spacerRestore = ns.OptionsSpacer(order)
-		order = order + 1
 	end
 
 	--[[
@@ -325,6 +447,35 @@ function ns:BuildItemListOptions(spec)
 	    beside it onto its own line. Taking the remainder after the control keeps
 	    the pair on one line and ending where the rows below it end.
 	]]
+	if spec.addFromBags then
+		local values, sorting = GetCarriedItemChoices(spec.getSourceTable())
+
+		args.addFromBagsLabel = ns.OptionsRowLabel(labels.fromBagsName, order, rowWidth - ns.OPTIONS_CONTROL_WIDTH)
+		order = order + 1
+
+		-- get returns nil so the picker reads empty again after each add.
+		args.addFromBagsSelect = {
+			type = "select",
+			name = "",
+			desc = labels.fromBagsDesc,
+			width = ns.OPTIONS_CONTROL_WIDTH,
+			order = order,
+			values = values,
+			sorting = sorting,
+			disabled = function()
+				return sorting[1] == nil
+			end,
+			get = function()
+				return nil
+			end,
+			set = function(_, itemId)
+				spec.onAdd(itemId)
+				AceConfigRegistry:NotifyChange(spec.notifyKey)
+			end,
+		}
+		order = order + 1
+	end
+
 	args.addItemLabel = ns.OptionsRowLabel(labels.addName, order, rowWidth - ns.OPTIONS_CONTROL_WIDTH)
 	order = order + 1
 
@@ -395,12 +546,14 @@ function ns:BuildItemListOptions(spec)
 		    width, and the flow layout always gives a fill widget its own line. The
 		    cells then flow inside it, so every row breaks at the same points.
 		]]
+		local tag = spec.getRowTag and spec.getRowTag(capturedId)
+
 		local cells = {
 			item = {
 				type = "input",
 				name = "",
 				dialogControl = ns.ITEM_LINK_WIDGET_TYPE,
-				width = itemWidth,
+				width = tag and (itemWidth - ROW_TAG_WIDTH) or itemWidth,
 				order = 1,
 				get = function()
 					return tostring(capturedId)
@@ -408,6 +561,16 @@ function ns:BuildItemListOptions(spec)
 				set = function() end,
 			},
 		}
+
+		if tag then
+			cells.tag = {
+				type = "description",
+				name = GetColor("HELP") .. tag .. "|r",
+				fontSize = "medium",
+				width = ROW_TAG_WIDTH,
+				order = 1.5,
+			}
+		end
 
 		if actionColumn then
 			if actionColumn.type == "execute" then
@@ -493,7 +656,7 @@ local function OnItemLinkEnter(frame)
 		return
 	end
 	--[[
-	    The bare "item:id" form rather than the link off ns.GetItemInfo, so a row
+	    The bare "item:id" form rather than the link off C_Item.GetItemInfo, so a row
 	    still waiting on its item data gets a tooltip too -- and hovering it pulls
 	    the very data the row is waiting for.
 	]]
@@ -517,11 +680,17 @@ function itemLinkMethods:OnRelease()
 	self.itemId = nil
 end
 
+--[[
+    The text is the item id, optionally followed by ";" and a suffix drawn after
+    the item, such as a stack count ("1234; x20"). The suffix rides in the text
+    because AceConfig hands a dialogControl nothing but its get value.
+]]
 function itemLinkMethods:SetText(text)
-	local itemId = tonumber(text)
+	local idText, suffix = tostring(text or ""):match("^(%d+);(.*)$")
+	local itemId = tonumber(idText or text)
 	if itemId then
 		self.itemId = itemId
-		self.label:SetText(ns:GetItemDisplayName(itemId))
+		self.label:SetText(ns:GetItemDisplayName(itemId) .. (suffix or ""))
 	else
 		self.label:SetText(text or "")
 	end

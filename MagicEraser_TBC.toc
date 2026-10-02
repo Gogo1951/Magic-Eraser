@@ -55,19 +55,25 @@ Locales/zhTW.lua
 # Data
 Data/Flavor.lua
 Data/Data.lua
+Data/TBC/Quest-Items-TBC.lua
+Data/TBC/Quest-Starting-Items-TBC.lua
+Data/TBC/Consumables-TBC.lua
+Data/TBC/Ammo-TBC.lua
+Data/TBC/Equipment-TBC.lua
+Data/TBC/Class-Reagents-TBC.lua
 Data/Default-Settings.lua
-Data/Quest-Items.lua
-Data/Quest-Starting-Items.lua
-Data/Consumables.lua
-Data/Equipment.lua
 
 # Magic Eraser
 Features/Core.lua
+# MIGRATION (remove after 2026-11-30)
+Features/Migrations.lua
 Features/Utilities.lua
 Features/Announcements.lua
 Features/Ignore-List.lua
 Features/Erase-List.lua
+Features/Junk-Rules.lua
 Features/Eraser.lua
+Features/Quest-Item-Alerts.lua
 Features/Manual-Delete.lua
 Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
@@ -77,14 +83,18 @@ Features/Key-Bindings.lua
 Features/Diagnostics.lua
 Features/Minimap-Button.lua
 Options/Options-Utilities.lua
-Options/Options-Auto-Vend.lua
 Options/Options-Eraser.lua
+Options/Options-Manual-Delete.lua
+Options/Options-Auto-Vend.lua
 Options/Options-Bank-Retrieval.lua
 Options/Options-Item-Tooltips.lua
+Options/Options-Quest-Item-Alerts.lua
 Options/Options-Bag-Warnings.lua
-Options/Options-Manual-Delete.lua
 Options/Options-General.lua
-Options/Options-Safety.lua
+Options/Options-Your-Current-Bags.lua
+Options/Options-Erasing.lua
+Options/Options-Merchant-Bank.lua
+Options/Options-Alerts-Tooltips.lua
 Options/Options-Ignore-List.lua
 Options/Options-Erase-List.lua
 Options/Options-Profiles.lua

@@ -4,8 +4,8 @@ local GetColor = ns.GetColor
 
 local format = string.format
 local insert = table.insert
-local GetItemInfo = ns.GetItemInfo
-local GetItemQualityColor = ns.GetItemQualityColor
+local GetItemInfo = C_Item.GetItemInfo
+local GetItemQualityColor = C_Item.GetItemQualityColor
 
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
@@ -34,7 +34,7 @@ local function RefreshTooltip(anchor)
 		local iconString = format("|T%s:14:14|t", item.icon)
 		local countString = (item.count > 1) and format("%sx%d|r", GetColor("TEXT"), item.count) or ""
 
-		local leftText = iconString .. " " .. item.link .. " " .. countString
+		local leftText = iconString .. " " .. ns:StripLinkBrackets(item.link) .. " " .. countString
 		local rightText = (item.value > 0) and ns:FormatCurrency(item.value)
 			or (GetColor("MUTED") .. L["NO_VALUE"] .. "|r")
 
@@ -60,7 +60,7 @@ local function RefreshTooltip(anchor)
 
 	-- Auto-Vend
 	tooltip:AddLine(" ")
-	local autoVendStatus = (ns.db and ns.db.global.autoVendEnabled) and (GetColor("ON") .. L["ENABLED"] .. "|r")
+	local autoVendStatus = (ns.db and ns.db.profile.autoVendEnabled) and (GetColor("ON") .. L["ENABLED"] .. "|r")
 		or (GetColor("OFF") .. L["DISABLED"] .. "|r")
 	tooltip:AddDoubleLine(GetColor("TITLE") .. L["AUTO_VEND"] .. "|r", autoVendStatus)
 	tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESCRIPTION"] .. "|r", 1, 1, 1, true)
@@ -127,7 +127,7 @@ local function RefreshTooltip(anchor)
 
 		for _, ignoredItem in ipairs(sortedItems) do
 			local _, _, _, hexColor = GetItemQualityColor(ignoredItem.quality)
-			tooltip:AddLine(format("|T%s:14:14|t |c%s[%s]|r", ignoredItem.icon, hexColor, ignoredItem.name))
+			tooltip:AddLine(format("|T%s:14:14|t |c%s%s|r", ignoredItem.icon, hexColor, ignoredItem.name))
 		end
 
 		for _, itemId in ipairs(loadingItems) do
@@ -176,6 +176,13 @@ function ns:RefreshDisplay()
 			RefreshTooltip(button)
 		end
 	end
+
+	--[[
+	    Every bag change lands here, which is exactly when the Your Current Bags
+	    panel's queue goes stale. It is a builder function, so NotifyChange
+	    rebuilds it from the live bags, and costs nothing while it isn't shown.
+	]]
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.YourCurrentBags)
 end
 
 --------------------------------------------------------------------------------
@@ -197,8 +204,9 @@ ns.LDBObject = LibDataBroker:NewDataObject(ADDON_NAME, {
 			if not ns.db then
 				return
 			end
-			ns.db.global.autoVendEnabled = not ns.db.global.autoVendEnabled
+			ns.db.profile.autoVendEnabled = not ns.db.profile.autoVendEnabled
 			AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
+			AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.MerchantBank)
 			RefreshTooltip(self)
 			return
 		end

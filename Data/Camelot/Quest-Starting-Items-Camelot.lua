@@ -1,6 +1,34 @@
 local _, ns = ...
 
 --[[
+    Items that hand you a quest when you right click them. Distinct from
+    ALLOWED_DELETE_QUEST_ITEMS: those are consumed by a turn-in, these create the
+    quest in the first place, so they are safe to erase for two separate
+    reasons.
+
+    [itemId] = { questId, racesMask, classesMask }
+
+    questId     the quest the item starts. Erasable once it is flagged
+                complete, because the item is spent.
+    racesMask   quest_template.RequiredRaces. Omitted when unrestricted. When
+                the player's race bit is absent the quest can never be taken,
+                so the item is dead weight from the moment it drops and needs
+                no quest state at all.
+    classesMask quest_template.RequiredClasses, same rule.
+
+    Race bits:  Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32,
+                Gnome 64, Troll 128, BloodElf 512, Draenei 1024
+                Alliance = 1101, Horde = 690
+    Class bits: Warrior 1, Paladin 2, Hunter 4, Rogue 8, Priest 16,
+                DeathKnight 32, Shaman 64, Mage 128, Warlock 256, Druid 1024
+
+    Poor and common quality only. Several quest starters are epics and
+    legendaries and none of those belong here.
+]]
+
+--[[
+Source: copied from Data/Vanilla/ until Validate Data passes on this client;
+its rows came from the CMaNGOS WotLK world DB via the query below.
 
 Magic Eraser :: items that START a quest, non-repeatable
 
@@ -21,9 +49,9 @@ Repeatable quests are excluded: their starter can come back, so a completed
 flag proves nothing. If your schema names these differently, check with
   SHOW COLUMNS FROM quest_template LIKE '%Flags%';
 
-SpecialFlags alone is not enough. Five Craftsman's Writs came through an
-earlier run with SpecialFlags & 1 clear while the other nineteen in the same
-family were flagged correctly, so the repeatable flag has gaps in the data.
+SpecialFlags alone is not enough: the repeatable flag has gaps in the data.
+Five Craftsman's Writs carry SpecialFlags & 1 clear while the other nineteen
+in the same family are flagged correctly.
 The Bonding rule below catches all five on its own, but to see how wide the
 gap is, run this and look for families with counts in both columns:
 
@@ -44,7 +72,7 @@ gap is, run this and look for families with counts in both columns:
 Bonding is capped to bound items. A quest starter that does not bind can be
 handed to an alt or another player who does qualify, so deleting it destroys
 something still useful -- Carefully Folded Note and Captain Sanders' Treasure
-Map are the obvious cases, and every leaked Writ was unbound as well.
+Map are the obvious cases, and the five unflagged Writs are unbound as well.
   0 = no bind, 1 = bind on pickup, 2 = bind on equip,
   3 = bind on use, 4 = quest item (bound)
 Only 1 and 4 can never reach another character.
@@ -120,36 +148,8 @@ FROM starter
 ORDER BY faction, section, name;
 
 ]]
-
---[[
-    Items that hand you a quest when you right click them. Distinct from
-    ALLOWED_DELETE_QUEST_ITEMS: those are consumed by a turn-in, these create the
-    quest in the first place, so they are safe to erase for two separate
-    reasons.
-
-    [itemId] = { questId, racesMask, classesMask }
-
-    questId     the quest the item starts. Erasable once it is flagged
-                complete, because the item is spent.
-    racesMask   quest_template.RequiredRaces. Omitted when unrestricted. When
-                the player's race bit is absent the quest can never be taken,
-                so the item is dead weight from the moment it drops and needs
-                no quest state at all.
-    classesMask quest_template.RequiredClasses, same rule.
-
-    Race bits:  Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32,
-                Gnome 64, Troll 128, BloodElf 512, Draenei 1024
-                Alliance = 1101, Horde = 690
-    Class bits: Warrior 1, Paladin 2, Hunter 4, Rogue 8, Priest 16,
-                DeathKnight 32, Shaman 64, Mage 128, Warlock 256, Druid 1024
-
-    Poor and common quality only. Several quest starters are epics and
-    legendaries and none of those belong here.
-]]
+-- [itemId] = { questId, racesMask, classesMask }, -- Item Name
 ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
-
-	-- [itemId] = { questId, racesMask, classesMask }, -- Item Name
-
 	--------------------------------------------------------------------------------
 	-- 01. World of Warcraft
 	--------------------------------------------------------------------------------

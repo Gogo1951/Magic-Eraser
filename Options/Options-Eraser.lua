@@ -4,7 +4,6 @@ local L = ns.L
 local format, ipairs = string.format, ipairs
 
 local GetColor = ns.GetColor
-local SubRow, SubLabel = ns.OptionsSubRow, ns.OptionsSubLabel
 
 --[[
     The value cap's dropdown, built once from ns.VALUE_CAP_CHOICES rather than
@@ -21,84 +20,93 @@ for index, gold in ipairs(ns.VALUE_CAP_CHOICES) do
 end
 
 --[[
-    The value cap's row is a caption beside a dropdown, so it spends the label
-    and control widths every captioned row on the Safety panel spends, and the
-    dropdowns line up with each other down the panel.
+    The three choices every kind row offers, in the order the dropdown lists
+    them: least cautious to most.
 ]]
-local VALUE_CAP_LABEL_WIDTH = 1.3
-local VALUE_CAP_SELECT_WIDTH = 1.0
-
--- Sized to its caption with room to spare, per ns.OptionsSubRow.
-local SUB_TOGGLE_WIDTH = 2.0
+local ACTION_VALUES = {
+	[ns.ERASE_ACTION_ERASE] = L["OPTIONS_KIND_ERASE"],
+	[ns.ERASE_ACTION_ASK] = L["OPTIONS_KIND_ASK"],
+	[ns.ERASE_ACTION_KEEP] = L["OPTIONS_KIND_KEEP"],
+}
+local ACTION_SORTING = { ns.ERASE_ACTION_ERASE, ns.ERASE_ACTION_ASK, ns.ERASE_ACTION_KEEP }
 
 local function ValueCapOff()
-	return not (ns.db and ns.db.global.valueCapEnabled)
-end
-
-local function SafetyOff()
-	return not (ns.db and ns.db.global.safetyEnabled)
+	return not (ns.db and ns.db.profile.valueCapEnabled)
 end
 
 --[[
-    One sub-toggle per erase reason, all four the same shape, so they are built
-    from a table rather than written out four times. The locale keys are string
-    values here rather than literal L["..."] reads, the same way ALERT_KEYS
-    carries them in Features/Eraser.lua; search the key name, not the L[] form.
+    A kind's choice changes what counts as junk at all, so it drops the scan
+    cache and repaints like the value cap does: the mini-map icon and the Your
+    Current Bags queue move on the spot.
 ]]
-local SAFETY_TOGGLES = {
-	-- { argKey, order, labelKey, settingKey }
-	{ "rowSafetyQuest", 46, "OPTIONS_SAFETY_QUEST", "safetyQuest" },
-	{ "rowSafetyConsumable", 47, "OPTIONS_SAFETY_CONSUMABLE", "safetyConsumable" },
-	{ "rowSafetyWhite", 48, "OPTIONS_SAFETY_WHITE", "safetyWhite" },
-	{ "rowSafetyGray", 49, "OPTIONS_SAFETY_GRAY", "safetyGray" },
-}
+local function SetEraseAction(deleteReason, action)
+	ns.db.profile.eraseActions[deleteReason] = action
+	ns:InvalidateCache()
+	ns:RefreshDisplay()
+end
+
+local function EveryKindKept()
+	for _, kind in ipairs(ns.ERASE_KINDS) do
+		if ns:GetEraseAction(kind[1]) ~= ns.ERASE_ACTION_KEEP then
+			return false
+		end
+	end
+	return true
+end
 
 --------------------------------------------------------------------------------
 -- Eraser Sections
 --------------------------------------------------------------------------------
 
 --[[
-    The two Safety-panel sections owned by Features/Eraser.lua, fourth and fifth
-    on that panel: Mini-map Eraser Confirmation, which decides what the eraser
-    asks about before it acts, then Maximum Value to Erase, which decides what it
-    may pick at all. They share a file because they share a feature, and they sit
-    adjacent by their order numbers rather than by being written together.
+    The two Erasing-panel sections owned by Features/Junk-Rules.lua: What Counts as
+    Junk, one row per kind with Erase, Ask First or Keep, then Maximum Value to
+    Erase. Manual Delete Assistance follows them from its own fragment.
+
+    One dropdown per kind covers erasing, asking first, and taking the kind out
+    of the junk pile entirely.
 ]]
 function ns.BuildEraserOptions(args)
-	args.spacerSafety0 = ns.OptionsSpacer(40)
-	args.headerSafety = ns.OptionsHeader(L["OPTIONS_SAFETY_HEADER"], 41)
-	args.spacerSafety1 = ns.OptionsSpacer(42)
-	args.descSafety = ns.OptionsDesc(L["OPTIONS_SAFETY_DESCRIPTION"], 43)
-	args.spacerSafety2 = ns.OptionsSpacer(44)
+	args.spacerKinds0 = ns.OptionsSpacer(10)
+	args.headerKinds = ns.OptionsHeader(L["OPTIONS_JUNK_HEADER"], 11)
+	args.spacerKinds1 = ns.OptionsSpacer(12)
+	args.descKinds = ns.OptionsDesc(L["OPTIONS_JUNK_DESCRIPTION"], 13)
+	args.spacerKinds2 = ns.OptionsSpacer(14)
 
-	args.toggleSafety = {
-		type = "toggle",
-		name = GetColor("TEXT") .. L["OPTIONS_ENABLE_SAFETY"] .. "|r",
-		width = "full",
-		order = 45,
-		get = function()
-			return ns.db and ns.db.global.safetyEnabled
-		end,
-		set = function(_, value)
-			ns.db.global.safetyEnabled = value
+	args.descAllKept = {
+		type = "description",
+		name = GetColor("OFF") .. L["OPTIONS_KINDS_ALL_KEPT"] .. "|r",
+		fontSize = "medium",
+		order = 15,
+		hidden = function()
+			return not EveryKindKept()
 		end,
 	}
 
-	for _, entry in ipairs(SAFETY_TOGGLES) do
-		local argKey, order, labelKey, settingKey = entry[1], entry[2], entry[3], entry[4]
-		args[argKey] = SubRow(order, SafetyOff, {
-			{
-				type = "toggle",
-				name = SubLabel(L[labelKey]),
-				width = SUB_TOGGLE_WIDTH,
-				get = function()
-					return ns.db and ns.db.global[settingKey]
-				end,
-				set = function(_, value)
-					ns.db.global[settingKey] = value
-				end,
-			},
-		})
+	--[[
+	    Standard one-line rows, a caption at ns.OPTIONS_LABEL_WIDTH beside a
+	    dropdown at ns.OPTIONS_CONTROL_WIDTH. Not sub-rows: no switch above
+	    them gates these, so they take no indent and no gray caption.
+	]]
+	for index, kind in ipairs(ns.ERASE_KINDS) do
+		local deleteReason, labelKey, descKey = kind[1], kind[2], kind[3]
+		local order = 14 + index * 2
+		args["labelKind" .. index] = ns.OptionsRowLabel(GetColor("TEXT") .. L[labelKey] .. "|r", order)
+		args["selectKind" .. index] = {
+			type = "select",
+			name = "",
+			desc = L[descKey] .. "\n\n" .. L["OPTIONS_KIND_ACTION_DESC"],
+			width = ns.OPTIONS_CONTROL_WIDTH,
+			order = order + 1,
+			values = ACTION_VALUES,
+			sorting = ACTION_SORTING,
+			get = function()
+				return ns:GetEraseAction(deleteReason)
+			end,
+			set = function(_, value)
+				SetEraseAction(deleteReason, value)
+			end,
+		}
 	end
 
 	--[[
@@ -108,43 +116,48 @@ function ns.BuildEraserOptions(args)
 	    the icon of something the eraser will no longer touch until the next bag
 	    update happens to clear it.
 	]]
-	args.spacerValueCap0 = ns.OptionsSpacer(50)
-	args.headerValueCap = ns.OptionsHeader(L["OPTIONS_VALUE_CAP_HEADER"], 51)
-	args.spacerValueCap1 = ns.OptionsSpacer(52)
-	args.descValueCap = ns.OptionsDesc(L["OPTIONS_VALUE_CAP_DESCRIPTION"], 53)
-	args.spacerValueCap2 = ns.OptionsSpacer(54)
+	args.spacerValueCap0 = ns.OptionsSpacer(30)
+	args.headerValueCap = ns.OptionsHeader(L["OPTIONS_VALUE_CAP_HEADER"], 31)
+	args.spacerValueCap1 = ns.OptionsSpacer(32)
+	args.descValueCap = ns.OptionsDesc(L["OPTIONS_VALUE_CAP_DESCRIPTION"], 33)
+	args.spacerValueCap2 = ns.OptionsSpacer(34)
 
-	args.toggleValueCap = {
-		type = "toggle",
-		name = L["OPTIONS_ENABLE_VALUE_CAP"],
-		width = "full",
-		order = 55,
+	--[[
+	    The switch and its limit share one line, the switch at
+	    ns.OPTIONS_LABEL_WIDTH where a caption would sit and the dropdown at
+	    ns.OPTIONS_CONTROL_WIDTH, so the dropdown still ends where every other
+	    row's does. The
+	    dropdown hides while the switch is off: a setting for a feature that is
+	    not running is not shown at all.
+	]]
+	args.toggleValueCap = ns.OptionsFeatureToggle(
+		"valueCapEnabled",
+		"OPTIONS_ENABLE_VALUE_CAP",
+		"OPTIONS_ENABLE_VALUE_CAP_DESC",
+		35,
+		ns.OPTIONS_LABEL_WIDTH,
+		function()
+			ns:InvalidateCache()
+			ns:RefreshDisplay()
+		end
+	)
+
+	args.selectValueCap = {
+		type = "select",
+		name = "",
+		desc = L["OPTIONS_VALUE_CAP_LIMIT_DESC"],
+		width = ns.OPTIONS_CONTROL_WIDTH,
+		order = 36,
+		hidden = ValueCapOff,
+		values = VALUE_CAP_VALUES,
+		sorting = VALUE_CAP_SORTING,
 		get = function()
-			return ns.db and ns.db.global.valueCapEnabled
+			return ns:GetValueCapGold()
 		end,
 		set = function(_, value)
-			ns.db.global.valueCapEnabled = value
+			ns.db.profile.valueCapGold = value
 			ns:InvalidateCache()
 			ns:RefreshDisplay()
 		end,
 	}
-
-	args.rowValueCapLimit = SubRow(56, ValueCapOff, {
-		ns.OptionsRowLabel(SubLabel(L["OPTIONS_VALUE_CAP_LIMIT"]), nil, VALUE_CAP_LABEL_WIDTH),
-		{
-			type = "select",
-			name = "",
-			width = VALUE_CAP_SELECT_WIDTH,
-			values = VALUE_CAP_VALUES,
-			sorting = VALUE_CAP_SORTING,
-			get = function()
-				return ns.db and ns.db.global.valueCapGold
-			end,
-			set = function(_, value)
-				ns.db.global.valueCapGold = value
-				ns:InvalidateCache()
-				ns:RefreshDisplay()
-			end,
-		},
-	})
 end
