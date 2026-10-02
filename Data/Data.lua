@@ -24,14 +24,17 @@ ns.LINKS = {
 --------------------------------------------------------------------------------
 
 --[[
-    AceConfig registry names, derived from the TOC addon name and never
-    localized. The root General panel uses the bare addon name; feature panels
+    AceConfig registry names, derived from the TOC add-on name and never
+    localized. The root General panel uses the bare add-on name; feature panels
     suffix it. Referenced by the registration calls in Options/Options.lua and by
     NotifyChange in the panels.
 ]]
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
-	Safety = ADDON_NAME .. "_Safety",
+	YourCurrentBags = ADDON_NAME .. "_YourCurrentBags",
+	Erasing = ADDON_NAME .. "_Erasing",
+	MerchantBank = ADDON_NAME .. "_MerchantBank",
+	AlertsTooltips = ADDON_NAME .. "_AlertsTooltips",
 	IgnoreList = ADDON_NAME .. "_IgnoreList",
 	EraseList = ADDON_NAME .. "_EraseList",
 	Profiles = ADDON_NAME .. "_Profiles",
@@ -71,18 +74,31 @@ ns.OPTIONS_REMOVE_ICON_WIDTH = 0.25
 ]]
 ns.OPTIONS_SUB_INDENT_WIDTH = 0.115
 
--- The item lists' promote column, sized to hold its button caption.
-ns.OPTIONS_PROMOTE_WIDTH = 0.6
+--[[
+    The caption of a captioned sub-row: the label width less the indent that
+    leads the row, so the control after it (ns.OPTIONS_CONTROL_WIDTH) ends on
+    the right edge exactly where a top-level row's control does. Every dropdown
+    and slider then lines up down the panel, right-aligned, the way every
+    Gogo1951 add-on lays them out. Less a hair of slack, because an inline
+    group summing to its budget can tip its last control onto its own line
+    (see ns.OptionsSubRow).
+]]
+ns.OPTIONS_SUB_LABEL_WIDTH = ns.OPTIONS_LABEL_WIDTH - ns.OPTIONS_SUB_INDENT_WIDTH - 0.05
+
+-- The item lists' promote column, sized to hold "All Characters" without truncating.
+ns.OPTIONS_PROMOTE_WIDTH = 0.9
 
 --[[
     A tree panel's sidebar eats into the pane its rows are laid out in, so rows
     inside one spend a shorter budget than ns.OPTIONS_ROW_WIDTH. AceGUI's tree
-    defaults to 175px, which truncates the longer "Name - Realm" scope keys;
-    widening it costs the item pane exactly what it gains, hence the paired
-    constant. The tree stays drag-resizable, and a drag wins over this seed.
+    defaults to 175px; this is a hair wider, enough for a long realm name, and
+    no more, since every pixel it takes is one the item pane's promote button
+    needs. Narrowing it gives the item pane exactly what it loses, hence the
+    paired constant. The tree stays drag-resizable, and a drag wins over this
+    seed.
 ]]
-ns.OPTIONS_TREE_WIDTH = 220
-ns.OPTIONS_TREE_ROW_WIDTH = 2.3
+ns.OPTIONS_TREE_WIDTH = 180
+ns.OPTIONS_TREE_ROW_WIDTH = 2.5
 
 --[[
     The AceGUI widget the shared item-list builder draws each row's item with --
@@ -98,10 +114,11 @@ ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
 --[[
     The Ignore List and Erase List panels each name one scope per list on the
-    account. Every scope but one is an AceDB profile name ("Name - Realm", never
-    localized), so the account-wide list needs a key that no profile can collide
-    with -- hence the asterisks, which the profile picker's name box would never
-    produce. One constant serves both panels because the two never share a table:
+    account. Every scope but one is an AceDB char key ("Name - Realm", from
+    ns.db.keys.char and ns.db.sv.char, never localized), so the account-wide
+    list needs a key no character can collide with -- hence the asterisks, which
+    no character or realm name can contain. One constant serves both panels
+    because the two never share a table:
     the key is only ever looked up against one list at a time. Read by
     ns:GetIgnoreListForScope in Features/Ignore-List.lua and
     ns:GetEraseListForScope in Features/Erase-List.lua.
@@ -129,6 +146,24 @@ ns.PALETTE = {
 	MUTED = "808080", -- Dark Gray: Meta-data, Version Numbers
 }
 
+--[[
+    Class colors, keyed by the token UnitClass returns, covering classes
+    through Wrath so the table is the same on every flavor. The list panels
+    color each character's name with them.
+]]
+ns.CLASS_COLORS = {
+	DEATHKNIGHT = "C41E3A",
+	DRUID = "FF7C0A",
+	HUNTER = "AAD372",
+	MAGE = "3FC7EB",
+	PALADIN = "F48CBA",
+	PRIEST = "FFFFFF",
+	ROGUE = "FFF468",
+	SHAMAN = "0070DD",
+	WARLOCK = "8788EE",
+	WARRIOR = "C69B6D",
+}
+
 ns.CURRENCY_COLORS = {
 	GOLD = "FFD700",
 	SILVER = "C7C7CF",
@@ -136,47 +171,20 @@ ns.CURRENCY_COLORS = {
 }
 
 --------------------------------------------------------------------------------
--- Class Reagents
---------------------------------------------------------------------------------
-
---[[
-    Items one class needs and every other class can throw away, keyed by the
-    class token UnitClass returns. Shiny Fish Scales and Fish Oil are the
-    Shaman's Water Breathing and Water Walking reagents.
-
-    Only ns:SeedEraseList in Features/Erase-List.lua acts on this table, putting
-    another class's reagents on a character's Erase List once, the first time it
-    plays; Features/Diagnostics.lua also reads it, for the count on the Eraser
-    Context report. Nothing filters on it at scan time, so a Shaman who
-    deliberately adds Fish Oil to their own list is obeyed instead of silently
-    overridden.
-
-    Hand-maintained, and never added to one of the four Data/ tables that carry
-    SQL queries: those files are regenerated from their queries, and a hand-added
-    row does not survive the next regeneration. An id no query can express
-    belongs in a file no query rewrites.
-]]
-ns.CLASS_REAGENTS = {
-	SHAMAN = {
-		[17057] = true, -- Shiny Fish Scales
-		[17058] = true, -- Fish Oil
-	},
-}
-
---------------------------------------------------------------------------------
 -- Carried Bag Range
 --------------------------------------------------------------------------------
 
 --[[
-    The highest carried-bag container index: the backpack is 0 and the
-    equippable bags run up from there, so every bag scan walks 0 through this.
-    The fallback covers a client that never defined the global, which a bare
-    comparison against it would error on rather than simply skip.
+    The highest general-purpose bag index: the backpack is 0 and the
+    equippable bags run up from there. The fallback covers a client that never
+    defined the global, which a bare comparison against it would error on
+    rather than simply skip.
 
-    Every bag scan and every bag-range test in the add-on reads this, so the
-    range is stated once -- the eraser's scans, the vendor scan, the free-slot
-    count, the bank's first bank-bag index, and the item tooltip's
-    is-this-a-carried-bag check.
+    The range is stated once here. It seeds ns.CARRIED_BAGS (Features/
+    Utilities.lua), which adds the reagent bag where the client has one and is
+    what every carried-bag scan and range test walks; on its own it bounds the
+    free-slot count and the first bank bag on clients without character bank
+    tabs.
 ]]
 ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
 
@@ -186,9 +194,10 @@ ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
 
 --[[
     Bit values for quest_template.RequiredRaces and RequiredClasses, carried in
-    Data/Quest-Starting-Items.lua. A quest whose mask is non-zero and lacks the
-    player's bit can never be taken by this character, so the item that starts
-    it is dead weight the moment it drops, with no quest state involved.
+    each flavor folder's Quest-Starting-Items file. A quest whose mask is
+    non-zero and lacks the player's bit can never be taken by this character,
+    so the item that starts it is dead weight the moment it drops, with no
+    quest state involved.
 
     Keyed by the tokens UnitRace and UnitClass return, not by localized names.
     Undead's race token is "Scourge", which is why it reads oddly here.
@@ -236,6 +245,7 @@ ns.DELETE_PRIORITY = {
 	questIneligible = 1,
 	gray = 2,
 	consumable = 3,
+	ammo = 3,
 	equipment = 3,
 }
 
@@ -251,6 +261,37 @@ ns.DELETE_PRIORITY = {
     The run is the modified Fibonacci sequence, the same one agile estimators
     reach for, and for the same reason -- the gaps widen the way tolerance does.
     One gold to two is a real difference; twenty to twenty-one is not. (=
+
+    One gold is the floor; the run deliberately has no zero.
 ]]
 ns.COPPER_PER_GOLD = 10000
 ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
+
+--------------------------------------------------------------------------------
+-- Erase Actions
+--------------------------------------------------------------------------------
+
+--[[
+    What the eraser does with each kind of junk when it comes up next, keyed by
+    the delete reason ns:GetItemDeleteReason returns. "erase" takes it without
+    asking, "ask" shows the confirmation first, and "keep" stops the kind
+    counting as junk at all -- never erased, sold, or pulled from the bank.
+    "manual" is absent on purpose: an Erase List entry always goes, unasked.
+
+    The rows are listed in the order the Erasing panel draws them, each with the
+    locale keys for its caption and tooltip. They are string values rather than
+    literal L["..."] reads; search the key name, not the L[] form.
+]]
+ns.ERASE_ACTION_ERASE = "erase"
+ns.ERASE_ACTION_ASK = "ask"
+ns.ERASE_ACTION_KEEP = "keep"
+
+ns.ERASE_KINDS = {
+	-- { deleteReason, labelKey, descKey, tagKey }
+	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESC", "REASON_QUEST" },
+	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_UNAVAILABLE_DESC", "REASON_QUEST_INELIGIBLE" },
+	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESC", "REASON_OUTGROWN" },
+	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESC", "REASON_OUTGROWN" },
+	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESC", "REASON_EQUIPMENT" },
+	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESC", "REASON_GRAY" },
+}

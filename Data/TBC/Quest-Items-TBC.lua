@@ -1,9 +1,11 @@
 local _, ns = ...
 
 --[[
+Source: the CMaNGOS WotLK world DB, via the query below, until Validate
+Data passes on this client.
 
 THE RULE: key each row to the quest whose completion makes the item safe to
-erase, which is the LATEST quest that could still need it. Eraser.lua fires on
+erase, which is the LATEST quest that could still need it. Junk-Rules.lua fires on
 the first listed quest that is flagged complete, and the two ways to be wrong
 are not symmetric: erasing an item the player still needs is unrecoverable,
 while erasing it a few minutes late costs nothing.
@@ -43,6 +45,24 @@ finish holding 21. The lingers column marks these. The second shape is items no
 quest ever takes at all, which this query cannot see by construction; the
 SECOND QUERY below is the anti-join that finds them.
 
+SUPERSEDED ITEMS :: a third shape, and neither query below can find it
+
+An item no quest ever consumes, retired by a better one a quest pays out.
+Argent Dawn Commission (12846) is keyed to 5213 The Active Agent, a quest that
+neither hands the Commission out nor takes it back. It pays Seal of the Dawn
+or Rune of the Dawn, and both collect scourgestones in the Commission's place
+while carrying real stats, so finishing it leaves the badge with no job.
+
+Both queries drop the item by construction. The first joins granted to
+handed_in and nothing in the game ever takes a Commission at a turn-in; the
+second cuts it at any_repeatable = 0, because the quests that hand it out
+(5401, 5405, 5503) are repeatable. Those repeatable quests are also why
+erasing one early costs so little: the player takes another.
+
+Rows of this shape are keyed by hand and by eye, never by a query. An audit
+that diffs this table against either query reports them as orphans, and that
+is expected rather than a finding.
+
 CMaNGOS WotLK world DB, MySQL 8. Roles in quest_template:
   SrcItemId        handed to you when you ACCEPT
   ReqSourceId1..4  extra items handed to you when you ACCEPT
@@ -53,7 +73,7 @@ Rows with 2+ hand-in quests need an eye: same quest title repeated is usually
 a faction or class variant and safe to list in full, but it is also what
 converging siblings look like (A Taste of Flame is 4022, 4023 and 4024), so
 check the chain before listing them all; and two genuinely different quests in
-one chain still erase at the first, because Eraser.lua fires on the first
+one chain still erase at the first, because Junk-Rules.lua fires on the first
 listed quest that is flagged complete.
 
 To audit the table instead of regenerating it, wrap the current contents of
@@ -157,7 +177,7 @@ what separates the surplus that rots from the turn-in items that are consumed
 clean and can never fire. Both queries answer the same question from opposite
 sides: can this still be in the bag once the quest is done?
 
-TWO RULES, both learned by getting them wrong on the first run:
+TWO RULES:
 
   Never key on a granting quest while a later quest still needs the item.
   Divination Scryer is granted by 7647 Judgment and Redemption AND by 7668
@@ -166,15 +186,15 @@ TWO RULES, both learned by getting them wrong on the first run:
   is an item with more than one granting quest. Those sort into confidence
   bucket 3 and are never keyed automatically.
 
-  Openables stay in, and an earlier run of this query was wrong to drop them.
-  Flags & 4 is ITEM_FLAG_HAS_LOOT, the right click that spills contents into
-  the bags, and the argument for excluding those was that erasing one destroys
-  what is inside. It fails twice. The row only fires once its quest is already
-  complete, by which point the contents are spent quest items too; and in a
-  group only one player's container ever gets used, so everyone else finishes
-  still holding an unopened one. Covert Ops Pack, Smokywood Satchel, Box of
-  Empty Vials. That leftover is exactly the clutter this table exists to
-  clear, and a rare edge case is the point rather than a reason to skip it.
+  Openables stay in; dropping them is wrong. Flags & 4 is ITEM_FLAG_HAS_LOOT,
+  the right click that spills contents into the bags, and the argument for
+  excluding those, that erasing one destroys what is inside, fails twice. The
+  row only fires once its quest is already complete, by which point the
+  contents are spent quest items too; and in a group only one player's
+  container ever gets used, so everyone else finishes still holding an
+  unopened one. Covert Ops Pack, Smokywood Satchel, Box of Empty Vials. That
+  leftover is exactly the clutter this table exists to clear, and a rare edge
+  case is the point rather than a reason to skip it.
 
   A real bag is the one container that stays excluded. ContainerSlots above
   zero means it holds the player's own loot rather than a quest payload, and
@@ -182,21 +202,20 @@ TWO RULES, both learned by getting them wrong on the first run:
   NO_USER_DESTROY, which the client refuses to delete anyway, so those are
   noise either way.
 
-  Never propose an item that starts a quest. Quest-Starting-Items.lua owns
+  Never propose an item that starts a quest. Quest-Starting-Items-TBC.lua owns
   those, and its rows are strictly better: they carry the race and class masks
   that make a wrong-faction starter erasable with no quest state at all. Every
   such row this query found had startquest equal to its granting quest, so the
   line it wanted to emit was the same quest id with the masks stripped off. It
   could never fire either way. GetQuestStarterReason returns "quest" on that
-  same id and runs first in the shared branch, see Eraser.lua. The overlap
+  same id and runs first in the shared branch, see Junk-Rules.lua. The overlap
   already in the two tables is deliberate and stays; this rule only stops the
   query proposing new duplicates.
 
-DROPPED AFTER THE FIRST RUN: a text_mentions column matching the item name
-against quest text. It looked clever and was useless. Short names swamped it,
-Boulder hitting 44 quests, Stick 21, Holy Water 6, while the names it was
-built for never matched at all, because quest text abbreviates. Xiggs says
-"toss the flare gun", never "Standard Issue Flare Gun".
+NO TEXT MATCHING: matching the item name against quest text finds nothing
+useful. Short names swamp it, Boulder hitting 44 quests, Stick 21, Holy Water
+6, while the names that matter never match at all, because quest text
+abbreviates. Xiggs says "toss the flare gun", never "Standard Issue Flare Gun".
 
 STILL NEEDS YOUR EYE, every row. The query above proves an item is spent,
 because the turn-in consumed it. Nothing proves that here. use_quests is the
@@ -220,7 +239,7 @@ WITH granted AS (
 ),
 taken AS (
   -- Protective exclusion, so deliberately no Method <> 0 filter, matching
-  -- quest_touched in Equipment.lua: a disabled quest still shields its item.
+  -- quest_touched in Equipment-TBC.lua: a disabled quest still shields its item.
       SELECT ReqItemId1 AS item FROM quest_template WHERE ReqItemId1 > 0
   UNION SELECT ReqItemId2        FROM quest_template WHERE ReqItemId2 > 0
   UNION SELECT ReqItemId3        FROM quest_template WHERE ReqItemId3 > 0
@@ -296,7 +315,7 @@ WHERE NOT EXISTS (SELECT 1 FROM taken t WHERE t.item = g.item)
   AND (it.class = 12 OR it.Bonding IN (1, 4))
   AND it.ContainerSlots = 0           -- a real bag holds the player's own loot
   AND (it.Flags & 32) = 0             -- client refuses to destroy these anyway
-  AND it.startquest = 0               -- Quest-Starting-Items.lua owns these
+  AND it.startquest = 0               -- Quest-Starting-Items-TBC.lua owns these
   AND it.name NOT LIKE '%Test%'
   AND it.name NOT LIKE '%[PH]%'
   AND it.name NOT LIKE '%UNUSED%'
@@ -305,30 +324,9 @@ WHERE NOT EXISTS (SELECT 1 FROM taken t WHERE t.item = g.item)
   AND it.name NOT LIKE '%(old%'
 ORDER BY confidence, section, it.name;
 
-SUPERSEDED ITEMS :: a third shape, and neither query above can find it
-
-An item no quest ever consumes, retired by a better one a quest pays out.
-Argent Dawn Commission (12846) is keyed to 5213 The Active Agent, a quest that
-neither hands the Commission out nor takes it back. It pays Seal of the Dawn
-or Rune of the Dawn, and both collect scourgestones in the Commission's place
-while carrying real stats, so finishing it leaves the badge with no job.
-
-Both queries drop the item by construction. The first joins granted to
-handed_in and nothing in the game ever takes a Commission at a turn-in; the
-second cuts it at any_repeatable = 0, because the quests that hand it out
-(5401, 5405, 5503) are repeatable. Those repeatable quests are also why
-erasing one early costs so little: the player takes another.
-
-Rows of this shape are keyed by hand and by eye, never by a query. An audit
-that diffs this table against either query reports them as orphans, and that
-is expected rather than a finding.
-
 ]]
-
+-- [itemId] = { questId, ... }, -- Item Name
 ns.ALLOWED_DELETE_QUEST_ITEMS = {
-
-	-- [itemId] = { questId, ... }, -- Item Name
-
 	--------------------------------------------------------------------------------
 	-- 01. World of Warcraft
 	--------------------------------------------------------------------------------

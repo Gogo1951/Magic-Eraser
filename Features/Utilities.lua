@@ -24,24 +24,96 @@ function ns.GetColor(key)
 end
 
 --------------------------------------------------------------------------------
--- Item Info
+-- Displayed Item
 --------------------------------------------------------------------------------
 
 --[[
-    WoW Forever's Retail engine has no bare GetItemInfo, GetItemInfoInstant or
-    GetItemQualityColor, so a bare call errors there. Each read resolves once
-    at load, C_Item first wherever the client ships it; every caller goes
-    through these rather than the globals.
+    The item a tooltip is showing, as its name and link. WoW Forever ships
+    TooltipUtil.GetDisplayedItem, and there GameTooltip:GetItem survives only as
+    a wrapper around it that Blizzard has marked for removal. Classic Era and TBC
+    Anniversary load no TooltipUtil and answer through GetItem itself. Resolved
+    once at load, modern first; both halves are rows in the Diagnostic Tools API
+    report.
 ]]
-ns.GetItemInfo = C_Item.GetItemInfo or GetItemInfo
-ns.GetItemInfoInstant = C_Item.GetItemInfoInstant or GetItemInfoInstant
-ns.GetItemQualityColor = C_Item.GetItemQualityColor or GetItemQualityColor
+ns.GetDisplayedItem = (TooltipUtil and TooltipUtil.GetDisplayedItem) or function(tooltip)
+	return tooltip:GetItem()
+end
+
+--------------------------------------------------------------------------------
+-- Tooltip Text
+--------------------------------------------------------------------------------
+
+--[[
+    An item's tooltip as plain lines, a right-hand column kept after " >> ".
+    C_TooltipInfo hands the lines over as data where the client ships its
+    GetItemByID getter; elsewhere they are read off a hidden tooltip that is
+    never shown. Color escapes are stripped so each line reads as its words.
+    Resolved once at load. A read can throw on an odd item, so callers protect it.
+]]
+local SCAN_TOOLTIP_NAME = "MagicEraserScanTooltip"
+local GetTooltipItemData = C_TooltipInfo and C_TooltipInfo.GetItemByID
+local scanTooltip
+
+local function PlainText(text)
+	if type(text) ~= "string" then
+		return nil
+	end
+	return (text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|cn[^:]*:", ""):gsub("|r", ""))
+end
+
+local function JoinTooltipLine(left, right)
+	left = PlainText(left) or ""
+	right = PlainText(right)
+	if right and right ~= "" then
+		return left .. " >> " .. right
+	end
+	return left
+end
+
+local function ReadTooltipData(itemId)
+	local lines = {}
+	local data = GetTooltipItemData(itemId)
+	for _, line in ipairs(data and data.lines or {}) do
+		lines[#lines + 1] = JoinTooltipLine(line.leftText, line.rightText)
+	end
+	return lines
+end
+
+local function ReadScanTooltip(itemId)
+	if not scanTooltip then
+		scanTooltip = CreateFrame("GameTooltip", SCAN_TOOLTIP_NAME, nil, "GameTooltipTemplate")
+	end
+	scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	scanTooltip:ClearLines()
+	scanTooltip:SetHyperlink("item:" .. itemId)
+	local lines = {}
+	for index = 1, scanTooltip:NumLines() do
+		local left = _G[SCAN_TOOLTIP_NAME .. "TextLeft" .. index]
+		local right = _G[SCAN_TOOLTIP_NAME .. "TextRight" .. index]
+		lines[#lines + 1] = JoinTooltipLine(left and left:GetText(), right and right:IsShown() and right:GetText())
+	end
+	scanTooltip:Hide()
+	return lines
+end
+
+ns.GetItemTooltipLines = GetTooltipItemData and ReadTooltipData or ReadScanTooltip
 
 --------------------------------------------------------------------------------
 -- Formatting
 --------------------------------------------------------------------------------
 
 local format, insert, floor = string.format, table.insert, math.floor
+
+--[[
+    An item link without the square brackets around its name, which is how
+    Magic Eraser shows every item: Options rows and pickers, the mini-map
+    tooltip, the Ask First dialog and its chat lines. Only the brackets inside
+    a hyperlink's |h...|h text go; the link itself still hovers, clicks and
+    shift-clicks as before, and any other text passes through untouched.
+]]
+function ns:StripLinkBrackets(text)
+	return (text:gsub("(|H[^|]*|h)%[(.-)%]|h", "%1%2|h"))
+end
 
 function ns:FormatCommaNumber(number)
 	return (tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", ""))
@@ -127,4 +199,109 @@ function ns:CountFreeBagSlots()
 		return nil
 	end
 	return free
+end
+
+--------------------------------------------------------------------------------
+-- Carried Bags
+--------------------------------------------------------------------------------
+
+--[[
+    Every container the player carries, built once at load: the backpack and
+    the equippable bags, then the reagent bag where the client defines one (WoW
+    Forever does, as container 5). Every carried-bag scan walks this list, and
+    ns.IS_CARRIED_BAG answers the range tests. ns:CountFreeBagSlots above stays
+    on the general bags, since ordinary loot can't go in a reagent bag.
+]]
+ns.CARRIED_BAGS = {}
+ns.IS_CARRIED_BAG = {}
+do
+	for bag = 0, BAG_SLOTS do
+		ns.CARRIED_BAGS[#ns.CARRIED_BAGS + 1] = bag
+	end
+	local reagentBag = Enum.BagIndex and Enum.BagIndex.ReagentBag
+	if reagentBag then
+		ns.CARRIED_BAGS[#ns.CARRIED_BAGS + 1] = reagentBag
+	end
+	for _, bag in ipairs(ns.CARRIED_BAGS) do
+		ns.IS_CARRIED_BAG[bag] = true
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Bank Containers
+--------------------------------------------------------------------------------
+
+--[[
+    The containers Bank Retrieval scans, built once at load. WoW Forever numbers
+    its bank the modern way, as character bank tabs, and there -1 is the keyring
+    and 5 the reagent bag; Classic Era and TBC Anniversary keep BANK_CONTAINER
+    plus the bank bags right after the carried bags, with fallbacks for a client
+    that never defined those globals. The account-wide Warband tabs are never
+    included: Bank Retrieval pulls from the character's own bank only.
+]]
+ns.BANK_CONTAINERS = {}
+do
+	local bagIndex = Enum.BagIndex
+	if bagIndex and bagIndex.CharacterBankTab_1 then
+		local tab = 1
+		while bagIndex["CharacterBankTab_" .. tab] do
+			ns.BANK_CONTAINERS[tab] = bagIndex["CharacterBankTab_" .. tab]
+			tab = tab + 1
+		end
+	else
+		ns.BANK_CONTAINERS[1] = BANK_CONTAINER or -1
+		for bag = BAG_SLOTS + 1, BAG_SLOTS + (NUM_BANKBAGSLOTS or 6) do
+			ns.BANK_CONTAINERS[#ns.BANK_CONTAINERS + 1] = bag
+		end
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Characters
+--------------------------------------------------------------------------------
+
+--[[
+    Every character on the account that has per-character data, plus the one
+    being played, as "Name - Realm" keys sorted as plain strings. The list
+    panels draw one tree node per key. Characters live in AceDB's char scope,
+    not in profiles: every character shares the Default profile, so profile
+    names say nothing about who has a list.
+]]
+function ns:GetCharacterKeys()
+	local keys, seen = {}, {}
+	local current = ns.db and ns.db.keys and ns.db.keys.char
+	if current then
+		keys[1] = current
+		seen[current] = true
+	end
+	for charKey in pairs((ns.db and ns.db.sv and ns.db.sv.char) or {}) do
+		if not seen[charKey] then
+			seen[charKey] = true
+			keys[#keys + 1] = charKey
+		end
+	end
+	table.sort(keys)
+	return keys
+end
+
+--[[
+    A character key in its class color, for the list panels' trees. The
+    character being played answers from UnitClass; any other one from the
+    classToken it saved at its last login. A character that hasn't logged in
+    since that was recorded keeps the tree's default color.
+]]
+function ns:GetCharacterDisplayName(charKey)
+	local classToken
+	if ns.db and charKey == ns.db.keys.char then
+		local _, token = UnitClass("player")
+		classToken = token
+	else
+		local charData = ns.db and ns.db.sv and ns.db.sv.char and ns.db.sv.char[charKey]
+		classToken = type(charData) == "table" and charData.classToken or nil
+	end
+	local hex = classToken and ns.CLASS_COLORS[classToken]
+	if not hex then
+		return charKey
+	end
+	return "|cff" .. hex .. charKey .. "|r"
 end

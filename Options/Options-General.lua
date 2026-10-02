@@ -13,27 +13,153 @@ local GetColor = ns.GetColor
 local LINK_LABEL_WIDTH = 0.6
 local LINK_URL_WIDTH = ns.OPTIONS_ROW_WIDTH - LINK_LABEL_WIDTH
 
+--------------------------------------------------------------------------------
+-- Features
+--------------------------------------------------------------------------------
+
 --[[
-    The feature sections on the root panel. Auto-Vend is the only one: everything
-    governing how careful erasing is moved to the Safety panel, which is composed
-    from the other five fragments the same way (see Options/Options-Safety.lua).
-    A list of one rather than a bare call, so adding a second root section is an
-    entry here instead of a change in shape.
+    Every feature's on/off switch, two to a line, so the front page shows at a
+    glance what Magic Eraser is doing. Each is built by ns.OptionsFeatureToggle,
+    as on its own page, so the two copies share one setting, caption and
+    tooltip; the Bag-Space Warnings page also passes an onSet this copy doesn't.
+    Listed in the order the feature pages
+    list them: Merchant & Bank, then Erasing's Manual Delete Assistance, then
+    Alerts & Tooltips.
+
+    The pair widths leave slack under ns.OPTIONS_ROW_WIDTH, for the reason
+    ns.OptionsSubRow gives: a row summing exactly to the pane sits on the wrap
+    boundary and can drop its second switch onto a line of its own.
 ]]
-local FEATURE_SECTIONS = {
-	"BuildAutoVendOptions",
+local FEATURE_TOGGLES = {
+	-- { settingKey, nameKey, descKey }
+	{ "autoVendEnabled", "OPTIONS_ENABLE_AUTO_VEND", "OPTIONS_ENABLE_AUTO_VEND_DESC" },
+	{ "bankRetrievalEnabled", "OPTIONS_ENABLE_BANK_RETRIEVAL", "OPTIONS_ENABLE_BANK_RETRIEVAL_DESC" },
+	{
+		"manualDeleteAutoFillEnabled",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC",
+	},
+	{ "tooltipWarningEnabled", "OPTIONS_ENABLE_TOOLTIPS", "OPTIONS_ENABLE_TOOLTIPS_DESC" },
+	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESC" },
+	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC" },
 }
+
+local FEATURE_TOGGLE_WIDTH = 1.6
+
+local function AddFeatureToggles(args, startOrder)
+	for index = 1, #FEATURE_TOGGLES, 2 do
+		local pair = {}
+		for offset = 0, 1 do
+			local entry = FEATURE_TOGGLES[index + offset]
+			if entry then
+				pair["toggle" .. (offset + 1)] =
+					ns.OptionsFeatureToggle(entry[1], entry[2], entry[3], offset + 1, FEATURE_TOGGLE_WIDTH)
+			end
+		end
+		args["rowFeatures" .. index] = {
+			type = "group",
+			name = "",
+			inline = true,
+			order = startOrder + index,
+			args = pair,
+		}
+	end
+end
+
+--------------------------------------------------------------------------------
+-- Key Bindings
+--------------------------------------------------------------------------------
+
+--[[
+    A binding cannot be set from an AceConfig panel, so each row shows the key
+    the player bound, or a muted Not Bound, and a Set Key button that opens the
+    game's Key Bindings list through ns:OpenKeyBindings (Features/Key-Bindings.lua),
+    which tries each route the clients use and prints where to look if none
+    works. The binding names come from Bindings.xml's name attributes; the
+    captions are the same BINDING_* strings the Key Bindings list prints.
+    ns:OnUpdateBindings repaints this panel when the player changes a key.
+]]
+local KEY_BINDINGS = {
+	-- { bindingName, captionKey, descKey }
+	{ "MAGICERASER_ERASE", "BINDING_ERASE", "OPTIONS_KEY_BINDING_ERASE_DESCRIPTION" },
+	{ "MAGICERASER_ADD_TO_IGNORE_LIST", "BINDING_ADD_TO_IGNORE_LIST", "OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION" },
+	{ "MAGICERASER_ADD_TO_ERASE_LIST", "BINDING_ADD_TO_ERASE_LIST", "OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION" },
+}
+
+local KEY_LABEL_WIDTH = 1.9
+local KEY_STATUS_WIDTH = 0.85
+local KEY_BUTTON_WIDTH = 0.55
+
+local function GetBindingStatus(bindingName)
+	local key = GetBindingKey(bindingName)
+	if not key then
+		return GetColor("MUTED") .. L["OPTIONS_KEY_NOT_BOUND"] .. "|r"
+	end
+	local text = (GetBindingText and GetBindingText(key)) or key
+	return GetColor("TEXT") .. text .. "|r"
+end
+
+--[[
+    Each binding is its row (caption, key, Set Key), its description under it,
+    and a blank line before the next, so the three read as separate entries.
+]]
+local function AddKeyBindingRows(args, startOrder)
+	local order = startOrder
+
+	for index, entry in ipairs(KEY_BINDINGS) do
+		local bindingName, captionKey, descKey = entry[1], entry[2], entry[3]
+
+		if index > 1 then
+			args["spacerKeyBinding" .. index] = ns.OptionsSpacer(order)
+			order = order + 1
+		end
+
+		args["rowKeyBinding" .. index] = {
+			type = "group",
+			name = "",
+			inline = true,
+			order = order,
+			args = {
+				caption = ns.OptionsRowLabel(GetColor("INFO") .. L[captionKey] .. "|r", 1, KEY_LABEL_WIDTH),
+				status = {
+					type = "description",
+					name = function()
+						return GetBindingStatus(bindingName)
+					end,
+					fontSize = "medium",
+					width = KEY_STATUS_WIDTH,
+					order = 2,
+				},
+				setKey = {
+					type = "execute",
+					name = L["OPTIONS_KEY_SET"],
+					desc = L["OPTIONS_KEY_SET_DESC"],
+					width = KEY_BUTTON_WIDTH,
+					order = 3,
+					func = function()
+						ns:OpenKeyBindings()
+					end,
+				},
+			},
+		}
+		order = order + 1
+
+		args["descKeyBinding" .. index] = ns.OptionsDesc(GetColor("HELP") .. L[descKey] .. "|r", order)
+		order = order + 1
+	end
+end
 
 --------------------------------------------------------------------------------
 -- General Panel
 --------------------------------------------------------------------------------
 
 --[[
-    The root panel: the add-on's own settings at the top, every feature's
-    settings merged in from its Options-{Feature-Name}.lua fragment, then
-    Feedback & Support and the version line at the bottom. The fragments load
-    before this file (see the TOC), so their builders exist by the time this
-    runs.
+    The root panel, in the order every Gogo1951 add-on's root panel uses: the
+    pitch, the Welcome Message and Mini-map Button switches, a Features section
+    with every feature's switch, Key Bindings, /Commands, then Feedback &
+    Support and the version line at the bottom. Each feature's full settings
+    live on its own page under this one. The mini-map clicks are spelled out in
+    the button's own tooltip, so they aren't repeated here.
 ]]
 function ns.BuildGeneralOptions()
 	local args = {
@@ -43,18 +169,20 @@ function ns.BuildGeneralOptions()
 		toggleWelcome = {
 			type = "toggle",
 			name = L["OPTIONS_ENABLE_WELCOME"],
+			desc = L["OPTIONS_ENABLE_WELCOME_DESC"],
 			width = "full",
 			order = 6,
 			get = function()
-				return ns.db and ns.db.global.showWelcome
+				return ns.db and ns.db.profile.showWelcome
 			end,
 			set = function(_, value)
-				ns.db.global.showWelcome = value
+				ns.db.profile.showWelcome = value
 			end,
 		},
 		toggleMinimap = {
 			type = "toggle",
 			name = L["OPTIONS_ENABLE_MINIMAP"],
+			desc = L["OPTIONS_ENABLE_MINIMAP_DESC"],
 			width = "full",
 			order = 7,
 			get = function()
@@ -66,31 +194,25 @@ function ns.BuildGeneralOptions()
 			end,
 		},
 
-		spacerCommands0 = ns.OptionsSpacer(20),
-		headerCommands = ns.OptionsHeader(L["OPTIONS_COMMANDS_HEADER"], 21),
-		spacerCommands1 = ns.OptionsSpacer(22),
-		descCommands = ns.OptionsDesc(
-			GetColor("INFO") .. L["OPTIONS_COMMAND"] .. "|r" .. "  " .. L["OPTIONS_COMMAND_DESCRIPTION"],
-			23
-		),
+		spacerFeatures0 = ns.OptionsSpacer(10),
+		headerFeatures = ns.OptionsHeader(L["OPTIONS_FEATURES_HEADER"], 11),
+		spacerFeatures1 = ns.OptionsSpacer(12),
 
-		--[[
-		    A binding cannot be set from an AceConfig panel, so this section only
-		    points at the game's own Key Bindings list, naming the binding exactly as
-		    that list does.
-		]]
 		spacerKeyBindings0 = ns.OptionsSpacer(30),
 		headerKeyBindings = ns.OptionsHeader(L["OPTIONS_KEY_BINDINGS_HEADER"], 31),
 		spacerKeyBindings1 = ns.OptionsSpacer(32),
-		descKeyBindings = ns.OptionsDesc(
-			GetColor("INFO") .. L["BINDING_ERASE"] .. "|r" .. "  " .. L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"],
-			33
+
+		spacerCommands0 = ns.OptionsSpacer(90),
+		headerCommands = ns.OptionsHeader(L["OPTIONS_COMMANDS_HEADER"], 91),
+		spacerCommands1 = ns.OptionsSpacer(92),
+		descCommands = ns.OptionsDesc(
+			GetColor("INFO") .. L["OPTIONS_COMMAND"] .. "|r" .. "  " .. L["OPTIONS_COMMAND_DESCRIPTION"],
+			93
 		),
 	}
 
-	for _, builder in ipairs(FEATURE_SECTIONS) do
-		ns[builder](args)
-	end
+	AddFeatureToggles(args, 12)
+	AddKeyBindingRows(args, 33)
 
 	-- Feedback & Support (Discord, GitHub, CurseForge, Wago, in that order)
 	args.spacerFeedback0 = ns.OptionsSpacer(100)
@@ -153,7 +275,7 @@ function ns.BuildGeneralOptions()
 	}
 	args.versionLine = {
 		type = "description",
-		name = GetColor("MUTED") .. "Version " .. ns.Version .. "|r",
+		name = GetColor("MUTED") .. L["OPTIONS_VERSION"]:format(ns.Version) .. "|r",
 		fontSize = "medium",
 		order = 999,
 	}

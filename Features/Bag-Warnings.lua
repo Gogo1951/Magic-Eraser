@@ -27,7 +27,7 @@ local lastSeenFree = nil
 
 --[[
     Bag-space warnings stay quiet until GetTime() reaches this deadline, set on
-    every PLAYER_ENTERING_WORLD (see ns:OnEnteringWorld). Secondary to the
+    every PLAYER_ENTERING_WORLD (see ns:OnPlayerEnteringWorld). Secondary to the
     unknown-vs-zero guard in ns:CountFreeBagSlots: it simply keeps the check idle
     for a moment after each loading screen, while the client repopulates the
     containers.
@@ -70,7 +70,7 @@ end
     follows is never mistaken for slots lost in play. A fresh deadline each time
     means rapid back-to-back loading screens just extend the hold.
 ]]
-function ns:OnEnteringWorld()
+function ns:OnPlayerEnteringWorld()
 	bagWarningsHeldUntil = GetTime() + BAG_SETTLE_SECONDS
 end
 
@@ -92,7 +92,7 @@ end
     measure a phantom drop against.
 ]]
 function ns:CheckBagsFullNudge()
-	if not (ns.db and ns.db.global.bagsFullNudgeEnabled) then
+	if not (ns.db and ns.db.profile.bagsFullNudgeEnabled) then
 		return
 	end
 
@@ -110,7 +110,7 @@ function ns:CheckBagsFullNudge()
 		return
 	end
 
-	if free > ns.db.global.bagsFullThreshold then
+	if free > ns.db.profile.bagsFullThreshold then
 		return
 	end
 

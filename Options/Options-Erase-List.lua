@@ -24,10 +24,13 @@ local L = ns.L
     rather than the full row width, because the tree sidebar takes its share of
     the panel first.
 
-    There is no drop target, for the same reason the Ignore List has none: the
+    There is no drop target, for the same reason the Protect List has none: the
     game closes the bags and the bank when the options interface opens, so there
     is no way to have an item on the cursor and this panel in front of you at the
-    same time.
+    same time. The Add from Bags picker stands in for it.
+
+    A row a Protect List overrules says Protected, so the list never looks like
+    it is doing something it isn't.
 ]]
 
 --[[
@@ -54,16 +57,35 @@ local function PromoteColumn()
 	}
 end
 
+--[[
+    Whether a Protect List overrules this row, so the row can say so instead of
+    looking like it does something. The account-wide Protect List covers every
+    scope; a character's own covers that character's pane. The All Characters
+    Erase List pane checks the account-wide Protect List only, since no single
+    character's list decides it.
+]]
+local function IsProtectedInScope(scopeKey, itemId)
+	local globalList = ns:GetGlobalIgnoreList()
+	if globalList and globalList[itemId] then
+		return true
+	end
+	if scopeKey == ns.LIST_SCOPE_GLOBAL then
+		return false
+	end
+	local scopeList = ns:GetIgnoreListForScope(scopeKey)
+	return (scopeList and scopeList[itemId]) and true or false
+end
+
 local function BuildScopeArgs(scopeKey)
 	local isGlobalScope = scopeKey == ns.LIST_SCOPE_GLOBAL
 
 	--[[
 	    Only the character being played gets Restore Defaults. ns:SeedEraseList
-	    reads that character's own class and writes ns.db.profile, so it cannot
+	    reads that character's own class and writes ns.db.char, so it cannot
 	    re-seed another character's list, and the Global scope ships no defaults
 	    to restore in the first place.
 	]]
-	local isCurrentProfile = ns.db and scopeKey == ns.db:GetCurrentProfile()
+	local isCurrentCharacter = ns.db and scopeKey == ns.db.keys.char
 
 	local args = ns:BuildItemListOptions({
 		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
@@ -78,16 +100,23 @@ local function BuildScopeArgs(scopeKey)
 		onRemove = function(itemId)
 			ns:SetOnEraseListInScope(scopeKey, itemId, false)
 		end,
-		onRestore = isCurrentProfile and function()
+		onRestore = isCurrentCharacter and function()
 			ns:RestoreEraseListDefaults()
 		end or nil,
+		addFromBags = true,
+		getRowTag = function(itemId)
+			return IsProtectedInScope(scopeKey, itemId) and L["OPTIONS_LIST_PROTECTED_TAG"] or nil
+		end,
 		labels = {
+			fromBagsName = L["OPTIONS_LIST_ADD_FROM_BAGS"],
+			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"],
 			addName = L["OPTIONS_LIST_ADD_ID"],
 			addHelp = L["OPTIONS_LIST_ADD_ID_DESCRIPTION"],
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
 			restoreName = L["OPTIONS_ERASE_RESTORE"],
+			restoreDesc = L["OPTIONS_ERASE_RESTORE_DESC"],
 			restoreConfirm = L["OPTIONS_ERASE_RESTORE_CONFIRM"],
 		},
 		--[[
@@ -125,29 +154,38 @@ function ns.BuildEraseListOptions()
 
 	--[[
 	    Keyed by scope, not by position: the tree remembers the selected node by
-	    its arg key, so a key that moved when a profile appeared or dropped out of
+	    its arg key, so a key that moved when a character appeared or dropped out of
 	    the list would silently reselect a different character.
 	]]
 	args[ns.LIST_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_LIST_GLOBAL"], 3, ns.LIST_SCOPE_GLOBAL)
 
-	if ns.db then
-		local profiles = ns.db:GetProfiles()
-		table.sort(profiles)
+	--[[
+	    A blank, unclickable row between All Characters and the characters.
+	    Disabled tree rows take no mouse input, so it can never be selected.
+	]]
+	args.spacerCharacters = {
+		type = "group",
+		name = " ",
+		order = 4,
+		disabled = true,
+		args = {},
+	}
 
-		local currentProfile = ns.db:GetCurrentProfile()
+	if ns.db then
+		local currentCharacter = ns.db.keys.char
 		local order = 10
 
-		for _, profileName in ipairs(profiles) do
+		for _, charKey in ipairs(ns:GetCharacterKeys()) do
 			--[[
 			    A character with an empty list is noise in the tree, so it is left
 			    out -- except for the character playing right now, whose list has
-			    to be reachable to put a first item in it. Profile names are
-			    character keys ("Name - Realm") and are never localized, so they
-			    are shown as-is and sorted as plain strings.
+			    to be reachable to put a first item in it. Character keys
+			    ("Name - Realm") are never localized, so they are shown as-is
+			    in their class color and sorted as plain strings.
 			]]
-			local eraseList = ns:GetEraseListForScope(profileName)
-			if profileName == currentProfile or (eraseList and next(eraseList) ~= nil) then
-				args[profileName] = ScopeGroup(profileName, order, profileName)
+			local eraseList = ns:GetEraseListForScope(charKey)
+			if charKey == currentCharacter or (eraseList and next(eraseList) ~= nil) then
+				args[charKey] = ScopeGroup(ns:GetCharacterDisplayName(charKey), order, charKey)
 				order = order + 1
 			end
 		end
