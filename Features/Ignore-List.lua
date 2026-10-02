@@ -8,11 +8,11 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
 --[[
     Two ignore lists, and protection is additive: an item on either one is left
-    alone. The per-character list is the one profile-scoped setting -- each
-    character has its own AceDB profile (ns.db is created without the
-    shared-Default flag, so a fresh character lands on its own "Name - Realm"
-    profile), so it lives directly in the profile as a flat table. The
-    account-wide list is its mirror in global, shared by every character.
+    alone. The per-character list lives in char, AceDB's per-character scope,
+    as a flat table, so it stays with the character whatever profile is
+    active: every character shares the Default profile, which holds settings
+    only. The account-wide list is its mirror in global, shared by every
+    character.
 
     Both are created on first use, so a brand-new character simply starts empty,
     and both return nil only before the database exists.
@@ -21,10 +21,10 @@ function ns:GetIgnoreList()
 	if not ns.db then
 		return nil
 	end
-	local ignoreList = ns.db.profile.ignoreList
+	local ignoreList = ns.db.char.ignoreList
 	if type(ignoreList) ~= "table" then
 		ignoreList = {}
-		ns.db.profile.ignoreList = ignoreList
+		ns.db.char.ignoreList = ignoreList
 	end
 	return ignoreList
 end
@@ -56,16 +56,17 @@ function ns:IsIgnored(itemId)
 end
 
 --[[
-    The minimap button's right-click (toggle) and middle-click (clear) act on the
-    current character's list only, which is exactly what the minimap tooltip's
-    Ignore List section shows -- so both keep meaning what the player just read.
+    The mini-map button's right-click (toggle) and middle-click (clear) act on
+    the current character's list only, which is exactly what the mini-map
+    tooltip's Ignore List section shows -- so both keep meaning what the player just read.
     The account-wide list is edited from the Ignore List panel instead, through
     ns:SetIgnoredInScope below.
 
     Both repaint that panel as well. It is registered as a builder function, so a
     repaint rebuilds its rows straight off the live lists -- but something has to
-    ask for one, and a minimap click while the panel is already on screen is the
-    one edit path with nothing that does. Opening the panel builds it, and an
+    ask for one, and an edit made outside the panel while it is on screen, a
+    mini-map click here or a key press through ns:AddToIgnoreList below, has
+    nothing else that does. Opening the panel builds it, and an
     edit made in the panel is followed by AceConfigDialog re-opening the frame,
     which is why ns:SetIgnoredInScope does not repeat this; without it here, the
     panel would keep showing the rows it drew when it opened until the player
@@ -100,23 +101,70 @@ function ns:ClearIgnoreList()
 	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
 end
 
+--[[
+    The Add Hovered Item to Ignore List binding (Features/Key-Bindings.lua), onto
+    this character's list: the list the mini-map right-click writes, so a click
+    and a key press land in one place, and the account-wide list stays something
+    the player chooses in the panel.
+
+    Add-only, never a toggle. A second press reports the item is already
+    protected rather than taking the protection away, since that is the one edit
+    where a stray press costs the player an item they meant to keep; removing
+    stays in the panel. An item either list protects counts as already there.
+
+    Protecting an item also retires this character's Erase List row for it. The
+    Ignore List always wins, so the row could no longer change any outcome --
+    the reason ClearFromAllCharacters clears rows on a promote. The account-wide
+    Erase List is left alone, because it still decides the item on every other
+    character.
+
+    Returns "already", "moved" or "added" for the caller's chat line, or nil
+    before the database exists. A key press is an edit made outside both panels,
+    so this repaints whichever of them it changed.
+]]
+function ns:AddToIgnoreList(itemId)
+	local ignoreList = ns:GetIgnoreList()
+	if not (itemId and ignoreList) then
+		return nil
+	end
+
+	if ns:IsIgnored(itemId) then
+		return "already"
+	end
+
+	local eraseList = ns:GetEraseList()
+	local wasOnEraseList = (eraseList and eraseList[itemId]) and true or false
+	if wasOnEraseList then
+		eraseList[itemId] = nil
+	end
+	ignoreList[itemId] = true
+
+	ns:InvalidateCache()
+	ns:RefreshDisplay()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
+	if wasOnEraseList then
+		AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.EraseList)
+	end
+
+	return wasOnEraseList and "moved" or "added"
+end
+
 --------------------------------------------------------------------------------
 -- Ignore List Scopes
 --------------------------------------------------------------------------------
 
 --[[
     One list looked up by the scope key the Ignore List panel uses: the global
-    sentinel (ns.LIST_SCOPE_GLOBAL), the profile the player is on right now, or
-    any other AceDB profile on the account.
+    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played ("Name -
+    Realm", ns.db.keys.char), or any other character on the account.
 
-    The current profile resolves through ns.db.profile rather than the raw saved
-    table, so an edit lands on the very list the eraser reads and applies live.
-    Every other profile is read straight out of ns.db.sv.profiles, because AceDB
-    only materializes the profile you are on -- and it strips default-valued
-    tables at logout, so a character who never added an entry has no stored
-    ignoreList, and one who never changed a setting has no stored profile at all.
-    A read returns nil in those cases; a write passes createIfMissing and builds
-    what it needs on the spot.
+    The character being played resolves through ns.db.char rather than the raw
+    saved table, so an edit lands on the very list the eraser reads and applies
+    live. Every other character is read straight out of ns.db.sv.char, because
+    AceDB only materializes the character you are on -- and it strips
+    default-valued tables at logout, so a character who never added an entry
+    has no stored ignoreList. A read returns nil in those cases; a write passes
+    createIfMissing and builds what it needs on the spot.
 ]]
 function ns:GetIgnoreListForScope(scopeKey, createIfMissing)
 	if not (ns.db and scopeKey) then
@@ -127,31 +175,31 @@ function ns:GetIgnoreListForScope(scopeKey, createIfMissing)
 		return ns:GetGlobalIgnoreList()
 	end
 
-	if scopeKey == ns.db:GetCurrentProfile() then
+	if scopeKey == ns.db.keys.char then
 		return ns:GetIgnoreList()
 	end
 
-	local profiles = ns.db.sv and ns.db.sv.profiles
-	if not profiles then
+	local characters = ns.db.sv and ns.db.sv.char
+	if not characters then
 		return nil
 	end
 
-	local profile = profiles[scopeKey]
-	if type(profile) ~= "table" then
+	local charData = characters[scopeKey]
+	if type(charData) ~= "table" then
 		if not createIfMissing then
 			return nil
 		end
-		profile = {}
-		profiles[scopeKey] = profile
+		charData = {}
+		characters[scopeKey] = charData
 	end
 
-	local ignoreList = profile.ignoreList
+	local ignoreList = charData.ignoreList
 	if type(ignoreList) ~= "table" then
 		if not createIfMissing then
 			return nil
 		end
 		ignoreList = {}
-		profile.ignoreList = ignoreList
+		charData.ignoreList = ignoreList
 	end
 
 	return ignoreList
@@ -165,16 +213,16 @@ end
     row that does nothing. Clearing them is what makes "add to Global" mean the
     item lives in exactly one place.
 
-    The live table behind ns.db.profile is the same table as its sv.profiles
-    entry, so the loop covers the current character too -- but only once AceDB
-    has materialized that profile, hence the direct pass afterwards.
+    The live table behind ns.db.char is the same table as its sv.char entry,
+    so the loop covers the current character too -- but only once AceDB has
+    materialized it, hence the direct pass afterwards.
 ]]
-local function ClearFromAllProfiles(itemId)
-	local profiles = ns.db.sv and ns.db.sv.profiles
-	if profiles then
-		for _, profile in pairs(profiles) do
-			if type(profile) == "table" and type(profile.ignoreList) == "table" then
-				profile.ignoreList[itemId] = nil
+local function ClearFromAllCharacters(itemId)
+	local characters = ns.db.sv and ns.db.sv.char
+	if characters then
+		for _, charData in pairs(characters) do
+			if type(charData) == "table" and type(charData.ignoreList) == "table" then
+				charData.ignoreList[itemId] = nil
 			end
 		end
 	end
@@ -208,7 +256,7 @@ function ns:SetIgnoredInScope(scopeKey, itemId, isIgnored)
 	ignoreList[itemId] = isIgnored and true or nil
 
 	if isIgnored and scopeKey == ns.LIST_SCOPE_GLOBAL then
-		ClearFromAllProfiles(itemId)
+		ClearFromAllCharacters(itemId)
 	end
 
 	ns:InvalidateCache()

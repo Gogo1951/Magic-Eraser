@@ -53,7 +53,7 @@ ns.DiagnosticsStrings = {
 	ERASER_BUTTON = "Show Eraser Context",
 	VALIDATE_TITLE = "Validate Data: %s",
 	VALIDATE_BUTTON = "Validate %s",
-	VALIDATE_HINT = "Checks every item and quest id a data file ships against this client and exports what the client knows about each one as tab-separated text, ready to paste into a spreadsheet. Item rows carry every item API return, the file's own values in the DATA columns so you can sort for mismatches, and the full tooltip, one line per TOOLTIP column. STATUS reads OK, NOT ON CLIENT for an item id this client does not recognize, or NOT LOADED when the client knows the id but never answered with its data. Quest ids follow in a block of their own, where NO TITLE means the client never answered with the quest's title, which is also how an unknown quest looks. A large file takes a few seconds; the box shows progress until the export replaces it.",
+	VALIDATE_HINT = "Checks every item and quest id a data file ships against this client and exports what the client knows about each one as tab-separated text, ready to paste into a spreadsheet. Item rows carry every item API return, the file's own values in the DATA columns so you can sort for mismatches, the item's spell text, and the whole tooltip in one TOOLTIP cell, its lines joined by // and a right-hand text after >>. STATUS reads OK, NOT ON CLIENT for an id this client does not have or never answers for, INCOMPLETE when an item loaded but its tooltip never did, ERROR with the message in the name cell when a read throws, or TABLE MISSING when this client's folder never built a table. Quest ids follow in a block of their own. The box shows progress one batch at a time until the export replaces it.",
 	DISPLAY_TITLE = "Display Context",
 	DISPLAY_BUTTON = "Show Display Context",
 	ADDONS_TITLE = "Other Add-ons",
@@ -80,6 +80,7 @@ function ns:SetDiagnosticsEnabled(value)
 	ns.diagnostics.enabled = value and true or false
 	if not ns.diagnostics.enabled then
 		ns:StopEventLog()
+		ns.diagnostics.log = nil
 		ns:StopDataValidation()
 	end
 end
@@ -90,16 +91,17 @@ end
 
 local function GetClientHeader()
 	local version, build, _, tocVersion = GetBuildInfo()
-	local flavor = (ns.FLAVOR or "?") .. (ns.IS_SOD and " (Season of Discovery)" or "")
+	local flavor = (ns.FLAVOR or "?") .. (ns.IS_DISCOVERY and " (Season of Discovery)" or "")
 	return string.format(
-		"%s %s // Client %s // Build %s // TOC %s // Locale %s // Flavor %s",
+		"%s %s // Client %s // Build %s // TOC %s // Locale %s // Flavor %s // Data %s",
 		ns.ADDON_TITLE,
 		ns.Version,
 		version,
 		build,
 		tocVersion,
 		GetLocale(),
-		flavor
+		flavor,
+		tostring(ns.DATA_FOLDER)
 	)
 end
 
@@ -141,7 +143,6 @@ end
 
 function ns:StopEventLog()
 	ns.diagnostics.logging = false
-	ns.diagnostics.log = nil
 end
 
 --[[
@@ -249,14 +250,14 @@ end
     lives -- nothing incidental, and nothing the add-on does not use.
 
     Every modern/legacy pair the add-on still picks between is listed as both
-    halves: the tooltip hook (TooltipDataProcessor or GameTooltip:SetBagItem),
-    the three item-info accessors in Features/Utilities.lua, and the item class
-    names Validate Data reads. A FAIL on one half is the report working rather
-    than a defect: the pair is what tells a bug report which branch that client
-    actually took. Reading the tooltip pair as PASS legacy plus FAIL modern is
-    how you know the SetBagItem hook is the live path there. Never drop the half
-    that fails on the client in front of you -- that is the half carrying the
-    answer.
+    halves: the tooltip hook (TooltipDataProcessor or GameTooltip:SetBagItem)
+    and the list bindings' hovered-item read (TooltipUtil.GetDisplayedItem or
+    GameTooltip:GetItem, picked by ns.GetDisplayedItem in Features/Utilities.lua).
+    A FAIL on one half is the report working rather than a defect: the pair is
+    what tells a bug report which branch that client actually took. Reading the
+    tooltip pair as PASS legacy plus FAIL modern is how you know the SetBagItem
+    hook is the live path there. Never drop the half that fails on the client in
+    front of you -- that is the half carrying the answer.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
 	-- { label, testFunction }
@@ -282,6 +283,28 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"Settings.OpenToCategory",
 		function()
 			return type(Settings) == "table" and type(Settings.OpenToCategory) == "function"
+		end,
+	},
+	--[[
+	    The three routes ns:OpenKeyBindings tries for the Set Key button, in its
+	    order. One passing is enough; the report says which one this client has.
+	]]
+	{
+		"Settings.KEYBINDINGS_CATEGORY_ID",
+		function()
+			return type(Settings) == "table" and Settings.KEYBINDINGS_CATEGORY_ID ~= nil
+		end,
+	},
+	{
+		"SettingsPanel.GetCategoryList",
+		function()
+			return type(SettingsPanel) == "table" and type(SettingsPanel.GetCategoryList) == "function"
+		end,
+	},
+	{
+		"KeyBindingFrame_LoadUI (legacy)",
+		function()
+			return type(KeyBindingFrame_LoadUI) == "function" or type(KeyBindingFrame) == "table"
 		end,
 	},
 	{
@@ -350,25 +373,11 @@ ns.DIAGNOSTIC_API_CHECKS = {
 			return type(C_Item) == "table" and type(C_Item.GetItemQualityColor) == "function"
 		end,
 	},
-	{
-		"GetItemInfo (legacy)",
-		function()
-			return type(_G.GetItemInfo) == "function"
-		end,
-	},
-	{
-		"GetItemInfoInstant (legacy)",
-		function()
-			return type(_G.GetItemInfoInstant) == "function"
-		end,
-	},
-	{
-		"GetItemQualityColor (legacy)",
-		function()
-			return type(_G.GetItemQualityColor) == "function"
-		end,
-	},
-	-- Validate Data's extra reads; one a client lacks leaves its columns blank.
+	--[[
+	    Validate Data's extra reads; one a client lacks leaves its columns blank.
+	    GetItemSpell and GetItemStats are the white-gear rule's reads as well, and
+	    a client missing either one never erases white gear.
+	]]
 	{
 		"C_Item.GetItemSpell",
 		function()
@@ -394,21 +403,21 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
-		"GetItemClassInfo (legacy)",
-		function()
-			return type(_G.GetItemClassInfo) == "function"
-		end,
-	},
-	{
 		"C_Item.GetItemSubClassInfo",
 		function()
 			return type(C_Item) == "table" and type(C_Item.GetItemSubClassInfo) == "function"
 		end,
 	},
 	{
-		"GetItemSubClassInfo (legacy)",
+		"C_Spell.GetSpellDescription",
 		function()
-			return type(_G.GetItemSubClassInfo) == "function"
+			return type(C_Spell) == "table" and type(C_Spell.GetSpellDescription) == "function"
+		end,
+	},
+	{
+		"C_Spell.RequestLoadSpellData",
+		function()
+			return type(C_Spell) == "table" and type(C_Spell.RequestLoadSpellData) == "function"
 		end,
 	},
 	{
@@ -527,6 +536,36 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
+		"TooltipUtil.GetDisplayedItem",
+		function()
+			return type(TooltipUtil) == "table" and type(TooltipUtil.GetDisplayedItem) == "function"
+		end,
+	},
+	{
+		"GameTooltip.GetItem (legacy)",
+		function()
+			return type(GameTooltip) == "table" and type(GameTooltip.GetItem) == "function"
+		end,
+	},
+	{
+		"Enum.BagIndex.ReagentBag",
+		function()
+			return type(Enum) == "table" and type(Enum.BagIndex) == "table" and Enum.BagIndex.ReagentBag ~= nil
+		end,
+	},
+	{
+		"Enum.BagIndex.CharacterBankTab_1",
+		function()
+			return type(Enum) == "table" and type(Enum.BagIndex) == "table" and Enum.BagIndex.CharacterBankTab_1 ~= nil
+		end,
+	},
+	{
+		"BANK_CONTAINER (legacy)",
+		function()
+			return type(BANK_CONTAINER) == "number"
+		end,
+	},
+	{
 		"InCombatLockdown",
 		function()
 			return type(InCombatLockdown) == "function"
@@ -572,62 +611,16 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Every line of an item's tooltip as plain text, for the Validate Data export
-    and the Eraser Context candidate. A client with C_TooltipInfo hands the lines
-    over as data; any other is read off a hidden tooltip that is never shown.
-    Color escapes are stripped so a cell sorts on its words, and a line with a
-    right-hand column keeps it after " :: ". Both reads are protected, because
-    one item the client chokes on must not end a run of a thousand.
+    An item's tooltip lines through ns.GetItemTooltipLines, protected, because
+    one item the client chokes on must not end a run of a thousand. A throw
+    comes back as its message, so the caller can report it.
 ]]
-local SCAN_TOOLTIP_NAME = "MagicEraserScanTooltip"
-local GetTooltipItemData = C_TooltipInfo and C_TooltipInfo.GetItemByID
-local scanTooltip
-
-local function PlainText(text)
-	if type(text) ~= "string" then
-		return nil
+local function ItemTooltipLines(itemId)
+	local ok, lines = pcall(ns.GetItemTooltipLines, itemId)
+	if ok then
+		return lines, nil
 	end
-	return (text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|cn[^:]*:", ""):gsub("|r", ""))
-end
-
-local function JoinTooltipLine(left, right)
-	left = PlainText(left) or ""
-	right = PlainText(right)
-	if right and right ~= "" then
-		return left .. " :: " .. right
-	end
-	return left
-end
-
-local function ReadTooltipData(itemId, lines)
-	local data = GetTooltipItemData(itemId)
-	for _, line in ipairs(data and data.lines or {}) do
-		lines[#lines + 1] = JoinTooltipLine(line.leftText, line.rightText)
-	end
-end
-
-local function ReadScanTooltip(itemId, lines)
-	if not scanTooltip then
-		scanTooltip = CreateFrame("GameTooltip", SCAN_TOOLTIP_NAME, nil, "GameTooltipTemplate")
-	end
-	scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
-	scanTooltip:ClearLines()
-	scanTooltip:SetHyperlink("item:" .. itemId)
-	for index = 1, scanTooltip:NumLines() do
-		local left = _G[SCAN_TOOLTIP_NAME .. "TextLeft" .. index]
-		local right = _G[SCAN_TOOLTIP_NAME .. "TextRight" .. index]
-		lines[#lines + 1] = JoinTooltipLine(left and left:GetText(), right and right:IsShown() and right:GetText())
-	end
-	scanTooltip:Hide()
-end
-
-local function ReadTooltipLines(itemId)
-	local lines = {}
-	local ok = pcall(GetTooltipItemData and ReadTooltipData or ReadScanTooltip, itemId, lines)
-	if not ok then
-		return { "(tooltip read failed)" }
-	end
-	return lines
+	return {}, tostring(lines)
 end
 
 --------------------------------------------------------------------------------
@@ -647,9 +640,9 @@ function ns:BuildEraserContextReport()
 	local _, class = UnitClass("player")
 	lines[#lines + 1] = string.format("Player: %s level %d", tostring(class), UnitLevel("player") or 0)
 	lines[#lines + 1] =
-		string.format("Auto-Vend: %s", (ns.db and ns.db.global.autoVendEnabled) and "enabled" or "disabled")
+		string.format("Auto-Vend: %s", (ns.db and ns.db.profile.autoVendEnabled) and "enabled" or "disabled")
 	lines[#lines + 1] =
-		string.format("Bank retrieval: %s", (ns.db and ns.db.global.bankRetrievalEnabled) and "enabled" or "disabled")
+		string.format("Bank retrieval: %s", (ns.db and ns.db.profile.bankRetrievalEnabled) and "enabled" or "disabled")
 
 	--[[
 	    Both scopes, because protection is additive: an unexpectedly skipped item
@@ -669,23 +662,27 @@ function ns:BuildEraserContextReport()
 		"Erase list: character=%d, global=%d, seeded=%s",
 		CountKeys(ns:GetEraseList()),
 		CountKeys(ns:GetGlobalEraseList()),
-		tostring((ns.db and ns.db.profile.eraseListSeeded) and true or false)
+		tostring((ns.db and ns.db.char.eraseListSeeded) and true or false)
 	)
 	lines[#lines + 1] = string.format(
-		"Databases: quest=%d, questStarting=%d, consumables=%d, equipment=%d",
+		"Databases: quest=%d, questStarting=%d, consumables=%d, ammo=%d, keepEquipment=%d",
 		CountKeys(ns.ALLOWED_DELETE_QUEST_ITEMS),
 		CountKeys(ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS),
 		CountKeys(ns.ALLOWED_DELETE_CONSUMABLES),
-		CountKeys(ns.ALLOWED_DELETE_EQUIPMENT)
+		CountKeys(ns.ALLOWED_DELETE_AMMO),
+		CountKeys(ns.KEEP_EQUIPMENT)
 	)
 	-- Seed data only. Nothing filters on this at scan time; see ns.CLASS_REAGENTS.
 	local reagents = ns.CLASS_REAGENTS and ns.CLASS_REAGENTS[class]
 	lines[#lines + 1] = string.format("Class reagents (%s): %d", tostring(class), CountKeys(reagents))
 
 	--[[
-	    Bank Retrieval builds its container list from these globals, so a client
-	    whose bank is laid out differently shows up here without a bank window
-	    open. A missing global prints nil.
+	    Bank Retrieval scans ns.BANK_CONTAINERS, built from the client's character
+	    bank tabs where it has them and from these globals where it does not, so
+	    printing both beside every container's slot count shows a client whose
+	    bank is laid out differently without a bank window open. A missing global
+	    prints nil. ns.CARRIED_BAGS is listed too, so a report shows whether the
+	    reagent bag is among the bags every scan walks.
 	]]
 	lines[#lines + 1] = ""
 	lines[#lines + 1] = "Bank layout:"
@@ -696,6 +693,8 @@ function ns:BuildEraserContextReport()
 		tostring(NUM_BANKBAGSLOTS),
 		tostring(ns.LAST_BAG_INDEX)
 	)
+	lines[#lines + 1] = "  Carried bags scanned: " .. table.concat(ns.CARRIED_BAGS, ", ")
+	lines[#lines + 1] = "  Bank Retrieval scans: " .. table.concat(ns.BANK_CONTAINERS, ", ")
 	local bagIndex = Enum.BagIndex
 	if type(bagIndex) == "table" then
 		local entries = {}
@@ -716,7 +715,8 @@ function ns:BuildEraserContextReport()
 		lines[#lines + 1] = "  Enum.BagIndex: (absent)"
 	end
 	-- pcall because an index this client does not define may throw rather than answer 0.
-	for index = -1, ns.LAST_BAG_INDEX + 8 do
+	local lastIndex = math.max(ns.LAST_BAG_INDEX + 8, ns.BANK_CONTAINERS[#ns.BANK_CONTAINERS] or 0)
+	for index = -1, lastIndex do
 		local ok, slots = pcall(C_Container.GetContainerNumSlots, index)
 		lines[#lines + 1] = string.format("  container %d: %s", index, ok and (tostring(slots) .. " slots") or "error")
 	end
@@ -730,7 +730,11 @@ function ns:BuildEraserContextReport()
 		lines[#lines + 1] = string.format("  reason   = %s", tostring(item.deleteReason))
 		lines[#lines + 1] = string.format("  value    = %d copper (x%d)", item.value or 0, item.count or 1)
 		lines[#lines + 1] = string.format("  bag/slot = %s/%s", tostring(item.bag), tostring(item.slot))
-		for _, tooltipLine in ipairs(ReadTooltipLines(item.itemId)) do
+		local tooltipLines, problem = ItemTooltipLines(item.itemId)
+		if problem then
+			lines[#lines + 1] = "  tooltip  = (read failed: " .. (problem:gsub("|", "||")) .. ")"
+		end
+		for _, tooltipLine in ipairs(tooltipLines) do
 			lines[#lines + 1] = "  tooltip  = " .. (tooltipLine:gsub("|", "||"))
 		end
 	else
@@ -746,9 +750,10 @@ end
 
 --[[
     One entry per data file, and one gated Validate Data section per entry in
-    Options/Options-Diagnostics.lua. Each source names the static table on ns and
-    its kind, "item" or "quest". Ids are reached through rowId(key, row) over the
-    table's pairs, or through collect(tbl) for a table not keyed by the id it
+    Options/Options-Diagnostics.lua. Each entry's label is the table-name part of
+    its file name, so ns.DataSourceFileName can name the file this client's
+    folder built. Each source names the static table on ns and its kind, "item"
+    or "quest". Ids are reached through rowId(key, row) over the table's pairs, or through collect(tbl) for a table not keyed by the id it
     holds, which returns { id, key, row } entries. dataColumns carries the
     shipped row's own values as { header, getter(key, row) }, so the export sets
     what the file says beside what the client says. Adding a data file adds an
@@ -819,20 +824,9 @@ end)
 local QUEST_ITEM_IDS_COLUMN = { "DATA_ITEM_IDS", RowJoined }
 
 ns.DIAGNOSTIC_DATA_SOURCES = {
-	-- { file, sources = { { table, kind, rowId or collect, dataColumns } } }
+	-- { label, sources = { { table, kind, rowId or collect, dataColumns } } }
 	{
-		file = "Data.lua",
-		sources = {
-			{
-				table = "CLASS_REAGENTS",
-				kind = "item",
-				collect = CollectClassReagents,
-				dataColumns = { { "DATA_CLASS", KeyValue } },
-			},
-		},
-	},
-	{
-		file = "Quest-Items.lua",
+		label = "Quest-Items",
 		sources = {
 			{
 				table = "ALLOWED_DELETE_QUEST_ITEMS",
@@ -849,7 +843,7 @@ ns.DIAGNOSTIC_DATA_SOURCES = {
 		},
 	},
 	{
-		file = "Quest-Starting-Items.lua",
+		label = "Quest-Starting-Items",
 		sources = {
 			{
 				table = "ALLOWED_DELETE_QUEST_STARTING_ITEMS",
@@ -870,7 +864,7 @@ ns.DIAGNOSTIC_DATA_SOURCES = {
 		},
 	},
 	{
-		file = "Consumables.lua",
+		label = "Consumables",
 		sources = {
 			{
 				table = "ALLOWED_DELETE_CONSUMABLES",
@@ -881,14 +875,45 @@ ns.DIAGNOSTIC_DATA_SOURCES = {
 		},
 	},
 	{
-		file = "Equipment.lua",
-		sources = { { table = "ALLOWED_DELETE_EQUIPMENT", kind = "item", rowId = KeyIsId } },
+		label = "Ammo",
+		sources = {
+			{
+				table = "ALLOWED_DELETE_AMMO",
+				kind = "item",
+				rowId = KeyIsId,
+				dataColumns = {
+					{ "DATA_USE_LEVEL", RowField(1) },
+					{ "DATA_NEXT_TIER_LEVEL", RowField(2) },
+				},
+			},
+		},
+	},
+	{
+		label = "Equipment",
+		sources = { { table = "KEEP_EQUIPMENT", kind = "item", rowId = KeyIsId } },
+	},
+	{
+		label = "Class-Reagents",
+		sources = {
+			{
+				table = "CLASS_REAGENTS",
+				kind = "item",
+				collect = CollectClassReagents,
+				dataColumns = { { "DATA_CLASS", KeyValue } },
+			},
+		},
 	},
 }
 
+-- The file a manifest entry names in the data folder this client loaded.
+function ns.DataSourceFileName(entry)
+	local folder = tostring(ns.DATA_FOLDER)
+	return string.format("%s/%s-%s.lua", folder, entry.label, folder)
+end
+
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-local GetItemInfo = ns.GetItemInfo
-local GetItemInfoInstant = ns.GetItemInfoInstant
+local GetItemInfo = C_Item.GetItemInfo
+local GetItemInfoInstant = C_Item.GetItemInfoInstant
 
 --[[
     The reads beyond the item-info pair, each picked once by existence. One the
@@ -897,23 +922,26 @@ local GetItemInfoInstant = ns.GetItemInfoInstant
 local GetItemSpell = C_Item.GetItemSpell
 local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
 local GetItemStats = C_Item.GetItemStats
-local GetItemClassName = C_Item.GetItemClassInfo or GetItemClassInfo
-local GetItemSubClassName = C_Item.GetItemSubClassInfo or GetItemSubClassInfo
+local GetItemClassName = C_Item.GetItemClassInfo
+local GetItemSubClassName = C_Item.GetItemSubClassInfo
+local GetSpellDescription = C_Spell.GetSpellDescription
+local RequestLoadSpellData = C_Spell.RequestLoadSpellData
 local GetQuestTitle = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestInfo
 local RequestLoadQuest = C_QuestLog.RequestLoadQuestByID
 
 --[[
-    Item and quest data load asynchronously, so a run works in batches across
-    frames rather than stalling the client on a thousand lookups at once, and an
-    id the server never answers for is flagged after a bounded number of polls
-    instead of holding the run open forever.
+    A run works one batch at a time: it requests a batch, polls until every row
+    in it has settled, asks again for stragglers every few idle polls, and only
+    then starts the next batch, so a thousand lookups never stall one frame. A
+    straggler still unanswered after a bounded run of idle polls settles as a
+    flagged row rather than holding the run open.
 ]]
 local VALIDATE_BATCH_SIZE = 100
-local VALIDATE_TICK_SECONDS = 0.1
-local VALIDATE_RETRY_SECONDS = 0.5
-local VALIDATE_MAX_RETRIES = 20
+local VALIDATE_POLL_SECONDS = 0.5
+local VALIDATE_REASK_POLLS = 3
+local VALIDATE_MAX_IDLE_POLLS = 12
 
-local ITEM_INFO_RETURNS = 17
+local ITEM_INFO_RETURNS = 18
 local ITEM_INFO_INSTANT_RETURNS = 7
 
 local ITEM_COLUMNS = {
@@ -937,6 +965,7 @@ local ITEM_COLUMNS = {
 	"EXPANSION_ID",
 	"SET_ID",
 	"CRAFTING_REAGENT",
+	"DESCRIPTION",
 	"INSTANT_ITEM_ID",
 	"INSTANT_TYPE",
 	"INSTANT_SUBTYPE",
@@ -950,12 +979,14 @@ local ITEM_COLUMNS = {
 local EXTRA_ITEM_COLUMNS = {
 	"SPELL_NAME",
 	"SPELL_ID",
+	"SPELL_DESCRIPTION",
 	"ILVL_EFFECTIVE",
 	"ILVL_PREVIEW",
 	"ILVL_BASE",
 	"CLASS_NAME",
 	"SUBCLASS_NAME",
 	"STATS",
+	"TOOLTIP",
 }
 
 local QUEST_COLUMNS = {
@@ -966,10 +997,14 @@ local QUEST_COLUMNS = {
 	"IS_FLAGGED_COMPLETED",
 }
 
+-- STATUS, SOURCE and the id come first, so the name or title is the fourth cell.
+local NAME_CELL = 4
+
 local STATUS_OK = "OK"
 local STATUS_NOT_ON_CLIENT = "NOT ON CLIENT"
-local STATUS_NOT_LOADED = "NOT LOADED"
-local STATUS_NO_TITLE = "NO TITLE"
+local STATUS_INCOMPLETE = "INCOMPLETE"
+local STATUS_ERROR = "ERROR"
+local STATUS_TABLE_MISSING = "TABLE MISSING"
 
 local validations = {}
 
@@ -1001,31 +1036,33 @@ local function AppendBlanks(cells, count)
 	end
 end
 
-local function AppendReturns(cells, count, ...)
+local function AppendResults(cells, count, ok, ...)
+	if not ok then
+		AppendBlanks(cells, count)
+		return tostring((...))
+	end
 	for index = 1, count do
 		cells[#cells + 1] = CellText((select(index, ...)))
 	end
-end
-
-local function AppendProtected(cells, count, ok, ...)
-	if ok then
-		AppendReturns(cells, count, ...)
-	else
-		cells[#cells + 1] = "ERROR"
-		AppendBlanks(cells, count - 1)
-	end
+	return nil
 end
 
 --[[
-    Calls a read the client may lack or may refuse for one odd item, filling
-    exactly count cells either way so every row keeps its column alignment.
+    Calls a read the client may lack or may refuse for one odd id, filling
+    exactly count cells either way so every row keeps its column alignment. A
+    throw comes back as its message, for the row's ERROR status.
 ]]
 local function AppendCall(cells, count, fn, ...)
 	if type(fn) ~= "function" then
 		AppendBlanks(cells, count)
-		return
+		return nil
 	end
-	AppendProtected(cells, count, pcall(fn, ...))
+	return AppendResults(cells, count, pcall(fn, ...))
+end
+
+-- Keeps the first problem a row met; both arguments are always evaluated.
+local function FirstProblem(current, found)
+	return current or found
 end
 
 local function FormatStats(stats)
@@ -1044,25 +1081,52 @@ local function FormatStats(stats)
 	return table.concat(parts, "; ")
 end
 
+local function ItemSpellId(itemId)
+	if type(GetItemSpell) ~= "function" then
+		return nil
+	end
+	local ok, _, spellId = pcall(GetItemSpell, itemId)
+	return ok and spellId or nil
+end
+
+--[[
+    Everything after the DATA_* columns: the item's spell and that spell's
+    description, the level, class and stat reads, and the whole tooltip in one
+    cell, its lines joined by " // ". Returns the first read that threw.
+]]
 local function AppendExtraItemCells(cells, itemId)
 	local _, link, _, _, _, _, _, _, _, _, _, classId, subclassId = GetItemInfo(itemId)
-	AppendCall(cells, 2, GetItemSpell, itemId)
-	AppendCall(cells, 3, GetDetailedItemLevelInfo, link or itemId)
+	local problem = AppendCall(cells, 2, GetItemSpell, itemId)
+	local spellId = ItemSpellId(itemId)
+	if spellId then
+		problem = FirstProblem(problem, AppendCall(cells, 1, GetSpellDescription, spellId))
+	else
+		AppendBlanks(cells, 1)
+	end
+	problem = FirstProblem(problem, AppendCall(cells, 3, GetDetailedItemLevelInfo, link or itemId))
 	if classId then
-		AppendCall(cells, 1, GetItemClassName, classId)
+		problem = FirstProblem(problem, AppendCall(cells, 1, GetItemClassName, classId))
 	else
 		AppendBlanks(cells, 1)
 	end
 	if classId and subclassId then
-		AppendCall(cells, 1, GetItemSubClassName, classId, subclassId)
+		problem = FirstProblem(problem, AppendCall(cells, 1, GetItemSubClassName, classId, subclassId))
 	else
 		AppendBlanks(cells, 1)
 	end
-	local ok, stats = false, nil
+	local stats
 	if type(GetItemStats) == "function" and link then
-		ok, stats = pcall(GetItemStats, link)
+		local ok, result = pcall(GetItemStats, link)
+		if ok then
+			stats = FormatStats(result)
+		else
+			problem = FirstProblem(problem, tostring(result))
+		end
 	end
-	cells[#cells + 1] = CellText(ok and FormatStats(stats) or nil)
+	cells[#cells + 1] = CellText(stats)
+	local tooltipLines, tooltipProblem = ItemTooltipLines(itemId)
+	cells[#cells + 1] = CellText(table.concat(tooltipLines, " // "))
+	return FirstProblem(problem, tooltipProblem)
 end
 
 local function AppendDataCells(cells, entry, dataHeaders)
@@ -1072,29 +1136,32 @@ local function AppendDataCells(cells, entry, dataHeaders)
 end
 
 --[[
-    Everything up to the tooltip. The tooltip lines come back separately because
-    the number of TOOLTIP_ columns is only known once the whole run is in, and
-    only a row that resolved OK reads extras or a tooltip at all.
+    A flagged row still carries its id, source table and DATA_* values, so the
+    bad entry is copyable straight out of the sheet; only an id the client has
+    reads the extras and the tooltip. A read that throws turns the row's status
+    to ERROR, with the message in the name cell.
 ]]
-local function BuildItemCells(status, entry, dataHeaders)
+local function BuildItemRow(status, entry, dataHeaders)
 	local itemId = entry.id
 	local cells = { status, entry.source, tostring(itemId) }
-	AppendReturns(cells, ITEM_INFO_RETURNS, GetItemInfo(itemId))
-	AppendCall(cells, ITEM_INFO_INSTANT_RETURNS, GetItemInfoInstant, itemId)
+	local problem = AppendCall(cells, ITEM_INFO_RETURNS, GetItemInfo, itemId)
+	problem = FirstProblem(problem, AppendCall(cells, ITEM_INFO_INSTANT_RETURNS, GetItemInfoInstant, itemId))
 	AppendDataCells(cells, entry, dataHeaders)
-
-	if status ~= STATUS_OK then
+	if status == STATUS_NOT_ON_CLIENT then
 		AppendBlanks(cells, #EXTRA_ITEM_COLUMNS)
-		return cells, {}
+	else
+		problem = FirstProblem(problem, AppendExtraItemCells(cells, itemId))
 	end
-
-	AppendExtraItemCells(cells, itemId)
-	return cells, ReadTooltipLines(itemId)
+	if problem then
+		cells[1] = STATUS_ERROR
+		cells[NAME_CELL] = CellText(problem)
+	end
+	return cells
 end
 
 --[[
     A quest has no existence check to ask, so an unknown quest and an uncached
-    one look the same until the retries run out: the title is the only answer.
+    one look the same until the polls run out: the title is the only answer.
 ]]
 local function QuestTitle(questId)
 	if type(GetQuestTitle) ~= "function" then
@@ -1107,16 +1174,15 @@ local function QuestTitle(questId)
 	return nil
 end
 
-local function BuildQuestCells(status, entry, dataHeaders)
+local function BuildQuestRow(status, entry, dataHeaders)
 	local questId = entry.id
-	local cells = {
-		status,
-		entry.source,
-		tostring(questId),
-		CellText(QuestTitle(questId)),
-		CellText(C_QuestLog.IsQuestFlaggedCompleted(questId)),
-	}
+	local cells = { status, entry.source, tostring(questId), CellText(QuestTitle(questId)) }
+	local problem = AppendCall(cells, 1, C_QuestLog.IsQuestFlaggedCompleted, questId)
 	AppendDataCells(cells, entry, dataHeaders)
+	if problem then
+		cells[1] = STATUS_ERROR
+		cells[NAME_CELL] = CellText(problem)
+	end
 	return cells
 end
 
@@ -1128,11 +1194,7 @@ local function ItemExistsOnClient(itemId)
 	return C_Item.DoesItemExistByID(itemId) and true or false
 end
 
-local function CollectEntries(source)
-	local rows = ns[source.table]
-	if type(rows) ~= "table" then
-		return {}
-	end
+local function CollectEntries(source, rows)
 	if source.collect then
 		return source.collect(rows)
 	end
@@ -1145,12 +1207,12 @@ end
 
 --[[
     Every id the entry's sources reach, items before quests and each in id
-    order, with its DATA_* values already read, plus each kind's DATA_* headers
-    in first-seen order so a file with several sources still gets one header row
-    per block.
+    order, with its DATA_* values already read; each kind's DATA_* headers in
+    first-seen order, so a file with several sources still gets one header row
+    per block; and every source whose table this client's folder never built.
 ]]
 local function CollectIds(entry)
-	local ids = {}
+	local ids, missing = {}, {}
 	local headers = { item = {}, quest = {} }
 	local seenHeaders = { item = {}, quest = {} }
 
@@ -1163,13 +1225,18 @@ local function CollectIds(entry)
 			end
 		end
 
-		for _, found in ipairs(CollectEntries(source)) do
-			if type(found.id) == "number" then
-				local data = {}
-				for _, column in ipairs(columns) do
-					data[column[1]] = column[2](found.key, found.row)
+		local rows = ns[source.table]
+		if type(rows) ~= "table" then
+			missing[#missing + 1] = source
+		else
+			for _, found in ipairs(CollectEntries(source, rows)) do
+				if type(found.id) == "number" then
+					local data = {}
+					for _, column in ipairs(columns) do
+						data[column[1]] = column[2](found.key, found.row)
+					end
+					ids[#ids + 1] = { id = found.id, source = source.table, kind = source.kind, data = data }
 				end
-				ids[#ids + 1] = { id = found.id, source = source.table, kind = source.kind, data = data }
 			end
 		end
 	end
@@ -1183,30 +1250,78 @@ local function CollectIds(entry)
 		end
 		return a.id < b.id
 	end)
-	return ids, headers
+	return ids, headers, missing
+end
+
+-- Asks the client for one id's data: the item and its spell, or the quest.
+local function RequestEntry(entry)
+	if entry.kind == "quest" then
+		if type(RequestLoadQuest) == "function" then
+			pcall(RequestLoadQuest, entry.id)
+		end
+		return
+	end
+	C_Item.RequestLoadItemDataByID(entry.id)
+	local spellId = ItemSpellId(entry.id)
+	if spellId and type(RequestLoadSpellData) == "function" then
+		pcall(RequestLoadSpellData, spellId)
+		entry.spellRequested = true
+	end
+end
+
+--[[
+    Whether an id's row can be written as OK: an item once its data and its
+    tooltip have loaded, a quest once it has a title. An item whose spell only
+    shows up once its data arrives gets that spell requested then, and one more
+    poll for the description to land.
+]]
+local function IsSettled(entry)
+	if entry.kind == "quest" then
+		return QuestTitle(entry.id) ~= nil
+	end
+	if not GetItemInfo(entry.id) or #ItemTooltipLines(entry.id) == 0 then
+		return false
+	end
+	if not entry.spellRequested then
+		entry.spellRequested = true
+		local spellId = ItemSpellId(entry.id)
+		if spellId and type(RequestLoadSpellData) == "function" then
+			pcall(RequestLoadSpellData, spellId)
+			return false
+		end
+	end
+	return true
+end
+
+-- A straggler the polls gave up on: an item whose data loaded without its tooltip is INCOMPLETE.
+local function UnsettledStatus(entry)
+	if entry.kind == "item" and GetItemInfo(entry.id) then
+		return STATUS_INCOMPLETE
+	end
+	return STATUS_NOT_ON_CLIENT
 end
 
 local function ResolveRow(run, index, status)
 	local entry = run.ids[index]
 	if entry.kind == "quest" then
-		run.rows[index] = BuildQuestCells(status, entry, run.headers.quest)
+		run.rows[index] = BuildQuestRow(status, entry, run.headers.quest)
 	else
-		local cells, tooltip = BuildItemCells(status, entry, run.headers.item)
-		run.rows[index] = cells
-		run.tooltips[index] = tooltip
-		if #tooltip > run.maxTooltipLines then
-			run.maxTooltipLines = #tooltip
-		end
+		run.rows[index] = BuildItemRow(status, entry, run.headers.item)
 	end
 	run.resolved = run.resolved + 1
-	run.counts[entry.kind][status] = run.counts[entry.kind][status] + 1
 end
 
 local function ProgressText(run)
 	return table.concat({
 		GetClientHeader(),
 		"",
-		string.format("Validated %s / %s ...", ns:FormatCommaNumber(run.resolved), ns:FormatCommaNumber(#run.ids)),
+		string.format(
+			"Validated %s / %s IDs (batch %d of %d)...",
+			ns:FormatCommaNumber(run.resolved),
+			ns:FormatCommaNumber(#run.ids),
+			run.batch,
+			run.batchCount
+		),
 	}, "\n")
 end
 
@@ -1228,87 +1343,56 @@ end
 local function ReleaseRun(run)
 	run.ids = {}
 	run.rows = {}
-	run.tooltips = {}
 	run.pending = {}
+	run.missing = {}
 end
 
-local function AppendHeaderRow(lines, ...)
+local function JoinColumns(...)
 	local header = {}
 	for index = 1, select("#", ...) do
 		for _, column in ipairs((select(index, ...))) do
 			header[#header + 1] = column
 		end
 	end
-	lines[#lines + 1] = table.concat(header, "\t")
+	return header
 end
 
 --[[
-    The report is the standard client header plus a one-line tally, a blank
-    line, then up to two TSV blocks, each a header row naming every column and
-    then one row per id in id order: the items, padded out to the run's longest
-    tooltip so every row carries the same number of columns, then the quests
-    after a blank line. Flagged rows keep their id and source table so the bad
-    entry is copyable straight out of the sheet.
+    One kind's TSV block: its header row, a TABLE MISSING row for each of its
+    tables this client never built, then one row per id in id order. A kind
+    with nothing to show prints no block.
 ]]
+local function AppendKindBlock(lines, run, kind, header)
+	local rows = {}
+	for _, source in ipairs(run.missing) do
+		if source.kind == kind then
+			local cells = { STATUS_TABLE_MISSING, source.table }
+			AppendBlanks(cells, #header - #cells)
+			rows[#rows + 1] = cells
+		end
+	end
+	for index, entry in ipairs(run.ids) do
+		if entry.kind == kind then
+			rows[#rows + 1] = run.rows[index]
+		end
+	end
+	if #rows == 0 then
+		return
+	end
+	if lines[#lines] ~= "" then
+		lines[#lines + 1] = ""
+	end
+	lines[#lines + 1] = table.concat(header, "\t")
+	for _, cells in ipairs(rows) do
+		lines[#lines + 1] = table.concat(cells, "\t")
+	end
+end
+
+-- The report is the client header, a blank line, then one TSV block per kind.
 local function FinishValidation(fileIndex, run)
-	local itemCounts, questCounts = run.counts.item, run.counts.quest
-	local tally = string.format(
-		"%s // %s item ids // %s %s // %s %s // %s %s",
-		run.file,
-		ns:FormatCommaNumber(run.itemCount),
-		ns:FormatCommaNumber(itemCounts[STATUS_OK]),
-		STATUS_OK,
-		ns:FormatCommaNumber(itemCounts[STATUS_NOT_ON_CLIENT]),
-		STATUS_NOT_ON_CLIENT,
-		ns:FormatCommaNumber(itemCounts[STATUS_NOT_LOADED]),
-		STATUS_NOT_LOADED
-	)
-	if run.questCount > 0 then
-		tally = tally
-			.. string.format(
-				" // %s quest ids // %s %s // %s %s",
-				ns:FormatCommaNumber(run.questCount),
-				ns:FormatCommaNumber(questCounts[STATUS_OK]),
-				STATUS_OK,
-				ns:FormatCommaNumber(questCounts[STATUS_NO_TITLE]),
-				STATUS_NO_TITLE
-			)
-	end
-
-	local lines = { GetClientHeader(), tally, "" }
-
-	if run.itemCount > 0 then
-		local tooltipColumns = { "TOOLTIP_LINES" }
-		for index = 1, run.maxTooltipLines do
-			tooltipColumns[#tooltipColumns + 1] = "TOOLTIP_" .. index
-		end
-		AppendHeaderRow(lines, ITEM_COLUMNS, run.headers.item, EXTRA_ITEM_COLUMNS, tooltipColumns)
-
-		for index, entry in ipairs(run.ids) do
-			if entry.kind == "item" then
-				local cells = run.rows[index]
-				local tooltip = run.tooltips[index] or {}
-				cells[#cells + 1] = tostring(#tooltip)
-				for line = 1, run.maxTooltipLines do
-					cells[#cells + 1] = CellText(tooltip[line])
-				end
-				lines[#lines + 1] = table.concat(cells, "\t")
-			end
-		end
-	end
-
-	if run.questCount > 0 then
-		if run.itemCount > 0 then
-			lines[#lines + 1] = ""
-		end
-		AppendHeaderRow(lines, QUEST_COLUMNS, run.headers.quest)
-		for index, entry in ipairs(run.ids) do
-			if entry.kind == "quest" then
-				lines[#lines + 1] = table.concat(run.rows[index], "\t")
-			end
-		end
-	end
-
+	local lines = { GetClientHeader(), "" }
+	AppendKindBlock(lines, run, "item", JoinColumns(ITEM_COLUMNS, run.headers.item, EXTRA_ITEM_COLUMNS))
+	AppendKindBlock(lines, run, "quest", JoinColumns(QUEST_COLUMNS, run.headers.quest))
 	run.finished = true
 	ReleaseRun(run)
 	PublishValidation(fileIndex, table.concat(lines, "\n"))
@@ -1317,70 +1401,58 @@ end
 local PollValidation
 
 --[[
-    The first sweep. An item id the client does not know is flagged on the
-    spot, a cached item or a quest with a title is exported on the spot, and
-    everything else is requested from the server and left for the polls below.
+    Opens the next batch: an item id the client does not know is flagged on the
+    spot, and everything else is requested and left for the polls.
 ]]
-local function SweepValidation(fileIndex, run)
+local function StartBatch(fileIndex, run)
+	run.batch = run.batch + 1
+	run.idlePolls = 0
+	run.pending = {}
 	local last = math.min(run.cursor + VALIDATE_BATCH_SIZE, #run.ids)
 	for index = run.cursor + 1, last do
 		local entry = run.ids[index]
-		if entry.kind == "quest" then
-			if QuestTitle(entry.id) then
-				ResolveRow(run, index, STATUS_OK)
-			else
-				if type(RequestLoadQuest) == "function" then
-					pcall(RequestLoadQuest, entry.id)
-				end
-				run.pending[#run.pending + 1] = index
-			end
-		elseif not ItemExistsOnClient(entry.id) then
+		if entry.kind == "item" and not ItemExistsOnClient(entry.id) then
 			ResolveRow(run, index, STATUS_NOT_ON_CLIENT)
-		elseif GetItemInfo(entry.id) then
-			ResolveRow(run, index, STATUS_OK)
 		else
-			C_Item.RequestLoadItemDataByID(entry.id)
+			RequestEntry(entry)
 			run.pending[#run.pending + 1] = index
 		end
 	end
 	run.cursor = last
-
-	if run.cursor < #run.ids then
-		PublishValidation(fileIndex, ProgressText(run))
-		ScheduleValidation(fileIndex, run, VALIDATE_TICK_SECONDS, SweepValidation)
-	elseif #run.pending > 0 then
-		PublishValidation(fileIndex, ProgressText(run))
-		ScheduleValidation(fileIndex, run, VALIDATE_RETRY_SECONDS, PollValidation)
-	else
-		FinishValidation(fileIndex, run)
-	end
-end
-
-local function IsAnswered(entry)
-	if entry.kind == "quest" then
-		return QuestTitle(entry.id) ~= nil
-	end
-	return GetItemInfo(entry.id) ~= nil
+	PublishValidation(fileIndex, ProgressText(run))
+	ScheduleValidation(fileIndex, run, VALIDATE_POLL_SECONDS, PollValidation)
 end
 
 function PollValidation(fileIndex, run)
-	run.retries = run.retries + 1
 	local stillPending = {}
+	local settled = 0
 	for _, index in ipairs(run.pending) do
-		local entry = run.ids[index]
-		if IsAnswered(entry) then
+		if IsSettled(run.ids[index]) then
 			ResolveRow(run, index, STATUS_OK)
-		elseif run.retries >= VALIDATE_MAX_RETRIES then
-			ResolveRow(run, index, entry.kind == "quest" and STATUS_NO_TITLE or STATUS_NOT_LOADED)
+			settled = settled + 1
 		else
 			stillPending[#stillPending + 1] = index
 		end
 	end
 	run.pending = stillPending
+	run.idlePolls = settled > 0 and 0 or run.idlePolls + 1
+
+	if #run.pending > 0 and run.idlePolls >= VALIDATE_MAX_IDLE_POLLS then
+		for _, index in ipairs(run.pending) do
+			ResolveRow(run, index, UnsettledStatus(run.ids[index]))
+		end
+		run.pending = {}
+	elseif #run.pending > 0 and run.idlePolls > 0 and run.idlePolls % VALIDATE_REASK_POLLS == 0 then
+		for _, index in ipairs(run.pending) do
+			RequestEntry(run.ids[index])
+		end
+	end
 
 	if #run.pending > 0 then
 		PublishValidation(fileIndex, ProgressText(run))
-		ScheduleValidation(fileIndex, run, VALIDATE_RETRY_SECONDS, PollValidation)
+		ScheduleValidation(fileIndex, run, VALIDATE_POLL_SECONDS, PollValidation)
+	elseif run.cursor < #run.ids then
+		StartBatch(fileIndex, run)
 	else
 		FinishValidation(fileIndex, run)
 	end
@@ -1396,31 +1468,21 @@ function ns:StartDataValidation(fileIndex)
 	validations[fileIndex] = run
 
 	run.generation = run.generation + 1
-	run.file = entry.file
-	run.ids, run.headers = CollectIds(entry)
+	run.ids, run.headers, run.missing = CollectIds(entry)
 	run.rows = {}
-	run.tooltips = {}
 	run.pending = {}
-	run.maxTooltipLines = 0
-	run.itemCount, run.questCount = 0, 0
-	for _, id in ipairs(run.ids) do
-		if id.kind == "quest" then
-			run.questCount = run.questCount + 1
-		else
-			run.itemCount = run.itemCount + 1
-		end
-	end
-	run.counts = {
-		item = { [STATUS_OK] = 0, [STATUS_NOT_ON_CLIENT] = 0, [STATUS_NOT_LOADED] = 0 },
-		quest = { [STATUS_OK] = 0, [STATUS_NO_TITLE] = 0 },
-	}
 	run.cursor = 0
 	run.resolved = 0
-	run.retries = 0
+	run.batch = 0
+	run.batchCount = math.max(1, math.ceil(#run.ids / VALIDATE_BATCH_SIZE))
+	run.idlePolls = 0
 	run.finished = false
 
-	PublishValidation(fileIndex, ProgressText(run))
-	SweepValidation(fileIndex, run)
+	if #run.ids == 0 then
+		FinishValidation(fileIndex, run)
+		return
+	end
+	StartBatch(fileIndex, run)
 end
 
 --[[
@@ -1444,7 +1506,7 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Answers "the minimap button is gone / off-screen" reports: screen size, UI
+    Answers "the mini-map button is gone / off-screen" reports: screen size, UI
     scale, and the button's saved placement. Read-only.
 ]]
 function ns:BuildDisplayContextReport()
@@ -1540,43 +1602,13 @@ local function DumpTable(value, indent, depth, lines)
 end
 
 --[[
-    Dumps the single AceDB-managed table (profiles, profileKeys, global) so a
-    player can paste their exact configuration. Every player-managed item list is
-    replaced with a length summary rather than printing each itemId: these lists
-    are described by their size, never reproduced row by row, so a long one
-    cannot bury the settings a bug report is actually about.
-
-    Keyed by name because both lists exist in two scopes -- the profile's and its
-    account-wide twin in global -- and the recursion meets each of them.
+    Dumps the single AceDB-managed table (profiles, profileKeys, char, global)
+    so a player can paste their exact configuration: every setting in each
+    profile, and every Protect List and Erase List row in both scopes.
 ]]
-local SUMMARIZED_LIST_KEYS = {
-	ignoreList = true,
-	eraseList = true,
-}
-
-local function SummarizeList(entry)
-	local count = CountKeys(entry)
-	return string.format("{ %d %s }", count, count == 1 and "entry" or "entries")
-end
-
-local function SummarizeForDump(value)
-	if type(value) ~= "table" then
-		return value
-	end
-	local copy = {}
-	for key, entry in pairs(value) do
-		if SUMMARIZED_LIST_KEYS[key] and type(entry) == "table" then
-			copy[key] = SummarizeList(entry)
-		else
-			copy[key] = SummarizeForDump(entry)
-		end
-	end
-	return copy
-end
-
 function ns:BuildSavedVariablesReport()
 	local lines = { GetClientHeader(), "", "MagicEraserDB = {" }
-	DumpTable(SummarizeForDump(MagicEraserDB or {}), "    ", 1, lines)
+	DumpTable(MagicEraserDB or {}, "    ", 1, lines)
 	lines[#lines + 1] = "}"
 	return table.concat(lines, "\n")
 end

@@ -5,7 +5,7 @@ local _, ns = ...
 --------------------------------------------------------------------------------
 
 local ipairs, select = ipairs, select
-local GetItemInfo = ns.GetItemInfo
+local GetItemInfo = C_Item.GetItemInfo
 
 local SELL_PRICE_INDEX = 11
 
@@ -26,7 +26,7 @@ local SELL_PRICE_INDEX = 11
 
     The eraser's own deletes never come through here. ns:PerformErase calls
     DeleteCursorItem only inside the player's own input (a mini-map click, a
-    press of the key binding, or the Yes on the eraser's confirmation dialog),
+    press of the erase binding, or the Yes on the eraser's confirmation dialog),
     so the client never asks -- which is exactly why the eraser carries its
     own confirmation instead, and also the clue to the constraint below.
 ]]
@@ -71,7 +71,7 @@ end
     gave it rather than losing it to a failed lookup.
 ]]
 local function CursorItemQualifies()
-	if not ns.db.global.manualDeleteNoValueOnly then
+	if not ns.db.profile.manualDeleteNoValueOnly then
 		return true
 	end
 
@@ -99,15 +99,12 @@ end
 ]]
 local function ClearDialog(dialog, editBox)
 	--[[
-	    Enable the accept button outright rather than typing the word and letting
-	    the dialog's own EditBoxOnTextChanged notice. Filling the box was tried
-	    first and does not enable anything -- the box empties and the button stays
-	    greyed, leaving an item that cannot be deleted at all -- because this
-	    client's edit box is the SetSecureText/ClearText widget, not a plain one,
-	    and its OnTextChanged does not fire for text set from code. Leatrix Plus
-	    enables the button directly for the same reason. The text goes in anyway,
-	    so the dialog's own state agrees with its button rather than contradicting
-	    it if anything re-reads it.
+	    Filling the box alone enables nothing: this client's edit box is the
+	    SetSecureText/ClearText widget, not a plain one, and its OnTextChanged does
+	    not fire for text set from code, so the button stays greyed and the item
+	    cannot be deleted at all. Enable the accept button outright instead, as
+	    Leatrix Plus does. The text goes in anyway, so the dialog's own state agrees
+	    with its button rather than contradicting it if anything re-reads it.
 	]]
 	editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
 	editBox:Hide()
@@ -173,17 +170,16 @@ end
     it looks like an oversight and is not. DeleteCursorItem requires a hardware
     event and allows one item per event, so no add-on can answer a delete dialog
     on the player's behalf: their click on Yes is the event that makes the delete
-    legal. Both routes were tried against a live client and both were refused, a
-    deferred DeleteCursorItem and a synchronous one, and the same wall is
-    documented by every add-on that solves this problem -- Leatrix Plus, Easy
-    Delete Confirm, and NoDeleteConfirm, whose author states outright that it
-    "cannot bypass Blizzard's protections". All of them remove the typing and stop
-    there. So does this.
+    legal. The client refuses a DeleteCursorItem from add-on code whether it is
+    deferred or synchronous, and every add-on that solves this problem documents
+    the same wall -- Leatrix Plus, Easy Delete Confirm, and NoDeleteConfirm, whose
+    author states outright that it "cannot bypass Blizzard's protections". All of
+    them remove the typing and stop there. So does this.
 
-    Answering the dialog is worse than useless, not merely ineffective. An earlier
-    build called StaticPopup_OnClick from a timer: the delete was silently dropped
-    while the dialog, which is not protected, hid itself anyway, leaving the item
-    alive and no longer deletable because its prompt was gone. Never reach for
+    Answering the dialog is worse than useless, not merely ineffective: a
+    StaticPopup_OnClick from code silently drops the delete while the dialog,
+    which is not protected, hides itself anyway, leaving the item alive and no
+    longer deletable because its prompt is gone. Never reach for
     StaticPopup_OnClick, the accept button, or OnAccept.
 
     That leaves the plain Yes/No pair with nothing to do -- no edit box to empty,
@@ -195,7 +191,7 @@ end
     next frame is the earliest the dialog is guaranteed to be up.
 ]]
 function ns:OnDeleteItemConfirm()
-	if not (ns.db and ns.db.global.manualDeleteAutoFillEnabled) then
+	if not (ns.db and ns.db.profile.manualDeleteAutoFillEnabled) then
 		return
 	end
 

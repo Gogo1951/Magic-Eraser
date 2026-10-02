@@ -10,34 +10,31 @@ local _, ns = ...
     Only wildcard defaults resolve lazily through metatables, and there are none
     here.
 
-    Each character gets its own AceDB profile (Core.lua creates ns.db without the
-    shared-Default flag), so the profile-scoped entries are the ones that are
-    naturally per-character: the two item lists, flat profile.ignoreList and
-    profile.eraseList (see ns:GetIgnoreList and ns:GetEraseList), plus the seed
-    marker below.
+    Three scopes, each for one kind of data:
 
-    eraseListSeeded records that ns:SeedEraseList has run for this character. It
-    has to be stored rather than inferred, because an empty erase list cannot
-    tell "the player cleared it out" from "never seeded" and every login would
-    put the rows back. It is profile-scoped so Reset Profile clears the marker
-    and the list together and the character seeds again.
+      - profile holds every setting. Core.lua opens ns.db with the shared-Default
+        flag, so every character on the account lands on the one Default
+        profile: a setting changed once applies everywhere. A player who wants a
+        one-off, such as a bank alt with Auto-Vend off, makes a new profile by
+        hand in the Profiles panel.
+      - char holds what belongs to one character whatever profile it is on: its
+        own Protect List (ignoreList) and Erase List (eraseList), and
+        eraseListSeeded, the marker that ns:SeedEraseList has run for it. The
+        marker has to be stored rather than inferred, because an empty erase
+        list cannot tell "the player cleared it out" from "never seeded" and
+        every login would put the rows back. classToken records the
+        character's class at each login, so the list panels can color its name
+        while another character is being played.
+      - global holds the All Characters twins of both lists, which apply on
+        every character at once, and minimap, so switching or resetting a
+        profile never moves the button.
 
-    Everything else lives under global: account-wide, identical on every toon,
-    and untouched by profile switches. That includes each list's account-wide
-    twin, global.ignoreList and global.eraseList, which apply on every character
-    at once; both pairs are additive, and ns:IsIgnored and ns:IsOnEraseList
-    answer for both scopes. minimap is global too, so switching or resetting a
-    profile never moves the button.
+    Both pairs of lists are additive: ns:IsIgnored and ns:IsOnEraseList answer
+    for both scopes. Features/Migrations.lua carries saved data from the old
+    per-character-profile shape into this one.
 ]]
 ns.DATABASE_DEFAULTS = {
 	profile = {
-		ignoreList = {},
-		eraseList = {},
-		eraseListSeeded = false,
-	},
-	global = {
-		ignoreList = {},
-		eraseList = {},
 		showWelcome = true,
 		tooltipWarningEnabled = true,
 		autoVendEnabled = true,
@@ -48,13 +45,27 @@ ns.DATABASE_DEFAULTS = {
 		bagsFullNudgeEnabled = false,
 		bagsFullThreshold = 4,
 		bankRetrievalEnabled = true,
-		safetyEnabled = false,
-		safetyQuest = true,
-		safetyConsumable = false,
-		safetyWhite = false,
-		safetyGray = false,
+		questAlertsEnabled = true,
+		eraseActions = {
+			quest = "erase",
+			questIneligible = "erase",
+			consumable = "erase",
+			ammo = "erase",
+			equipment = "erase",
+			gray = "erase",
+		},
 		manualDeleteAutoFillEnabled = true,
 		manualDeleteNoValueOnly = true,
+	},
+	char = {
+		ignoreList = {},
+		eraseList = {},
+		eraseListSeeded = false,
+		classToken = false,
+	},
+	global = {
+		ignoreList = {},
+		eraseList = {},
 		minimap = {},
 	},
 }
