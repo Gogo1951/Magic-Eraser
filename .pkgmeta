@@ -32,3 +32,6 @@ ignore:
   - .pkgmeta
   - .vscode
   - LICENSE
+  - Data/Wrath
+  - Data/Mists
+  - Data/Mainline
