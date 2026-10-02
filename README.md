@@ -55,6 +55,8 @@ Five kinds of clutter are in scope, plus anything on your Erase List. The quest,
 
 - Hover the button to see the item you're about to erase and what it's worth, whether Auto-Vend is on, a Clutter Report totalling the bag slots and gold still sitting in the trash pile, and everything you've told it to spare on this character.
 
+<img width="250" src="https://github.com/user-attachments/assets/83cc9c8d-e815-4b03-a385-4f3ea06e180d" />
+
 ### Key Bindings
 
 Set these under Key Bindings in the game menu, in the Magic Eraser section.
@@ -69,6 +71,8 @@ Set these under Key Bindings in the game menu, in the Magic Eraser section.
 - The two list keys work on anything you can hover: your bags, the bank, a merchant, the loot window. Chat confirms every press, and the item's tooltip in your bags updates while you're still hovering it.
 - Neither list key takes anything off a list, so a second press just tells you the item's already there. Protecting an item takes it off this character's Erase List, and an item on your Protect List stays protected until you remove it in the Options Interface.
 
+<img width="500" src="https://github.com/user-attachments/assets/e12ff917-7e3b-4b2c-81d6-a311e1b3fc81" />
+
 ### Auto-Vend & Bank Retrieval
 
 Both are on by default, both use the eraser's own junk rules, and both leave your Protect List alone.
@@ -77,6 +81,8 @@ Both are on by default, both use the eraser's own junk rules, and both leave you
 - Quest items have no sale value, so they're left for the eraser.
 - Bank Retrieval pulls flagged items out of your bank when you open it, most valuable first, and never more than your free bag slots can hold.
 - A chat line sums up each visit: what sold or came home, how many bag slots it touched, and what it was worth.
+
+<img width="250" src="https://github.com/user-attachments/assets/a055e043-2f13-4b51-8f10-3a964951e6a4" />
 
 ### Options
 
@@ -91,7 +97,7 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 - **Profiles** // Every character shares the **Default** profile, so a setting changed once applies everywhere. Make a new profile only for a one-off, such as a bank alt with Auto-Vend off. Each character's own Protect List and Erase List stay with it whatever profile it's on.
 - **Diagnostic Tools** // Reports to paste into a bug report. Off until you switch it on, and it never runs on its own.
 
-<img width="800" src="https://github.com/user-attachments/assets/303e0441-0002-4714-ba65-076bfa394e54" />
+<img width="800" src="https://github.com/user-attachments/assets/4835ad6a-0859-4a21-8c20-658e01cdee0e" />
 
 ## Testing & Localization Status
 
