@@ -3,19 +3,8 @@ local L = ns.L
 
 local format = string.format
 
-local GetColor = ns.GetColor
-local SubRow, SubLabel = ns.OptionsSubRow, ns.OptionsSubLabel
-
---[[
-    The manual-delete row is a caption beside a dropdown, the same shape as the
-    value cap's and bag-space rows, so it spends the same pair of widths and all
-    three line up with each other down the panel.
-]]
-local MANUAL_DELETE_LABEL_WIDTH = 1.3
-local MANUAL_DELETE_SELECT_WIDTH = 1.0
-
 local function ManualDeleteOff()
-	return not (ns.db and ns.db.global.manualDeleteAutoFillEnabled)
+	return not (ns.db and ns.db.profile.manualDeleteAutoFillEnabled)
 end
 
 --------------------------------------------------------------------------------
@@ -23,8 +12,8 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    A fragment of the Safety panel rather than a panel of its own: it adds its
-    widgets to the args table ns.BuildSafetyOptions hands it, and its order
+    A fragment of the Erasing panel rather than a panel of its own: it adds its
+    widgets to the args table ns.BuildErasingOptions hands it, and its order
     numbers are what place the section on that panel.
 
     This is the client's own delete prompt, not the eraser's -- see
@@ -32,48 +21,47 @@ end
     are separate sections.
 ]]
 function ns.BuildManualDeleteOptions(args)
-	args.spacerManualDelete0 = ns.OptionsSpacer(30)
-	args.headerManualDelete = ns.OptionsHeader(L["OPTIONS_MANUAL_DELETE_HEADER"], 31)
-	args.spacerManualDelete1 = ns.OptionsSpacer(32)
-	args.descManualDelete =
-		ns.OptionsDesc(format(L["OPTIONS_MANUAL_DELETE_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or ""), 33)
-	args.spacerManualDelete2 = ns.OptionsSpacer(34)
-
-	args.toggleManualDelete = {
-		type = "toggle",
-		name = GetColor("TEXT") .. L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] .. "|r",
-		width = "full",
-		order = 35,
-		get = function()
-			return ns.db and ns.db.global.manualDeleteAutoFillEnabled
-		end,
-		set = function(_, value)
-			ns.db.global.manualDeleteAutoFillEnabled = value
-		end,
-	}
+	args.spacerManualDelete0 = ns.OptionsSpacer(40)
+	args.headerManualDelete = ns.OptionsHeader(L["OPTIONS_MANUAL_DELETE_HEADER"], 41)
+	args.spacerManualDelete1 = ns.OptionsSpacer(42)
+	args.descManualDelete = ns.OptionsDesc(
+		format(L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or "", ITEM_QUALITY3_DESC),
+		43
+	)
+	args.spacerManualDelete2 = ns.OptionsSpacer(44)
 
 	--[[
-	    Hidden rather than greyed, which the sub-row carries for the whole row: a
-	    scope for a skip that is not happening is not a setting the player has any
-	    use for, and the section reads as one line until it has something to say.
+	    The switch and its scope share one line, the switch at
+	    ns.OPTIONS_LABEL_WIDTH where a caption would sit and the dropdown at
+	    ns.OPTIONS_CONTROL_WIDTH, the same shape as Maximum Value to Erase. The
+	    dropdown hides while the switch is off: a setting for a feature that is
+	    not running is not shown at all.
 	]]
-	args.rowManualDeleteScope = SubRow(36, ManualDeleteOff, {
-		ns.OptionsRowLabel(SubLabel(L["OPTIONS_MANUAL_DELETE_SCOPE"]), nil, MANUAL_DELETE_LABEL_WIDTH),
-		{
-			type = "select",
-			name = "",
-			width = MANUAL_DELETE_SELECT_WIDTH,
-			values = {
-				all = L["OPTIONS_MANUAL_DELETE_ALL"],
-				noValue = L["OPTIONS_MANUAL_DELETE_NO_VALUE"],
-			},
-			sorting = { "all", "noValue" },
-			get = function()
-				return (ns.db and ns.db.global.manualDeleteNoValueOnly) and "noValue" or "all"
-			end,
-			set = function(_, value)
-				ns.db.global.manualDeleteNoValueOnly = (value == "noValue")
-			end,
+	args.toggleManualDelete = ns.OptionsFeatureToggle(
+		"manualDeleteAutoFillEnabled",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC",
+		45,
+		ns.OPTIONS_LABEL_WIDTH
+	)
+
+	args.selectManualDeleteScope = {
+		type = "select",
+		name = "",
+		desc = L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"],
+		width = ns.OPTIONS_CONTROL_WIDTH,
+		order = 46,
+		hidden = ManualDeleteOff,
+		values = {
+			all = L["OPTIONS_MANUAL_DELETE_ALL"],
+			noValue = L["OPTIONS_MANUAL_DELETE_NO_VALUE"],
 		},
-	})
+		sorting = { "all", "noValue" },
+		get = function()
+			return (ns.db and ns.db.profile.manualDeleteNoValueOnly) and "noValue" or "all"
+		end,
+		set = function(_, value)
+			ns.db.profile.manualDeleteNoValueOnly = (value == "noValue")
+		end,
+	}
 end

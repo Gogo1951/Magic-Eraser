@@ -49,11 +49,12 @@ ns.EVENT_NAMES = {
 	"BANKFRAME_OPENED",
 	"BANKFRAME_CLOSED",
 	"PLAYER_REGEN_ENABLED",
+	"UPDATE_BINDINGS",
 }
 
 local EVENT_HANDLERS = {
 	PLAYER_LOGIN = "OnPlayerLogin",
-	PLAYER_ENTERING_WORLD = "OnEnteringWorld",
+	PLAYER_ENTERING_WORLD = "OnPlayerEnteringWorld",
 	PLAYER_LEVEL_UP = "OnPlayerLevelUp",
 	BAG_UPDATE_DELAYED = "OnBagUpdateDelayed",
 	QUEST_TURNED_IN = "OnQuestTurnedIn",
@@ -61,27 +62,50 @@ local EVENT_HANDLERS = {
 	MERCHANT_SHOW = "OnMerchantShow",
 	MERCHANT_CLOSED = "OnMerchantClosed",
 	MAIL_CLOSED = "OnMailClosed",
-	BANKFRAME_OPENED = "OnBankOpened",
-	BANKFRAME_CLOSED = "OnBankClosed",
-	PLAYER_REGEN_ENABLED = "OnCombatEnded",
+	BANKFRAME_OPENED = "OnBankframeOpened",
+	BANKFRAME_CLOSED = "OnBankframeClosed",
+	PLAYER_REGEN_ENABLED = "OnPlayerRegenEnabled",
+	UPDATE_BINDINGS = "OnUpdateBindings",
 }
 
 local updatePending = false
+local refreshAfterCombat = false
+
+function ns:PrintWelcome()
+	if not ns.db.profile.showWelcome then
+		return
+	end
+	ns:PrintMessage(L["CHAT_LOADED"]:format(ns.Version))
+end
 
 function ns:OnPlayerLogin()
-	ns.db = LibStub("AceDB-3.0"):New("MagicEraserDB", ns.DATABASE_DEFAULTS)
+	-- MIGRATION (remove after 2026-11-30)
+	-- On the raw table, before AceDB picks each character's profile.
+	ns:MigrateSavedVariables()
+
+	--[[
+	    The third argument puts every character on one shared Default profile,
+	    so a setting changed once applies everywhere; a player who needs a
+	    one-off makes a profile by hand. Each character's own lists live in
+	    char, not the profile, so they stay per-character whatever profile is
+	    active (see Data/Default-Settings.lua).
+	]]
+	ns.db = LibStub("AceDB-3.0"):New("MagicEraserDB", ns.DATABASE_DEFAULTS, true)
+
+	local _, classToken = UnitClass("player")
+	ns.db.char.classToken = classToken or false
 
 	ns:RegisterOptionsPanels()
 
 	--[[
-	    A profile holds this character's two item lists and the Erase List seed
-	    marker, so a reset, a switch and a Copy From all mean the same thing here:
-	    the lists the erase candidate is computed from just changed, so re-scan.
-	    None of the three touches the account-wide settings, which live in global,
-	    outside the profile scope AceDB resets.
+	    A profile holds the settings, so a reset, a switch and a Copy From all
+	    mean the same thing here: the rules the erase candidate is computed from
+	    may have just changed, so re-scan and repaint. None of the three touches
+	    the item lists, which live in char and global, outside the profile scope
+	    AceDB resets.
 	]]
 	for _, message in ipairs({ "OnProfileChanged", "OnProfileReset", "OnProfileCopied" }) do
-		ns.db.RegisterCallback(ns, message, "OnProfileSwitched")
+		ns.db.RegisterCallback(ns, message, "ApplyProfile")
 	end
 
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
@@ -89,9 +113,7 @@ function ns:OnPlayerLogin()
 		LibDBIcon:Register(ADDON_NAME, ns.LDBObject, ns.db.global.minimap)
 	end
 
-	if ns.db.global.showWelcome then
-		ns:PrintMessage(L["CHAT_LOADED"]:format(ns.Version))
-	end
+	ns:PrintWelcome()
 
 	--[[
 	    Put another class's reagents on this character's Erase List, once, the
@@ -131,23 +153,22 @@ function ns:OnPlayerLogin()
 end
 
 --[[
-    The seed runs here as well as at login, because a switch lands on a profile
-    that may never have been seeded and a reset clears the marker along with the
-    list. Both cases mean this character is owed its seed now rather than at next
-    login. A Copy From carries the source profile's marker, so it does not
-    re-seed, which is right: the player asked for that character's list verbatim.
+    Every registered panel is repainted, so whatever is open redraws against the
+    new profile's settings. The Erase List seed isn't involved: its marker lives
+    in char with the list, so a profile change never re-seeds.
 ]]
-function ns:OnProfileSwitched()
-	ns:SeedEraseList()
+function ns:ApplyProfile()
+	ns:InvalidateCache()
 	ns:RefreshDisplay()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.EraseList)
+	for _, registryName in pairs(ns.OPTIONS_REGISTRY) do
+		AceConfigRegistry:NotifyChange(registryName)
+	end
 end
 
 --[[
-    Consumable eligibility is gated on the player's level (see
-    GetConsumableEraseLevel in Eraser.lua), so leveling up can newly qualify
-    outgrown food. Re-scan on level-up so the candidate reflects the new level
+    Consumable and ammo eligibility is gated on the player's level (see
+    GetConsumableEraseLevel and GetAmmoEraseLevel in Junk-Rules.lua), so leveling
+    up can newly qualify outgrown food or ammo. Re-scan on level-up so the candidate reflects the new level
     immediately instead of waiting for the next bag update or quest turn-in to
     happen to fire.
 ]]
@@ -156,27 +177,61 @@ function ns:OnPlayerLevelUp()
 	ns:RefreshDisplay()
 end
 
+--[[
+    The debounced half of BAG_UPDATE_DELAYED. Nothing can be erased in combat,
+    so there the two full bag walks, the mini-map repaint and the quest-starter
+    check, wait for PLAYER_REGEN_ENABLED; dropping the cache is enough meanwhile,
+    because hovering the mini-map button rescans on demand.
+]]
+local function ProcessBagUpdate()
+	updatePending = false
+	ns:InvalidateCache()
+
+	if InCombatLockdown() then
+		refreshAfterCombat = true
+	else
+		ns:RefreshDisplay()
+		ns:CheckQuestStarters()
+	end
+
+	--[[
+	    Bag-space warning counts down (4, 3, 2, 1...) as the bags fill, but only
+	    when no merchant, mailbox or bank window is open -- see
+	    CheckBagsFullNudge and OnMerchantClosed/OnMailClosed/OnBankframeClosed,
+	    which defer the check to when the window closes.
+	]]
+	if not ns:IsBagWindowOpen() then
+		ns:CheckBagsFullNudge()
+	end
+end
+
 function ns:OnBagUpdateDelayed()
 	if not updatePending then
 		updatePending = true
-		C_Timer.After(0.1, function()
-			ns:InvalidateCache()
-			ns:RefreshDisplay()
-			updatePending = false
-
-			ns:CheckQuestStarters()
-
-			--[[
-                Bag-space warning counts down (4, 3, 2, 1...) as the bags fill,
-                but only when no merchant, mailbox or bank window is open -- see
-                CheckBagsFullNudge and OnMerchantClosed/OnMailClosed/OnBankClosed,
-                which defer the check to when the window closes.
-            ]]
-			if not ns:IsBagWindowOpen() then
-				ns:CheckBagsFullNudge()
-			end
-		end)
+		C_Timer.After(0.1, ProcessBagUpdate)
 	end
+end
+
+--[[
+    PLAYER_REGEN_ENABLED. Replays the bag walks a fight held back, then lets
+    Auto-Vend resume a merchant pass that combat deferred.
+]]
+function ns:OnPlayerRegenEnabled()
+	if refreshAfterCombat then
+		refreshAfterCombat = false
+		ns:RefreshDisplay()
+		ns:CheckQuestStarters()
+	end
+	ns:ResumeDeferredVend()
+end
+
+--[[
+    UPDATE_BINDINGS. The root panel shows each binding's key or Not Bound, and
+    the player changes them in the game's own Key Bindings list, so repaint the
+    panel when they come back from it.
+]]
+function ns:OnUpdateBindings()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
 end
 
 --[[

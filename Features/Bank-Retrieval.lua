@@ -8,24 +8,7 @@ local L = ns.L
 local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local UseContainerItem = C_Container.UseContainerItem
-local GetItemInfo = ns.GetItemInfo
-
---[[
-    The bank this scans is BANK_CONTAINER plus the purchasable bank bags,
-    assumed to sit directly above the carried bags in the container index space;
-    nothing else is scanned. Built once at load, starting one past the shared
-    carried-bag range (ns.LAST_BAG_INDEX in Data/Data.lua) and falling back on
-    the bank's own constants the same way, so a missing global can never quietly
-    scan nothing.
-]]
-local BANK_CONTAINERS = {}
-do
-	local carriedBags = ns.LAST_BAG_INDEX
-	BANK_CONTAINERS[1] = BANK_CONTAINER or -1
-	for bag = carriedBags + 1, carriedBags + (NUM_BANKBAGSLOTS or 6) do
-		BANK_CONTAINERS[#BANK_CONTAINERS + 1] = bag
-	end
-end
+local GetItemInfo = C_Item.GetItemInfo
 
 --[[
     The bank containers read empty for a moment after BANKFRAME_OPENED while the
@@ -97,10 +80,10 @@ local function GetMoveBudget()
 	if not free then
 		return 0
 	end
-	if not (ns.db and ns.db.global.bagsFullNudgeEnabled) then
+	if not (ns.db and ns.db.profile.bagsFullNudgeEnabled) then
 		return free
 	end
-	return free - (ns.db.global.bagsFullThreshold or 0)
+	return free - (ns.db.profile.bagsFullThreshold or 0)
 end
 
 --------------------------------------------------------------------------------
@@ -258,7 +241,7 @@ local function ScanBank(generation)
 	wipe(moveQueue)
 	moveIndex = 0
 
-	for _, bag in ipairs(BANK_CONTAINERS) do
+	for _, bag in ipairs(ns.BANK_CONTAINERS) do
 		local slotCount = GetContainerNumSlots(bag) or 0
 		for slot = 1, slotCount do
 			local itemInfo = GetContainerItemInfo(bag, slot)
@@ -348,8 +331,8 @@ end
     captures BANKFRAME_OPENED and BANKFRAME_CLOSED too.
 ]]
 
-function ns:OnBankOpened()
-	if not (ns.db and ns.db.global.bankRetrievalEnabled) then
+function ns:OnBankframeOpened()
+	if not (ns.db and ns.db.profile.bankRetrievalEnabled) then
 		return
 	end
 
@@ -367,7 +350,7 @@ function ns:OnBankOpened()
 	end)
 end
 
-function ns:OnBankClosed()
+function ns:OnBankframeClosed()
 	--[[
 	    Ending through FinishPass rather than clearing the state here is what
 	    lets a pass cut short by the player closing the window still report what

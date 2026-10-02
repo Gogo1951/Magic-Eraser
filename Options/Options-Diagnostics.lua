@@ -59,10 +59,11 @@ end
 local function AddValidateDataSections(args, startOrder)
 	local order = startOrder
 	for index, entry in ipairs(ns.DIAGNOSTIC_DATA_SOURCES) do
-		args["headerValidate" .. index] = SectionHeader(string.format(D.VALIDATE_TITLE, entry.file), order)
+		args["headerValidate" .. index] =
+			SectionHeader(string.format(D.VALIDATE_TITLE, ns.DataSourceFileName(entry)), order)
 		args["buttonValidate" .. index] = {
 			type = "execute",
-			name = string.format(D.VALIDATE_BUTTON, entry.file),
+			name = string.format(D.VALIDATE_BUTTON, entry.label),
 			order = order + 1,
 			hidden = Hidden,
 			func = function()

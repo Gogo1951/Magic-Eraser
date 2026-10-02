@@ -26,8 +26,14 @@ local L = ns.L
 
     There is no drop target. The game closes the bags and the bank when the
     options interface opens, so there is no way to have an item on the cursor and
-    this panel in front of you at the same time; typing or shift-clicking an id
-    into the add box is the only path that can actually work.
+    this panel in front of you at the same time. The Add from Bags picker stands
+    in for it, listing what the player carries; typing or shift-clicking an id
+    into the add box covers everything else.
+
+    Players see this as the Protect List. The code keeps the Ignore List name
+    (ignoreList, ns:IsIgnored, the IgnoreList registry key and the binding's
+    name attribute), because renaming saved keys would cost every player their
+    list and every bound key.
 ]]
 
 --[[
@@ -66,7 +72,10 @@ local function BuildScopeArgs(scopeKey)
 		onRemove = function(itemId)
 			ns:SetIgnoredInScope(scopeKey, itemId, false)
 		end,
+		addFromBags = true,
 		labels = {
+			fromBagsName = L["OPTIONS_LIST_ADD_FROM_BAGS"],
+			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"],
 			addName = L["OPTIONS_LIST_ADD_ID"],
 			addHelp = L["OPTIONS_LIST_ADD_ID_DESCRIPTION"],
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
@@ -108,29 +117,38 @@ function ns.BuildIgnoreListOptions()
 
 	--[[
 	    Keyed by scope, not by position: the tree remembers the selected node by
-	    its arg key, so a key that moved when a profile appeared or dropped out of
+	    its arg key, so a key that moved when a character appeared or dropped out of
 	    the list would silently reselect a different character.
 	]]
 	args[ns.LIST_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_LIST_GLOBAL"], 3, ns.LIST_SCOPE_GLOBAL)
 
-	if ns.db then
-		local profiles = ns.db:GetProfiles()
-		table.sort(profiles)
+	--[[
+	    A blank, unclickable row between All Characters and the characters.
+	    Disabled tree rows take no mouse input, so it can never be selected.
+	]]
+	args.spacerCharacters = {
+		type = "group",
+		name = " ",
+		order = 4,
+		disabled = true,
+		args = {},
+	}
 
-		local currentProfile = ns.db:GetCurrentProfile()
+	if ns.db then
+		local currentCharacter = ns.db.keys.char
 		local order = 10
 
-		for _, profileName in ipairs(profiles) do
+		for _, charKey in ipairs(ns:GetCharacterKeys()) do
 			--[[
 			    A character with nothing ignored is noise in the tree, so it is
 			    left out -- except for the character playing right now, whose
-			    list has to be reachable to put a first item in it. Profile names
-			    are character keys ("Name - Realm") and are never localized, so
-			    they are shown as-is and sorted as plain strings.
+			    list has to be reachable to put a first item in it. Character
+			    keys ("Name - Realm") are never localized, so they are shown
+			    as-is in their class color and sorted as plain strings.
 			]]
-			local ignoreList = ns:GetIgnoreListForScope(profileName)
-			if profileName == currentProfile or (ignoreList and next(ignoreList) ~= nil) then
-				args[profileName] = ScopeGroup(profileName, order, profileName)
+			local ignoreList = ns:GetIgnoreListForScope(charKey)
+			if charKey == currentCharacter or (ignoreList and next(ignoreList) ~= nil) then
+				args[charKey] = ScopeGroup(ns:GetCharacterDisplayName(charKey), order, charKey)
 				order = order + 1
 			end
 		end
