@@ -68,7 +68,7 @@ function ns.BuildAutoVendOptions(args)
 	args.toggleAutoVend = ns.OptionsFeatureToggle(
 		"autoVendEnabled",
 		"OPTIONS_ENABLE_AUTO_VEND",
-		"OPTIONS_ENABLE_AUTO_VEND_DESC",
+		"OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION",
 		15,
 		ns.OPTIONS_LABEL_WIDTH
 	)
@@ -76,7 +76,7 @@ function ns.BuildAutoVendOptions(args)
 	args.selectAutoVendReport = {
 		type = "select",
 		name = "",
-		desc = L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESC"],
+		desc = L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"],
 		width = ns.OPTIONS_CONTROL_WIDTH,
 		order = 16,
 		hidden = AutoVendOff,

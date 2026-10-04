@@ -6,11 +6,11 @@ local _, ns = ...
 
 -- MIGRATION (remove after 2026-11-30)
 --[[
-    One pass that brings a MagicEraserDB saved before storage version 2 into
-    the current shape. It runs on the raw saved table, from ns:OnPlayerLogin,
-    before AceDB-3.0 opens it, because the profile a character lands on is
-    decided the moment AceDB opens the table, and the old per-character profiles
-    have to be gone by then.
+    Brings a MagicEraserDB saved before storage version 2 into the current
+    shape. It runs on the raw saved table, from ns:OnPlayerLogin, before
+    AceDB-3.0 opens it, because the profile a character lands on is decided
+    the moment AceDB opens the table, and the old per-character profiles have
+    to be gone by then.
 
     The old shape: every character had its own AceDB profile ("Name - Realm")
     holding only its two item lists and the Erase List seed marker, and every
@@ -32,27 +32,12 @@ local _, ns = ...
          before this, global was the only place a setting was read from, so
          it is the value the player actually had.
       3. Turn the old confirmation switch (safetyEnabled over four per-kind
-         toggles) into Ask First on the kinds that asked. A missing safetyQuest
-         means its old default, true.
+         toggles) into Erase Confirmation when any kind asked. A missing
+         safetyQuest means its old default, true.
       4. Clear the lists out of every profile, drop the profiles that are now
          empty, and point every character at Default.
-
-    storageVersion marks it done. It is needed rather than inferred: once
-    settings live in profiles, a player's own one-off profile that happens to
-    hold only defaults is stored empty, and step 4 would otherwise send its
-    characters back to Default on every login. A fresh install, with no saved
-    table yet, is stamped current rather than migrated, so its second login
-    never runs the steps either.
 ]]
-local STORAGE_VERSION = 2
-
-local LEGACY_SAFETY_KEYS = {
-	quest = "safetyQuest",
-	questIneligible = "safetyQuest",
-	consumable = "safetyConsumable",
-	equipment = "safetyWhite",
-	gray = "safetyGray",
-}
+local LEGACY_SAFETY_KEYS = { "safetyQuest", "safetyConsumable", "safetyWhite", "safetyGray" }
 
 local function CopyList(from, to)
 	if type(from) ~= "table" then
@@ -95,20 +80,20 @@ local function MoveSettingsToDefault(sv)
 	end
 
 	local settings = sv.global
-	if settings.safetyEnabled then
-		default.eraseActions = default.eraseActions or {}
-		for reason, key in pairs(LEGACY_SAFETY_KEYS) do
+	if settings.safetyEnabled and default.eraseConfirmEnabled == nil then
+		for _, key in ipairs(LEGACY_SAFETY_KEYS) do
 			local asked = settings[key]
 			if asked == nil then
 				asked = (key == "safetyQuest")
 			end
-			if asked and default.eraseActions[reason] == nil then
-				default.eraseActions[reason] = ns.ERASE_ACTION_ASK
+			if asked then
+				default.eraseConfirmEnabled = true
+				break
 			end
 		end
 	end
 	settings.safetyEnabled = nil
-	for _, key in pairs(LEGACY_SAFETY_KEYS) do
+	for _, key in ipairs(LEGACY_SAFETY_KEYS) do
 		settings[key] = nil
 	end
 end
@@ -135,6 +120,49 @@ local function RetireCharacterProfiles(sv)
 	end
 end
 
+local function MigrateToVersion2(sv)
+	MoveListsToCharacters(sv)
+	MoveSettingsToDefault(sv)
+	RetireCharacterProfiles(sv)
+end
+
+-- MIGRATION (remove after 2026-11-03)
+--[[
+    Storage version 3: the per-kind erase action ("erase", "ask" or "keep" in
+    profile.eraseActions) became a junkKinds checkbox per kind plus one
+    eraseConfirmEnabled switch. Every profile is converted, a player's own
+    one-offs included: a kind set to Keep comes in unchecked, and any kind set
+    to Ask First turns Erase Confirmation on, so nobody loses a confirmation
+    they chose. AceDB stores only values that differ from the defaults, so
+    eraseActions holds nothing but "ask" and "keep" rows.
+]]
+local function MigrateToVersion3(sv)
+	for _, profile in pairs(sv.profiles or {}) do
+		if type(profile) == "table" and type(profile.eraseActions) == "table" then
+			for reason, action in pairs(profile.eraseActions) do
+				if action == "keep" then
+					profile.junkKinds = profile.junkKinds or {}
+					profile.junkKinds[reason] = false
+				elseif action == "ask" then
+					profile.eraseConfirmEnabled = true
+				end
+			end
+			profile.eraseActions = nil
+		end
+	end
+end
+
+-- MIGRATION (remove after 2026-11-30)
+--[[
+    storageVersion marks which steps have run. It is needed rather than
+    inferred: once settings live in profiles, a player's own one-off profile
+    that happens to hold only defaults is stored empty, and version 2's last
+    step would otherwise send its characters back to Default on every login. A
+    fresh install, with no saved table yet, is stamped current rather than
+    migrated, so its second login never runs the steps either.
+]]
+local STORAGE_VERSION = 3
+
 function ns:MigrateSavedVariables()
 	local sv = MagicEraserDB
 	if type(sv) ~= "table" then
@@ -142,16 +170,21 @@ function ns:MigrateSavedVariables()
 		return
 	end
 	sv.global = sv.global or {}
-	if (sv.global.storageVersion or 0) >= STORAGE_VERSION then
+	local version = sv.global.storageVersion or 0
+	if version >= STORAGE_VERSION then
 		return
 	end
 
 	sv.profiles = sv.profiles or {}
 	sv.char = sv.char or {}
 
-	MoveListsToCharacters(sv)
-	MoveSettingsToDefault(sv)
-	RetireCharacterProfiles(sv)
+	if version < 2 then
+		MigrateToVersion2(sv)
+	end
+	-- MIGRATION (remove after 2026-11-03)
+	if version < 3 then
+		MigrateToVersion3(sv)
+	end
 
 	sv.global.storageVersion = STORAGE_VERSION
 end

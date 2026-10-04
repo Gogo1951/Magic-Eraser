@@ -95,18 +95,8 @@ local function ValueCell(value, order)
 	return TextOnly(text, VALUE_WIDTH, order)
 end
 
---[[
-    Why the row counts as junk, with "Asks First" when the Erasing panel says
-    so, in place of the reason, since that is the thing the player needs to
-    know before they click.
-]]
 local function ReasonCell(candidate, order)
-	local text
-	if ns:NeedsSafetyConfirm(candidate) then
-		text = GetColor("TITLE") .. L["REASON_ASKS_FIRST"] .. "|r"
-	else
-		text = GetColor("HELP") .. L[REASON_TAG_KEYS[candidate.deleteReason] or "REASON_MANUAL"] .. "|r"
-	end
+	local text = GetColor("HELP") .. L[REASON_TAG_KEYS[candidate.deleteReason] or "REASON_MANUAL"] .. "|r"
 	return TextOnly(text, REASON_WIDTH, order)
 end
 
@@ -114,7 +104,7 @@ local function ProtectButton(candidate, order)
 	return {
 		type = "execute",
 		name = L["OPTIONS_PROTECT_BUTTON"],
-		desc = L["OPTIONS_PROTECT_BUTTON_DESC"],
+		desc = L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"],
 		width = BUTTON_WIDTH,
 		order = order,
 		func = function()
@@ -282,7 +272,8 @@ local function AddEverythingInBags(args, startOrder)
 				erase = {
 					type = "toggle",
 					name = "",
-					desc = eraseGlobal and L["OPTIONS_CHECK_ERASE_GLOBAL_DESC"] or L["OPTIONS_CHECK_ERASE_DESC"],
+					desc = eraseGlobal and L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"]
+						or L["OPTIONS_CHECK_ERASE_DESCRIPTION"],
 					width = ROW_CHECK_WIDTH,
 					order = 3,
 					disabled = eraseGlobal or protectGlobal,
@@ -296,7 +287,8 @@ local function AddEverythingInBags(args, startOrder)
 				protect = {
 					type = "toggle",
 					name = "",
-					desc = protectGlobal and L["OPTIONS_CHECK_PROTECT_GLOBAL_DESC"] or L["OPTIONS_CHECK_PROTECT_DESC"],
+					desc = protectGlobal and L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"]
+						or L["OPTIONS_CHECK_PROTECT_DESCRIPTION"],
 					width = ROW_CHECK_WIDTH,
 					order = 4,
 					disabled = protectGlobal,
@@ -343,7 +335,7 @@ function ns.BuildYourCurrentBagsOptions()
 				erase = {
 					type = "execute",
 					name = L["OPTIONS_ERASE_BUTTON"],
-					desc = L["OPTIONS_ERASE_BUTTON_DESC"],
+					desc = L["OPTIONS_ERASE_BUTTON_DESCRIPTION"],
 					width = BUTTON_WIDTH,
 					order = 4,
 					func = function()

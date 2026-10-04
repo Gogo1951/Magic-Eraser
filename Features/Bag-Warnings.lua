@@ -86,16 +86,13 @@ end
     from landing at the moment the player made room, and opening and closing a
     window without touching the bags stays quiet for the same reason.
 
-    The baseline is taken before the remaining guards, so a tick that prints
-    nothing -- held after a loading screen, or above the threshold -- still
-    tracks the bags and cannot leave a stale reading behind for a later check to
-    measure a phantom drop against.
+    The baseline is taken before the remaining guards, the enable switch
+    included, so a tick that prints nothing -- warnings off, held after a
+    loading screen, or above the threshold -- still tracks the bags and cannot
+    leave a stale reading behind for a later check to measure a phantom drop
+    against.
 ]]
 function ns:CheckBagsFullNudge()
-	if not (ns.db and ns.db.profile.bagsFullNudgeEnabled) then
-		return
-	end
-
 	local free = ns:CountFreeBagSlots()
 	if not free then
 		-- Containers have no data yet: the answer is unknown, not full.
@@ -104,6 +101,10 @@ function ns:CheckBagsFullNudge()
 
 	local previousFree = lastSeenFree
 	lastSeenFree = free
+
+	if not (ns.db and ns.db.profile.bagsFullNudgeEnabled) then
+		return
+	end
 
 	-- Idle for a moment after each loading screen while the bags repopulate.
 	if GetTime() < bagWarningsHeldUntil then

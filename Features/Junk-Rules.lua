@@ -6,7 +6,7 @@ local _, ns = ...
 
 local GetItemInfo = C_Item.GetItemInfo
 local GetItemSpell = C_Item.GetItemSpell
-local GetItemStats = C_Item.GetItemStats
+local GetItemStats = ns.GetItemStats
 local ipairs = ipairs
 
 --[[
@@ -231,27 +231,27 @@ local function IsWhiteGearTrash(itemId)
 end
 
 --------------------------------------------------------------------------------
--- Erase Actions
+-- Junk Kinds
 --------------------------------------------------------------------------------
 
 --[[
-    The player's choice for one kind of junk, from the Erasing panel's rows: see
-    ns.ERASE_KINDS in Data/Data.lua. An Erase List entry has no row and always
-    erases, and anything unreadable falls back to erasing, the default for
-    every kind.
+    Whether the player counts one kind as junk, from the Erasing panel's
+    checkboxes: see ns.ERASE_KINDS in Data/Data.lua. An Erase List entry has no
+    checkbox and is always junk, and anything unreadable counts as junk, the
+    default for every kind.
 ]]
-function ns:GetEraseAction(deleteReason)
+function ns:IsJunkKind(deleteReason)
 	if deleteReason == "manual" then
-		return ns.ERASE_ACTION_ERASE
+		return true
 	end
-	local actions = ns.db and ns.db.profile.eraseActions
-	return (actions and actions[deleteReason]) or ns.ERASE_ACTION_ERASE
+	local kinds = ns.db and ns.db.profile.junkKinds
+	return not (kinds and kinds[deleteReason] == false)
 end
 
 --[[
-    The rules half of the verdict. ns:GetItemDeleteReason below adds the
-    player's Keep choices on top, so this only ever answers what the curated
-    data and the gray and white-gear rules say.
+    The rules half of the verdict. ns:GetItemDeleteReason below drops the kinds
+    the player unchecked, so this only ever answers what the curated data and
+    the gray and white-gear rules say.
 ]]
 local function GetRuleDeleteReason(itemId, rarity, sellPrice)
 	--[[
@@ -315,13 +315,13 @@ end
 
 --[[
     The verdict every scanner, the tooltip and Auto-Vend share. A kind the player
-    set to Keep is not junk anywhere, so it drops out here rather than at each
+    unchecked is not junk anywhere, so it drops out here rather than at each
     caller: never erased, never sold, never pulled from the bank, and never
     marked in a tooltip.
 ]]
 function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	local deleteReason = GetRuleDeleteReason(itemId, rarity, sellPrice)
-	if deleteReason and ns:GetEraseAction(deleteReason) == ns.ERASE_ACTION_KEEP then
+	if deleteReason and not ns:IsJunkKind(deleteReason) then
 		return nil
 	end
 	return deleteReason

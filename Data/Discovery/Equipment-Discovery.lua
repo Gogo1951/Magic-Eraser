@@ -34,6 +34,7 @@ QUEST TURN-INS rows are Wowhead's white quest turn-in gear with a sell
 price for this client, read 2026-10-02:
 https://www.wowhead.com/classic/items/quality:1/slot:16:5:8:10:1:23:7:21:2:22:13:15:26:14:3:17:6:9?filter=85%3A195%3A64%3B1%3A1%3A1%3B0%3A0%3A1
 ]]
+-- TODO: Add SQL Query
 -- [itemId] = true, -- Item Name
 ns.KEEP_EQUIPMENT = {
 	--------------------------------------------------------------------------------

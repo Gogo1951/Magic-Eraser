@@ -6,6 +6,7 @@ ns.L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 --------------------------------------------------------------------------------
 
 ns.ADDON_TITLE = ns.L["ADDON_TITLE"]
+ns.SAVED_VARIABLES_NAME = "MagicEraserDB"
 ns.DEFAULT_ICON = "Interface/Icons/inv_misc_bag_07_green"
 
 --------------------------------------------------------------------------------
@@ -268,30 +269,30 @@ ns.COPPER_PER_GOLD = 10000
 ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
 
 --------------------------------------------------------------------------------
--- Erase Actions
+-- Junk Kinds
 --------------------------------------------------------------------------------
 
 --[[
-    What the eraser does with each kind of junk when it comes up next, keyed by
-    the delete reason ns:GetItemDeleteReason returns. "erase" takes it without
-    asking, "ask" shows the confirmation first, and "keep" stops the kind
-    counting as junk at all -- never erased, sold, or pulled from the bank.
-    "manual" is absent on purpose: an Erase List entry always goes, unasked.
+    The kinds of junk the Erasing panel draws a checkbox for, keyed by the
+    delete reason ns:GetItemDeleteReason returns. "manual" is absent on
+    purpose: an Erase List entry is always junk.
 
-    The rows are listed in the order the Erasing panel draws them, each with the
-    locale keys for its caption and tooltip. They are string values rather than
-    literal L["..."] reads; search the key name, not the L[] form.
+    The rows are listed in the order the panel draws them, each with the locale
+    keys for its caption, its tooltip and its Your Current Bags tag. They are
+    string values rather than literal L["..."] reads; search the key name, not
+    the L[] form.
 ]]
-ns.ERASE_ACTION_ERASE = "erase"
-ns.ERASE_ACTION_ASK = "ask"
-ns.ERASE_ACTION_KEEP = "keep"
-
 ns.ERASE_KINDS = {
 	-- { deleteReason, labelKey, descKey, tagKey }
-	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESC", "REASON_QUEST" },
-	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_UNAVAILABLE_DESC", "REASON_QUEST_INELIGIBLE" },
-	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESC", "REASON_OUTGROWN" },
-	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESC", "REASON_OUTGROWN" },
-	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESC", "REASON_EQUIPMENT" },
-	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESC", "REASON_GRAY" },
+	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESCRIPTION", "REASON_QUEST" },
+	{
+		"questIneligible",
+		"OPTIONS_KIND_STARTER",
+		"OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION",
+		"REASON_QUEST_INELIGIBLE",
+	},
+	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION", "REASON_OUTGROWN" },
+	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION", "REASON_OUTGROWN" },
+	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION", "REASON_EQUIPMENT" },
+	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION", "REASON_GRAY" },
 }

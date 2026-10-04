@@ -53,7 +53,7 @@ function ns.BuildBagWarningsOptions(args)
 	args.toggleBagsFullNudge = ns.OptionsFeatureToggle(
 		"bagsFullNudgeEnabled",
 		"OPTIONS_ENABLE_BAGS_FULL_WARNINGS",
-		"OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC",
+		"OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION",
 		35,
 		nil,
 		NotifyMerchantBank
@@ -64,7 +64,7 @@ function ns.BuildBagWarningsOptions(args)
 		{
 			type = "range",
 			name = "",
-			desc = L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"],
+			desc = L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"],
 			width = BAGS_FULL_RANGE_WIDTH,
 			min = 1,
 			max = 10,

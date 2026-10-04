@@ -30,7 +30,7 @@ function ns.BuildQuestItemAlertsOptions(args)
 	args.toggleQuestAlerts = ns.OptionsFeatureToggle(
 		"questAlertsEnabled",
 		"OPTIONS_ENABLE_QUEST_ALERTS",
-		"OPTIONS_ENABLE_QUEST_ALERTS_DESC",
+		"OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION",
 		25
 	)
 

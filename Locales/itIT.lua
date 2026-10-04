@@ -20,6 +20,7 @@ L["CHAT_OPTIONS_IN_COMBAT"] =
 	"Per sicurezza, il pannello delle opzioni non può essere aperto durante il combattimento."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"Per sicurezza, l'elenco delle assegnazioni tasti non può essere aperto durante il combattimento."
+L["KEY_BINDINGS_LOCATION"] = "Apri il menu di gioco, poi %s, poi %s, e cerca la sezione Magic Eraser."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Non puoi eliminare oggetti durante il combattimento."
@@ -124,10 +125,10 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Oggetto di esempio"
 L["OPTIONS_DESCRIPTION"] =
 	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi con un clic sul pulsante della minimappa. Una lista di spazzatura curata a mano protegge ciò che ti serve, mentre la Vendita automatica vende il resto dal prossimo mercante."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
-L["OPTIONS_ENABLE_WELCOME_DESC"] =
+L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra in chat un messaggio di benvenuto di una riga con la versione ogni volta che accedi."
 L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
-L["OPTIONS_ENABLE_MINIMAP_DESC"] =
+L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 	"Mostra il pulsante di Magic Eraser sulla minimappa. La sua icona è il prossimo oggetto in coda, e passandoci sopra il mouse vedi il Rapporto spazzatura."
 
 -- Features
@@ -140,10 +141,9 @@ L["OPTIONS_COMMAND_DESCRIPTION"] = "Apre il pannello delle opzioni di questo add
 
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Assegnazione tasti"
-L["OPTIONS_KEY_NOT_BOUND"] = "Non assegnato"
 L["OPTIONS_KEY_SET"] = "Assegna tasto"
-L["OPTIONS_KEY_SET_DESC"] = "Apre l'elenco delle assegnazioni tasti del gioco, dove Magic Eraser ha una sua sezione."
-L["KEY_BINDINGS_LOCATION"] = "Apri il menu di gioco, poi %s, poi %s, e cerca la sezione Magic Eraser."
+L["OPTIONS_KEY_SET_DESCRIPTION"] =
+	"Apre l'elenco delle assegnazioni tasti del gioco, dove Magic Eraser ha una sua sezione."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Elimina il prossimo oggetto in coda, come un clic sinistro sul pulsante della minimappa. Non c'è anteprima prima di premere il tasto, quindi assegnalo a un tasto che non premeresti per sbaglio."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
@@ -169,10 +169,10 @@ L["OPTIONS_UP_NEXT"] = "Prossimo"
 L["OPTIONS_CLUTTER_TOTAL"] = "Totale"
 L["OPTIONS_STACKS"] = "(%d pile)"
 L["OPTIONS_ERASE_BUTTON"] = "Elimina"
-L["OPTIONS_ERASE_BUTTON_DESC"] =
-	"Elimina il prossimo oggetto in coda, esattamente come un clic sinistro sul pulsante della minimappa."
+L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
+	"Elimina il prossimo oggetto in coda, come un clic sinistro sul pulsante della minimappa."
 L["OPTIONS_PROTECT_BUTTON"] = "Proteggi"
-L["OPTIONS_PROTECT_BUTTON_DESC"] =
+L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
 	"Aggiunge questo oggetto alla Lista protetti di questo personaggio, così non viene mai eliminato né venduto."
 
 -- Everything in Your Bags
@@ -183,13 +183,13 @@ L["OPTIONS_COLUMN_ITEM"] = "Oggetto"
 L["OPTIONS_COLUMN_TYPE"] = "Tipo"
 L["OPTIONS_COLUMN_ERASE"] = "Elimina"
 L["OPTIONS_COLUMN_PROTECT"] = "Proteggi"
-L["OPTIONS_CHECK_ERASE_DESC"] =
+L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
 	"Mette questo oggetto nella Lista eliminazione di questo personaggio, così è sempre spazzatura, qualunque sia il suo valore. Lo toglie dalla Lista protetti di questo personaggio."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
 	"Questo oggetto è in una lista Tutti i personaggi. Modificalo nella pagina Lista eliminazione o Lista protetti, perché quella lista vale per ogni personaggio."
-L["OPTIONS_CHECK_PROTECT_DESC"] =
+L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
 	"Mette questo oggetto nella Lista protetti di questo personaggio, così non viene mai eliminato né venduto. Lo toglie dalla Lista eliminazione di questo personaggio."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
 	"Questo oggetto è nella Lista protetti di Tutti i personaggi. Modificalo nella pagina Lista protetti, perché quella lista vale per ogni personaggio."
 
 -- Why an item counts as junk, beside it in the queue.
@@ -199,7 +199,6 @@ L["REASON_OUTGROWN"] = "Superato"
 L["REASON_EQUIPMENT"] = "Oggetto bianco"
 L["REASON_GRAY"] = "Grigio"
 L["REASON_MANUAL"] = "Lista eliminazione"
-L["REASON_ASKS_FIRST"] = "Chiede prima"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -212,38 +211,35 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Cosa conta come spazzatura"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Scegli quali tipi di oggetti vengono eliminati. Per perfezionare la scelta, aggiungi un oggetto alla tua Lista protetti per tenerlo sempre, o alla tua Lista eliminazione per eliminarlo sempre."
+	"Scegli quali tipi di oggetti vengono eliminati. Sono regole generali, quindi per perfezionarle aggiungi un oggetto alla tua Lista protetti per tenerlo sempre, o alla tua Lista eliminazione per eliminarlo sempre."
 L["OPTIONS_KIND_QUEST"] = "Oggetti di missioni completate"
-L["OPTIONS_KIND_QUEST_DESC"] = "Oggetti che avanzano dopo aver consegnato l'ultima missione che li richiede."
+L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Oggetti che avanzano dopo aver consegnato l'ultima missione che li richiede."
 L["OPTIONS_KIND_STARTER"] = "Avvii di missione inaccessibili"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESC"] =
+L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"Oggetti che avviano una missione che la tua razza o classe non potrà mai accettare."
 L["OPTIONS_KIND_FOOD"] = "Cibo e bevande superati"
-L["OPTIONS_KIND_FOOD_DESC"] =
+L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
 	"Cibo e bevande dieci livelli oltre il livello in cui potevi usarli per la prima volta. Pane e acqua iniziali se ne vanno al livello 5."
 L["OPTIONS_KIND_AMMO"] = "Frecce e proiettili superati"
-L["OPTIONS_KIND_AMMO_DESC"] =
+L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Frecce e proiettili non appena puoi usarne un tipo migliore venduto dai mercanti. Le migliori munizioni da mercante per il tuo livello non vengono mai eliminate."
 L["OPTIONS_KIND_WHITE"] = "Armi e armature bianche"
-L["OPTIONS_KIND_WHITE_DESC"] =
+L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Armi e armature bianche che un mercante compra. Strumenti di professione, camicie, abiti eleganti e oggetti bianchi ancora richiesti da una missione vengono tenuti."
 L["OPTIONS_KIND_GRAY"] = "Spazzatura grigia"
-L["OPTIONS_KIND_GRAY_DESC"] = "Qualsiasi oggetto grigio che un mercante compra."
-L["OPTIONS_KIND_ERASE"] = "Elimina"
-L["OPTIONS_KIND_ASK"] = "Elimina, chiedi prima"
-L["OPTIONS_KIND_KEEP"] = "Tieni"
-L["OPTIONS_KIND_ACTION_DESC"] =
-	"Elimina lo elimina senza chiedere. Elimina, chiedi prima mostra un Sì o No prima di eliminarlo. Tieni significa che non è spazzatura: mai eliminato, venduto o prelevato dalla banca. Gli oggetti nella tua Lista eliminazione se ne vanno sempre senza chiedere, qualunque sia il loro valore."
-L["OPTIONS_KINDS_ALL_KEPT"] =
-	"Ogni tipo è impostato su Tieni, quindi vengono eliminati o venduti solo gli oggetti della tua Lista eliminazione."
+L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Qualsiasi oggetto grigio che un mercante compra."
+L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
+	"Se non è spuntato, non è spazzatura: mai eliminato, venduto o prelevato dalla banca."
+L["OPTIONS_KINDS_NONE_CHECKED"] =
+	"Nessun tipo è spuntato, quindi vengono eliminati o venduti solo gli oggetti della tua Lista eliminazione."
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Valore massimo da eliminare"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Non elimina mai un oggetto o una pila che valga più del limite impostato sotto."
 L["OPTIONS_ENABLE_VALUE_CAP"] = "Abilita valore massimo da eliminare"
-L["OPTIONS_ENABLE_VALUE_CAP_DESC"] =
+L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Attiva o disattiva il limite di valore. La Vendita automatica vende comunque ciò che viene trattenuto, e la tua Lista eliminazione non è soggetta al limite."
-L["OPTIONS_VALUE_CAP_LIMIT_DESC"] =
+L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Le pile che valgono più di questo, contando il valore di vendita dell'intera pila, non vengono mai eliminate."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d oro"
 
@@ -252,12 +248,19 @@ L["OPTIONS_MANUAL_DELETE_HEADER"] = "Assistenza all'eliminazione manuale"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Per impostazione predefinita, il gioco ti fa digitare "%s" quando elimini un oggetto %s o superiore. Questo trasforma la richiesta in un semplice Sì o No.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Abilita assistenza all'eliminazione manuale"
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC"] =
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
 	"Attiva o disattiva l'Assistenza all'eliminazione manuale. Il gioco chiede comunque Sì o No; sparisce solo la digitazione."
-L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"] =
+L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Oggetti senza valore di vendita semplifica solo gli oggetti che nessun mercante compra. Tutti gli oggetti semplifica ogni richiesta da digitare."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tutti gli oggetti"
 L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Oggetti senza valore di vendita"
+
+-- Erase Confirmation
+L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Conferma eliminazione"
+L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "Chiede Sì o No prima di eliminare qualsiasi cosa."
+L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Abilita conferma eliminazione"
+L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
+	"Mostra un Sì o No prima di ogni eliminazione, dal pulsante della minimappa, dal tasto assegnato o da Le tue borse attuali, inclusi gli oggetti nella tua Lista eliminazione."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -268,12 +271,12 @@ L["TAB_MERCHANT_BANK_DESCRIPTION"] =
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Abilita Vendita automatica"
-L["OPTIONS_ENABLE_AUTO_VEND_DESC"] =
+L["OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION"] =
 	"Attiva o disattiva la vendita ai mercanti. Gli oggetti nella tua Lista protetti non vengono mai venduti."
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Riepilogo in chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Ogni vendita in chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Nessun resoconto in chat"
-L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESC"] =
+L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
 	"Cosa scrive in chat la Vendita automatica. Riepilogo in chat scrive un totale per visita. Ogni vendita in chat scrive ogni vendita, poi il totale. Nessun resoconto in chat non scrive nulla."
 
 -- Bank Retrieval
@@ -281,7 +284,7 @@ L["OPTIONS_BANK_HEADER"] = "Prelievo dalla banca"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Preleva la spazzatura dalla tua banca quando la apri, così può essere venduta o eliminata insieme al resto. Preleva solo dalla tua banca personale, mai da una banca di gilda o da una banca condivisa dall'account."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Abilita prelievo dalla banca"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESC"] =
+L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Attiva o disattiva il prelievo dalla banca. Non preleva mai più di quanto possano contenere i tuoi slot borse liberi."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Lascia liberi %d slot borse, perché gli Avvisi di spazio nelle borse sono attivi."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Lascia libero 1 slot borsa, perché gli Avvisi di spazio nelle borse sono attivi."
@@ -297,7 +300,7 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Avvisi nelle descrizioni"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Aggiunge una riga alla descrizione di qualsiasi oggetto nelle tue borse che Magic Eraser potrebbe eliminare, o che la tua Lista protetti protegge."
 L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita avvisi nelle descrizioni"
-L["OPTIONS_ENABLE_TOOLTIPS_DESC"] =
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] =
 	"Attiva o disattiva la riga di Magic Eraser nelle descrizioni degli oggetti nelle borse."
 
 -- Quest Item Alerts
@@ -305,7 +308,7 @@ L["OPTIONS_QUEST_ALERTS_HEADER"] = "Avvisi oggetti di missione"
 L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Ti avvisa non appena un Oggetto di missioni completate o un Avvio di missione inaccessibile nelle tue borse può essere eliminato in sicurezza."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Abilita avvisi oggetti di missione"
-L["OPTIONS_ENABLE_QUEST_ALERTS_DESC"] =
+L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
 	"Attiva o disattiva questi messaggi. Gli Oggetti di missioni completate e gli Avvii di missione inaccessibili vengono eliminati comunque."
 
 -- Bag-Space Warnings
@@ -313,9 +316,9 @@ L["OPTIONS_BAGS_FULL_HEADER"] = "Avvisi di spazio nelle borse"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Ti avvisa mentre si riempiono i tuoi ultimi slot borse liberi. Resta in silenzio mentre è aperta la finestra di un mercante, della cassetta postale o della banca."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Abilita avvisi di spazio nelle borse"
-L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC"] = "Attiva o disattiva il conto alla rovescia in chat."
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Attiva o disattiva il conto alla rovescia in chat."
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Soglia di slot liberi"
-L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
+L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Quanti slot liberi fanno partire il conto alla rovescia. Mentre gli avvisi sono attivi, anche il Prelievo dalla banca lascia liberi altrettanti slot."
 
 --------------------------------------------------------------------------------
@@ -325,7 +328,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "Tutti i personaggi"
 L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Aggiungi dalle borse"
-L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"] =
+L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"Scegli qualsiasi cosa tu abbia con te. Le borse si chiudono quando si apre il pannello delle opzioni, quindi questo sostituisce il trascinamento di un oggetto qui."
 L["OPTIONS_LIST_ADD_ID"] = "Aggiungi tramite ID oggetto"
 L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
@@ -354,7 +357,7 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Sposta questo oggetto nella lista Tutti i personaggi, così viene eliminato su ogni personaggio, anche su quelli per cui non era mai stato aggiunto."
 L["OPTIONS_ERASE_RESTORE"] = "Ripristina predefiniti"
-L["OPTIONS_ERASE_RESTORE_DESC"] =
+L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Riporta la Lista eliminazione di questo personaggio agli oggetti con cui Magic Eraser la fa partire."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"Svuotare la Lista eliminazione di questo personaggio e rimettere solo gli oggetti con cui Magic Eraser ti fa partire? Tutto ciò che hai aggiunto tu viene rimosso."

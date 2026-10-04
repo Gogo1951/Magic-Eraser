@@ -40,18 +40,35 @@ ns.GetDisplayedItem = (TooltipUtil and TooltipUtil.GetDisplayedItem) or function
 end
 
 --------------------------------------------------------------------------------
+-- Item Stats
+--------------------------------------------------------------------------------
+
+--[[
+    An item's stat table from its link. WoW Forever ships C_Item.GetItemStats;
+    Classic Era and TBC Anniversary have only the legacy global GetItemStats,
+    which returns the same table. Resolved once at load, modern first; both are
+    rows in the Diagnostic Tools API report.
+]]
+ns.GetItemStats = C_Item.GetItemStats or GetItemStats
+
+--------------------------------------------------------------------------------
 -- Tooltip Text
 --------------------------------------------------------------------------------
 
 --[[
-    An item's tooltip as plain lines, a right-hand column kept after " >> ".
-    C_TooltipInfo hands the lines over as data where the client ships its
-    GetItemByID getter; elsewhere they are read off a hidden tooltip that is
-    never shown. Color escapes are stripped so each line reads as its words.
-    Resolved once at load. A read can throw on an odd item, so callers protect it.
+    An item's or spell's tooltip as plain lines, a right-hand column kept after
+    " >> ". kind is "item" or "spell". C_TooltipInfo hands the lines over as
+    data where the client ships its GetItemByID and GetSpellByID getters (WoW
+    Forever); elsewhere they are read off a hidden tooltip that is never shown
+    (Classic Era and TBC Anniversary). Color escapes are stripped so each line
+    reads as its words. Resolved once at load. A read can throw on an odd id, so
+    callers protect it.
 ]]
 local SCAN_TOOLTIP_NAME = "MagicEraserScanTooltip"
-local GetTooltipItemData = C_TooltipInfo and C_TooltipInfo.GetItemByID
+local TOOLTIP_DATA_GETTERS = C_TooltipInfo
+	and C_TooltipInfo.GetItemByID
+	and C_TooltipInfo.GetSpellByID
+	and { item = C_TooltipInfo.GetItemByID, spell = C_TooltipInfo.GetSpellByID }
 local scanTooltip
 
 local function PlainText(text)
@@ -70,22 +87,22 @@ local function JoinTooltipLine(left, right)
 	return left
 end
 
-local function ReadTooltipData(itemId)
+local function ReadTooltipData(kind, id)
 	local lines = {}
-	local data = GetTooltipItemData(itemId)
+	local data = TOOLTIP_DATA_GETTERS[kind](id)
 	for _, line in ipairs(data and data.lines or {}) do
 		lines[#lines + 1] = JoinTooltipLine(line.leftText, line.rightText)
 	end
 	return lines
 end
 
-local function ReadScanTooltip(itemId)
+local function ReadScanTooltip(kind, id)
 	if not scanTooltip then
 		scanTooltip = CreateFrame("GameTooltip", SCAN_TOOLTIP_NAME, nil, "GameTooltipTemplate")
 	end
 	scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 	scanTooltip:ClearLines()
-	scanTooltip:SetHyperlink("item:" .. itemId)
+	scanTooltip:SetHyperlink(kind .. ":" .. id)
 	local lines = {}
 	for index = 1, scanTooltip:NumLines() do
 		local left = _G[SCAN_TOOLTIP_NAME .. "TextLeft" .. index]
@@ -96,7 +113,7 @@ local function ReadScanTooltip(itemId)
 	return lines
 end
 
-ns.GetItemTooltipLines = GetTooltipItemData and ReadTooltipData or ReadScanTooltip
+ns.GetTooltipLines = TOOLTIP_DATA_GETTERS and ReadTooltipData or ReadScanTooltip
 
 --------------------------------------------------------------------------------
 -- Formatting
@@ -107,7 +124,7 @@ local format, insert, floor = string.format, table.insert, math.floor
 --[[
     An item link without the square brackets around its name, which is how
     Magic Eraser shows every item: Options rows and pickers, the mini-map
-    tooltip, the Ask First dialog and its chat lines. Only the brackets inside
+    tooltip, the Erase Confirmation dialog and its chat lines. Only the brackets inside
     a hyperlink's |h...|h text go; the link itself still hovers, clicks and
     shift-clicks as before, and any other text passes through untouched.
 ]]
@@ -207,10 +224,14 @@ end
 
 --[[
     Every container the player carries, built once at load: the backpack and
-    the equippable bags, then the reagent bag where the client defines one (WoW
-    Forever does, as container 5). Every carried-bag scan walks this list, and
-    ns.IS_CARRIED_BAG answers the range tests. ns:CountFreeBagSlots above stays
-    on the general bags, since ordinary loot can't go in a reagent bag.
+    the equippable bags, then the reagent bag on clients that number their bank
+    as character bank tabs (WoW Forever, where container 5 is a reagent bag).
+    Classic Era and TBC Anniversary define Enum.BagIndex.ReagentBag as 5 too,
+    but their own BankFrame.lua numbers bank bag N as container N +
+    NUM_BAG_SLOTS, so 5 there is the first bank bag and never carried. Every
+    carried-bag scan walks this list, and ns.IS_CARRIED_BAG answers the range
+    tests. ns:CountFreeBagSlots above stays on the general bags, since ordinary
+    loot can't go in a reagent bag.
 ]]
 ns.CARRIED_BAGS = {}
 ns.IS_CARRIED_BAG = {}
@@ -218,7 +239,8 @@ do
 	for bag = 0, BAG_SLOTS do
 		ns.CARRIED_BAGS[#ns.CARRIED_BAGS + 1] = bag
 	end
-	local reagentBag = Enum.BagIndex and Enum.BagIndex.ReagentBag
+	local bagIndex = Enum.BagIndex
+	local reagentBag = bagIndex and bagIndex.CharacterBankTab_1 and bagIndex.ReagentBag
 	if reagentBag then
 		ns.CARRIED_BAGS[#ns.CARRIED_BAGS + 1] = reagentBag
 	end
@@ -303,5 +325,5 @@ function ns:GetCharacterDisplayName(charKey)
 	if not hex then
 		return charKey
 	end
-	return "|cff" .. hex .. charKey .. "|r"
+	return COLOR_PREFIX .. hex .. charKey .. "|r"
 end

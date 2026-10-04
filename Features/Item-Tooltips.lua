@@ -17,8 +17,8 @@ local GetItemInfo = C_Item.GetItemInfo
     quest-completion check included. Purely read-only.
 
     Two hook paths, because the tooltip API differs across the flavors we target:
-    modern clients expose the data-driven TooltipDataProcessor; others lack it and
-    instead get a hooksecurefunc on GameTooltip:SetBagItem. Hooking the setter (not
+    WoW Forever's GameTooltip is data-driven and runs TooltipDataProcessor
+    post-calls; the others instead get a hooksecurefunc on GameTooltip:SetBagItem. Hooking the setter (not
     the shared OnTooltipSetItem script) means our line is added AFTER other add-ons'
     OnTooltipSetItem rebuilds, so a heavy tooltip add-on like TSM that clears and
     re-fills the tooltip can't wipe our line. Only one path is ever active, so the
@@ -139,8 +139,21 @@ local function AddEraserWarning(tooltip, itemId, stackCount)
 	return true
 end
 
+--[[
+    The data-driven path needs both halves: TooltipDataProcessor to register
+    with, and a GameTooltip that runs its setters through ProcessInfo. TBC
+    Anniversary loads TooltipDataProcessor but its GameTooltip never mixes in
+    the data handler (only WoW Forever's Mainline GameTooltip does, per
+    wow-ui-source), so a post-call registered there never fires.
+]]
+local function IsTooltipDataDriven()
+	return TooltipDataProcessor
+		and TooltipDataProcessor.AddTooltipPostCall
+		and type(GameTooltip.ProcessInfo) == "function"
+end
+
 function ns.SetupTooltipHooks()
-	if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall then
+	if IsTooltipDataDriven() then
 		--[[
 		    Modern data-driven hook. Fires for any item tooltip, so gate to bag
 		    slots (data.id is the itemID; see Enum.TooltipDataType.Item).
@@ -154,12 +167,14 @@ function ns.SetupTooltipHooks()
 		end)
 	else
 		--[[
-		    Clients without TooltipDataProcessor: hook the bag-item setter.
-		    hooksecurefunc wraps whatever GameTooltip:SetBagItem currently is, so it
-		    runs after the wrapped function returns. Because this is registered late
-		    (see below), we wrap OTHER add-ons' hooks/wrappers -- TSM replaces the
-		    tooltip setters with prehook/orig/posthook wrappers on these clients --
-		    landing outermost, so our line is added last and survives their rebuilds.
+		    Clients whose GameTooltip isn't data-driven (Classic Era, TBC
+		    Anniversary): hook the bag-item setter. hooksecurefunc wraps whatever
+		    GameTooltip:SetBagItem currently is, so it runs after the wrapped
+		    function returns. Because this is registered late (ns:OnPlayerLogin in
+		    Core.lua defers it a frame), we wrap OTHER add-ons' hooks/wrappers --
+		    TSM replaces the tooltip setters with prehook/orig/posthook wrappers on
+		    these clients -- landing outermost, so our line is added last and
+		    survives their rebuilds.
 		    Bag-scoped: the bag arg is the container, and anything not in
 		    ns.IS_CARRIED_BAG, bank bags included, is excluded, so no owner
 		    sniffing is needed.
