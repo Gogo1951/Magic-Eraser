@@ -12,10 +12,11 @@ local _, ns = ...
     deliberately adds Fish Oil to their own list is obeyed instead of silently
     overridden.
 
-    Hand-maintained, and never added to one of the four tables beside it that
-    carry SQL queries: those files are regenerated from their queries, and a
-    hand-added row does not survive the next regeneration. An id no query can
-    express belongs in a file no query rewrites.
+    Hand-maintained, and never added to the regenerated tables beside it
+    (Consumables, Quest-Items and Quest-Starting-Items from SQL queries, Ammo
+    from DB2 exports): a hand-added row does not survive the next
+    regeneration. An id no source can express belongs in a file nothing
+    regenerates.
 
     Copied from Data/TBC/ until Validate Data passes on this client.
 ]]
