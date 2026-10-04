@@ -28,7 +28,7 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 ### What Gets Erased
 
-Five kinds of clutter are in scope, plus anything on your Erase List. The quest, food and ammo lists behind them are hand-curated, and white gear and grays go by rule.
+Six kinds of clutter are in scope, plus anything on your Erase List. The quest, food and ammo lists behind them are hand-curated, and white gear and grays go by rule.
 
 | Clutter | When it goes |
 | --- | --- |
@@ -36,10 +36,12 @@ Five kinds of clutter are in scope, plus anything on your Erase List. The quest,
 | Dead-end quest starters | The moment it drops, when the quest is closed to your race or class. A Paladin-only Tome of Divinity in a Rogue's bags is fair game right away. |
 | Outgrown food and drink | Ten levels past the point you could first use it. Starter bread and water go at level 5 rather than squatting in your bags until 11. |
 | Outgrown arrows and bullets | The moment you can use a better kind sold by vendors: Rough Arrows at 10 when Sharp Arrows unlock, Sharp Arrows at 25 for Razor Arrows, and so on. The best vendor ammo for your level is never touched. |
-| Vendor-quality whites and gray trash | White weapons and armor, plus any gray, whenever a vendor will buy it. Profession tools, shirts, formal wear and whites a quest still needs are left alone. |
+| White weapons and armor | Whenever a vendor will buy them. Profession tools, shirts, formal wear and whites a quest still needs are left alone. |
+| Gray trash | Any gray, whenever a vendor will buy it. |
 
 - The cheapest stack goes first. When two are worth the same, priority breaks the tie: your Erase List first, then quest items, then gray trash, then food, ammo and gear.
-- Each kind above can be set to **Erase**, **Erase, Ask First** or **Keep** on the Erasing page. Keep takes that kind out of the junk pile everywhere: never erased, sold or pulled from the bank.
+- Each kind above has its own checkbox on the Erasing page. Uncheck one and that kind leaves the junk pile everywhere: never erased, sold or pulled from the bank.
+- Want a Yes or No before anything goes? Turn on Erase Confirmation and every erase asks first, Erase List included.
 - Anything on your Protect List is skipped everywhere, and nothing is erased while you're in combat.
 - Your Erase List flags what the built-in lists and rules never will, whatever it's worth. Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every non-Shaman starts with both already listed and a Shaman starts with neither.
 
@@ -67,7 +69,7 @@ Set these under Key Bindings in the game menu, in the Magic Eraser section.
 | Add Hovered Item to Protect List | Protect the item under your mouse on this character. |
 | Add Hovered Item to Erase List | Flag the item under your mouse as junk on this character, whatever it's worth. |
 
-- Use the erase key at your own risk: the button shows you what's next before you click, a key doesn't, and a stray keypress erases just as surely as a deliberate one.
+- Use the erase key at your own risk: the button shows you what's next before you click, a key doesn't, and unless Erase Confirmation is on, a stray keypress erases just as surely as a deliberate one.
 - The two list keys work on anything you can hover: your bags, the bank, a merchant, the loot window. Chat confirms every press, and the item's tooltip in your bags updates while you're still hovering it.
 - Neither list key takes anything off a list, so a second press just tells you the item's already there. Protecting an item takes it off this character's Erase List, and an item on your Protect List stays protected until you remove it in the Options Interface.
 
@@ -89,7 +91,7 @@ Both are on by default, both use the eraser's own junk rules, and both leave you
 Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`.
 
 - **General** // The welcome message and mini-map button, a switch for every feature, and your key bindings, with each one's key or Not Bound.
-- **Erasing** // What counts as junk (**Erase**, **Erase, Ask First** or **Keep** for each kind), a maximum value to erase, and Manual Delete Assistance.
+- **Erasing** // What counts as junk (a checkbox for each kind), a maximum value to erase, Manual Delete Assistance, and Erase Confirmation.
 - **Merchant & Bank** // Auto-Vend and its chat report, and Bank Retrieval.
 - **Alerts & Tooltips** // Tooltip warnings, quest item alerts, and a bag-space countdown as your last free slots fill.
 - **Protect List** and **Erase List** // One pane per character, plus an All Characters list that applies everywhere. Pick an item straight from your bags, or add one by item ID.
@@ -126,11 +128,11 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 
 ### 🟢 Pairs With
 
+* Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
 * plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 * Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/consumable-connoisseur)
 * Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
-* Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 
 ### 🟡 Overlaps
 
