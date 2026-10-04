@@ -300,22 +300,11 @@ function ns:PerformErase(item)
 		local stackString = (item.count > 1) and format(" x%d", item.count) or ""
 
 		--[[
-		    One complete sentence per outcome rather than a stem plus a glued-on
-		    clause, so a translation can place the "worth" and "from a quest"
-		    wording wherever its language wants it.
+		    Just the item, never its value or why it went. Quest leftovers already
+		    got their "can now be safely erased" alert, so repeating the reason is
+		    noise, and the price of something gone for good only stings.
 		]]
-		local message
-		if item.deleteReason == "quest" then
-			message = format(L["ERASED_ITEM_FROM_QUEST"], item.link, stackString)
-		elseif item.deleteReason == "questIneligible" then
-			message = format(L["ERASED_ITEM_QUEST_UNAVAILABLE"], item.link, stackString)
-		elseif item.value > 0 then
-			message = format(L["ERASED_ITEM_WITH_VALUE"], item.link, stackString, ns:FormatCurrency(item.value))
-		else
-			message = format(L["ERASED_ITEM"], item.link, stackString)
-		end
-
-		self:PrintMessage(message)
+		self:PrintMessage(format(L["ERASED_ITEM"], item.link, stackString))
 
 		ns:InvalidateCache()
 		C_Timer.After(0.2, function()

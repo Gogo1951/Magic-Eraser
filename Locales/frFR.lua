@@ -30,10 +30,6 @@ L["CURSOR_TOO_FAST"] = "Doucement ! Vous cliquez plus vite que le jeu ne peut su
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Cet objet a changé avant de pouvoir être supprimé, rien n'a donc été supprimé. Vérifiez le bouton de la minicarte et réessayez."
 L["ERASED_ITEM"] = "%s%s supprimé."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s supprimé, valeur %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s supprimé, restant d'une quête que vous avez terminée."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
-	"%s%s supprimé, un objet qui démarre une quête que votre personnage ne peut pas accepter."
 L["QUEST_ITEM_READY"] =
 	"%s%s peut maintenant être supprimé en toute sécurité. C'est un reste d'une quête que vous avez terminée."
 L["QUEST_STARTER_UNAVAILABLE"] =

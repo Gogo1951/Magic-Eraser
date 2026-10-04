@@ -29,9 +29,6 @@ L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can eras
 L["ERASE_CANDIDATE_CHANGED"] =
 	"That item changed before it could be erased, so nothing was erased. Check the mini-map button and try again."
 L["ERASED_ITEM"] = "Erased %s%s."
-L["ERASED_ITEM_WITH_VALUE"] = "Erased %s%s, worth %s."
-L["ERASED_ITEM_FROM_QUEST"] = "Erased %s%s, left over from a quest you have completed."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "Erased %s%s, which starts a quest your character cannot take."
 L["QUEST_ITEM_READY"] = "%s%s can now be safely erased. It's left over from a quest you have completed."
 L["QUEST_STARTER_UNAVAILABLE"] = "%s%s can now be safely erased. It starts a quest your character can't take."
 

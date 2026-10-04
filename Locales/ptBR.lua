@@ -29,9 +29,6 @@ L["CURSOR_TOO_FAST"] = "Devagar! Você está clicando mais rápido do que o jogo
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Esse item mudou antes de poder ser excluído, então nada foi excluído. Confira o botão do minimapa e tente de novo."
 L["ERASED_ITEM"] = "%s%s excluído."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s excluído, no valor de %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s excluído, sobra de uma missão que você concluiu."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s excluído. Ele inicia uma missão que seu personagem não pode aceitar."
 L["QUEST_ITEM_READY"] = "%s%s agora pode ser excluído com segurança. É sobra de uma missão que você concluiu."
 L["QUEST_STARTER_UNAVAILABLE"] =
 	"%s%s agora pode ser excluído com segurança. Ele inicia uma missão que seu personagem não pode aceitar."
