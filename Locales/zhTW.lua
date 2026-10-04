@@ -29,9 +29,6 @@ L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物�
 L["ERASE_CANDIDATE_CHANGED"] =
 	"該物品在刪除前發生了變化，因此沒有刪除任何東西。請查看小地圖按鈕後再試一次。"
 L["ERASED_ITEM"] = "已刪除 %s%s。"
-L["ERASED_ITEM_WITH_VALUE"] = "已刪除 %s%s，價值 %s。"
-L["ERASED_ITEM_FROM_QUEST"] = "已刪除 %s%s，這是你已完成任務的遺留物品。"
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "已刪除 %s%s，它會開始一個你的角色無法接受的任務。"
 L["QUEST_ITEM_READY"] = "%s%s 現在可以安全刪除了。它是你已完成任務的遺留物品。"
 L["QUEST_STARTER_UNAVAILABLE"] =
 	"%s%s 現在可以安全刪除了。它會開始一個你的角色無法接受的任務。"

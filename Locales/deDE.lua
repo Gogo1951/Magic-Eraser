@@ -29,10 +29,6 @@ L["CURSOR_TOO_FAST"] = "Langsamer! Du klickst schneller, als das Spiel Gegenstä
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Dieser Gegenstand hat sich vor dem Löschen verändert, daher wurde nichts gelöscht. Sieh dir die Minikarten-Schaltfläche an und versuche es erneut."
 L["ERASED_ITEM"] = "%s%s gelöscht."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s gelöscht, Wert %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s gelöscht, übrig geblieben von einer Quest, die du abgeschlossen hast."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
-	"%s%s gelöscht, der Gegenstand startet eine Quest, die dein Charakter nicht annehmen kann."
 L["QUEST_ITEM_READY"] =
 	"%s%s kann jetzt sicher gelöscht werden. Der Gegenstand ist von einer Quest übrig, die du abgeschlossen hast."
 L["QUEST_STARTER_UNAVAILABLE"] =

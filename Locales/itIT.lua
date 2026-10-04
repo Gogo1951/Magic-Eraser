@@ -31,9 +31,6 @@ L["CURSOR_TOO_FAST"] = "Piano! Stai cliccando più velocemente di quanto il gioc
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Quell'oggetto è cambiato prima di poter essere eliminato, quindi non è stato eliminato nulla. Controlla il pulsante della minimappa e riprova."
 L["ERASED_ITEM"] = "%s%s eliminato."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s eliminato, valore %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s eliminato, avanzato da una missione che hai completato."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] = "%s%s eliminato: avvia una missione che il tuo personaggio non può accettare."
 L["QUEST_ITEM_READY"] = "%s%s ora può essere eliminato in sicurezza. È avanzato da una missione che hai completato."
 L["QUEST_STARTER_UNAVAILABLE"] =
 	"%s%s ora può essere eliminato in sicurezza. Avvia una missione che il tuo personaggio non può accettare."

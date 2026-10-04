@@ -30,10 +30,6 @@ L["CURSOR_TOO_FAST"] =
 L["ERASE_CANDIDATE_CHANGED"] =
 	"삭제하기 전에 아이템이 바뀌어 아무것도 삭제하지 않았습니다. 미니맵 버튼을 확인하고 다시 시도하세요."
 L["ERASED_ITEM"] = "%s%s 삭제됨."
-L["ERASED_ITEM_WITH_VALUE"] = "%s%s 삭제됨, 가치 %s."
-L["ERASED_ITEM_FROM_QUEST"] = "%s%s 삭제됨, 완료한 퀘스트에서 남은 아이템입니다."
-L["ERASED_ITEM_QUEST_UNAVAILABLE"] =
-	"%s%s 삭제됨, 캐릭터가 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
 L["QUEST_ITEM_READY"] =
 	"%s%s: 이제 안전하게 삭제할 수 있습니다. 완료한 퀘스트에서 남은 아이템입니다."
 L["QUEST_STARTER_UNAVAILABLE"] =
