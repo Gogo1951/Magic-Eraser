@@ -109,14 +109,14 @@ local function BuildScopeArgs(scopeKey)
 		end,
 		labels = {
 			fromBagsName = L["OPTIONS_LIST_ADD_FROM_BAGS"],
-			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"],
+			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"],
 			addName = L["OPTIONS_LIST_ADD_ID"],
 			addHelp = L["OPTIONS_LIST_ADD_ID_DESCRIPTION"],
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
 			restoreName = L["OPTIONS_ERASE_RESTORE"],
-			restoreDesc = L["OPTIONS_ERASE_RESTORE_DESC"],
+			restoreDesc = L["OPTIONS_ERASE_RESTORE_DESCRIPTION"],
 			restoreConfirm = L["OPTIONS_ERASE_RESTORE_CONFIRM"],
 		},
 		--[[

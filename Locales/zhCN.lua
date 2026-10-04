@@ -18,6 +18,7 @@ L["CHAT_LOADED"] =
 	"版本 %s。设置（包括关闭此消息的选项）可以在 选项 > 插件 > Magic Eraser 中找到。喜欢这个插件吗？告诉朋友吧！(="
 L["CHAT_OPTIONS_IN_COMBAT"] = "出于安全考虑，战斗中无法打开选项界面。"
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "出于安全考虑，战斗中无法打开按键设置列表。"
+L["KEY_BINDINGS_LOCATION"] = "打开游戏菜单，依次进入 %s 和 %s，然后找到 Magic Eraser 分类。"
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "战斗中无法删除物品。"
@@ -121,9 +122,9 @@ L["OPTIONS_EXAMPLE_ITEM"] = "示例物品"
 L["OPTIONS_DESCRIPTION"] =
 	"删除杂物，瞬间腾出背包空间。点击一下小地图按钮，即可清理已完成任务的物品、已经用不上的消耗品、可卖给商人的杂物和灰色物品。精心整理的杂物清单会保护你需要的物品，自动售卖则会在你下次遇到商人时卖掉其余物品。"
 L["OPTIONS_ENABLE_WELCOME"] = "启用欢迎消息"
-L["OPTIONS_ENABLE_WELCOME_DESC"] = "每次登录时在聊天框中显示一行包含版本号的欢迎消息。"
+L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登录时在聊天框中显示一行包含版本号的欢迎消息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "启用小地图按钮"
-L["OPTIONS_ENABLE_MINIMAP_DESC"] =
+L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 	"在小地图上显示 Magic Eraser 按钮。它的图标就是下一件要删除的物品，鼠标悬停时会显示杂物报告。"
 
 -- Features
@@ -136,10 +137,8 @@ L["OPTIONS_COMMAND_DESCRIPTION"] = "打开本插件的选项界面。"
 
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "按键设置"
-L["OPTIONS_KEY_NOT_BOUND"] = "未绑定"
 L["OPTIONS_KEY_SET"] = "设置按键"
-L["OPTIONS_KEY_SET_DESC"] = "打开游戏的按键设置列表，Magic Eraser 在其中有自己的分类。"
-L["KEY_BINDINGS_LOCATION"] = "打开游戏菜单，依次进入 %s 和 %s，然后找到 Magic Eraser 分类。"
+L["OPTIONS_KEY_SET_DESCRIPTION"] = "打开游戏的按键设置列表，Magic Eraser 在其中有自己的分类。"
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"删除下一件物品，与左键点击小地图按钮相同。按键前没有预览，所以请把它绑定在不容易误按的位置。"
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
@@ -165,9 +164,9 @@ L["OPTIONS_UP_NEXT"] = "下一件"
 L["OPTIONS_CLUTTER_TOTAL"] = "总计"
 L["OPTIONS_STACKS"] = "(%d 组)"
 L["OPTIONS_ERASE_BUTTON"] = "删除"
-L["OPTIONS_ERASE_BUTTON_DESC"] = "删除下一件物品，与左键点击小地图按钮完全相同。"
+L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "删除下一件物品，与左键点击小地图按钮相同。"
 L["OPTIONS_PROTECT_BUTTON"] = "保护"
-L["OPTIONS_PROTECT_BUTTON_DESC"] =
+L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
 	"将此物品加入此角色的保护列表，使其永远不会被删除或出售。"
 
 -- Everything in Your Bags
@@ -178,13 +177,13 @@ L["OPTIONS_COLUMN_ITEM"] = "物品"
 L["OPTIONS_COLUMN_TYPE"] = "类型"
 L["OPTIONS_COLUMN_ERASE"] = "删除"
 L["OPTIONS_COLUMN_PROTECT"] = "保护"
-L["OPTIONS_CHECK_ERASE_DESC"] =
+L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
 	"将此物品加入此角色的删除列表，使其无论价值多少都始终被视为杂物。同时会将它移出此角色的保护列表。"
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
 	"此物品在所有角色列表中。请在删除列表或保护列表页面修改它，因为该列表对每个角色都生效。"
-L["OPTIONS_CHECK_PROTECT_DESC"] =
+L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
 	"将此物品加入此角色的保护列表，使其永远不会被删除或出售。同时会将它移出此角色的删除列表。"
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
 	"此物品在所有角色保护列表中。请在保护列表页面修改它，因为该列表对每个角色都生效。"
 
 -- Why an item counts as junk, beside it in the queue.
@@ -194,7 +193,6 @@ L["REASON_OUTGROWN"] = "已用不上"
 L["REASON_EQUIPMENT"] = "白色装备"
 L["REASON_GRAY"] = "灰色"
 L["REASON_MANUAL"] = "删除列表"
-L["REASON_ASKS_FIRST"] = "先询问"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -207,38 +205,35 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "哪些算杂物"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"选择要删除哪些种类的物品。如需微调，可以把任意物品加入保护列表以始终保留，或加入删除列表以始终删除。"
+	"选择要删除哪些种类的物品。这些是大致的规则，如需微调，可以把任意物品加入保护列表以始终保留，或加入删除列表以始终删除。"
 L["OPTIONS_KIND_QUEST"] = "已完成任务的物品"
-L["OPTIONS_KIND_QUEST_DESC"] = "交付最后一个需要它们的任务后剩下的物品。"
+L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "交付最后一个需要它们的任务后剩下的物品。"
 L["OPTIONS_KIND_STARTER"] = "无法接取的任务起始物品"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESC"] =
+L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"会开启一个你的种族或职业永远无法接取的任务的物品。"
 L["OPTIONS_KIND_FOOD"] = "已用不上的食物与饮料"
-L["OPTIONS_KIND_FOOD_DESC"] =
+L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
 	"超过最初可使用等级十级的食物和饮料。新手面包和水在 5 级时删除。"
 L["OPTIONS_KIND_AMMO"] = "已用不上的箭与子弹"
-L["OPTIONS_KIND_AMMO_DESC"] =
+L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"一旦你能使用商人出售的更好弹药，旧的箭和子弹就会被删除。适合你当前等级的最佳商人弹药永远不会被删除。"
 L["OPTIONS_KIND_WHITE"] = "白色武器与护甲"
-L["OPTIONS_KIND_WHITE_DESC"] =
+L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"商人会收购的白色武器和护甲。专业工具、衬衣、礼服以及任务仍需要的白色物品会被保留。"
 L["OPTIONS_KIND_GRAY"] = "灰色垃圾"
-L["OPTIONS_KIND_GRAY_DESC"] = "商人会收购的任何灰色物品。"
-L["OPTIONS_KIND_ERASE"] = "删除"
-L["OPTIONS_KIND_ASK"] = "删除，先询问"
-L["OPTIONS_KIND_KEEP"] = "保留"
-L["OPTIONS_KIND_ACTION_DESC"] =
-	"删除：不询问直接删除。删除，先询问：删除前显示是或否确认。保留：表示它不是杂物，永远不会被删除、出售或从银行取出。删除列表中的物品无论价值多少，总是不经询问直接删除。"
-L["OPTIONS_KINDS_ALL_KEPT"] =
-	"所有种类都设为保留，因此只有删除列表中的物品会被删除或出售。"
+L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "商人会收购的任何灰色物品。"
+L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
+	"不勾选时，它就不算杂物：永远不会被删除、出售或从银行取出。"
+L["OPTIONS_KINDS_NONE_CHECKED"] =
+	"没有勾选任何种类，因此只有删除列表中的物品会被删除或出售。"
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "删除的最高价值"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "永不删除价值超过你在下方所设上限的物品或整组物品。"
 L["OPTIONS_ENABLE_VALUE_CAP"] = "启用删除的最高价值"
-L["OPTIONS_ENABLE_VALUE_CAP_DESC"] =
+L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"开启或关闭价值上限。被它拦下的物品仍会由自动售卖出售，而你的删除列表不受此上限限制。"
-L["OPTIONS_VALUE_CAP_LIMIT_DESC"] =
+L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"按整组物品的出售价值计算，价值超过此数额的物品组永远不会被删除。"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 
@@ -247,12 +242,19 @@ L["OPTIONS_MANUAL_DELETE_HEADER"] = "手动删除辅助"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'默认情况下，游戏会要求你输入"%s"才能删除%s或更高品质的物品。此功能会把这个提示变成简单的是或否确认。'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "启用手动删除辅助"
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC"] =
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
 	"开启或关闭手动删除辅助。游戏仍会询问是或否，只是不用再输入文字。"
-L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"] =
+L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"无出售价值的物品：只简化商人不收购的物品。所有物品：简化每一个需要输入文字的提示。"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"
 L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "无出售价值的物品"
+
+-- Erase Confirmation
+L["OPTIONS_ERASE_CONFIRM_HEADER"] = "删除确认"
+L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "删除任何物品前先询问是或否。"
+L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "启用删除确认"
+L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
+	"每次删除前都显示是或否确认，无论来自小地图按钮、快捷键还是当前背包，删除列表中的物品也包括在内。"
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -263,12 +265,12 @@ L["TAB_MERCHANT_BANK_DESCRIPTION"] =
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "启用自动售卖"
-L["OPTIONS_ENABLE_AUTO_VEND_DESC"] =
+L["OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION"] =
 	"开启或关闭在商人处出售。保护列表中的物品永远不会被出售。"
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "聊天框显示汇总"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "聊天框显示每笔出售"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "不在聊天框显示"
-L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESC"] =
+L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
 	"自动售卖在聊天框中显示的内容。聊天框显示汇总：每次光顾商人显示一条总计。聊天框显示每笔出售：逐条显示每笔出售，最后显示总计。不在聊天框显示：什么都不显示。"
 
 -- Bank Retrieval
@@ -276,7 +278,7 @@ L["OPTIONS_BANK_HEADER"] = "银行取回"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"打开银行时取出其中的杂物，以便和其他杂物一起出售或删除。它只会从你自己的银行取出物品，绝不会动公会银行或账号共享银行。"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "启用银行取回"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESC"] =
+L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"开启或关闭银行取回。取出的物品永远不会超过你的空余背包格子所能容纳的数量。"
 L["OPTIONS_BANK_CUSHION_NOTE"] = "由于背包空间警告已开启，会保留 %d 个空余背包格子。"
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "由于背包空间警告已开启，会保留 1 个空余背包格子。"
@@ -292,14 +294,14 @@ L["OPTIONS_TOOLTIP_HEADER"] = "物品提示警告"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"为背包中 Magic Eraser 可能删除的物品，或受你的保护列表保护的物品，在其提示中添加一行说明。"
 L["OPTIONS_ENABLE_TOOLTIPS"] = "启用物品提示警告"
-L["OPTIONS_ENABLE_TOOLTIPS_DESC"] = "开启或关闭背包物品提示中的 Magic Eraser 说明行。"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "开启或关闭背包物品提示中的 Magic Eraser 说明行。"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "任务物品提醒"
 L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"当背包中的已完成任务的物品或无法接取的任务起始物品可以安全删除时，立即通知你。"
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "启用任务物品提醒"
-L["OPTIONS_ENABLE_QUEST_ALERTS_DESC"] =
+L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
 	"开启或关闭这些消息。无论如何，已完成任务的物品和无法接取的任务起始物品仍会被删除。"
 
 -- Bag-Space Warnings
@@ -307,9 +309,9 @@ L["OPTIONS_BAGS_FULL_HEADER"] = "背包空间警告"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"在最后几个空余背包格子被填满时提醒你。打开商人、邮箱或银行窗口时不会提醒。"
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "启用背包空间警告"
-L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC"] = "开启或关闭聊天框中的倒数提醒。"
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "开启或关闭聊天框中的倒数提醒。"
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空余格子阈值"
-L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
+L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"剩余多少个空余格子时开始倒数提醒。警告开启时，银行取回也会保留这么多空余格子。"
 
 --------------------------------------------------------------------------------
@@ -319,7 +321,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "所有角色"
 L["OPTIONS_LIST_ADD_FROM_BAGS"] = "从背包添加"
-L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"] =
+L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"从你携带的物品中任选一件。打开选项界面时背包会关闭，所以这里代替了把物品拖到此处的操作。"
 L["OPTIONS_LIST_ADD_ID"] = "按物品 ID 添加"
 L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
@@ -347,6 +349,6 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"将此物品移到所有角色列表，使其在每个角色上都被删除，包括从未添加过它的角色。"
 L["OPTIONS_ERASE_RESTORE"] = "恢复默认"
-L["OPTIONS_ERASE_RESTORE_DESC"] = "将此角色的删除列表恢复为 Magic Eraser 预设的物品。"
+L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] = "将此角色的删除列表恢复为 Magic Eraser 预设的物品。"
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"清空此角色的删除列表，只恢复 Magic Eraser 预设的物品？你自己添加的内容会被移除。"

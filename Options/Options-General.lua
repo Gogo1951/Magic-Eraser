@@ -21,49 +21,32 @@ local LINK_URL_WIDTH = ns.OPTIONS_ROW_WIDTH - LINK_LABEL_WIDTH
     Every feature's on/off switch, two to a line, so the front page shows at a
     glance what Magic Eraser is doing. Each is built by ns.OptionsFeatureToggle,
     as on its own page, so the two copies share one setting, caption and
-    tooltip; the Bag-Space Warnings page also passes an onSet this copy doesn't.
-    Listed in the order the feature pages
-    list them: Merchant & Bank, then Erasing's Manual Delete Assistance, then
-    Alerts & Tooltips.
-
-    The pair widths leave slack under ns.OPTIONS_ROW_WIDTH, for the reason
-    ns.OptionsSubRow gives: a row summing exactly to the pane sits on the wrap
-    boundary and can drop its second switch onto a line of its own.
+    tooltip; the Bag-Space Warnings section also passes an onSet this copy
+    doesn't. Listed Merchant & Bank first, then Erasing's Maximum Value to Erase,
+    Manual Delete Assistance and Erase Confirmation, then Alerts & Tooltips.
 ]]
 local FEATURE_TOGGLES = {
-	-- { settingKey, nameKey, descKey }
-	{ "autoVendEnabled", "OPTIONS_ENABLE_AUTO_VEND", "OPTIONS_ENABLE_AUTO_VEND_DESC" },
-	{ "bankRetrievalEnabled", "OPTIONS_ENABLE_BANK_RETRIEVAL", "OPTIONS_ENABLE_BANK_RETRIEVAL_DESC" },
+	-- { settingKey, nameKey, descKey, onSet }
+	{ "autoVendEnabled", "OPTIONS_ENABLE_AUTO_VEND", "OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION" },
+	{ "bankRetrievalEnabled", "OPTIONS_ENABLE_BANK_RETRIEVAL", "OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION" },
+	{ "valueCapEnabled", "OPTIONS_ENABLE_VALUE_CAP", "OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION", ns.OnValueCapToggled },
 	{
 		"manualDeleteAutoFillEnabled",
 		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
 	},
-	{ "tooltipWarningEnabled", "OPTIONS_ENABLE_TOOLTIPS", "OPTIONS_ENABLE_TOOLTIPS_DESC" },
-	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESC" },
-	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC" },
+	{ "eraseConfirmEnabled", "OPTIONS_ENABLE_ERASE_CONFIRM", "OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION" },
+	{ "tooltipWarningEnabled", "OPTIONS_ENABLE_TOOLTIPS", "OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION" },
+	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION" },
+	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION" },
 }
 
-local FEATURE_TOGGLE_WIDTH = 1.6
-
 local function AddFeatureToggles(args, startOrder)
-	for index = 1, #FEATURE_TOGGLES, 2 do
-		local pair = {}
-		for offset = 0, 1 do
-			local entry = FEATURE_TOGGLES[index + offset]
-			if entry then
-				pair["toggle" .. (offset + 1)] =
-					ns.OptionsFeatureToggle(entry[1], entry[2], entry[3], offset + 1, FEATURE_TOGGLE_WIDTH)
-			end
-		end
-		args["rowFeatures" .. index] = {
-			type = "group",
-			name = "",
-			inline = true,
-			order = startOrder + index,
-			args = pair,
-		}
+	local toggles = {}
+	for index, entry in ipairs(FEATURE_TOGGLES) do
+		toggles[index] = ns.OptionsFeatureToggle(entry[1], entry[2], entry[3], nil, nil, entry[4])
 	end
+	ns.OptionsTogglePairs(args, "rowFeatures", startOrder, toggles)
 end
 
 --------------------------------------------------------------------------------
@@ -93,7 +76,7 @@ local KEY_BUTTON_WIDTH = 0.55
 local function GetBindingStatus(bindingName)
 	local key = GetBindingKey(bindingName)
 	if not key then
-		return GetColor("MUTED") .. L["OPTIONS_KEY_NOT_BOUND"] .. "|r"
+		return GetColor("MUTED") .. NOT_BOUND .. "|r"
 	end
 	local text = (GetBindingText and GetBindingText(key)) or key
 	return GetColor("TEXT") .. text .. "|r"
@@ -133,7 +116,7 @@ local function AddKeyBindingRows(args, startOrder)
 				setKey = {
 					type = "execute",
 					name = L["OPTIONS_KEY_SET"],
-					desc = L["OPTIONS_KEY_SET_DESC"],
+					desc = L["OPTIONS_KEY_SET_DESCRIPTION"],
 					width = KEY_BUTTON_WIDTH,
 					order = 3,
 					func = function()
@@ -169,7 +152,7 @@ function ns.BuildGeneralOptions()
 		toggleWelcome = {
 			type = "toggle",
 			name = L["OPTIONS_ENABLE_WELCOME"],
-			desc = L["OPTIONS_ENABLE_WELCOME_DESC"],
+			desc = L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"],
 			width = "full",
 			order = 6,
 			get = function()
@@ -182,7 +165,7 @@ function ns.BuildGeneralOptions()
 		toggleMinimap = {
 			type = "toggle",
 			name = L["OPTIONS_ENABLE_MINIMAP"],
-			desc = L["OPTIONS_ENABLE_MINIMAP_DESC"],
+			desc = L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"],
 			width = "full",
 			order = 7,
 			get = function()

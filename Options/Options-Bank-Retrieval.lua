@@ -35,7 +35,7 @@ function ns.BuildBankRetrievalOptions(args)
 	args.toggleBankRetrieval = ns.OptionsFeatureToggle(
 		"bankRetrievalEnabled",
 		"OPTIONS_ENABLE_BANK_RETRIEVAL",
-		"OPTIONS_ENABLE_BANK_RETRIEVAL_DESC",
+		"OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION",
 		25
 	)
 

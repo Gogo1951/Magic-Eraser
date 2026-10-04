@@ -46,10 +46,10 @@ end
 
     Keyed by item id and living for the session, so moving a stack between bags or
     opening a merchant cannot make the same item announce twice.
-    ns:OnQuestTurnedIn reads the same set before its own walk: nearly every
-    starter also carries a row in ALLOWED_DELETE_QUEST_ITEMS under the same quest
-    id, so without that check a starter still in the bags at turn-in would
-    announce twice.
+    ns:OnQuestTurnedIn reads the same set before its own walk: most starters
+    also carry a row in ALLOWED_DELETE_QUEST_ITEMS under the same quest id, so
+    without that check a starter still in the bags at turn-in would announce
+    twice.
 
     An item on either Ignore List never announces, since the eraser will never
     act on it; it is left unmarked, so lifting the protection lets it speak on a
@@ -64,13 +64,13 @@ local ALERT_KEYS = {
 
 --[[
     Whether an alert for this kind may print: the Enable Quest Item Alerts switch
-    is on, and the player hasn't set the kind to Keep on the Erasing panel, where
+    is on, and the player hasn't unchecked the kind on the Erasing panel, where
     "safe to erase" would be telling them about an item Magic Eraser will never
     touch. Items are still marked as announced while alerts are off, so turning
     them back on doesn't replay every quest item already in the bags.
 ]]
 local function ShouldAlert(reason)
-	return ns.db and ns.db.profile.questAlertsEnabled and ns:GetEraseAction(reason) ~= ns.ERASE_ACTION_KEEP
+	return ns.db and ns.db.profile.questAlertsEnabled and ns:IsJunkKind(reason)
 end
 
 local function ScanQuestStarters(announce)

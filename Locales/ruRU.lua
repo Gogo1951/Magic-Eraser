@@ -20,6 +20,8 @@ L["CHAT_OPTIONS_IN_COMBAT"] =
 	"В целях безопасности панель настроек нельзя открыть во время боя."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"В целях безопасности список назначения клавиш нельзя открыть во время боя."
+L["KEY_BINDINGS_LOCATION"] =
+	"Откройте игровое меню, затем %s, затем %s, и найдите раздел Magic Eraser."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Нельзя удалять предметы во время боя."
@@ -133,10 +135,10 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Пример предмета"
 L["OPTIONS_DESCRIPTION"] =
 	"Удаляйте хлам и мгновенно освобождайте место в сумках. Одним кликом по кнопке у миникарты убирайте предметы выполненных заданий, ставшие ненужными расходники, торговый хлам и серые предметы. Проверенный вручную список хлама бережёт всё, что вам нужно, а Автопродажа продаёт остальное у ближайшего торговца."
 L["OPTIONS_ENABLE_WELCOME"] = "Включить приветственное сообщение"
-L["OPTIONS_ENABLE_WELCOME_DESC"] =
+L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Выводит в чат короткое приветствие с номером версии при каждом входе в игру."
 L["OPTIONS_ENABLE_MINIMAP"] = "Включить кнопку у миникарты"
-L["OPTIONS_ENABLE_MINIMAP_DESC"] =
+L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 	'Показывает кнопку Magic Eraser у миникарты. Её значок показывает следующий на очереди предмет, а при наведении появляется "Отчёт о хламе".'
 
 -- Features
@@ -149,12 +151,9 @@ L["OPTIONS_COMMAND_DESCRIPTION"] = "Открывает панель настро
 
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Назначение клавиш"
-L["OPTIONS_KEY_NOT_BOUND"] = "Не назначено"
 L["OPTIONS_KEY_SET"] = "Назначить клавишу"
-L["OPTIONS_KEY_SET_DESC"] =
+L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Открывает игровой список назначения клавиш, где у Magic Eraser есть свой раздел."
-L["KEY_BINDINGS_LOCATION"] =
-	"Откройте игровое меню, затем %s, затем %s, и найдите раздел Magic Eraser."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Удаляет следующий на очереди предмет, так же как левый клик по кнопке у миникарты. Перед нажатием клавиши нет предпросмотра, поэтому назначьте её туда, где вы не нажмёте её случайно."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
@@ -180,10 +179,10 @@ L["OPTIONS_UP_NEXT"] = "На очереди"
 L["OPTIONS_CLUTTER_TOTAL"] = "Итого"
 L["OPTIONS_STACKS"] = "(стопок: %d)"
 L["OPTIONS_ERASE_BUTTON"] = "Удалить"
-L["OPTIONS_ERASE_BUTTON_DESC"] =
-	"Удаляет следующий на очереди предмет, точно так же как левый клик по кнопке у миникарты."
+L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
+	"Удаляет следующий на очереди предмет, так же как левый клик по кнопке у миникарты."
 L["OPTIONS_PROTECT_BUTTON"] = "Защитить"
-L["OPTIONS_PROTECT_BUTTON_DESC"] =
+L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
 	"Добавляет этот предмет в список защиты этого персонажа, чтобы его никогда не удаляли и не продавали."
 
 -- Everything in Your Bags
@@ -194,13 +193,13 @@ L["OPTIONS_COLUMN_ITEM"] = "Предмет"
 L["OPTIONS_COLUMN_TYPE"] = "Тип"
 L["OPTIONS_COLUMN_ERASE"] = "Удалить"
 L["OPTIONS_COLUMN_PROTECT"] = "Защитить"
-L["OPTIONS_CHECK_ERASE_DESC"] =
+L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
 	"Вносит этот предмет в список удаления этого персонажа, и он всегда считается хламом, сколько бы ни стоил. Убирает его из списка защиты этого персонажа."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
 	'Этот предмет в списке "Все персонажи". Измените это на странице "Список удаления" или "Список защиты", так как этот список действует на всех персонажах.'
-L["OPTIONS_CHECK_PROTECT_DESC"] =
+L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
 	"Вносит этот предмет в список защиты этого персонажа, и его никогда не удалят и не продадут. Убирает его из списка удаления этого персонажа."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
 	'Этот предмет в списке защиты "Все персонажи". Измените это на странице "Список защиты", так как этот список действует на всех персонажах.'
 
 -- Why an item counts as junk, beside it in the queue.
@@ -210,7 +209,6 @@ L["REASON_OUTGROWN"] = "Устарело"
 L["REASON_EQUIPMENT"] = "Белая вещь"
 L["REASON_GRAY"] = "Серое"
 L["REASON_MANUAL"] = "Список удаления"
-L["REASON_ASKS_FIRST"] = "Сначала спросит"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -224,40 +222,37 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Что считается хламом"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Выберите, какие виды предметов удаляются. Для точной настройки добавьте любой предмет в список защиты, чтобы всегда его хранить, или в список удаления, чтобы всегда его удалять."
+	"Выберите, какие виды предметов удаляются. Это общие правила, поэтому для точной настройки добавьте любой предмет в список защиты, чтобы всегда его хранить, или в список удаления, чтобы всегда его удалять."
 L["OPTIONS_KIND_QUEST"] = "Предметы выполненных заданий"
-L["OPTIONS_KIND_QUEST_DESC"] =
+L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Предметы, оставшиеся после сдачи последнего задания, для которого они нужны."
 L["OPTIONS_KIND_STARTER"] = "Недоступные предметы, начинающие задания"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESC"] =
+L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"Предметы, начинающие задание, которое ваша раса или класс никогда не смогут взять."
 L["OPTIONS_KIND_FOOD"] = "Устаревшие еда и напитки"
-L["OPTIONS_KIND_FOOD_DESC"] =
+L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
 	"Еда и напитки, когда ваш уровень на десять выше того, с которого их можно было использовать. Начальные хлеб и вода уходят на 5-м уровне."
 L["OPTIONS_KIND_AMMO"] = "Устаревшие стрелы и пули"
-L["OPTIONS_KIND_AMMO_DESC"] =
+L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Стрелы и пули, как только вам доступен лучший вид, который продают торговцы. Лучшие боеприпасы от торговцев для вашего уровня никогда не удаляются."
 L["OPTIONS_KIND_WHITE"] = "Белое оружие и доспехи"
-L["OPTIONS_KIND_WHITE_DESC"] =
+L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Белое оружие и доспехи, которые купит торговец. Инструменты профессий, рубашки, парадная одежда и белые вещи, ещё нужные для задания, сохраняются."
 L["OPTIONS_KIND_GRAY"] = "Серый хлам"
-L["OPTIONS_KIND_GRAY_DESC"] = "Любой серый предмет, который купит торговец."
-L["OPTIONS_KIND_ERASE"] = "Удалять"
-L["OPTIONS_KIND_ASK"] = "Удалять, сначала спрашивать"
-L["OPTIONS_KIND_KEEP"] = "Хранить"
-L["OPTIONS_KIND_ACTION_DESC"] =
-	'"Удалять" убирает предмет без вопросов. "Удалять, сначала спрашивать" перед удалением предлагает выбор Да или Нет. "Хранить" значит, что это не хлам: предмет никогда не удаляется, не продаётся и не забирается из банка. Предметы из списка удаления всегда уходят без вопросов, сколько бы ни стоили.'
-L["OPTIONS_KINDS_ALL_KEPT"] =
-	'Для всех видов выбрано "Хранить", поэтому удаляется или продаётся только ваш список удаления.'
+L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Любой серый предмет, который купит торговец."
+L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
+	"Если не отмечено, это не хлам: предмет никогда не удаляется, не продаётся и не забирается из банка."
+L["OPTIONS_KINDS_NONE_CHECKED"] =
+	"Ни один вид не отмечен, поэтому удаляется или продаётся только ваш список удаления."
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Максимальная стоимость для удаления"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
 	"Никогда не удаляет предмет или стопку дороже заданного ниже предела."
 L["OPTIONS_ENABLE_VALUE_CAP"] = "Включить максимальную стоимость для удаления"
-L["OPTIONS_ENABLE_VALUE_CAP_DESC"] =
+L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Включает или выключает предел стоимости. Автопродажа всё равно продаёт всё, что он удерживает, а на ваш список удаления он не действует."
-L["OPTIONS_VALUE_CAP_LIMIT_DESC"] =
+L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Стопки дороже этой суммы (считается цена продажи всей стопки) никогда не удаляются."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d золота"
 
@@ -266,12 +261,20 @@ L["OPTIONS_MANUAL_DELETE_HEADER"] = "Помощь при удалении вру
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'По умолчанию игра требует ввести "%s" при удалении предмета качества "%s" или выше. Эта функция превращает такой запрос в простой выбор Да или Нет.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Включить помощь при удалении вручную"
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC"] =
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
 	'Включает или выключает "Помощь при удалении вручную". Игра всё равно спрашивает Да или Нет, исчезает только ввод текста.'
-L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"] =
+L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	'"Предметы без цены продажи" упрощает запрос только для предметов, которые не купит ни один торговец. "Все предметы" упрощает каждый запрос с вводом текста.'
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Все предметы"
 L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Предметы без цены продажи"
+
+-- Erase Confirmation
+L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Подтверждение удаления"
+L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] =
+	"Спрашивает Да или Нет перед любым удалением."
+L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Включить подтверждение удаления"
+L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
+	'Предлагает выбор Да или Нет перед каждым удалением, с кнопки у миникарты, назначенной клавишей или из раздела "Ваши сумки", включая предметы из списка удаления.'
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -282,12 +285,12 @@ L["TAB_MERCHANT_BANK_DESCRIPTION"] =
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Включить Автопродажу"
-L["OPTIONS_ENABLE_AUTO_VEND_DESC"] =
+L["OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION"] =
 	"Включает или выключает продажу у торговцев. Предметы из списка защиты никогда не продаются."
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Сводка в чате"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Каждая продажа в чате"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Без отчёта в чате"
-L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESC"] =
+L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
 	'Что Автопродажа выводит в чат. "Сводка в чате" выводит один итог за посещение торговца. "Каждая продажа в чате" выводит каждую продажу, а затем итог. "Без отчёта в чате" ничего не выводит.'
 
 -- Bank Retrieval
@@ -295,7 +298,7 @@ L["OPTIONS_BANK_HEADER"] = "Извлечение из банка"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Забирает хлам из банка, когда вы его открываете, чтобы его можно было продать или удалить вместе с остальным. Берёт только из вашего собственного банка, никогда из банка гильдии или общего банка учётной записи."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Включить извлечение из банка"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESC"] =
+L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Включает или выключает извлечение из банка. Никогда не забирает больше, чем вместят ваши свободные ячейки сумок."
 L["OPTIONS_BANK_CUSHION_NOTE"] =
 	'Оставляет запас свободных ячеек сумок: %d, так как включены "Предупреждения о месте в сумках".'
@@ -314,7 +317,7 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Предупреждения в подсказк�
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Добавляет строку в подсказку любого предмета в сумках, который Magic Eraser может удалить или который защищает ваш список защиты."
 L["OPTIONS_ENABLE_TOOLTIPS"] = "Включить предупреждения в подсказках"
-L["OPTIONS_ENABLE_TOOLTIPS_DESC"] =
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] =
 	"Включает или выключает строку Magic Eraser в подсказках предметов в сумках."
 
 -- Quest Item Alerts
@@ -322,7 +325,7 @@ L["OPTIONS_QUEST_ALERTS_HEADER"] = "Оповещения о предметах �
 L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	'Сообщает, как только предмет из категорий "Предметы выполненных заданий" или "Недоступные предметы, начинающие задания" в ваших сумках можно безопасно удалить.'
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Включить оповещения о предметах заданий"
-L["OPTIONS_ENABLE_QUEST_ALERTS_DESC"] =
+L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
 	'Включает или выключает эти сообщения. "Предметы выполненных заданий" и "Недоступные предметы, начинающие задания" удаляются в любом случае.'
 
 -- Bag-Space Warnings
@@ -330,10 +333,10 @@ L["OPTIONS_BAGS_FULL_HEADER"] = "Предупреждения о месте в �
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Предупреждает, когда заполняются последние свободные ячейки сумок. Молчит, пока открыто окно торговца, почтового ящика или банка."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Включить предупреждения о месте в сумках"
-L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC"] =
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] =
 	"Включает или выключает обратный отсчёт в чате."
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Порог свободных ячеек"
-L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
+L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	'При каком числе свободных ячеек начинается обратный отсчёт. Пока предупреждения включены, "Извлечение из банка" тоже оставляет столько ячеек свободными.'
 
 --------------------------------------------------------------------------------
@@ -343,7 +346,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "Все персонажи"
 L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Добавить из сумок"
-L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"] =
+L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"Выберите любой предмет из тех, что вы несёте. Сумки закрываются при открытии панели настроек, поэтому это заменяет перетаскивание предмета сюда."
 L["OPTIONS_LIST_ADD_ID"] = "Добавить по ID предмета"
 L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
@@ -372,7 +375,7 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	'Перемещает этот предмет в список "Все персонажи", чтобы он удалялся на каждом персонаже, включая тех, для кого его никогда не добавляли.'
 L["OPTIONS_ERASE_RESTORE"] = "Восстановить значения по умолчанию"
-L["OPTIONS_ERASE_RESTORE_DESC"] =
+L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Возвращает в список удаления этого персонажа исходный набор предметов Magic Eraser."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"Очистить список удаления этого персонажа и вернуть только те предметы, с которыми начинает Magic Eraser? Всё, что вы добавили сами, будет удалено."

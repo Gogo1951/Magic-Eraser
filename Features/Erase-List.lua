@@ -13,13 +13,12 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
     and sold, whatever its rarity and whatever the curated databases say about
     it.
 
-    That last part is the reason the feature exists. The four query-built tables
-    in each Data/ flavor folder are regenerated from SQL queries over a world DB,
-    so an item those queries cannot express has no way into them that survives
-    the next regeneration -- see ns.CLASS_REAGENTS, in the Class-Reagents file
-    beside them, for the case that proved it. A list
-    the player owns is not derived from anything, so nothing can drop rows out
-    of it.
+    That last part is the reason the feature exists. The tables in each Data/
+    flavor folder are curated per flavor and rebuilt by the Data
+    Validation pass, so an item outside their rules has no lasting place in them
+    -- see ns.CLASS_REAGENTS, in the Class-Reagents file beside them, for the
+    case that proved it. A list the player owns is not derived from anything, so
+    nothing can drop rows out of it.
 
     The per-character list lives in char, AceDB's per-character scope, so it
     stays with the character whatever profile is active. The account-wide list

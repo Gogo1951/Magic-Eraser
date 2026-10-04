@@ -203,22 +203,13 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Ask First. A kind the player set to Ask First pops a confirmation before the
-    erase, from the mini-map button, the key binding and the Your Current Bags
-    panel alike, since all three enter through ns:RunEraser.
-
-    An Erase List entry never asks (ns:GetEraseAction answers Erase for
-    "manual"): asking the player to approve erasing an item they typed in
-    themselves is friction that tells them nothing they did not already know. A
-    mistyped id is caught earlier and better -- the Erase List panel renders
-    every row as the real item link, icon and tooltip included, so a wrong id
-    shows the wrong item's name on sight.
+    Erase Confirmation. With the switch on, every erase pops a confirmation
+    first, Erase List entries included, from the mini-map button, the key
+    binding and the Your Current Bags panel alike, since all three enter
+    through ns:RunEraser.
 ]]
 function ns:NeedsSafetyConfirm(item)
-	if not item then
-		return false
-	end
-	return ns:GetEraseAction(item.deleteReason) == ns.ERASE_ACTION_ASK
+	return item ~= nil and (ns.db and ns.db.profile.eraseConfirmEnabled) and true or false
 end
 
 --[[

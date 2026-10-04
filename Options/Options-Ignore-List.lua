@@ -75,7 +75,7 @@ local function BuildScopeArgs(scopeKey)
 		addFromBags = true,
 		labels = {
 			fromBagsName = L["OPTIONS_LIST_ADD_FROM_BAGS"],
-			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"],
+			fromBagsDesc = L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"],
 			addName = L["OPTIONS_LIST_ADD_ID"],
 			addHelp = L["OPTIONS_LIST_ADD_ID_DESCRIPTION"],
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],

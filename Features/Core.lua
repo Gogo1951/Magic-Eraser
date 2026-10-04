@@ -90,7 +90,7 @@ function ns:OnPlayerLogin()
 	    char, not the profile, so they stay per-character whatever profile is
 	    active (see Data/Default-Settings.lua).
 	]]
-	ns.db = LibStub("AceDB-3.0"):New("MagicEraserDB", ns.DATABASE_DEFAULTS, true)
+	ns.db = LibStub("AceDB-3.0"):New(ns.SAVED_VARIABLES_NAME, ns.DATABASE_DEFAULTS, true)
 
 	local _, classToken = UnitClass("player")
 	ns.db.char.classToken = classToken or false
@@ -111,6 +111,17 @@ function ns:OnPlayerLogin()
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
 	if ns.LDBObject then
 		LibDBIcon:Register(ADDON_NAME, ns.LDBObject, ns.db.global.minimap)
+
+		if ns.FLAVOR == "Camelot" or ns.FLAVOR == "Mainline" then
+			LibDBIcon:SetButtonIcon(ADDON_NAME, nil, 20, "CENTER", 1, -0.35)
+			local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
+			if button then
+				local mask = button:CreateMaskTexture()
+				mask:SetTexture(130924, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE") -- Interface\CharacterFrame\TempPortraitAlphaMask
+				mask:SetAllPoints(button.icon)
+				button.icon:AddMaskTexture(mask)
+			end
+		end
 	end
 
 	ns:PrintWelcome()

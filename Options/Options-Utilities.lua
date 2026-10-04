@@ -147,6 +147,36 @@ function ns.OptionsFeatureToggle(settingKey, nameKey, descKey, order, width, onS
 	}
 end
 
+--[[
+    Lays toggles out two to a line, each pair in its own unnamed inline group so
+    every pair pins its own row. The widths leave slack under
+    ns.OPTIONS_ROW_WIDTH, for the reason ns.OptionsSubRow gives: a row summing
+    exactly to the pane sits on the wrap boundary and can drop its second
+    toggle onto a line of its own. Each toggle's width and order are set here.
+]]
+local TOGGLE_PAIR_WIDTH = 1.6
+
+function ns.OptionsTogglePairs(args, keyPrefix, startOrder, toggles)
+	for index = 1, #toggles, 2 do
+		local pair = {}
+		for offset = 0, 1 do
+			local toggle = toggles[index + offset]
+			if toggle then
+				toggle.width = TOGGLE_PAIR_WIDTH
+				toggle.order = offset + 1
+				pair["toggle" .. (offset + 1)] = toggle
+			end
+		end
+		args[keyPrefix .. index] = {
+			type = "group",
+			name = "",
+			inline = true,
+			order = startOrder + index,
+			args = pair,
+		}
+	end
+end
+
 --------------------------------------------------------------------------------
 -- Example Lines
 --------------------------------------------------------------------------------
@@ -160,7 +190,7 @@ end
     Callers put an ns.OptionsSpacer with the same hidden above the first
     example, so the example sits one blank line below the control it shows.
 ]]
-ns.EXAMPLE_ITEM_LINK = "|cffffffff" .. L["OPTIONS_EXAMPLE_ITEM"] .. "|r"
+ns.EXAMPLE_ITEM_LINK = GetColor("TEXT") .. L["OPTIONS_EXAMPLE_ITEM"] .. "|r"
 
 function ns.OptionsExample(getText, order, hidden)
 	return {

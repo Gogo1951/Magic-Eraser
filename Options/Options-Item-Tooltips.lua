@@ -36,8 +36,12 @@ function ns.BuildItemTooltipsOptions(args)
 	args.descTooltip = ns.OptionsDesc(L["OPTIONS_TOOLTIP_DESCRIPTION"], 13)
 	args.spacerTooltip2 = ns.OptionsSpacer(14)
 
-	args.toggleTooltipWarning =
-		ns.OptionsFeatureToggle("tooltipWarningEnabled", "OPTIONS_ENABLE_TOOLTIPS", "OPTIONS_ENABLE_TOOLTIPS_DESC", 15)
+	args.toggleTooltipWarning = ns.OptionsFeatureToggle(
+		"tooltipWarningEnabled",
+		"OPTIONS_ENABLE_TOOLTIPS",
+		"OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION",
+		15
+	)
 
 	for index, example in ipairs(TOOLTIP_EXAMPLES) do
 		local key, textKey, color = example[1], example[2], example[3]

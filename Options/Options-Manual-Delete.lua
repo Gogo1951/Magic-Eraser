@@ -40,7 +40,7 @@ function ns.BuildManualDeleteOptions(args)
 	args.toggleManualDelete = ns.OptionsFeatureToggle(
 		"manualDeleteAutoFillEnabled",
 		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC",
+		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
 		45,
 		ns.OPTIONS_LABEL_WIDTH
 	)
@@ -48,7 +48,7 @@ function ns.BuildManualDeleteOptions(args)
 	args.selectManualDeleteScope = {
 		type = "select",
 		name = "",
-		desc = L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"],
+		desc = L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"],
 		width = ns.OPTIONS_CONTROL_WIDTH,
 		order = 46,
 		hidden = ManualDeleteOff,

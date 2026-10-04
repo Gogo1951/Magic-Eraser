@@ -18,6 +18,7 @@ L["CHAT_LOADED"] =
 	"Version %s. Einstellungen (einschließlich der Option, diese Nachricht zu deaktivieren) findest du unter Optionen > AddOns > Magic Eraser. Gefällt dir das Add-on? Erzähle einem Freund davon! (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "Aus Sicherheitsgründen kann das Optionsfenster im Kampf nicht geöffnet werden."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "Aus Sicherheitsgründen kann die Tastaturbelegung im Kampf nicht geöffnet werden."
+L["KEY_BINDINGS_LOCATION"] = "Öffne das Spielmenü, dann %s, dann %s, und suche den Abschnitt Magic Eraser."
 
 -- Eraser
 L["COMBAT_LOCKOUT"] = "Gegenstände können im Kampf nicht gelöscht werden."
@@ -124,10 +125,10 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
 L["OPTIONS_DESCRIPTION"] =
 	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume Gegenstände abgeschlossener Quests, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick auf die Minikarten-Schaltfläche weg. Eine kuratierte Ramschliste schützt, was du brauchst, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
-L["OPTIONS_ENABLE_WELCOME_DESC"] =
+L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
-L["OPTIONS_ENABLE_MINIMAP_DESC"] =
+L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist der nächste Gegenstand an der Reihe, und wenn du mit der Maus darüberfährst, siehst du den Ramsch-Bericht."
 
 -- Features
@@ -140,10 +141,9 @@ L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
 
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Tastaturbelegung"
-L["OPTIONS_KEY_NOT_BOUND"] = "Nicht belegt"
 L["OPTIONS_KEY_SET"] = "Taste festlegen"
-L["OPTIONS_KEY_SET_DESC"] = "Öffnet die Tastaturbelegung des Spiels, in der Magic Eraser einen eigenen Abschnitt hat."
-L["KEY_BINDINGS_LOCATION"] = "Öffne das Spielmenü, dann %s, dann %s, und suche den Abschnitt Magic Eraser."
+L["OPTIONS_KEY_SET_DESCRIPTION"] =
+	"Öffnet die Tastaturbelegung des Spiels, in der Magic Eraser einen eigenen Abschnitt hat."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
@@ -169,10 +169,10 @@ L["OPTIONS_UP_NEXT"] = "Als Nächstes"
 L["OPTIONS_CLUTTER_TOTAL"] = "Gesamt"
 L["OPTIONS_STACKS"] = "(%d Stapel)"
 L["OPTIONS_ERASE_BUTTON"] = "Löschen"
-L["OPTIONS_ERASE_BUTTON_DESC"] =
+L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche."
 L["OPTIONS_PROTECT_BUTTON"] = "Schützen"
-L["OPTIONS_PROTECT_BUTTON_DESC"] =
+L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
 	"Fügt diesen Gegenstand zur Schutzliste dieses Charakters hinzu, damit er nie gelöscht oder verkauft wird."
 
 -- Everything in Your Bags
@@ -183,13 +183,13 @@ L["OPTIONS_COLUMN_ITEM"] = "Gegenstand"
 L["OPTIONS_COLUMN_TYPE"] = "Typ"
 L["OPTIONS_COLUMN_ERASE"] = "Löschen"
 L["OPTIONS_COLUMN_PROTECT"] = "Schützen"
-L["OPTIONS_CHECK_ERASE_DESC"] =
+L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
 	"Setzt diesen Gegenstand auf die Löschliste dieses Charakters, damit er immer als Ramsch gilt, egal was er wert ist. Entfernt ihn von der Schutzliste dieses Charakters."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
 	"Dieser Gegenstand steht auf einer Liste für Alle Charaktere. Ändere das auf der Seite Löschliste oder Schutzliste, da diese Liste für jeden Charakter gilt."
-L["OPTIONS_CHECK_PROTECT_DESC"] =
+L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
 	"Setzt diesen Gegenstand auf die Schutzliste dieses Charakters, damit er nie gelöscht oder verkauft wird. Entfernt ihn von der Löschliste dieses Charakters."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESC"] =
+L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
 	"Dieser Gegenstand steht auf der Schutzliste für Alle Charaktere. Ändere das auf der Seite Schutzliste, da diese Liste für jeden Charakter gilt."
 
 -- Why an item counts as junk, beside it in the queue.
@@ -199,7 +199,6 @@ L["REASON_OUTGROWN"] = "Ausgedient"
 L["REASON_EQUIPMENT"] = "Weiße Ausrüstung"
 L["REASON_GRAY"] = "Grau"
 L["REASON_MANUAL"] = "Löschliste"
-L["REASON_ASKS_FIRST"] = "Fragt erst"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -213,40 +212,37 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Was als Ramsch gilt"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Wähle, welche Arten von Gegenständen gelöscht werden. Zur Feinabstimmung füge einen Gegenstand deiner Schutzliste hinzu, um ihn immer zu behalten, oder deiner Löschliste, um ihn immer zu löschen."
+	"Wähle, welche Arten von Gegenständen gelöscht werden. Das sind grobe Regeln, also füge zur Feinabstimmung einen Gegenstand deiner Schutzliste hinzu, um ihn immer zu behalten, oder deiner Löschliste, um ihn immer zu löschen."
 L["OPTIONS_KIND_QUEST"] = "Gegenstände abgeschlossener Quests"
-L["OPTIONS_KIND_QUEST_DESC"] =
+L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Gegenstände, die übrig bleiben, sobald du die letzte Quest abgegeben hast, für die sie gebraucht werden."
 L["OPTIONS_KIND_STARTER"] = "Unbrauchbare Queststarter"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESC"] =
+L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"Gegenstände, die eine Quest starten, die dein Volk oder deine Klasse niemals annehmen kann."
 L["OPTIONS_KIND_FOOD"] = "Ausgediente Speisen und Getränke"
-L["OPTIONS_KIND_FOOD_DESC"] =
+L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
 	"Speisen und Getränke, sobald du zehn Stufen über der Stufe bist, ab der du sie benutzen konntest. Anfängerbrot und -wasser gehen ab Stufe 5."
 L["OPTIONS_KIND_AMMO"] = "Ausgediente Pfeile und Kugeln"
-L["OPTIONS_KIND_AMMO_DESC"] =
+L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Pfeile und Kugeln, sobald du eine bessere Sorte benutzen kannst, die Händler verkaufen. Die beste Händlermunition für deine Stufe wird nie gelöscht."
 L["OPTIONS_KIND_WHITE"] = "Weiße Waffen und Rüstungen"
-L["OPTIONS_KIND_WHITE_DESC"] =
+L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Weiße Waffen und Rüstungen, die ein Händler ankauft. Berufswerkzeuge, Hemden, festliche Kleidung und weiße Gegenstände, die eine Quest noch braucht, werden behalten."
 L["OPTIONS_KIND_GRAY"] = "Grauer Müll"
-L["OPTIONS_KIND_GRAY_DESC"] = "Jeder graue Gegenstand, den ein Händler ankauft."
-L["OPTIONS_KIND_ERASE"] = "Löschen"
-L["OPTIONS_KIND_ASK"] = "Löschen, erst fragen"
-L["OPTIONS_KIND_KEEP"] = "Behalten"
-L["OPTIONS_KIND_ACTION_DESC"] =
-	"Löschen löscht ohne Nachfrage. Löschen, erst fragen zeigt vor dem Löschen ein Ja oder Nein. Behalten heißt, es ist kein Ramsch: Es wird nie gelöscht, verkauft oder aus der Bank geholt. Gegenstände auf deiner Löschliste gehen immer ohne Nachfrage, egal was sie wert sind."
-L["OPTIONS_KINDS_ALL_KEPT"] =
-	"Jede Art steht auf Behalten, daher werden nur Gegenstände deiner Löschliste gelöscht oder verkauft."
+L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Jeder graue Gegenstand, den ein Händler ankauft."
+L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
+	"Nicht angehakt ist es kein Ramsch: Es wird nie gelöscht, verkauft oder aus der Bank geholt."
+L["OPTIONS_KINDS_NONE_CHECKED"] =
+	"Keine Art ist angehakt, daher werden nur Gegenstände deiner Löschliste gelöscht oder verkauft."
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Maximaler Wert zum Löschen"
 L["OPTIONS_VALUE_CAP_DESCRIPTION"] =
 	"Löscht niemals einen Gegenstand oder Stapel, der mehr wert ist als das unten festgelegte Limit."
 L["OPTIONS_ENABLE_VALUE_CAP"] = "Maximalen Wert zum Löschen aktivieren"
-L["OPTIONS_ENABLE_VALUE_CAP_DESC"] =
+L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Schaltet das Wertlimit ein oder aus. Der Auto-Verkauf verkauft trotzdem alles, was dadurch zurückgehalten wird, und für deine Löschliste gilt das Limit nicht."
-L["OPTIONS_VALUE_CAP_LIMIT_DESC"] = "Stapel, deren gesamter Verkaufswert darüber liegt, werden nie gelöscht."
+L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] = "Stapel, deren gesamter Verkaufswert darüber liegt, werden nie gelöscht."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
 -- Manual Delete Assistance
@@ -254,12 +250,19 @@ L["OPTIONS_MANUAL_DELETE_HEADER"] = "Hilfe beim manuellen Löschen"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Standardmäßig musst du "%s" eintippen, wenn du einen Gegenstand der Qualität %s oder besser löschst. Das hier macht daraus ein einfaches Ja oder Nein.'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Hilfe beim manuellen Löschen aktivieren"
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESC"] =
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
 	"Schaltet die Hilfe beim manuellen Löschen ein oder aus. Das Spiel fragt trotzdem Ja oder Nein, nur das Eintippen entfällt."
-L["OPTIONS_MANUAL_DELETE_SCOPE_DESC"] =
+L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Gegenstände ohne Verkaufswert vereinfacht nur Gegenstände, die kein Händler ankauft. Alle Gegenstände vereinfacht jede Eingabeaufforderung."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"
 L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Gegenstände ohne Verkaufswert"
+
+-- Erase Confirmation
+L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Löschbestätigung"
+L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "Fragt Ja oder Nein, bevor etwas gelöscht wird."
+L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Löschbestätigung aktivieren"
+L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
+	"Zeigt vor jedem Löschen ein Ja oder Nein, ob über die Minikarten-Schaltfläche, die Tastenbelegung oder Deine aktuellen Taschen, auch für Gegenstände auf deiner Löschliste."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -270,12 +273,12 @@ L["TAB_MERCHANT_BANK_DESCRIPTION"] =
 
 -- Auto-Vend
 L["OPTIONS_ENABLE_AUTO_VEND"] = "Auto-Verkauf aktivieren"
-L["OPTIONS_ENABLE_AUTO_VEND_DESC"] =
+L["OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION"] =
 	"Schaltet das Verkaufen bei Händlern ein oder aus. Gegenstände auf deiner Schutzliste werden nie verkauft."
 L["OPTIONS_AUTO_VEND_SUMMARY"] = "Zusammenfassung im Chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Jeder Verkauf im Chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Kein Chatbericht"
-L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESC"] =
+L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
 	"Was der Auto-Verkauf im Chat ausgibt. Zusammenfassung im Chat gibt eine Summe pro Besuch aus. Jeder Verkauf im Chat gibt jeden Verkauf und dann die Summe aus. Kein Chatbericht gibt nichts aus."
 
 -- Bank Retrieval
@@ -283,7 +286,7 @@ L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
 L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Holt Ramsch aus deiner Bank, wenn du sie öffnest, damit er mit dem Rest verkauft oder gelöscht werden kann. Es wird nur aus deiner eigenen Bank genommen, nie aus einer Gildenbank oder einer accountweiten Bank."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Bankentnahme aktivieren"
-L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESC"] =
+L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Schaltet die Bankentnahme ein oder aus. Sie holt nie mehr, als deine freien Taschenplätze fassen können."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Lässt %d Taschenplätze frei, weil Taschenplatz-Warnungen aktiviert sind."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Lässt 1 Taschenplatz frei, weil Taschenplatz-Warnungen aktiviert sind."
@@ -299,14 +302,14 @@ L["OPTIONS_TOOLTIP_HEADER"] = "Tooltip-Warnungen"
 L["OPTIONS_TOOLTIP_DESCRIPTION"] =
 	"Fügt dem Tooltip jedes Gegenstands in deinen Taschen eine Zeile hinzu, den Magic Eraser löschen kann oder den deine Schutzliste schützt."
 L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltip-Warnungen aktivieren"
-L["OPTIONS_ENABLE_TOOLTIPS_DESC"] = "Schaltet die Zeile von Magic Eraser in Taschen-Tooltips ein oder aus."
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Schaltet die Zeile von Magic Eraser in Taschen-Tooltips ein oder aus."
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "Hinweise zu Questgegenständen"
 L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Sagt dir sofort Bescheid, wenn ein Gegenstand abgeschlossener Quests oder ein unbrauchbarer Queststarter in deinen Taschen sicher gelöscht werden kann."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Hinweise zu Questgegenständen aktivieren"
-L["OPTIONS_ENABLE_QUEST_ALERTS_DESC"] =
+L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
 	"Schaltet diese Nachrichten ein oder aus. Gegenstände abgeschlossener Quests und unbrauchbare Queststarter werden so oder so gelöscht."
 
 -- Bag-Space Warnings
@@ -314,9 +317,9 @@ L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
 L["OPTIONS_BAGS_FULL_DESCRIPTION"] =
 	"Warnt dich, wenn sich deine letzten freien Taschenplätze füllen. Bleibt still, solange ein Händler-, Briefkasten- oder Bankfenster geöffnet ist."
 L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS"] = "Taschenplatz-Warnungen aktivieren"
-L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESC"] = "Schaltet den Countdown im Chat ein oder aus."
+L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Schaltet den Countdown im Chat ein oder aus."
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
-L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
+L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Ab wie vielen freien Plätzen der Countdown beginnt. Solange die Warnungen aktiv sind, lässt die Bankentnahme auch so viele Plätze frei."
 
 --------------------------------------------------------------------------------
@@ -326,7 +329,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESC"] =
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "Alle Charaktere"
 L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Aus Taschen hinzufügen"
-L["OPTIONS_LIST_ADD_FROM_BAGS_DESC"] =
+L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"Wähle etwas aus, das du bei dir trägst. Die Taschen schließen sich, wenn das Optionsfenster geöffnet wird, daher ersetzt das hier das Hineinziehen eines Gegenstands."
 L["OPTIONS_LIST_ADD_ID"] = "Über Gegenstands-ID hinzufügen"
 L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
@@ -355,7 +358,7 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Verschiebt diesen Gegenstand auf die Liste für Alle Charaktere, damit er auf jedem Charakter gelöscht wird, auch auf denen, für die er nie hinzugefügt wurde."
 L["OPTIONS_ERASE_RESTORE"] = "Standard wiederherstellen"
-L["OPTIONS_ERASE_RESTORE_DESC"] =
+L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Setzt die Löschliste dieses Charakters auf die Gegenstände zurück, mit denen Magic Eraser sie anlegt."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"Die Löschliste dieses Charakters leeren und nur die Gegenstände zurückholen, mit denen Magic Eraser startet? Alles, was du selbst hinzugefügt hast, wird entfernt."
