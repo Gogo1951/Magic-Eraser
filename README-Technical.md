@@ -8,7 +8,8 @@ This document combines architecture notes and contribution guidance for develope
 Magic-Eraser/
 ├── .github/
 │   └── workflows/
-│       └── package.yml                       CurseForge and Wago release plus library vendoring
+│       ├── ci.yml                            Calls Common-Core: Lua 5.1 syntax, luacheck, StyLua and tests on every PR
+│       └── package.yml                       Calls Common-Core: CurseForge and Wago release plus library vendoring
 ├── .gitattributes                            Line-ending normalization
 ├── .gitignore                                Dev-clutter ignore list
 ├── .luacheckrc                               Lint config
@@ -551,7 +552,7 @@ PR guidelines:
 - **Saved-data changes carry a migration.** A change to the shape, name or scope of saved data ships its own migration for the data players already have, tagged `MIGRATION (remove after YYYY-MM-DD)` 30 days past its release, per Style Guide → SAVED VARIABLES → Migration Windows. A retired key is nil'd explicitly inside that migration.
 - **Data edits** keep the column-header comment and the How We Got the Data block, don't reformat existing rows, and say which flavor folders changed.
 - **Output length**: nothing here sends chat or writes a macro, so neither ceiling in Style Guide → MESSAGES → Message Length applies today. A change that adds a sent message measures the decorated line in bytes against the widest-encoding locale (usually ruRU).
-- **Release notes are written on GitHub by hand.** `.github/workflows/package.yml` explains why it carries no GitHub token; never add one.
+- **Release notes are written on GitHub by hand.** Common-Core's `.github/workflows/package.yml` explains why it carries no GitHub token; never add one.
 - **Run `README-Testing.md`** on every flavor before tagging a release, and cite the step number when something fails.
 - **Update this document** when the architecture or file map changes.
 - **Commit and PR descriptions require a User Story.** Don't just say "I changed X" or "I fixed Y"; frame the change by who it helps and why.
