@@ -4,32 +4,6 @@ if not ns.IS_DISCOVERY then
 	return
 end
 
---[[
-Source: wago.tools DB2 exports of Item and ItemSparse for wow_classic_era build
-1.15.9.70003, until Validate Data passes on this client.
-
-  Rows       Item.ClassID 6 (Projectile), SubclassID 2 (Arrow) or 3 (Bullet),
-             with an ItemSparse row, ItemSparse.Flags_0 bit 0x10 (deprecated)
-             clear, and no Test, Monster, Deprecated or [PH] in the name.
-             Season of Discovery's own ammo (ids 200000 and up)
-             is included, since only this file loads there.
-  Use level  ItemSparse.RequiredLevel; where that is 0, ItemLevel minus 5
-             (every other arrow and bullet sits exactly 5 under its item
-             level), never below 1 or above the level cap of 60.
-  Next tier  The lowest use level above this row's among the vendor line of
-             the same kind, as present in this build: arrows 2512 Rough,
-             2515 Sharp, 3030 Razor, 11285 Jagged, 28053 Wicked, 28056
-             Blackflight, 41586 Terrorshaft; bullets 2516 Light, 2519 Heavy,
-             3033 Solid, 11284 Accurate, 28060 Impact, 28061 Ironbite, 41584
-             Frostbite. Omitted when nothing in the line is higher, which
-             leaves the row never outgrown on this client.
-
-The vendor line is hand-listed because DB2 cannot tell a vendor's ammo from a
-crafted or dropped white, and only vendor ammo is a replacement every hunter
-can buy. The next tier level is the player level the row becomes junk at
-(GetAmmoEraseLevel in Features/Junk-Rules.lua); the use level is carried for
-Validate Data.
-]]
 -- [itemId] = { Item Use Level, Next Tier Use Level }, -- Item Name
 ns.ALLOWED_DELETE_AMMO = {
 	-- Arrows
@@ -65,3 +39,28 @@ ns.ALLOWED_DELETE_AMMO = {
 	[3033] = { 25, 40 }, -- Solid Shot
 	[15997] = { 52 }, -- Thorium Shells
 }
+
+--[[
+How We Got the Data
+
+Last Validated
+	2026-10-09, Season of Discovery 1.15.9.70003
+
+Notes
+	- Every arrow and bullet on this client, leaving out test, monster, deprecated and placeholder items.
+	- Season of Discovery's own ammo (IDs 200000 and up) is included, since only this folder loads on Season of Discovery realms.
+	- Item Use Level is the level a hunter can use it. Where the game lists none, it's the item level minus 5, where every other arrow and bullet sits, kept between 1 and the level cap of 60. It's carried for Validate Data; the junk rule doesn't read it.
+	- Next Tier Use Level is the use level of the next better arrow or bullet a vendor sells, which is the level this ammo becomes junk (GetAmmoEraseLevel in Features/Junk-Rules.lua). Ammo with nothing better at a vendor has none, and is never junk on this client.
+	- The vendor line is hand-listed, because the game data can't tell vendor ammo from crafted or dropped ammo, and only vendor ammo is a replacement every hunter can buy. Arrows: 2512 Rough, 2515 Sharp, 3030 Razor, 11285 Jagged, 28053 Wicked, 28056 Blackflight, 41586 Terrorshaft. Bullets: 2516 Light, 2519 Heavy, 3033 Solid, 11284 Accurate, 28060 Impact, 28061 Ironbite, 41584 Frostbite. Only the ones this client has count.
+	- Found in the wago.tools tables below: Item.ClassID 6 (Projectile) with SubclassID 2 (Arrow) or 3 (Bullet), an ItemSparse row, and ItemSparse.Flags_0 bit 0x10 (deprecated) clear.
+
+SQL (CMaNGOS)
+	TODO: Add SQL Query
+
+Wowhead
+	None.
+
+wago.tools
+	https://wago.tools/db2/Item?build=1.15.9.70003
+	https://wago.tools/db2/ItemSparse?build=1.15.9.70003
+]]

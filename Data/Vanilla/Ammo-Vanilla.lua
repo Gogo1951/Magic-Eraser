@@ -41,7 +41,7 @@ ns.ALLOWED_DELETE_AMMO = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, Classic Era 1.15.9.70003
+	2026-10-09, Classic Era 1.15.9.70003
 
 Notes
 	- Every arrow and bullet on this client, leaving out test, monster, deprecated and placeholder items.

@@ -51,7 +51,7 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, TBC Anniversary 2.5.6.69795
+	2026-10-09, TBC Anniversary 2.5.6.69795
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.

@@ -53,7 +53,7 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, Classic Era 1.15.9.70003
+	2026-10-09, Classic Era 1.15.9.70003
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.

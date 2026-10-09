@@ -180,7 +180,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, TBC Anniversary 2.5.6.69795
+	2026-10-09, TBC Anniversary 2.5.6.69795
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:

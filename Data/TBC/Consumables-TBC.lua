@@ -47,6 +47,7 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[5478] = { 10 }, -- Dig Rat Stew
 	[8948] = { 45 }, -- Dried King Bolete
 	[422] = { 15 }, -- Dwarven Mild
+	[24408] = { 55 }, -- Edible Stalks
 	[13930] = { 35 }, -- Filet of Redgill
 	[3927] = { 35 }, -- Fine Aged Cheddar
 	[5066] = { 5 }, -- Fissure Plant
@@ -282,14 +283,18 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, TBC Anniversary 2.5.6.69795
+	2026-10-09, TBC Anniversary 2.5.6.69795
 
 Notes
 	- Food, water, food-and-water, and alcohol, one section each: items whose use only restores health or mana, or makes you drunk, so outgrowing one costs nothing. Test and placeholder items are left out.
 	- Item Use Level is the item level minus 10, never below 1. Where the game sets a required level, the row holds that instead.
 	- Underspore Pod holds 60 by hand: it has no required level and an item level of 100.
+	- Edible Stalks holds 55 by hand: it has no required level and an item level of 0, and it casts the same food spell as the level-55 rows (Smoked Talbuk Venison, Sunspring Carp).
 	- A consumable becomes junk ten levels past its use level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
 	- Rows outside the query were added from wago.tools build 2.5.6.69795.
+	- Found in the wago.tools tables below: Item class 0 whose first use spell (ItemEffect, SpellEffect) only applies the eating or drinking aura (84 or 85), directly or through a spell it triggers, or makes you drunk (effect 100).
+	- Elixirs, flasks and scrolls the same test finds, because their buff restores mana (the Mageblood line, Flask of Mighty Restoration), are left out: they're bought for their buff, not to eat or drink.
+	- Deprecated Cask of Merlot, Deprecated Bottle of Moonshine, Jessen's Special Slop OLD and zzOld - Brewfest Drink A are left out too: no player can get one.
 
 SQL (CMaNGOS)
 	CMaNGOS WotLK world DB (wotlk-db).
@@ -356,6 +361,8 @@ Wowhead
 
 wago.tools
 	Build 2.5.6.69795; the file never recorded which tables.
+	https://wago.tools/db2/Item?build=2.5.6.69795
+	https://wago.tools/db2/ItemSparse?build=2.5.6.69795
 	https://wago.tools/db2/ItemEffect?build=2.5.6.69795
 	https://wago.tools/db2/SpellEffect?build=2.5.6.69795
 ]]

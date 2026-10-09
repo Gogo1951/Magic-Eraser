@@ -44,7 +44,7 @@ ns.KEEP_EQUIPMENT = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, TBC Anniversary 2.5.6.69795
+	2026-10-09, TBC Anniversary 2.5.6.69795
 
 Notes
 	- White weapons and armor are judged by rule in Features/Junk-Rules.lua, the way grays are, so this file lists no junk at all: only the white gear that rule would wrongly erase. The rule checks this table before anything else.
