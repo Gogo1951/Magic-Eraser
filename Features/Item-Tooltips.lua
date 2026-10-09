@@ -152,8 +152,16 @@ local function IsTooltipDataDriven()
 		and type(GameTooltip.ProcessInfo) == "function"
 end
 
+-- Which hook installed, nil until ns.SetupTooltipHooks has run.
+local installedHookPath
+
+function ns:GetTooltipHookPath()
+	return installedHookPath
+end
+
 function ns.SetupTooltipHooks()
 	if IsTooltipDataDriven() then
+		installedHookPath = "TooltipDataProcessor"
 		--[[
 		    Modern data-driven hook. Fires for any item tooltip, so gate to bag
 		    slots (data.id is the itemID; see Enum.TooltipDataType.Item).
@@ -183,6 +191,7 @@ function ns.SetupTooltipHooks()
 		    AddLine alone would render our line outside the frame. Re-Show() when we
 		    added a line so the tooltip grows to include it.
 		]]
+		installedHookPath = "SetBagItem"
 		hooksecurefunc(GameTooltip, "SetBagItem", function(tooltip, bag, slot)
 			if not ns.IS_CARRIED_BAG[bag] then
 				return

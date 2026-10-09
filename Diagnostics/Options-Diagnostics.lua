@@ -11,17 +11,17 @@ local GetColor = ns.GetColor
 
 --[[
     A single runtime toggle gates the whole panel. When off, only the warning
-    text and the enable toggle are there; the four tabs below are left out of
+    text and the enable toggle are there; the five tabs below are left out of
     the table rather than grayed out. Left out, not hidden: AceConfigDialog
     decides whether to draw a tab frame by reading hidden as inherited from the
-    parent rather than from each tab, so four hidden tabs still get an empty
+    parent rather than from each tab, so five hidden tabs still get an empty
     bordered frame. The panel is registered as this builder, so every repaint
     rebuilds it and the toggle takes effect on the next one.
 
     Run Tests holds the live tools: the Event Log, the Taint Log, and pointers
-    to the game's own tools and Funkeh's. Settings, Code and Data each have a
-    Run All, a row per report, and one box that shows whatever ran last on that
-    tab. The runner lives in Diagnostics/Report-Runner.lua; everything here reads
+    to the game's own tools and Funkeh's. Settings, Code, Data and Localization
+    each have a Run All, a row per report, and one box that shows whatever ran
+    last on that tab. The runner lives in Diagnostics/Report-Runner.lua; everything here reads
     ns.diagnostics as it draws, and the runner repaints the panel as it goes.
 ]]
 
@@ -45,7 +45,7 @@ end
     Row budgets. AceGUI's TabGroup insets its pane 60px narrower than a plain
     panel's, and a titled box (an inline group with a name) insets another
     20px, so rows here spend less than ns.OPTIONS_ROW_WIDTH. Each budget keeps a
-    little slack under what fits, for the reason ns.OptionsSubRow gives: a row
+    little slack under what fits: a row
     summing exactly to the pane sits on the wrap boundary and can drop its last
     control onto a line of its own.
 ]]
@@ -82,8 +82,9 @@ local function Box(name, order, args)
 end
 
 --[[
-    One line of cells in an unnamed inline group, so it pins its own row (see
-    ns.OptionsSubRow): a label on the left, its controls on the right. Each
+    One line of cells in an unnamed inline group, which AceGUI always gives a
+    line to itself, so it pins its own row: a label on the left, its controls
+    on the right. Each
     cell's order is set here.
 ]]
 local function Row(order, cells)
@@ -195,7 +196,7 @@ local function BuildTaintBox(order)
 				ns:SetTaintLog(true)
 				Refresh()
 			end, function()
-				return ns:GetTaintLogState() > 0
+				return ns:GetTaintLogState() >= 2
 			end),
 			Button(D.TAINT_OFF, D.TAINT_OFF_DESCRIPTION, TAINT_BUTTON_WIDTH, function()
 				ns:SetTaintLog(false)
@@ -248,6 +249,7 @@ local SECTION_TEXT = {
 	settings = { tab = D.TAB_SETTINGS, intro = D.SETTINGS_INTRO, runAll = D.SETTINGS_RUN_ALL },
 	code = { tab = D.TAB_CODE, intro = D.CODE_INTRO, runAll = D.CODE_RUN_ALL },
 	data = { tab = D.TAB_DATA, intro = D.DATA_INTRO, runAll = D.DATA_RUN_ALL, hint = D.VALIDATE_HINT },
+	localization = { tab = D.TAB_LOCALIZATION, intro = D.LOCALIZATION_INTRO, runAll = D.LOCALIZATION_RUN_ALL },
 }
 
 local STATE_COLORS = {

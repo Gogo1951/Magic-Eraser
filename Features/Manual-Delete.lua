@@ -51,6 +51,11 @@ do
 	end
 end
 
+-- The instruction pattern above, for the Diagnostic Tools Game Names report.
+function ns:GetManualDeleteInstructionPattern()
+	return TYPE_IT_OUT_LINE
+end
+
 --[[
     Whether the item on the cursor is one the player asked us to handle. The wide
     setting takes everything and needs no lookup. The narrow one -- the default,

@@ -47,6 +47,11 @@ local function GetPlayerBits()
 	return playerRaceBit, playerClassBit
 end
 
+-- The race and class bits the quest-starter gate compares, for the Diagnostic Tools Eraser Context.
+function ns:GetPlayerQuestBits()
+	return GetPlayerBits()
+end
+
 local function IsGatedOut(mask, playerBit)
 	return mask and mask ~= 0 and bit.band(mask, playerBit) == 0
 end
@@ -109,6 +114,20 @@ end
 ]]
 local function GetAmmoEraseLevel(nextTierLevel)
 	return nextTierLevel
+end
+
+-- The level PLAYER_LEVEL_UP reported, since UnitLevel may lag the event itself.
+local levelUpLevel = 0
+
+function ns:NoteLevelUp(level)
+	if type(level) == "number" then
+		levelUpLevel = level
+	end
+end
+
+-- The level the consumable and ammo rules compare against.
+function ns:GetJunkRulesLevel()
+	return math.max(UnitLevel("player"), levelUpLevel)
 end
 
 --[[
@@ -270,7 +289,7 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice)
 		return "manual"
 	end
 
-	local playerLevel = UnitLevel("player")
+	local playerLevel = ns:GetJunkRulesLevel()
 	local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
 	local questStarterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {}
 	local consumableDatabase = ns.ALLOWED_DELETE_CONSUMABLES or {}

@@ -14,8 +14,8 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
     it.
 
     That last part is the reason the feature exists. The tables in each Data/
-    flavor folder are curated per flavor and rebuilt by the Data
-    Validation pass, so an item outside their rules has no lasting place in them
+    flavor folder are curated per flavor and rebuilt from each client's
+    Validate Data report, so an item outside their rules has no lasting place in them
     -- see ns.CLASS_REAGENTS, in the Class-Reagents file beside them, for the
     case that proved it. A list the player owns is not derived from anything, so
     nothing can drop rows out of it.

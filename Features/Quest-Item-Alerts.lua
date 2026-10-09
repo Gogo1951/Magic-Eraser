@@ -57,6 +57,15 @@ end
 ]]
 local announcedStarters = {}
 
+-- How many starters have been marked this session, for the Diagnostic Tools Eraser Context.
+function ns:CountAnnouncedQuestStarters()
+	local count = 0
+	for _ in pairs(announcedStarters) do
+		count = count + 1
+	end
+	return count
+end
+
 local ALERT_KEYS = {
 	quest = "QUEST_ITEM_READY",
 	questIneligible = "QUEST_STARTER_UNAVAILABLE",

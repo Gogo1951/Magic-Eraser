@@ -179,11 +179,12 @@ end
 --[[
     Consumable and ammo eligibility is gated on the player's level (see
     GetConsumableEraseLevel and GetAmmoEraseLevel in Junk-Rules.lua), so leveling
-    up can newly qualify outgrown food or ammo. Re-scan on level-up so the candidate reflects the new level
-    immediately instead of waiting for the next bag update or quest turn-in to
-    happen to fire.
+    up can newly qualify outgrown food or ammo, and a ding brings no bag update.
+    The rescan uses the event's own level, because UnitLevel may not be updated
+    yet when the event fires.
 ]]
-function ns:OnPlayerLevelUp()
+function ns:OnPlayerLevelUp(level)
+	ns:NoteLevelUp(level)
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
 end

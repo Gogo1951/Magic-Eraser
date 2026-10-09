@@ -114,7 +114,7 @@ L["TAB_ERASE_LIST"] = "삭제 목록"
 L["ENABLED"] = "활성화"
 L["DISABLED"] = "비활성화"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "예시: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "예시 아이템"
 
@@ -172,8 +172,6 @@ L["OPTIONS_ERASE_BUTTON"] = "삭제"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"미니맵 버튼을 좌클릭하는 것과 똑같이 다음 아이템을 삭제합니다."
 L["OPTIONS_PROTECT_BUTTON"] = "보호"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"이 아이템을 이 캐릭터의 보호 목록에 추가해 절대 삭제하거나 판매하지 않습니다."
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "가방 속 모든 아이템"
@@ -311,7 +309,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"가방 속 완료된 퀘스트 아이템이나 수락 불가 퀘스트 시작 아이템을 안전하게 삭제할 수 있게 되는 즉시 알려 줍니다."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "퀘스트 아이템 알림 활성화"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"이 메시지를 켜거나 끕니다. 어느 쪽이든 완료된 퀘스트 아이템과 수락 불가 퀘스트 시작 아이템은 그대로 삭제됩니다."
+	"대화창 알림을 켜거나 끕니다. 어느 쪽이든 완료된 퀘스트 아이템과 수락 불가 퀘스트 시작 아이템은 그대로 삭제됩니다."
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "가방 공간 경고"
@@ -339,7 +337,6 @@ L["OPTIONS_LIST_ADD_ID_INVALID"] =
 	"아이템 ID를 입력하거나, 대화창의 아이템 링크를 Shift+클릭하세요."
 L["OPTIONS_LIST_REMOVE"] = "제거"
 L["OPTIONS_LIST_EMPTY"] = "이 목록은 비어 있습니다."
-L["OPTIONS_LIST_PROTECTED_TAG"] = "보호됨"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -358,8 +355,9 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"삭제 목록에 있는 아이템은 가치와 상관없이 항상 잡동사니로 취급되어, 미니맵 버튼으로 삭제되고 상인에게 판매됩니다. 보호 목록이 여전히 우선하며, 보호 목록에 밀린 줄에는 보호됨이라고 표시됩니다."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"이 아이템을 모든 캐릭터 목록으로 옮겨, 추가한 적 없는 캐릭터를 포함해 모든 캐릭터에서 삭제합니다."
+L["OPTIONS_LIST_PROTECTED_TAG"] = "보호됨"
 L["OPTIONS_ERASE_RESTORE"] = "기본값 복원"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"이 캐릭터의 삭제 목록을 Magic Eraser가 처음 넣어 주는 아이템으로 되돌립니다."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
-	"이 캐릭터의 삭제 목록을 비우고 Magic Eraser가 처음에 넣어 주는 아이템만 되돌릴까요? 직접 추가한 항목은 모두 제거됩니다."
+	"이 캐릭터의 삭제 목록을 비우고 Magic Eraser가 처음 넣어 주는 아이템만 다시 넣을까요? 직접 추가한 항목은 모두 제거됩니다."
