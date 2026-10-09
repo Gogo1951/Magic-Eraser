@@ -46,75 +46,6 @@ function ns.OptionsRowLabel(text, order, width)
 end
 
 --------------------------------------------------------------------------------
--- Sub-Option Rows
---------------------------------------------------------------------------------
-
---[[
-    A sub-option is a control that only means anything while the toggle above it
-    is on, and it is marked two ways at once.
-
-    The row leads with a blank indent cell, which moves the checkbox itself.
-    Padding the label instead would indent only the caption -- AceConfig pins a
-    checkbox at the left edge of its own widget -- leaving the box lined up with
-    its parent's and the words drifting away from it.
-
-    ns.OptionsSubLabel then colors the caption HELP silver against the parent's
-    white, so the row reads as subordinate rather than merely shifted. Silver is
-    the palette's secondary-text role and is well clear of the dimmer gray AceGUI
-    paints a genuinely disabled label.
-
-    The whole row is wrapped in an inline group with no name, which AceConfig
-    renders as a bare SimpleGroup -- no border, no title, no padding -- at "fill"
-    width. That wrapper is load-bearing, not decoration. Laid out flat, the
-    indent and its control are just two more widgets in the panel's flow, kept
-    together only by their widths happening to fill the line; the pair after them
-    then packs onto whatever space is left and its indent stops indenting
-    anything. A fill widget always gets a line to itself, so one group per
-    sub-option pins one row per sub-option no matter what the pane is doing.
-
-    Inside the group the controls need slack rather than an exact fit: a row
-    summing to the full pane width sits on the wrap boundary, where a pass that
-    measures a control before its width is applied tips the control onto its own
-    line and strands the indent above it.
-
-    hidden goes on the group and never on the members; hung off the controls
-    individually, the indent is left behind on its own line when the section
-    collapses. Lives here with the other row builders, though only Bag-Space
-    Warnings on Alerts & Tooltips builds one today. A row no switch gates,
-    like the Erasing panel's kind rows, is a plain caption and control
-    instead, with no indent and no gray; a switch with one setting of its own
-    takes the caption's place, with the dropdown beside it.
-]]
-function ns.OptionsSubRow(order, hidden, controls)
-	local args = {
-		indent = {
-			type = "description",
-			name = " ",
-			width = ns.OPTIONS_SUB_INDENT_WIDTH,
-			order = 1,
-		},
-	}
-
-	for index, control in ipairs(controls) do
-		control.order = index + 1
-		args["control" .. index] = control
-	end
-
-	return {
-		type = "group",
-		name = "",
-		inline = true,
-		order = order,
-		hidden = hidden,
-		args = args,
-	}
-end
-
-function ns.OptionsSubLabel(text)
-	return GetColor("HELP") .. text .. "|r"
-end
-
---------------------------------------------------------------------------------
 -- Feature Switches
 --------------------------------------------------------------------------------
 
@@ -150,7 +81,7 @@ end
 --[[
     Lays toggles out two to a line, each pair in its own unnamed inline group so
     every pair pins its own row. The widths leave slack under
-    ns.OPTIONS_ROW_WIDTH, for the reason ns.OptionsSubRow gives: a row summing
+    ns.OPTIONS_ROW_WIDTH: a row summing
     exactly to the pane sits on the wrap boundary and can drop its second
     toggle onto a line of its own. Each toggle's width and order are set here.
 ]]

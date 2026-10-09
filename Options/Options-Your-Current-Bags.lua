@@ -33,8 +33,8 @@ local QUEUE_LENGTH = 5
     rather than ns.OPTIONS_ROW_WIDTH, because its rows are a table and the
     buttons need room for their captions: AceGUI's Button insets its text 15px
     from each edge, so anything narrower clips "Protect". The pane holds about
-    3.7 units; the columns sum to 3.6, leaving the slack ns.OptionsSubRow
-    explains.
+    3.7 units; the columns sum to 3.6, leaving slack, since a row exactly on
+    the wrap boundary can tip its last cell onto its own line.
 
     Every row shares one set of columns: the item with its count, its value,
     its reason, then two button slots. Up Next rows leave the Erase slot blank,
@@ -104,7 +104,7 @@ local function ProtectButton(candidate, order)
 	return {
 		type = "execute",
 		name = L["OPTIONS_PROTECT_BUTTON"],
-		desc = L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"],
+		desc = L["OPTIONS_CHECK_PROTECT_DESCRIPTION"],
 		width = BUTTON_WIDTH,
 		order = order,
 		func = function()

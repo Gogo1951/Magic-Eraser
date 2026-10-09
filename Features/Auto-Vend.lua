@@ -35,6 +35,11 @@ local scanRetries = 0
 local MAX_VEND_PASSES = 4
 local vendPasses = 0
 
+-- Where a pass stands, for the Diagnostic Tools Merchant & Bank Context.
+function ns:GetAutoVendState()
+	return isSelling, vendPending, vendPasses, MAX_VEND_PASSES
+end
+
 local CLOSE_CONFIRM_SECONDS = 0.4
 
 --[[
@@ -445,7 +450,7 @@ function ns:OnMerchantClosed()
 
 		--[[
 		    Bag-space warnings are suppressed while the merchant window is open
-		    (see OnBagUpdateDelayed in Core), since selling churns free slots.
+		    (see ProcessBagUpdate in Core), since selling churns free slots.
 		    Re-check here so the warning reflects where the bags landed after this
 		    visit.
 		]]

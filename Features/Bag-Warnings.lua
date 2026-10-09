@@ -35,6 +35,11 @@ local lastSeenFree = nil
 local BAG_SETTLE_SECONDS = 2
 local bagWarningsHeldUntil = 0
 
+-- The baseline and the hold deadline, for the Diagnostic Tools Merchant & Bank Context.
+function ns:GetBagWarningState()
+	return lastSeenFree, bagWarningsHeldUntil
+end
+
 --[[
     A merchant, mailbox or bank visit is exactly when bags churn hardest --
     selling junk and pulling items out of the bank move whole stacks, buying and
@@ -42,8 +47,8 @@ local bagWarningsHeldUntil = 0
     noise that is stale the moment the window closes. We suppress it while any of
     those windows is open (checked live rather than via a tracked flag so it
     stays correct even if a SHOW event is missed) and re-check once on close, so
-    the warning reflects where the bags actually landed. Core's
-    OnBagUpdateDelayed gates the nudge on this, so it is exposed on ns.
+    the warning reflects where the bags actually landed. ProcessBagUpdate in
+    Core gates the nudge on this, so it is exposed on ns.
 ]]
 function ns:IsBagWindowOpen()
 	return (MerchantFrame and MerchantFrame:IsShown())
@@ -133,7 +138,7 @@ end
 --[[
     Closing the mailbox is the counterpart to the merchant-close nudge in
     Auto-Vend's OnMerchantClosed: bag-space warnings are held while the window is
-    open (see Core's OnBagUpdateDelayed), so re-check once it closes to warn if
+    open (see ProcessBagUpdate in Core), so re-check once it closes to warn if
     looting mail left the bags at or below the threshold.
 ]]
 function ns:OnMailClosed()

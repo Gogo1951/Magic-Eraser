@@ -57,7 +57,7 @@ ns.ALLOWED_DELETE_AMMO = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, TBC Anniversary 2.5.6.69795
+	2026-10-09, TBC Anniversary 2.5.6.69795
 
 Notes
 	- Every arrow and bullet on this client, leaving out test, monster, deprecated and placeholder items.

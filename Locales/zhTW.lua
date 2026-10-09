@@ -111,7 +111,7 @@ L["TAB_ERASE_LIST"] = "刪除清單"
 L["ENABLED"] = "已啟用"
 L["DISABLED"] = "已停用"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "範例：%s"
 L["OPTIONS_EXAMPLE_ITEM"] = "範例物品"
 
@@ -166,8 +166,6 @@ L["OPTIONS_STACKS"] = "(%d 個堆疊)"
 L["OPTIONS_ERASE_BUTTON"] = "刪除"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "刪除下一件物品，效果等同左鍵點擊小地圖按鈕。"
 L["OPTIONS_PROTECT_BUTTON"] = "保護"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"將此物品加入此角色的保護清單，讓它永遠不會被刪除或出售。"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "背包中的所有物品"
@@ -302,7 +300,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"當背包中的已完成任務的物品或無法接受的任務起始物品可以安全刪除時，立即通知你。"
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "啟用任務物品提醒"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"開啟或關閉這些訊息。無論如何，已完成任務的物品和無法接受的任務起始物品仍會被刪除。"
+	"開啟或關閉聊天框中的提醒。無論如何，已完成任務的物品和無法接受的任務起始物品仍會被刪除。"
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "背包空間警告"
@@ -329,7 +327,6 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "請輸入物品 ID，或在聊天框中 Shift+點擊物品連結。"
 L["OPTIONS_LIST_REMOVE"] = "移除"
 L["OPTIONS_LIST_EMPTY"] = "此清單為空。"
-L["OPTIONS_LIST_PROTECTED_TAG"] = "已保護"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -348,6 +345,7 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"刪除清單中的物品無論價值多少都一律視為雜物：由小地圖按鈕刪除，並在商人處出售。你的保護清單依然優先，被它否決的項目會標示為已保護。"
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"將此物品移到所有角色清單，使它在每個角色上都會被刪除，包括從未加入過它的角色。"
+L["OPTIONS_LIST_PROTECTED_TAG"] = "已保護"
 L["OPTIONS_ERASE_RESTORE"] = "恢復預設"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] = "將此角色的刪除清單恢復為 Magic Eraser 的初始物品。"
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =

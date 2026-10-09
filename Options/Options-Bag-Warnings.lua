@@ -5,7 +5,50 @@ local format = string.format
 
 local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
-local SubRow, SubLabel = ns.OptionsSubRow, ns.OptionsSubLabel
+local GetColor = ns.GetColor
+
+--------------------------------------------------------------------------------
+-- Sub-Option Rows
+--------------------------------------------------------------------------------
+
+--[[
+    A sub-option row leads with a blank indent cell, because AceConfig pins a
+    checkbox at the left edge of its own widget: padding the label would indent
+    only the caption. The row is one unnamed inline group, so it keeps a line
+    to itself; laid out flat, the next pair packs onto the leftover space and
+    its indent stops indenting. The cells leave slack under the row budget,
+    since a row exactly on the wrap boundary can tip its control onto its own
+    line. hidden goes on the group, never the members, or the indent is left
+    behind when the section collapses.
+]]
+local function SubRow(order, hidden, controls)
+	local args = {
+		indent = {
+			type = "description",
+			name = " ",
+			width = ns.OPTIONS_SUB_INDENT_WIDTH,
+			order = 1,
+		},
+	}
+
+	for index, control in ipairs(controls) do
+		control.order = index + 1
+		args["control" .. index] = control
+	end
+
+	return {
+		type = "group",
+		name = "",
+		inline = true,
+		order = order,
+		hidden = hidden,
+		args = args,
+	}
+end
+
+local function SubLabel(text)
+	return GetColor("HELP") .. text .. "|r"
+end
 
 --[[
     The bag-space row is a caption beside a slider, the same pair of widths every

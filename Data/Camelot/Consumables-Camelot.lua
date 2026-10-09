@@ -106,12 +106,14 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[278118] = { 25 }, -- Rich Broth
 	[5057] = { 1 }, -- Ripe Watermelon
 	[8952] = { 45 }, -- Roasted Quail
+	[287963] = { 45 }, -- Roasted Quail
 	[18255] = { 45 }, -- Runn Tum Tuber
 	[1326] = { 5 }, -- Sauteed Sunfish
 	[260627] = { 45 }, -- Savory Shen'dralar Steak
 	[16171] = { 45 }, -- Shinsollo
 	[4536] = { 1 }, -- Shiny Red Apple
 	[6299] = { 1 }, -- Sickly Looking Fish
+	[240945] = { 1 }, -- Slice of Carrie's Apple Pie
 	[4656] = { 1 }, -- Small Pumpkin
 	[278121] = { 15 }, -- Smoked Sausage
 	[4538] = { 15 }, -- Snapvine Watermelon
@@ -163,6 +165,7 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[1205] = { 15 }, -- Melon Juice
 	[1645] = { 35 }, -- Moonberry Juice
 	[8766] = { 45 }, -- Morning Glory Dew
+	[287964] = { 45 }, -- Morning Glory Dew
 	[231778] = { 55 }, -- Mountain Spring Water
 	[159] = { 1 }, -- Refreshing Spring Water
 	[1708] = { 25 }, -- Sweet Nectar
@@ -227,14 +230,18 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, WoW Forever 1.60.1.70205
+	2026-10-09, WoW Forever 1.60.1.70291
 
 Notes
 	- Food, water, food-and-water, and alcohol, one section each: items whose use only restores health or mana, or makes you drunk, so outgrowing one costs nothing. Test and placeholder items are left out.
 	- Forever's cooked food gives a Well Fed buff and bonus XP from kills, so it's left out: buff food stays worth eating.
 	- Item Use Level is the item level minus 10, never below 1. Where the game sets a required level, the row holds that instead.
 	- A consumable becomes junk ten levels past its use level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
-	- Rows outside the query were added from wago.tools build 1.60.1.70205.
+	- Roasted Quail 287963 and Morning Glory Dew 287964, this client's soulbound copies of 8952 and 8766, hold 45 by hand like their twins: the game sets their required level to 1, which would make them junk at level 11.
+	- Rows outside the query were added from wago.tools builds 1.60.1.70205 and 1.60.1.70291.
+	- Found in the wago.tools tables below: Item class 0 whose first use spell (ItemEffect, SpellEffect) only applies the eating or drinking aura (84 or 85), directly or through a spell it triggers, or makes you drunk (effect 100).
+	- Elixirs, flasks and scrolls the same test finds, because their buff restores mana (the Mageblood line, Scroll of Arcane Recovery), are left out: they're bought for their buff, not to eat or drink.
+	- Deprecated Cask of Merlot and Deprecated Bottle of Moonshine are left out too: no player can get one.
 
 SQL (CMaNGOS)
 	CMaNGOS WotLK world DB (wotlk-db).
@@ -301,6 +308,9 @@ Wowhead
 
 wago.tools
 	Build 1.60.1.70205; the file never recorded which tables.
-	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70205
-	https://wago.tools/db2/SpellEffect?build=1.60.1.70205
+	https://wago.tools/db2/Item?build=1.60.1.70291
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70291
+	https://wago.tools/db2/ItemEffect?build=1.60.1.70291
+	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70291
+	https://wago.tools/db2/SpellEffect?build=1.60.1.70291
 ]]

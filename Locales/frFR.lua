@@ -115,7 +115,7 @@ L["TAB_ERASE_LIST"] = "Liste de suppression"
 L["ENABLED"] = "Activé"
 L["DISABLED"] = "Désactivé"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Exemple : %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Objet d'exemple"
 
@@ -172,8 +172,6 @@ L["OPTIONS_ERASE_BUTTON"] = "Supprimer"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Supprime le prochain objet, comme un clic gauche sur le bouton de la minicarte."
 L["OPTIONS_PROTECT_BUTTON"] = "Protéger"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"Ajoute cet objet à la Liste de protection de ce personnage, pour qu'il ne soit jamais supprimé ni vendu."
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Tout le contenu de vos sacs"
@@ -287,7 +285,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Retire le rebut de votre banque quand vous l'ouvrez, pour qu'il soit vendu ou supprimé avec le reste. Ne prend que dans votre propre banque, jamais dans une banque de guilde ni dans une banque partagée du compte."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Activer la récupération à la banque"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Active ou désactive la récupération à la banque. Elle ne retire jamais plus que vos emplacements de sac libres ne peuvent contenir."
+	"Active ou désactive la Récupération à la banque. Elle ne retire jamais plus que ce que vos emplacements de sac libres peuvent contenir."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Laisse %d emplacements de sac libres, car les Alertes d'espace de sac sont activées."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] =
 	"Laisse 1 emplacement de sac libre, car les Alertes d'espace de sac sont activées."
@@ -312,7 +310,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Vous prévient dès qu'un Objet de quête terminée ou un Déclencheur de quête sans issue dans vos sacs peut être supprimé en toute sécurité."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Activer les alertes d'objets de quête"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"Active ou désactive ces messages. Les Objets de quête terminée et les Déclencheurs de quête sans issue sont supprimés dans tous les cas."
+	"Active ou désactive les alertes dans la discussion. Les Objets de quête terminée et les Déclencheurs de quête sans issue sont supprimés dans tous les cas."
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Alertes d'espace de sac"
@@ -339,7 +337,6 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Saisissez un ID d'objet, ou Maj+cliquez sur un lien d'objet dans la discussion."
 L["OPTIONS_LIST_REMOVE"] = "Retirer"
 L["OPTIONS_LIST_EMPTY"] = "Cette liste est vide."
-L["OPTIONS_LIST_PROTECTED_TAG"] = "Protégé"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -358,8 +355,9 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"Les objets d'une Liste de suppression sont toujours du rebut, quelle que soit leur valeur : supprimés par le bouton de la minicarte et vendus chez les marchands. Votre Liste de protection l'emporte toujours, et une ligne qu'elle annule affiche Protégé."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Déplace cet objet vers la liste Tous les personnages, pour qu'il soit supprimé sur tous vos personnages, y compris ceux pour lesquels il n'a jamais été ajouté."
+L["OPTIONS_LIST_PROTECTED_TAG"] = "Protégé"
 L["OPTIONS_ERASE_RESTORE"] = "Restaurer les valeurs par défaut"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Rétablit la Liste de suppression de ce personnage avec les objets fournis au départ par Magic Eraser."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
-	"Vider la Liste de suppression de ce personnage et ne remettre que les objets fournis au départ par Magic Eraser ? Tout ce que vous avez ajouté vous-même est retiré."
+	"Vider la Liste de suppression de ce personnage et n'y remettre que les objets fournis au départ par Magic Eraser ? Tout ce que vous avez ajouté vous-même est retiré."

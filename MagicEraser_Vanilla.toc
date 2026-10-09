@@ -95,6 +95,7 @@ Diagnostics/Event-Log.lua
 Diagnostics/Code-Reports.lua
 Diagnostics/Settings-Reports.lua
 Diagnostics/Validate-Data.lua
+Diagnostics/Localization-Reports.lua
 Diagnostics/Report-Runner.lua
 
 # Options

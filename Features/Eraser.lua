@@ -52,6 +52,11 @@ function ns:InvalidateCache()
 	end
 end
 
+-- The retry counter and its cap, for the Diagnostic Tools Eraser Context.
+function ns:GetScanRetryState()
+	return scanRetries, MAX_SCAN_RETRIES, retryPending
+end
+
 local function ScheduleScanRetry()
 	if retryPending or scanRetries >= MAX_SCAN_RETRIES then
 		return

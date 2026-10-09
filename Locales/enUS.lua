@@ -110,7 +110,7 @@ L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
 L["DISABLED"] = "Disabled"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Example: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Example Item"
 
@@ -161,12 +161,10 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 	"What the mini-map button erases next and the junk behind it, then everything else you're carrying, ready to erase or protect."
 L["OPTIONS_UP_NEXT"] = "Up Next"
 L["OPTIONS_CLUTTER_TOTAL"] = "Total"
-L["OPTIONS_STACKS"] = "(%d stacks)"
+L["OPTIONS_STACKS"] = "(%d Stacks)"
 L["OPTIONS_ERASE_BUTTON"] = "Erase"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "Erases the next item up, same as a left-click on the mini-map button."
 L["OPTIONS_PROTECT_BUTTON"] = "Protect"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"Adds this item to this character's Protect List, so it's never erased or sold."
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Everything in Your Bags"
@@ -275,7 +273,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Pulls junk out of your bank when you open it, so it can be sold or erased with the rest. It only ever takes from your own bank, never a guild bank or an account-wide bank."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Enable Bank Retrieval"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Turns bank retrieval on or off. It never pulls more than your free bag slots can hold."
+	"Turns Bank Retrieval on or off. It never pulls more than your free bag slots can hold."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Leaves %d bag slots free, because Bag-Space Warnings are on."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Leaves 1 bag slot free, because Bag-Space Warnings are on."
 
@@ -298,7 +296,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Lets you know the moment a Completed Quest Item or Dead-End Quest Starter in your bags is safe to erase."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Enable Quest Item Alerts"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"Turns these messages on or off. Completed Quest Items and Dead-End Quest Starters are still erased either way."
+	"Turns the chat alerts on or off. Completed Quest Items and Dead-End Quest Starters are still erased either way."
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Bag-Space Warnings"
@@ -325,7 +323,6 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or Shift-click an item link in chat."
 L["OPTIONS_LIST_REMOVE"] = "Remove"
 L["OPTIONS_LIST_EMPTY"] = "This list is empty."
-L["OPTIONS_LIST_PROTECTED_TAG"] = "Protected"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -343,8 +340,9 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"Items on an Erase List are always junk, whatever they're worth: erased by the mini-map button and sold at merchants. Your Protect List still wins, and a row it overrules says Protected."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Moves this item to the All Characters list, so it's erased on every character, including ones it was never added for."
+L["OPTIONS_LIST_PROTECTED_TAG"] = "Protected"
 L["OPTIONS_ERASE_RESTORE"] = "Restore Defaults"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Puts this character's Erase List back to the items Magic Eraser starts it with."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
-	"Clear this character's Erase List and put back only the items Magic Eraser starts you with? Anything you added yourself is removed."
+	"Clear this character's Erase List and put back only the items Magic Eraser starts it with? Anything you added yourself is removed."

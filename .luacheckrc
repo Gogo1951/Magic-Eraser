@@ -78,5 +78,5 @@ globals = {
 	"MagicEraser_Erase",
 	"MagicEraserScanTooltip",
 	"SLASH_MAGICERASER1",
-	"SlashCmdList",
+	SlashCmdList = { fields = { "MAGICERASER" } },
 }

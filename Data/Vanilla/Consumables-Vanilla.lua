@@ -212,13 +212,17 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, Classic Era 1.15.9.70003
+	2026-10-09, Classic Era 1.15.9.70003
 
 Notes
 	- Food, water, food-and-water, and alcohol, one section each: items whose use only restores health or mana, or makes you drunk, so outgrowing one costs nothing. Test and placeholder items are left out.
 	- Item Use Level is the item level minus 10, never below 1. Where the game sets a required level, the row holds that instead.
 	- A consumable becomes junk ten levels past its use level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
 	- Rows outside the query were added from wago.tools build 1.15.9.70003.
+	- Found in the wago.tools tables below: Item class 0 whose first use spell (ItemEffect, SpellEffect) only applies the eating or drinking aura (84 or 85), directly or through a spell it triggers, or makes you drunk (effect 100).
+	- Elixirs, flasks and scrolls the same test finds, because their buff restores mana (Mageblood Potion, Scroll of Arcane Recovery), are left out: they're bought for their buff, not to eat or drink.
+	- Deprecated Cask of Merlot and Deprecated Bottle of Moonshine are left out too: no player can get one.
+	- Season of Discovery's own food and drink, which this client's tables list too (Drinkable Stratholme Holy Water 227813, Mountain Spring Water 231778, Slice of Carrie's Apple Pie 240945), is left out of this folder.
 
 SQL (CMaNGOS)
 	CMaNGOS WotLK world DB (wotlk-db).
@@ -285,6 +289,8 @@ Wowhead
 
 wago.tools
 	Build 1.15.9.70003; the file never recorded which tables.
+	https://wago.tools/db2/Item?build=1.15.9.70003
+	https://wago.tools/db2/ItemSparse?build=1.15.9.70003
 	https://wago.tools/db2/ItemEffect?build=1.15.9.70003
 	https://wago.tools/db2/SpellEffect?build=1.15.9.70003
 ]]

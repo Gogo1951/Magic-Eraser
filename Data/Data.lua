@@ -81,8 +81,7 @@ ns.OPTIONS_SUB_INDENT_WIDTH = 0.115
     the right edge exactly where a top-level row's control does. Every dropdown
     and slider then lines up down the panel, right-aligned, the way every
     Gogo1951 add-on lays them out. Less a hair of slack, because an inline
-    group summing to its budget can tip its last control onto its own line
-    (see ns.OptionsSubRow).
+    group summing to its budget can tip its last control onto its own line.
 ]]
 ns.OPTIONS_SUB_LABEL_WIDTH = ns.OPTIONS_LABEL_WIDTH - ns.OPTIONS_SUB_INDENT_WIDTH - 0.05
 

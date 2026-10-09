@@ -29,6 +29,7 @@ local GetItemClassName = C_Item.GetItemClassInfo
 local GetItemSubClassName = C_Item.GetItemSubClassInfo
 local GetSpellDescription = C_Spell.GetSpellDescription
 local RequestLoadSpellData = C_Spell.RequestLoadSpellData
+local IsSpellDataCached = C_Spell.IsSpellDataCached
 local GetQuestTitle = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestInfo
 local RequestLoadQuest = C_QuestLog.RequestLoadQuestByID
 
@@ -563,10 +564,13 @@ end
 
 --[[
     Whether an id's row can be written: an item once its data, its tooltip and
-    its spell's description have loaded, a quest once it has a title, and any
-    entry at once when a read has thrown, so the run carries on past it. An item
-    whose spell only shows up once its data arrives gets that spell requested
-    then. A client without GetSpellDescription can't be waited on for one.
+    its spell have loaded, a quest once it has a title, and any entry at once
+    when a read has thrown, so the run carries on past it. An item whose spell
+    only shows up once its data arrives gets that spell requested then. Plenty
+    of quest-object spells (keys that cast Opening) have no description at all,
+    so an empty one settles once the client says the spell's data is cached, or
+    where it can't say, one poll after the request. A client without
+    GetSpellDescription can't be waited on for one.
 ]]
 local function IsSettled(entry)
 	if entry.problem then
@@ -594,12 +598,26 @@ local function IsSettled(entry)
 		end
 		return false
 	end
-	return SpellDescription(spellId) ~= nil
+	if SpellDescription(spellId) ~= nil then
+		return true
+	end
+	if type(IsSpellDataCached) == "function" then
+		local ok, cached = pcall(IsSpellDataCached, spellId)
+		if ok then
+			return cached == true
+		end
+	end
+	if entry.spellPolled then
+		return true
+	end
+	entry.spellPolled = true
+	return false
 end
 
 --[[
     A straggler the polls gave up on: an item whose data loaded without its
-    tooltip or spell text is INCOMPLETE, and a quest without a title is NO TITLE.
+    tooltip or its spell's data is INCOMPLETE, and a quest without a title is
+    NO TITLE.
 ]]
 local function UnsettledStatus(entry)
 	if entry.problem then

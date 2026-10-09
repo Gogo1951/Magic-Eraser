@@ -114,7 +114,7 @@ L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
 L["DISABLED"] = "Deaktiviert"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Beispiel: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
 
@@ -172,8 +172,6 @@ L["OPTIONS_ERASE_BUTTON"] = "Löschen"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche."
 L["OPTIONS_PROTECT_BUTTON"] = "Schützen"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"Fügt diesen Gegenstand zur Schutzliste dieses Charakters hinzu, damit er nie gelöscht oder verkauft wird."
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Alles in deinen Taschen"
@@ -310,7 +308,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Sagt dir sofort Bescheid, wenn ein Gegenstand abgeschlossener Quests oder ein unbrauchbarer Queststarter in deinen Taschen sicher gelöscht werden kann."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Hinweise zu Questgegenständen aktivieren"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"Schaltet diese Nachrichten ein oder aus. Gegenstände abgeschlossener Quests und unbrauchbare Queststarter werden so oder so gelöscht."
+	"Schaltet die Hinweise im Chat ein oder aus. Gegenstände abgeschlossener Quests und unbrauchbare Queststarter werden so oder so gelöscht."
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Taschenplatz-Warnungen"
@@ -338,7 +336,6 @@ L["OPTIONS_LIST_ADD_ID_INVALID"] =
 	"Gib eine Gegenstands-ID ein oder klicke mit Umschalt auf einen Gegenstandslink im Chat."
 L["OPTIONS_LIST_REMOVE"] = "Entfernen"
 L["OPTIONS_LIST_EMPTY"] = "Diese Liste ist leer."
-L["OPTIONS_LIST_PROTECTED_TAG"] = "Geschützt"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -357,8 +354,9 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"Gegenstände auf einer Löschliste gelten immer als Ramsch, egal was sie wert sind: Sie werden über die Minikarten-Schaltfläche gelöscht und bei Händlern verkauft. Deine Schutzliste hat trotzdem Vorrang, und eine Zeile, die sie überstimmt, zeigt Geschützt an."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Verschiebt diesen Gegenstand auf die Liste für Alle Charaktere, damit er auf jedem Charakter gelöscht wird, auch auf denen, für die er nie hinzugefügt wurde."
+L["OPTIONS_LIST_PROTECTED_TAG"] = "Geschützt"
 L["OPTIONS_ERASE_RESTORE"] = "Standard wiederherstellen"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Setzt die Löschliste dieses Charakters auf die Gegenstände zurück, mit denen Magic Eraser sie anlegt."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
-	"Die Löschliste dieses Charakters leeren und nur die Gegenstände zurückholen, mit denen Magic Eraser startet? Alles, was du selbst hinzugefügt hast, wird entfernt."
+	"Die Löschliste dieses Charakters leeren und nur die Gegenstände zurückholen, mit denen Magic Eraser sie anlegt? Alles, was du selbst hinzugefügt hast, wird entfernt."

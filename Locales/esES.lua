@@ -112,7 +112,7 @@ L["TAB_ERASE_LIST"] = "Lista de eliminación"
 L["ENABLED"] = "Activado"
 L["DISABLED"] = "Desactivado"
 
--- Example lines under chat-printing features. %s is the whole chat line.
+-- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Ejemplo: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Objeto de ejemplo"
 
@@ -170,8 +170,6 @@ L["OPTIONS_ERASE_BUTTON"] = "Eliminar"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Elimina el próximo objeto, igual que un clic izquierdo en el botón del minimapa."
 L["OPTIONS_PROTECT_BUTTON"] = "Proteger"
-L["OPTIONS_PROTECT_BUTTON_DESCRIPTION"] =
-	"Añade este objeto a la Lista de protegidos de este personaje, para que nunca se elimine ni se venda."
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Todo lo que llevas en las bolsas"
@@ -283,7 +281,7 @@ L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Saca la basura de tu banco al abrirlo, para que pueda venderse o eliminarse con el resto. Solo toma objetos de tu propio banco, nunca de un banco de hermandad ni de un banco de cuenta."
 L["OPTIONS_ENABLE_BANK_RETRIEVAL"] = "Habilitar recuperación del banco"
 L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
-	"Activa o desactiva la recuperación del banco. Nunca saca más de lo que cabe en tus espacios de bolsa libres."
+	"Activa o desactiva la Recuperación del banco. Nunca saca más de lo que cabe en tus espacios de bolsa libres."
 L["OPTIONS_BANK_CUSHION_NOTE"] =
 	"Deja %d espacios de bolsa libres, porque los Avisos de espacio en bolsas están activados."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] =
@@ -309,7 +307,7 @@ L["OPTIONS_QUEST_ALERTS_DESCRIPTION"] =
 	"Te avisa en cuanto un Objeto de misión completada o un Iniciador de misión sin salida de tus bolsas se puede eliminar sin riesgo."
 L["OPTIONS_ENABLE_QUEST_ALERTS"] = "Habilitar avisos de objetos de misión"
 L["OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION"] =
-	"Activa o desactiva estos mensajes. Los Objetos de misión completada y los Iniciadores de misión sin salida se eliminan igualmente."
+	"Activa o desactiva los avisos en el chat. Los Objetos de misión completada y los Iniciadores de misión sin salida se eliminan igualmente."
 
 -- Bag-Space Warnings
 L["OPTIONS_BAGS_FULL_HEADER"] = "Avisos de espacio en bolsas"
@@ -336,7 +334,6 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Escribe un ID de objeto, o haz Mayús+clic en un enlace de objeto del chat."
 L["OPTIONS_LIST_REMOVE"] = "Quitar"
 L["OPTIONS_LIST_EMPTY"] = "Esta lista está vacía."
-L["OPTIONS_LIST_PROTECTED_TAG"] = "Protegido"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List
@@ -355,8 +352,9 @@ L["OPTIONS_ERASE_DESCRIPTION"] =
 	"Los objetos de una Lista de eliminación siempre son basura, valgan lo que valgan: los elimina el botón del minimapa y se venden a los vendedores. Tu Lista de protegidos sigue teniendo prioridad, y una fila que esta anula indica Protegido."
 L["OPTIONS_ERASE_PROMOTE_DESCRIPTION"] =
 	"Mueve este objeto a la lista de Todos los personajes, para que se elimine en todos los personajes, incluidos aquellos en los que nunca se añadió."
+L["OPTIONS_LIST_PROTECTED_TAG"] = "Protegido"
 L["OPTIONS_ERASE_RESTORE"] = "Restaurar valores predeterminados"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Devuelve la Lista de eliminación de este personaje a los objetos con los que Magic Eraser la empieza."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
-	"¿Vaciar la Lista de eliminación de este personaje y dejar solo los objetos con los que Magic Eraser te hace empezar? Se quitará todo lo que hayas añadido tú."
+	"¿Vaciar la Lista de eliminación de este personaje y dejar solo los objetos con los que Magic Eraser la empieza? Se quitará todo lo que hayas añadido tú."

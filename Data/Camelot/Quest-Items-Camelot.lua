@@ -343,7 +343,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[16782] = { 6922 }, -- Strange Water Globe
 	[4506] = { 682 }, -- Stromgarde Badge
 	[5165] = { 905 }, -- Sunscale Feather
-	[6866] = { 1779, 1781 }, -- Symbol of Life
+	[6866] = { 1785, 1788 }, -- Symbol of Life
 	[7516] = { 1948 }, -- Tabetha's Instructions
 	[21751] = { 8536 }, -- Tactical Task Briefing III
 	[20946] = { 8536 }, -- Tactical Task Briefing III
@@ -413,12 +413,13 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-04, WoW Forever 1.60.1.70205
+	2026-10-09, WoW Forever 1.60.1.70291
 
 Notes
 	- Quest items the player can still be holding once the quest is done, each keyed to the quest whose completion makes it safe to erase. The row fires on the first listed quest flagged complete (Features/Junk-Rules.lua); Features/Quest-Item-Alerts.lua reads it too.
 	- Key each row to the LATEST quest that could still need the item. Erasing an item the player still needs can't be undone, while erasing it a few minutes late costs nothing.
 		- In a chain, that's the quest that takes the item at turn-in, never the one that hands it out.
+		- Where the item belongs to a quest series, wait for the series' final quest, even past the step that uses it: Symbol of Life (6866) is keyed to 1785 and 1788, the last Tome of Divinity steps, not 1783 and 1786, where it resurrects Narm and Henze Faulk.
 		- Where sibling quests that exclude each other meet in a final quest, key to the final quest and list no sibling, so one ID covers every branch. Black Dragonflight Molt (10575) is keyed to 4024, not its sibling 4023: finishing 4023 is what spawns the dragon the molt drops from.
 		- Where the quest that hands the item out is itself the last step, key to it, not the step before, which would erase the item as it's handed over.
 		- Never key to a quest that hands the item out while a later quest still needs it. Divination Scryer comes from both 7647 Judgment and Redemption and 7668 The Darkreaver Menace; keyed to 7647, it would be erased before Scholomance.

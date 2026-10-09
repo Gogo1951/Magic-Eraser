@@ -86,6 +86,15 @@ local function GetMoveBudget()
 	return free - (ns.db.profile.bagsFullThreshold or 0)
 end
 
+-- The budget and whether a pass is running, for the Diagnostic Tools Merchant & Bank Context.
+function ns:GetBankMoveBudget()
+	return GetMoveBudget()
+end
+
+function ns:IsBankRetrieving()
+	return isRetrieving
+end
+
 --------------------------------------------------------------------------------
 -- Pass Lifecycle
 --------------------------------------------------------------------------------

@@ -22,7 +22,8 @@ local _, ns = ...
     don't exist until the client loads them. This is a plain namespace table, so
     it starts false at every login and is never persisted.
 
-    outputs holds each report tab's one output box (settings, code, data),
+    outputs holds each report tab's one output box (settings, code, data,
+    localization),
     status each report's last run state, and running the tab whose run is in
     flight, or nil.
 ]]
@@ -60,9 +61,11 @@ ns.DiagnosticsStrings = {
 	TAB_SETTINGS = "Settings",
 	TAB_CODE = "Code",
 	TAB_DATA = "Data",
+	TAB_LOCALIZATION = "Localization",
 	SECTION_SETTINGS = "Settings & Configuration",
 	SECTION_CODE = "Code",
 	SECTION_DATA = "Data",
+	SECTION_LOCALIZATION = "Localization",
 
 	RUN_TESTS_INTRO = "Live tools for catching a problem as it happens. Turn on what you need, reproduce the problem, then copy what they caught.",
 	EVENT_LOG_TITLE = "Event Log",
@@ -117,6 +120,10 @@ ns.DiagnosticsStrings = {
 	CODE_RUN_ALL = "Run All Code Reports",
 	DATA_INTRO = "Checks every item and quest the add-on ships against this client. Paste a result into a spreadsheet and sort by STATUS to find what needs pruning.",
 	DATA_RUN_ALL = "Validate All Data Files",
+	LOCALIZATION_INTRO = "Playing in a language other than English and a name or prompt reads wrong? These show what your client calls everything "
+		.. TITLE
+		.. " names.",
+	LOCALIZATION_RUN_ALL = "Run All Localization Reports",
 	RUN_ALL_DESCRIPTION = "Runs %s, one after another.",
 
 	EVENTS_TITLE = "Event Registration",
@@ -126,11 +133,13 @@ ns.DiagnosticsStrings = {
 	API_TITLE = "API Endpoints",
 	API_DESCRIPTION = "Checks that every game function " .. TITLE .. " calls exists on this client.",
 	ERASER_TITLE = "Eraser Context",
-	ERASER_DESCRIPTION = "Shows your character, settings, list sizes, bag layout and the item the eraser would take next.",
+	ERASER_DESCRIPTION = "Shows your character, every switch that can stop an erase, your key bindings, list sizes and the item the eraser would take next.",
+	MERCHANT_BANK_TITLE = "Merchant & Bank Context",
+	MERCHANT_BANK_DESCRIPTION = "Shows where Auto-Vend, Bank Retrieval and Bag-Space Warnings stand: their switches, free bag slots, open windows and bag layout.",
 	VALIDATE_TITLE = "Validate Data: %s",
 	VALIDATE_DESCRIPTION = "Checks every id in this data file against this client and exports the results as tab-separated text.",
 	VALIDATE_PROGRESS = "%s / %s IDs",
-	VALIDATE_HINT = "Checks every item and quest id a data file ships against this client and exports what the client knows about each one as tab-separated text, ready to paste into a spreadsheet. Item rows carry every item API return, the file's own values in the DATA columns so you can sort for mismatches, everything the client knows about the item's spell including its tooltip in SPELL_TOOLTIP, and the whole item tooltip in one TOOLTIP cell, its lines joined by // and a right-hand text after >>. Quest rows carry every quest API return the client has. STATUS reads OK, NOT ON CLIENT for an id this client does not have or never answers for, INCOMPLETE when an item loaded but its tooltip or spell text never did, NO TITLE when a quest's title never loaded (not grounds to prune), ERROR with the message in the name cell when a read throws, or TABLE MISSING when this client's folder never built a table. Quest ids follow in a block of their own.",
+	VALIDATE_HINT = "Checks every item and quest id a data file ships against this client and exports what the client knows about each one as tab-separated text, ready to paste into a spreadsheet. Item rows carry every item API return, the file's own values in the DATA columns so you can sort for mismatches, everything the client knows about the item's spell including its tooltip in SPELL_TOOLTIP, and the whole item tooltip in one TOOLTIP cell, its lines joined by // and a right-hand text after >>. Quest rows carry every quest API return the client has. STATUS reads OK, NOT ON CLIENT for an id this client does not have or never answers for, INCOMPLETE when an item loaded but its tooltip or its spell never did (a spell with no description of its own is fine), NO TITLE when a quest's title never loaded (not grounds to prune), ERROR with the message in the name cell when a read throws, or TABLE MISSING when this client's folder never built a table. Quest ids follow in a block of their own.",
 	DISPLAY_TITLE = "Display Context",
 	DISPLAY_DESCRIPTION = "Shows your screen size, UI scale and the mini-map button's saved position.",
 	ADDONS_TITLE = "Other Add-ons",
@@ -139,6 +148,14 @@ ns.DiagnosticsStrings = {
 	SAVED_DESCRIPTION = "Prints " .. TITLE .. "'s saved settings and lists as readable text.",
 	LIBS_TITLE = "Library Versions",
 	LIBS_DESCRIPTION = "Lists the version of every library " .. TITLE .. " loaded.",
+	LOCALE_TITLE = "Locale Context",
+	LOCALE_DESCRIPTION = "Shows your client's language, its text and audio language settings, and how many of "
+		.. TITLE
+		.. "'s own strings loaded.",
+	NAMES_TITLE = "Game Names",
+	NAMES_DESCRIPTION = "Shows the name your client gives every game string " .. TITLE .. " shows or matches.",
+	NAMES_ALL_FOUND = "all found",
+	NAMES_SOME_NIL = "%d NIL",
 
 	STATUS_WAITING = "Waiting",
 	STATUS_RUNNING = "Running",
