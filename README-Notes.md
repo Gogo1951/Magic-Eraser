@@ -24,7 +24,7 @@
 - The Protect List and Erase List panels keep their tree of scopes (All Characters, then one node per character), because players can have ten or more characters. Tabs don't scale to that.
 - Declined: merging the Erase and Protect labels of the mini-map tooltip, the Your Current Bags buttons and its column headers into one key each; every place keeps its own key.
 - The stock Profiles panel stays. Every character shares the Default profile, which holds every setting; a player who really needs something different makes a new profile by hand, for one-offs. Each character's own lists live in `char`, not the profile, and the All Characters lists and the mini-map position live in `global`, so neither ever changes with the profile.
-- In the README's Related Add-ons, Play It Forward sits under Overlaps and ArkInventory under Pairs With.
+- In the README's Related Add-ons, Play It Forward sits under Overlaps and ArkInventory under Pairs With, and GogoLoot takes Open Sesame's Pairs With slot, since Open Sesame's features were merged into it.
 - Declined: adding a quest starter found only in the wago.tools tables. One joins a flavor's list only once that client's Wowhead quest page confirms the quest is one-time, because a repeatable quest's starter must never be erased.
 - Diagnostic Tools probes read feature state through small read-only accessors in the feature files, so a report shows the exact values the features act on rather than a copy of their logic in `Diagnostics/`.
 - The Settings tab carries two context probes: **Eraser Context** for erasing, Manual Delete Assistance, the item tooltip line, quest alerts and key bindings, and **Merchant & Bank Context** for Auto-Vend, Bank Retrieval, Bag-Space Warnings and the bank layout.
