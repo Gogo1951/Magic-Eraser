@@ -625,6 +625,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[31524] = { 10831 }, -- Square of Imbued Netherweave
 	[23818] = { 9538 }, -- Stillpine Furbolg Language Primer
 	[23270] = { 9361 }, -- Tainted Helboar Meat
+	[30539] = { 10712 }, -- Tally's Waiver (Signed)
 	[30540] = { 10710 }, -- Tally's Waiver (Unsigned)
 	[33009] = { 11129 }, -- Tender Strider Meat
 	[30712] = { 10606, 10611 }, -- The Doctor's Key
