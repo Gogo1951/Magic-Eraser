@@ -4,7 +4,7 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 **TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need, and Marie Kondo would be so proud!
 
-<img width="800" src="https://github.com/user-attachments/assets/caa2157d-18fb-44c5-9790-f7feb6f36887" />
+<img width="800" src="https://github.com/user-attachments/assets/1b3091e3-79b3-443d-8fff-824e322aae3a" />
 
 ## Features
 
