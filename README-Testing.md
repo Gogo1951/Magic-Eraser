@@ -1,16 +1,16 @@
 # Magic Eraser // Test Plan
 
-Magic Eraser spots the junk in your bags and erases it a click at a time, or sells it at your next merchant. This time we most want you on Season of Discovery, whose junk lists were rebuilt, and on characters close to a level-up.
+Magic Eraser spots the junk in your bags and erases it a click at a time, or sells it at your next merchant. This time we most want you on quest items from long quest chains, and on switching Auto-Vend off in the middle of a sale.
 
 **Play on Classic Era, Season of Discovery, TBC Anniversary and WoW Forever.** If something looks wrong, tell us the check number and what you saw on [Discord](https://discord.gg/eh8hKq992Q).
 
 ## What's New
 
-1. Level up while carrying food or arrows you're about to outgrow, such as Refreshing Spring Water at level 4: the mini-map button should offer it the moment you ding.
-2. On a Paladin working through the Tome of Divinity quests, make sure Symbol of Life is never offered until you've turned in the last quest of the chain.
-3. On Season of Discovery, make a new character and open its Erase List: it should hold every other class's reagents and none of its own.
-4. On Season of Discovery, check that outgrown food and drink (ale and wine included) and leftover quest items are offered, while quest items you still need never are.
-5. Past level 55 on WoW Forever, Roasted Quail and Morning Glory Dew should be offered as outgrown food, and so should Edible Stalks past level 65 on TBC Anniversary.
+1. On a Horde character, carry the Befouled Water Globe through The Befouled Element: it should only be offered once you've handed in Je'neu of the Earthen Ring.
+2. Make sure Evergreen Pouch, Dawn's Gambit, Blood of Innocents and Zorbin's Ultra-Shrinker are never offered, even after their quests are done.
+3. While Auto-Vend is selling a big pile of junk, Shift + Right-Click the mini-map button: the selling should stop straight away.
+4. Right after logging in, open the Protect List and Erase List: every item should show its name, in your character's list and the All Characters list alike.
+5. On WoW Forever, check that the mini-map button's ring and icon sit as neatly as the game's own buttons.
 
 ## Everything Else
 
