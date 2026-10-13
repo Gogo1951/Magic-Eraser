@@ -22,6 +22,11 @@ while erasing it a few minutes late costs nothing.
   Where the quest that hands the item out is itself the last step, key to it
   and not the step before it, which would erase the item as it is handed over.
 
+Evergreen Pouch (11020), Dawn's Gambit (12368) and Blood of Innocents (13523)
+are left out on the maintainer's ruling: each can still be wanted after its
+quest is done, and the Evergreen Pouch keeps growing Morrowgrain for the
+repeatable Morrowgrain turn-ins.
+
 Quest ids do not imply chain order (4121 comes after 4122), so confirm the
 order from each quest's own page rather than from an id sequence or a
 previous/next widget. The two queries in this file find CANDIDATES and prove
@@ -370,7 +375,6 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[12341] = { 4763 }, -- Blackwood Fruit Sample
 	[12342] = { 4763 }, -- Blackwood Grain Sample
 	[12343] = { 4763 }, -- Blackwood Nut Sample
-	[13523] = { 5384 }, -- Blood of Innocents
 	[13140] = { 5202 }, -- Blood Red Key
 	[12848] = { 5127 }, -- Blood Stained Pike
 	[14650] = { 5844 }, -- Bloodhoof Village Gift Voucher
@@ -417,7 +421,6 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[16790] = { 6564 }, -- Damp Note
 	[11468] = { 4286 }, -- Dark Iron Fanny Pack
 	[5462] = { 1029, 1030, 1045 }, -- Dartol's Rod of Transformation
-	[12368] = { 4771 }, -- Dawn's Gambit
 	[6783] = { 1667 }, -- Dead-tooth's Key
 	[20741] = { 8470 }, -- Deadwood Ritual Totem
 	[5570] = { 1069 }, -- Deepmoss Egg
@@ -466,7 +469,6 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[10663] = { 3528 }, -- Essence of Hakkar
 	[11129] = { 3911, 7201 }, -- Essence of the Elements
 	[5867] = { 1195 }, -- Etched Phial
-	[11020] = { 3785, 3786, 3791 }, -- Evergreen Pouch
 	[5021] = { 849 }, -- Explosive Stick of Gann
 	[22115] = { 8977, 8978 }, -- Extra-Dimensional Ghost Revealer
 	[4903] = { 832 }, -- Eye of Burning Shadow

@@ -47,7 +47,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[15044] = { 6389, 6390 }, -- Barrel of Plagueland Termites
 	[6929] = { 1712 }, -- Bath'rah's Parchment
 	[12815] = { 5097, 5098 }, -- Beacon Torch
-	[16408] = { 1918 }, -- Befouled Water Globe
+	[16408] = { 824 }, -- Befouled Water Globe
 	[4650] = { 736 }, -- Bel'dugur's Note
 	[10575] = { 4024 }, -- Black Dragonflight Molt
 	[16786] = { 6569 }, -- Black Dragonspawn Eye
@@ -56,7 +56,6 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[12341] = { 4763 }, -- Blackwood Fruit Sample
 	[12342] = { 4763 }, -- Blackwood Grain Sample
 	[12343] = { 4763 }, -- Blackwood Nut Sample
-	[13523] = { 5384 }, -- Blood of Innocents
 	[13140] = { 5202 }, -- Blood Red Key
 	[12848] = { 5127 }, -- Blood Stained Pike
 	[14650] = { 5844 }, -- Camp Narache Gift Voucher
@@ -65,7 +64,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[7668] = { 2201, 2339 }, -- Bloodstained Journal
 	[6928] = { 1689 }, -- Bloodstone Choker
 	[9282] = { 2930 }, -- Blue Punch Card
-	[12558] = { 4882 }, -- Blue-feathered Necklace
+	[12558] = { 4883 }, -- Blue-feathered Necklace
 	[13159] = { 5206 }, -- Bone Dust
 	[4649] = { 735 }, -- Bonegrip's Note
 	[11169] = { 4005 }, -- Book of Aquor
@@ -94,15 +93,14 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[5851] = { 1182 }, -- Cozzle's Key
 	[5877] = { 1148 }, -- Cracked Silithid Carapace
 	[7846] = { 2258, 2500 }, -- Crag Coyote Fang
-	[12842] = { 5123 }, -- Crudely-written Log
+	[12842] = { 5128 }, -- Crudely-written Log
 	[5185] = { 921 }, -- Crystal Phial
 	[11482] = { 4285, 4288, 4287 }, -- Crystal Pylon User's Manual
 	[15826] = { 6124, 6129 }, -- Curative Animal Salve
 	[12738] = { 5059 }, -- Dalson Outhouse Key
 	[16790] = { 6564 }, -- Damp Note
 	[11468] = { 4286 }, -- Dark Iron Fanny Pack
-	[5462] = { 1029, 1030, 1045 }, -- Dartol's Rod of Transformation
-	[12368] = { 4771 }, -- Dawn's Gambit
+	[5462] = { 1046 }, -- Dartol's Rod of Transformation
 	[6783] = { 1667 }, -- Dead-tooth's Key
 	[20741] = { 8470 }, -- Deadwood Ritual Totem
 	[5570] = { 1069 }, -- Deepmoss Egg
@@ -152,16 +150,15 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[4529] = { 696 }, -- Enchanted Agate
 	[16603] = { 6481 }, -- Enchanted Resonite Crystal
 	[20023] = { 8235 }, -- Encoded Fragment
-	[3706] = { 551 }, -- Ensorcelled Parchment
+	[3706] = { 554 }, -- Ensorcelled Parchment
 	[11617] = { 4005 }, -- Eridan's Supplies
 	[11682] = { 4441 }, -- Eridan's Vial
 	[10454] = { 3373 }, -- Essence of Eranikus
 	[10663] = { 3528 }, -- Essence of Hakkar
 	[11129] = { 3911, 7201 }, -- Essence of the Elements
 	[5867] = { 1195 }, -- Etched Phial
-	[11020] = { 3785, 3786, 3791 }, -- Evergreen Pouch
 	[5021] = { 849 }, -- Explosive Stick of Gann
-	[22115] = { 8977, 8978 }, -- Extra-Dimensional Ghost Revealer
+	[22115] = { 8999, 9000, 9001, 9002, 9003, 9004, 9005, 9006, 9007, 9008, 9009, 9010, 9011, 9012, 9013, 9014 }, -- Extra-Dimensional Ghost Revealer
 	[4903] = { 832 }, -- Eye of Burning Shadow
 	[11108] = { 3844 }, -- Faded Photograph
 	[18626] = { 7603 }, -- Fel Fire
@@ -356,7 +353,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[8050] = { 2459 }, -- Tallonkai's Jewel
 	[7667] = { 2201 }, -- Talvash's Phial of Scrying
 	[7208] = { 1858 }, -- Tazan's Key
-	[7209] = { 1963 }, -- Tazan's Satchel
+	[7209] = { 1858 }, -- Tazan's Satchel
 	[5505] = { 1023 }, -- Teronis' Journal
 	[7586] = { 2118 }, -- Tharnariun's Hope
 	[7870] = { 2203, 2501 }, -- Thaumaturgy Vessel Lockbox
@@ -372,7 +369,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[6916] = { 1646 }, -- Tome of Divinity
 	[6999] = { 1795 }, -- Tome of the Cabal
 	[6776] = { 1649 }, -- Tome of Valor
-	[22047] = { 9015 }, -- Top Piece of Lord Valthalak's Amulet
+	[22047] = { 8999, 9000, 9001, 9002, 9003, 9004, 9005, 9006, 9007, 9008, 9009, 9010, 9011, 9012, 9013, 9014 }, -- Top Piece of Lord Valthalak's Amulet
 	[10515] = { 3463 }, -- Torch of Retribution
 	[11568] = { 4292 }, -- Torwa's Pouch
 	[5621] = { 933 }, -- Tourmaline Phial
@@ -411,14 +408,13 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[5475] = { 1026 }, -- Wooden Key
 	[13158] = { 5083 }, -- Words of the High Chief
 	[9280] = { 2930 }, -- Yellow Punch Card
-	[18904] = { 7003 }, -- Zorbin's Ultra-Shrinker
 }
 
 --[[
 How We Got the Data
 
 Last Validated
-	2026-10-09, Classic Era 1.15.9.70003
+	2026-10-13, Classic Era 1.15.9.70003
 
 Notes
 	- Quest items the player can still be holding once the quest is done, each keyed to the quest whose completion makes it safe to erase. The row fires on the first listed quest flagged complete (Features/Junk-Rules.lua); Features/Quest-Item-Alerts.lua reads it too.
@@ -429,6 +425,9 @@ Notes
 		- Where the quest that hands the item out is itself the last step, key to it, not the step before, which would erase the item as it's handed over.
 		- Never key to a quest that hands the item out while a later quest still needs it. Divination Scryer comes from both 7647 Judgment and Redemption and 7668 The Darkreaver Menace; keyed to 7647, it would be erased before Scholomance.
 		- Two different quests in one chain on one row still erase at the first one done.
+		- Once a chain is done, every item on it can go, so key to the chain's final quest, never a middle step that hands the item on. Befouled Water Globe (16408) was keyed to 1918 The Befouled Element and got erased while 824 Je'neu of the Earthen Ring still needed it; checking every row against Questie's quest chains then moved eight rows to their chains' ends, among them Extra-Dimensional Ghost Revealer (22115) and Top Piece of Lord Valthalak's Amulet (22047), now keyed to every class's Saving the Best for Last.
+		- A chain that ends in a repeatable quest is never done, since the game never flags a repeatable quest complete, so its items get no row: Zorbin's Ultra-Shrinker (18904) is absent because its chain ends in 7725 Again With the Zapped Giants.
+		- Evergreen Pouch (11020), Dawn's Gambit (12368) and Blood of Innocents (13523) are left out on the maintainer's ruling: each can still be wanted after its quest is done, and the Evergreen Pouch keeps growing Morrowgrain for the repeatable Morrowgrain turn-ins.
 	- Quest IDs don't show chain order (4121 comes after 4122). Confirm the order on each quest's own page, never from the ID sequence or a previous/next widget.
 	- A row earns its place only if the item can still be in the bag after its quest is done. An item the turn-in takes is gone by the time the quest is flagged complete, so its row could never fire: Ol' Sooty's Head, Crown of Will and Karnitol's Satchel are real turn-ins and rightly absent. That's why the table is a small hand-picked slice of what the queries find, never a paste of them.
 	- Three kinds of item pass that test:
