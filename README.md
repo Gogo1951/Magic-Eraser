@@ -12,6 +12,8 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 > Magic Eraser // Erased Bristleback Quilboar Tusk x2.
 
+> 😎 _Clean Bags!_
+
 ## Features
 
 🧹 **One-Click Cleanup** // The mini-map button shows the cheapest junk in your bags, and one click, or one key press, makes it vanish.
