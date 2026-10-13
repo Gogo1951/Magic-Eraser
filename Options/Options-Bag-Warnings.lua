@@ -51,8 +51,9 @@ local function SubLabel(text)
 end
 
 --[[
-    The bag-space row is a caption beside a slider, the same pair of widths every
-    captioned row spends, so it lines up with the rows on the other panels.
+    The bag-space row is a sub-row caption at the sub-row caption width beside
+    a slider at ns.OPTIONS_CONTROL_WIDTH, so the slider ends where every other
+    row's control ends.
 ]]
 local BAGS_FULL_LABEL_WIDTH = ns.OPTIONS_SUB_LABEL_WIDTH
 local BAGS_FULL_RANGE_WIDTH = ns.OPTIONS_CONTROL_WIDTH

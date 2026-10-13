@@ -144,7 +144,6 @@ function ns:FindItemToDelete()
 	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
 
 	local isDataMissing = ForEachCandidate(function(candidate)
-		-- Slots counts one per qualifying slot; items counts stacked quantity.
 		reclaimSlots = reclaimSlots + 1
 		reclaimItems = reclaimItems + candidate.count
 		reclaimValue = reclaimValue + candidate.value

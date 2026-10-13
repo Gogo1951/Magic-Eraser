@@ -41,6 +41,9 @@ local GetItemInfo = C_Item.GetItemInfo
     The slot half is what the value cap needs: the cap is judged on the stack,
     so the tooltip has to know which stack it is looking at rather than just
     which bag.
+
+    The line renders in ArkInventory's bag window beside TSM's tooltip block,
+    so this owner check already covers bag add-ons.
 ]]
 local function GetCarriedBagSlot(tooltip)
 	local owner = tooltip:GetOwner()

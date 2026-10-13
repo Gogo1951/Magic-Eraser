@@ -23,7 +23,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 L["KEY_BINDINGS_LOCATION"] = "Apri il menu di gioco, poi %s, poi %s, e cerca la sezione Magic Eraser."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "Non puoi eliminare oggetti durante il combattimento."
+L["COMBAT_LOCKOUT"] = "Per sicurezza, gli oggetti non possono essere eliminati durante il combattimento."
 L["CONFIRM_ERASE"] = "Eliminare %s%s?"
 L["BAGS_FULL"] = "Le tue borse sono piene!"
 L["BAGS_FULL_NUDGE"] = "Le tue borse sono quasi piene. Ti restano %d slot."
@@ -81,8 +81,6 @@ L["RIGHT_CLICK"] = "Clic destro"
 L["MIDDLE_CLICK"] = "Clic centrale"
 L["SHIFT_RIGHT_CLICK"] = "Maiusc + Clic destro"
 L["SHIFT_MIDDLE_CLICK"] = "Maiusc + Clic centrale"
-L["ACTION_ERASE"] = "Elimina"
-L["ACTION_IGNORE"] = "Proteggi"
 L["ACTION_TOGGLE"] = "Attiva/Disattiva"
 L["ACTION_CLEAR_IGNORE"] = "Svuota Lista protetti"
 L["BAGS_CLEAN_CONGRATS"] = "Congratulazioni, le tue borse sono piene di cose utili!"
@@ -113,6 +111,8 @@ L["TAB_IGNORE_LIST"] = "Lista protetti"
 L["TAB_ERASE_LIST"] = "Lista eliminazione"
 L["ENABLED"] = "Attivato"
 L["DISABLED"] = "Disattivato"
+L["ACTION_ERASE"] = "Elimina"
+L["ACTION_IGNORE"] = "Proteggi"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Esempio: %s"
@@ -134,11 +134,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funzionalità"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Apre il pannello delle opzioni di questo add-on."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Assegnazione tasti"
 L["OPTIONS_KEY_SET"] = "Assegna tasto"
@@ -150,6 +145,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protegge l'oggetto sotto il mouse su questo personaggio, ovunque tu lo veda: borse, banca, mercante o finestra del bottino. Se era nella Lista eliminazione di questo personaggio, viene tolto da lì."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Aggiunge l'oggetto sotto il mouse alla Lista eliminazione di questo personaggio, qualunque sia il suo valore. La tua Lista protetti ha comunque la precedenza."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Comandi"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Apre il pannello delle opzioni di questo add-on."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Commenti e supporto"
@@ -168,10 +168,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "Prossimo"
 L["OPTIONS_CLUTTER_TOTAL"] = "Totale"
 L["OPTIONS_STACKS"] = "(%d pile)"
-L["OPTIONS_ERASE_BUTTON"] = "Elimina"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Elimina il prossimo oggetto in coda, come un clic sinistro sul pulsante della minimappa."
-L["OPTIONS_PROTECT_BUTTON"] = "Proteggi"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Tutto ciò che hai nelle borse"
@@ -196,7 +194,6 @@ L["REASON_QUEST_INELIGIBLE"] = "Non accettabile"
 L["REASON_OUTGROWN"] = "Superato"
 L["REASON_EQUIPMENT"] = "Oggetto bianco"
 L["REASON_GRAY"] = "Grigio"
-L["REASON_MANUAL"] = "Lista eliminazione"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -209,7 +206,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Cosa conta come spazzatura"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Scegli quali tipi di oggetti vengono eliminati. Sono regole generali, quindi per perfezionarle aggiungi un oggetto alla tua Lista protetti per tenerlo sempre, o alla tua Lista eliminazione per eliminarlo sempre."
+	"Scegli quali tipi di oggetti vengono eliminati. Sono regole generali. Per perfezionarle, aggiungi un oggetto alla tua Lista protetti per tenerlo sempre, o alla tua Lista eliminazione per eliminarlo sempre."
 L["OPTIONS_KIND_QUEST"] = "Oggetti di missioni completate"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Oggetti che avanzano dopo aver consegnato l'ultima missione che li richiede."
 L["OPTIONS_KIND_STARTER"] = "Avvii di missione inaccessibili"

@@ -48,7 +48,7 @@ local VALUE_WIDTH = 0.45
 local REASON_WIDTH = 0.6
 local BUTTON_WIDTH = 0.55
 
-local REASON_TAG_KEYS = { manual = "REASON_MANUAL" }
+local REASON_TAG_KEYS = { manual = "TAB_ERASE_LIST" }
 for _, kind in ipairs(ns.ERASE_KINDS) do
 	REASON_TAG_KEYS[kind[1]] = kind[4]
 end
@@ -96,14 +96,14 @@ local function ValueCell(value, order)
 end
 
 local function ReasonCell(candidate, order)
-	local text = GetColor("HELP") .. L[REASON_TAG_KEYS[candidate.deleteReason] or "REASON_MANUAL"] .. "|r"
+	local text = GetColor("HELP") .. L[REASON_TAG_KEYS[candidate.deleteReason] or "TAB_ERASE_LIST"] .. "|r"
 	return TextOnly(text, REASON_WIDTH, order)
 end
 
 local function ProtectButton(candidate, order)
 	return {
 		type = "execute",
-		name = L["OPTIONS_PROTECT_BUTTON"],
+		name = L["ACTION_IGNORE"],
 		desc = L["OPTIONS_CHECK_PROTECT_DESCRIPTION"],
 		width = BUTTON_WIDTH,
 		order = order,
@@ -334,7 +334,7 @@ function ns.BuildYourCurrentBagsOptions()
 				reason = ReasonCell(nextItem, 3),
 				erase = {
 					type = "execute",
-					name = L["OPTIONS_ERASE_BUTTON"],
+					name = L["ACTION_ERASE"],
 					desc = L["OPTIONS_ERASE_BUTTON_DESCRIPTION"],
 					width = BUTTON_WIDTH,
 					order = 4,

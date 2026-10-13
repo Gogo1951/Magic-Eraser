@@ -109,8 +109,8 @@ function ns:OnPlayerLogin()
 	end
 
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
-	if ns.LDBObject then
-		LibDBIcon:Register(ADDON_NAME, ns.LDBObject, ns.db.global.minimap)
+	if ns.dataBrokerObject then
+		LibDBIcon:Register(ADDON_NAME, ns.dataBrokerObject, ns.db.global.minimap)
 
 		if ns.FLAVOR == "Camelot" or ns.FLAVOR == "Mainline" then
 			LibDBIcon:SetButtonIcon(ADDON_NAME, nil, 20, "CENTER", 1, -0.35)

@@ -21,7 +21,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "Aus Sicherheitsgründen kann die Tastaturbel
 L["KEY_BINDINGS_LOCATION"] = "Öffne das Spielmenü, dann %s, dann %s, und suche den Abschnitt Magic Eraser."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "Gegenstände können im Kampf nicht gelöscht werden."
+L["COMBAT_LOCKOUT"] = "Aus Sicherheitsgründen können im Kampf keine Gegenstände gelöscht werden."
 L["CONFIRM_ERASE"] = "%s%s löschen?"
 L["BAGS_FULL"] = "Deine Taschen sind voll!"
 L["BAGS_FULL_NUDGE"] = "Deine Taschen sind fast voll. Du hast noch %d freie Plätze."
@@ -81,8 +81,6 @@ L["RIGHT_CLICK"] = "Rechtsklick"
 L["MIDDLE_CLICK"] = "Mittelklick"
 L["SHIFT_RIGHT_CLICK"] = "Umschalt + Rechtsklick"
 L["SHIFT_MIDDLE_CLICK"] = "Umschalt + Mittelklick"
-L["ACTION_ERASE"] = "Löschen"
-L["ACTION_IGNORE"] = "Schützen"
 L["ACTION_TOGGLE"] = "Umschalten"
 L["ACTION_CLEAR_IGNORE"] = "Schutzliste leeren"
 L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
@@ -113,6 +111,8 @@ L["TAB_IGNORE_LIST"] = "Schutzliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
 L["DISABLED"] = "Deaktiviert"
+L["ACTION_ERASE"] = "Löschen"
+L["ACTION_IGNORE"] = "Schützen"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Beispiel: %s"
@@ -134,11 +134,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funktionen"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Befehle"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Tastaturbelegung"
 L["OPTIONS_KEY_SET"] = "Taste festlegen"
@@ -150,6 +145,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Schützt den Gegenstand unter deiner Maus auf diesem Charakter, wo immer du ihn siehst: Taschen, Bank, Händler oder Beutefenster. Stand er auf der Löschliste dieses Charakters, wird er dort entfernt."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Fügt den Gegenstand unter deiner Maus zur Löschliste dieses Charakters hinzu, egal was er wert ist. Deine Schutzliste hat trotzdem Vorrang."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Befehle"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Öffnet das Optionsfenster dieses Add-ons."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Feedback & Unterstützung"
@@ -168,10 +168,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "Als Nächstes"
 L["OPTIONS_CLUTTER_TOTAL"] = "Gesamt"
 L["OPTIONS_STACKS"] = "(%d Stapel)"
-L["OPTIONS_ERASE_BUTTON"] = "Löschen"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche."
-L["OPTIONS_PROTECT_BUTTON"] = "Schützen"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Alles in deinen Taschen"
@@ -196,7 +194,6 @@ L["REASON_QUEST_INELIGIBLE"] = "Nicht annehmbar"
 L["REASON_OUTGROWN"] = "Ausgedient"
 L["REASON_EQUIPMENT"] = "Weiße Ausrüstung"
 L["REASON_GRAY"] = "Grau"
-L["REASON_MANUAL"] = "Löschliste"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -210,7 +207,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Was als Ramsch gilt"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Wähle, welche Arten von Gegenständen gelöscht werden. Das sind grobe Regeln, also füge zur Feinabstimmung einen Gegenstand deiner Schutzliste hinzu, um ihn immer zu behalten, oder deiner Löschliste, um ihn immer zu löschen."
+	"Wähle, welche Arten von Gegenständen gelöscht werden. Das sind grobe Regeln. Zur Feinabstimmung füge einen Gegenstand deiner Schutzliste hinzu, um ihn immer zu behalten, oder deiner Löschliste, um ihn immer zu löschen."
 L["OPTIONS_KIND_QUEST"] = "Gegenstände abgeschlossener Quests"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Gegenstände, die übrig bleiben, sobald du die letzte Quest abgegeben hast, für die sie gebraucht werden."
