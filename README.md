@@ -4,15 +4,7 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 **TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need, and Marie Kondo would be so proud!
 
-> ✔️ _Finish a Quest_
-
-> Magic Eraser // Bristleback Quilboar Tusk x2 can now be safely erased. It's left over from a quest you have completed.
-
-> 🪄 _Click_
-
-> Magic Eraser // Erased Bristleback Quilboar Tusk x2.
-
-> 😎 _Clean Bags!_
+<img width="800" src="https://github.com/user-attachments/assets/78089d96-dc8f-4f5b-870a-d0f9d2016734" />
 
 ## Features
 
