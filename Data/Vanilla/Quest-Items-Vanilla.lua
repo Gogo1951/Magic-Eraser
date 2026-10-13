@@ -49,6 +49,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[12815] = { 5097, 5098 }, -- Beacon Torch
 	[16408] = { 824 }, -- Befouled Water Globe
 	[4650] = { 736 }, -- Bel'dugur's Note
+	[3711] = { 544 }, -- Belamoore's Research Journal
 	[10575] = { 4024 }, -- Black Dragonflight Molt
 	[16786] = { 6569 }, -- Black Dragonspawn Eye
 	[18987] = { 7761 }, -- Blackhand's Command
