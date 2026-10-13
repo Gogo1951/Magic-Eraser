@@ -615,6 +615,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[15875] = { 6146 }, -- Rotten Apple
 	[20613] = { 8421 }, -- Rotting Wood
 	[12533] = { 4867 }, -- Roughshod Pike
+	[15696] = { 5154 }, -- Ruined Tome
 	[10621] = { 3513 }, -- Runed Scroll
 	[6284] = { 1471 }, -- Runes of Summoning
 	[19883] = { 8201 }, -- Sacred Cord
