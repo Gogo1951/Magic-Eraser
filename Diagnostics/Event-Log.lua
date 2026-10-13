@@ -16,8 +16,9 @@ local EVENT_LOG_MAX_ARG_LENGTH = 255
     ns.EVENT_NAMES), and none of those is a sustained firehose worth dropping:
     the add-on listens on the coalesced BAG_UPDATE_DELAYED rather than raw
     BAG_UPDATE, and every registered event is potential signal in a bug report.
-    The lookup in LogEvent stays so a genuine no-signal firehose can be excluded
-    here if one is ever registered. Generic offenders
+    The lookup in LogEvent stays so a firehose can be excluded here if one is
+    ever registered; one that is sometimes signal has its deciding handler
+    write those firings back through ns:LogEventNow. Generic offenders
     (COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA, ...) do not belong here unless
     registered -- the log never sees an event the add-on didn't register.
 ]]
@@ -81,7 +82,7 @@ function ns:StopEventLog()
 end
 
 --[[
-    Called by Core's central dispatcher for every event while logging is active.
+    One entry in the buffer, for ns:LogEvent and ns:LogEventNow below.
     Snapshots arguments to strings immediately -- never retain references, since
     some events carry frames or tables that would leak memory or go stale. Caps
     the arg count and per-argument byte length so a single entry can't run away.
@@ -91,13 +92,7 @@ end
     swatch. Escaping last also means the cut can never leave a dangling pipe that
     would eat the following ", " separator.
 ]]
-function ns:LogEvent(event, ...)
-	if ns.DIAGNOSTIC_EVENT_EXCLUDE[event] then
-		return
-	end
-	if ns:SuppressUncorrelatedMessage(event, ...) then
-		return
-	end
+local function AppendEntry(event, ...)
 	local log = ns.diagnostics.log
 	if not log then
 		return
@@ -114,6 +109,31 @@ function ns:LogEvent(event, ...)
 	if #log > EVENT_LOG_SIZE then
 		table.remove(log, 1)
 	end
+end
+
+-- Called by Core's central dispatcher for every event while logging is active.
+function ns:LogEvent(event, ...)
+	if ns.DIAGNOSTIC_EVENT_EXCLUDE[event] then
+		return
+	end
+	if ns:SuppressUncorrelatedMessage(event, ...) then
+		return
+	end
+	AppendEntry(event, ...)
+end
+
+--[[
+    The way back in for an excluded firehose that is sometimes signal: the
+    handler that decides a firing mattered calls this with the event and its
+    arguments, and it is recorded as the dispatcher would have, past the
+    exclude list. Feature code calls it, so it carries the dispatcher's own
+    single boolean check before any work.
+]]
+function ns:LogEventNow(event, ...)
+	if not ns.diagnostics.logging then
+		return
+	end
+	AppendEntry(event, ...)
 end
 
 --[[
