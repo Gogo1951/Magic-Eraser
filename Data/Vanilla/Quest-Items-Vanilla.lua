@@ -76,6 +76,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[22056] = { 8996 }, -- Brazier of Beckoning
 	[14651] = { 5847 }, -- Deathknell Gift Voucher
 	[5085] = { 899 }, -- Bristleback Quilboar Tusk
+	[7135] = { 1846 }, -- Broken Dragonmaw Shinbone
 	[16783] = { 6543 }, -- Bundle of Reports
 	[3499] = { 498 }, -- Burnished Gold Key
 	[15710] = { 6002 }, -- Cenarion Lunardust
