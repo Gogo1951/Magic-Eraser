@@ -157,6 +157,7 @@ local function FillDeletePrompt()
 		return
 	end
 
+	-- GetEditBox, GetButton1, GetTextFontString and Resize exist on Classic Era and TBC Anniversary alike, tested on both, so there is no _G[name .. "EditBox"] fallback.
 	for _, which in ipairs(FILL_DIALOGS) do
 		local dialog = StaticPopup_FindVisible(which)
 		local editBox = dialog and dialog.GetEditBox and dialog:GetEditBox()

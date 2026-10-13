@@ -88,6 +88,10 @@ end
     ([itemId] = { useLevel }), never from the item info's requiredLevel: static
     data answers on a cold item cache and does not shift between client
     versions (Style Guide → DATA).
+
+    No row carries a zone: zone-limited food such as the Arathi Basin and
+    Warsong Gulch rations is outgrown by level like any other food, and a
+    zone-limited quest item goes when its quest does.
 ]]
 local CONSUMABLE_OUTGROWN_DELTA = 10
 local CONSUMABLE_STARTER_LEVEL = 5

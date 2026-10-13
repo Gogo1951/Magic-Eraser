@@ -24,7 +24,8 @@ L["KEY_BINDINGS_LOCATION"] =
 	"Откройте игровое меню, затем %s, затем %s, и найдите раздел Magic Eraser."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "Нельзя удалять предметы во время боя."
+L["COMBAT_LOCKOUT"] =
+	"В целях безопасности предметы нельзя удалять во время боя."
 L["CONFIRM_ERASE"] = "Удалить %s%s?"
 L["BAGS_FULL"] = "Ваши сумки полны!"
 L["BAGS_FULL_NUDGE"] = "Ваши сумки почти полны. Свободных ячеек: %d."
@@ -89,8 +90,6 @@ L["RIGHT_CLICK"] = "Правый клик"
 L["MIDDLE_CLICK"] = "Средний клик"
 L["SHIFT_RIGHT_CLICK"] = "Shift + Правый клик"
 L["SHIFT_MIDDLE_CLICK"] = "Shift + Средний клик"
-L["ACTION_ERASE"] = "Удалить"
-L["ACTION_IGNORE"] = "Защитить"
 L["ACTION_TOGGLE"] = "Переключить"
 L["ACTION_CLEAR_IGNORE"] = "Очистить список защиты"
 L["BAGS_CLEAN_CONGRATS"] = "Поздравляем, ваши сумки полны полезных вещей!"
@@ -123,6 +122,8 @@ L["TAB_IGNORE_LIST"] = "Список защиты"
 L["TAB_ERASE_LIST"] = "Список удаления"
 L["ENABLED"] = "Включено"
 L["DISABLED"] = "Выключено"
+L["ACTION_ERASE"] = "Удалить"
+L["ACTION_IGNORE"] = "Защитить"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Пример: %s"
@@ -144,11 +145,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Функции"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Команды"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Открывает панель настроек этого аддона."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Назначение клавиш"
 L["OPTIONS_KEY_SET"] = "Назначить клавишу"
@@ -160,6 +156,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Защищает предмет под курсором на этом персонаже, где бы вы его ни увидели: в сумках, в банке, у торговца или в окне добычи. Если предмет был в списке удаления этого персонажа, он оттуда убирается."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Добавляет предмет под курсором в список удаления этого персонажа, сколько бы он ни стоил. Ваш список защиты всё равно главнее."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Команды"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Открывает панель настроек этого аддона."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Обратная связь и поддержка"
@@ -178,10 +179,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "На очереди"
 L["OPTIONS_CLUTTER_TOTAL"] = "Итого"
 L["OPTIONS_STACKS"] = "(стопок: %d)"
-L["OPTIONS_ERASE_BUTTON"] = "Удалить"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Удаляет следующий на очереди предмет, так же как левый клик по кнопке у миникарты."
-L["OPTIONS_PROTECT_BUTTON"] = "Защитить"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Всё в ваших сумках"
@@ -206,7 +205,6 @@ L["REASON_QUEST_INELIGIBLE"] = "Недоступно"
 L["REASON_OUTGROWN"] = "Устарело"
 L["REASON_EQUIPMENT"] = "Белая вещь"
 L["REASON_GRAY"] = "Серое"
-L["REASON_MANUAL"] = "Список удаления"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -220,7 +218,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Что считается хламом"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Выберите, какие виды предметов удаляются. Это общие правила, поэтому для точной настройки добавьте любой предмет в список защиты, чтобы всегда его хранить, или в список удаления, чтобы всегда его удалять."
+	"Выберите, какие виды предметов удаляются. Это общие правила. Для точной настройки добавьте предмет в список защиты, чтобы всегда его хранить, или в список удаления, чтобы всегда его удалять."
 L["OPTIONS_KIND_QUEST"] = "Предметы выполненных заданий"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Предметы, оставшиеся после сдачи последнего задания, для которого они нужны."

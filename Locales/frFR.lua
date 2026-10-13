@@ -22,7 +22,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 L["KEY_BINDINGS_LOCATION"] = "Ouvrez le menu du jeu, puis %s, puis %s, et trouvez la section Magic Eraser."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "Impossible de supprimer des objets en combat."
+L["COMBAT_LOCKOUT"] = "Par mesure de sécurité, les objets ne peuvent pas être supprimés en combat."
 L["CONFIRM_ERASE"] = "Supprimer %s%s ?"
 L["BAGS_FULL"] = "Vos sacs sont pleins !"
 L["BAGS_FULL_NUDGE"] = "Vos sacs sont presque pleins. Il vous reste %d emplacements."
@@ -82,8 +82,6 @@ L["RIGHT_CLICK"] = "Clic droit"
 L["MIDDLE_CLICK"] = "Clic central"
 L["SHIFT_RIGHT_CLICK"] = "Maj + Clic droit"
 L["SHIFT_MIDDLE_CLICK"] = "Maj + Clic central"
-L["ACTION_ERASE"] = "Supprimer"
-L["ACTION_IGNORE"] = "Protéger"
 L["ACTION_TOGGLE"] = "Basculer"
 L["ACTION_CLEAR_IGNORE"] = "Vider la Liste de protection"
 L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
@@ -114,6 +112,8 @@ L["TAB_IGNORE_LIST"] = "Liste de protection"
 L["TAB_ERASE_LIST"] = "Liste de suppression"
 L["ENABLED"] = "Activé"
 L["DISABLED"] = "Désactivé"
+L["ACTION_ERASE"] = "Supprimer"
+L["ACTION_IGNORE"] = "Protéger"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Exemple : %s"
@@ -135,11 +135,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Fonctionnalités"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cette extension."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Raccourcis clavier"
 L["OPTIONS_KEY_SET"] = "Assigner une touche"
@@ -150,6 +145,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protège l'objet sous votre souris sur ce personnage, où que vous le voyiez : sacs, banque, marchand ou fenêtre de butin. S'il était sur la Liste de suppression de ce personnage, il en est retiré."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Ajoute l'objet sous votre souris à la Liste de suppression de ce personnage, quelle que soit sa valeur. Votre Liste de protection l'emporte toujours."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Commandes"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Ouvre le panneau d'options de cette extension."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Commentaires et assistance"
@@ -168,10 +168,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "À suivre"
 L["OPTIONS_CLUTTER_TOTAL"] = "Total"
 L["OPTIONS_STACKS"] = "(%d piles)"
-L["OPTIONS_ERASE_BUTTON"] = "Supprimer"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Supprime le prochain objet, comme un clic gauche sur le bouton de la minicarte."
-L["OPTIONS_PROTECT_BUTTON"] = "Protéger"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Tout le contenu de vos sacs"
@@ -196,7 +194,6 @@ L["REASON_QUEST_INELIGIBLE"] = "Inaccessible"
 L["REASON_OUTGROWN"] = "Dépassé"
 L["REASON_EQUIPMENT"] = "Équipement blanc"
 L["REASON_GRAY"] = "Gris"
-L["REASON_MANUAL"] = "Liste de suppression"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -209,7 +206,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Ce qui compte comme rebut"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Choisissez les types d'objets à supprimer. Ce sont des règles générales : pour les affiner, ajoutez n'importe quel objet à votre Liste de protection pour toujours le garder, ou à votre Liste de suppression pour toujours le supprimer."
+	"Choisissez les types d'objets à supprimer. Ce sont des règles générales. Pour les affiner, ajoutez un objet à votre Liste de protection pour toujours le garder, ou à votre Liste de suppression pour toujours le supprimer."
 L["OPTIONS_KIND_QUEST"] = "Objets de quête terminée"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Objets restants une fois que vous avez rendu la dernière quête qui en a besoin."

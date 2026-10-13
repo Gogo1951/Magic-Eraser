@@ -22,7 +22,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 L["KEY_BINDINGS_LOCATION"] = "Abre el menú del juego, luego %s, luego %s, y busca la sección Magic Eraser."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "No se pueden eliminar objetos durante el combate."
+L["COMBAT_LOCKOUT"] = "Por seguridad, no se pueden eliminar objetos durante el combate."
 L["CONFIRM_ERASE"] = "¿Eliminar %s%s?"
 L["BAGS_FULL"] = "¡Tus bolsas están llenas!"
 L["BAGS_FULL_NUDGE"] = "Tus bolsas están casi llenas. Te quedan %d espacios."
@@ -80,8 +80,6 @@ L["RIGHT_CLICK"] = "Clic derecho"
 L["MIDDLE_CLICK"] = "Clic central"
 L["SHIFT_RIGHT_CLICK"] = "Mayús + Clic derecho"
 L["SHIFT_MIDDLE_CLICK"] = "Mayús + Clic central"
-L["ACTION_ERASE"] = "Eliminar"
-L["ACTION_IGNORE"] = "Proteger"
 L["ACTION_TOGGLE"] = "Alternar"
 L["ACTION_CLEAR_IGNORE"] = "Vaciar Lista de protegidos"
 L["BAGS_CLEAN_CONGRATS"] = "¡Felicidades, tus bolsas están llenas de cosas buenas!"
@@ -111,6 +109,8 @@ L["TAB_IGNORE_LIST"] = "Lista de protegidos"
 L["TAB_ERASE_LIST"] = "Lista de eliminación"
 L["ENABLED"] = "Activado"
 L["DISABLED"] = "Desactivado"
+L["ACTION_ERASE"] = "Eliminar"
+L["ACTION_IGNORE"] = "Proteger"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Ejemplo: %s"
@@ -132,11 +132,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funciones"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este add-on."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Asignación de teclas"
 L["OPTIONS_KEY_SET"] = "Asignar tecla"
@@ -148,6 +143,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protege el objeto bajo el cursor en este personaje, dondequiera que lo veas: bolsas, banco, vendedor o ventana de botín. Si estaba en la Lista de eliminación de este personaje, sale de ella."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Añade el objeto bajo el cursor a la Lista de eliminación de este personaje, valga lo que valga. Tu Lista de protegidos sigue teniendo prioridad."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este add-on."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Comentarios y soporte"
@@ -166,10 +166,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "Siguiente"
 L["OPTIONS_CLUTTER_TOTAL"] = "Total"
 L["OPTIONS_STACKS"] = "(%d montones)"
-L["OPTIONS_ERASE_BUTTON"] = "Eliminar"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"Elimina el próximo objeto, igual que un clic izquierdo en el botón del minimapa."
-L["OPTIONS_PROTECT_BUTTON"] = "Proteger"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Todo lo que llevas en las bolsas"
@@ -194,7 +192,6 @@ L["REASON_QUEST_INELIGIBLE"] = "No disponible"
 L["REASON_OUTGROWN"] = "Superado"
 L["REASON_EQUIPMENT"] = "Equipo blanco"
 L["REASON_GRAY"] = "Gris"
-L["REASON_MANUAL"] = "Lista de eliminación"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -207,7 +204,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Qué cuenta como basura"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Elige qué tipos de objetos se eliminan. Son reglas generales, así que para ajustarlas, añade cualquier objeto a tu Lista de protegidos para conservarlo siempre, o a tu Lista de eliminación para eliminarlo siempre."
+	"Elige qué tipos de objetos se eliminan. Son reglas generales. Para ajustarlas, añade un objeto a tu Lista de protegidos para conservarlo siempre, o a tu Lista de eliminación para eliminarlo siempre."
 L["OPTIONS_KIND_QUEST"] = "Objetos de misión completada"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Objetos que sobran cuando has entregado la última misión que los necesita."
 L["OPTIONS_KIND_STARTER"] = "Iniciadores de misión sin salida"

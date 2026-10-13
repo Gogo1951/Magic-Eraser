@@ -21,7 +21,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟�
 L["KEY_BINDINGS_LOCATION"] = "開啟遊戲選單，依序點選 %s、%s，然後找到 Magic Eraser 分類。"
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "戰鬥中無法刪除物品。"
+L["COMBAT_LOCKOUT"] = "基於安全考量，戰鬥中無法刪除物品。"
 L["CONFIRM_ERASE"] = "刪除 %s%s？"
 L["BAGS_FULL"] = "你的背包已滿！"
 L["BAGS_FULL_NUDGE"] = "你的背包快滿了。還剩 %d 個背包空格。"
@@ -79,8 +79,6 @@ L["RIGHT_CLICK"] = "右鍵點擊"
 L["MIDDLE_CLICK"] = "中鍵點擊"
 L["SHIFT_RIGHT_CLICK"] = "Shift + 右鍵點擊"
 L["SHIFT_MIDDLE_CLICK"] = "Shift + 中鍵點擊"
-L["ACTION_ERASE"] = "刪除"
-L["ACTION_IGNORE"] = "保護"
 L["ACTION_TOGGLE"] = "切換"
 L["ACTION_CLEAR_IGNORE"] = "清空保護清單"
 L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包裡都是好東西！"
@@ -110,6 +108,8 @@ L["TAB_IGNORE_LIST"] = "保護清單"
 L["TAB_ERASE_LIST"] = "刪除清單"
 L["ENABLED"] = "已啟用"
 L["DISABLED"] = "已停用"
+L["ACTION_ERASE"] = "刪除"
+L["ACTION_IGNORE"] = "保護"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "範例：%s"
@@ -130,11 +130,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "功能"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/指令"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "開啟本插件的選項介面。"
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "按鍵設定"
 L["OPTIONS_KEY_SET"] = "設定按鍵"
@@ -145,6 +140,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"在此角色上保護滑鼠指向的物品，無論它出現在哪裡：背包、銀行、商人或拾取視窗。如果它在此角色的刪除清單中，會從中移除。"
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"將滑鼠指向的物品加入此角色的刪除清單，無論它價值多少。你的保護清單依然優先。"
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/指令"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "開啟本插件的選項介面。"
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "回饋與支援"
@@ -163,9 +163,7 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "下一件"
 L["OPTIONS_CLUTTER_TOTAL"] = "總計"
 L["OPTIONS_STACKS"] = "(%d 個堆疊)"
-L["OPTIONS_ERASE_BUTTON"] = "刪除"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "刪除下一件物品，效果等同左鍵點擊小地圖按鈕。"
-L["OPTIONS_PROTECT_BUTTON"] = "保護"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "背包中的所有物品"
@@ -190,7 +188,6 @@ L["REASON_QUEST_INELIGIBLE"] = "無法接受"
 L["REASON_OUTGROWN"] = "已用不上"
 L["REASON_EQUIPMENT"] = "白色裝備"
 L["REASON_GRAY"] = "灰色"
-L["REASON_MANUAL"] = "刪除清單"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -203,7 +200,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "哪些算是雜物"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"選擇要刪除哪些類型的物品。這些是大致的規則，若要微調，可將任何物品加入保護清單以永遠保留，或加入刪除清單以永遠刪除。"
+	"選擇要刪除哪些類型的物品。這些是大致的規則。若要微調，可將物品加入保護清單以永遠保留，或加入刪除清單以永遠刪除。"
 L["OPTIONS_KIND_QUEST"] = "已完成任務的物品"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "在你交完最後一個需要它們的任務後留下的物品。"
 L["OPTIONS_KIND_STARTER"] = "無法接受的任務起始物品"

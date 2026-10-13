@@ -2,7 +2,13 @@
 
 Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
 
-**TL;DR**: For anyone whose bags are always full. It spots the junk, erases it a click at a time, or sells it the next time you chat with a merchant. What you need stays, what you don't gets tossed. Marie Kondo would be so proud!
+**TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need, and Marie Kondo would be so proud!
+
+> Magic Eraser // Bristleback Quilboar Tusk x2 can now be safely erased. It's left over from a quest you have completed.
+
+> 🪄 Click
+
+> Magic Eraser // Erased Bristleback Quilboar Tusk x2.
 
 ## Features
 
@@ -40,8 +46,6 @@ Six kinds of clutter, plus anything you put on your Erase List. The quest, food 
 | Gray trash | Whenever a vendor will buy it. |
 
 - The cheapest stack always goes first, and nothing is erased in combat.
-- Switch off any kind you'd rather keep, or turn on Erase Confirmation for a Yes or No before every erase.
-- Shiny Fish Scales and Fish Oil are junk to everyone except a Shaman, so every other class starts with both on its Erase List.
 
 ### Mini-Map Button
 
@@ -62,7 +66,6 @@ Six kinds of clutter, plus anything you put on your Erase List. The quest, food 
 - Auto-Vend sells every bit of flagged junk the moment a merchant window opens.
 - Bank Retrieval pulls junk out of your bank when you open it, as much as your bags can hold.
 - A chat line sums up each visit: what went, and what it was worth.
-- Both are on by default, and both leave your Protect List alone.
 
 <img width="250" src="https://github.com/user-attachments/assets/a055e043-2f13-4b51-8f10-3a964951e6a4" />
 
@@ -76,8 +79,6 @@ Find these under Key Bindings in the game menu, in the Magic Eraser section.
 | Add Hovered Item to Protect List | Protect the item under your mouse on this character. |
 | Add Hovered Item to Erase List | Flag the item under your mouse as junk on this character. |
 
-- The button shows you what's next before you click, a key doesn't. Turn on Erase Confirmation if a stray keypress makes you nervous.
-
 <img width="500" src="https://github.com/user-attachments/assets/e12ff917-7e3b-4b2c-81d6-a311e1b3fc81" />
 
 ### Options
@@ -90,8 +91,8 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 * **Alerts & Tooltips** // Tooltip warnings, quest item alerts, and a heads-up as your last free bag slots fill.
 * **Protect List** and **Erase List** // One list per character, plus an All Characters list that applies everywhere.
 * **Your Current Bags** // Everything you carry, with an Erase and a Protect checkbox on every row.
-* **Profiles** // Every character shares one Default profile, so a setting changed once applies everywhere. Each character keeps its own Protect List and Erase List.
-* **Diagnostic Tools** // Reports to paste into a bug report. Off until you switch it on.
+* **Profiles** // One shared Default profile, so a setting changed once applies on every character.
+* **Diagnostic Tools** // Reports to paste into a bug report.
 
 <img width="800" src="https://github.com/user-attachments/assets/4835ad6a-0859-4a21-8c20-658e01cdee0e" />
 

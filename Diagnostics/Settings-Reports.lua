@@ -21,6 +21,8 @@ function ns:BuildDisplayContextReport()
 	lines[#lines + 1] = ""
 	local LibDBIcon = LibStub("LibDBIcon-1.0")
 	local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
+	-- Without the data object, login never registers a button and every repaint returns early.
+	lines[#lines + 1] = string.format("Data broker object: %s", ns.dataBrokerObject and "present" or "MISSING")
 	lines[#lines + 1] = string.format("Minimap button created: %s", button and "yes" or "no")
 
 	local minimap = ns.db and ns.db.global.minimap

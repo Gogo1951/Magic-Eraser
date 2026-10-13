@@ -21,7 +21,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "As a safety precaution, the key binding list
 L["KEY_BINDINGS_LOCATION"] = "Open the game menu, then %s, then %s, and find the Magic Eraser section."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "Cannot erase items while in combat."
+L["COMBAT_LOCKOUT"] = "As a safety precaution, items cannot be erased during combat."
 L["CONFIRM_ERASE"] = "Erase %s%s?"
 L["BAGS_FULL"] = "Your bags are full!"
 L["BAGS_FULL_NUDGE"] = "Your bags are nearly full. You have %d slots remaining."
@@ -78,8 +78,6 @@ L["RIGHT_CLICK"] = "Right-Click"
 L["MIDDLE_CLICK"] = "Middle-Click"
 L["SHIFT_RIGHT_CLICK"] = "Shift + Right-Click"
 L["SHIFT_MIDDLE_CLICK"] = "Shift + Middle-Click"
-L["ACTION_ERASE"] = "Erase"
-L["ACTION_IGNORE"] = "Protect"
 L["ACTION_TOGGLE"] = "Toggle"
 L["ACTION_CLEAR_IGNORE"] = "Clear Protect List"
 L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
@@ -109,6 +107,8 @@ L["TAB_IGNORE_LIST"] = "Protect List"
 L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
 L["DISABLED"] = "Disabled"
+L["ACTION_ERASE"] = "Erase"
+L["ACTION_IGNORE"] = "Protect"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Example: %s"
@@ -129,11 +129,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Features"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "Opens the Options Interface for this add-on."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "Key Bindings"
 L["OPTIONS_KEY_SET"] = "Set Key"
@@ -144,6 +139,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protects the item under your mouse on this character, wherever you see it: bags, bank, merchant or loot window. If it was on this character's Erase List, it comes off."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Adds the item under your mouse to this character's Erase List, whatever it's worth. Your Protect List still wins."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/Commands"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "Opens the Options Interface for this add-on."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "Feedback & Support"
@@ -162,9 +162,7 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "Up Next"
 L["OPTIONS_CLUTTER_TOTAL"] = "Total"
 L["OPTIONS_STACKS"] = "(%d Stacks)"
-L["OPTIONS_ERASE_BUTTON"] = "Erase"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "Erases the next item up, same as a left-click on the mini-map button."
-L["OPTIONS_PROTECT_BUTTON"] = "Protect"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "Everything in Your Bags"
@@ -189,7 +187,6 @@ L["REASON_QUEST_INELIGIBLE"] = "Can't Take"
 L["REASON_OUTGROWN"] = "Outgrown"
 L["REASON_EQUIPMENT"] = "White Gear"
 L["REASON_GRAY"] = "Gray"
-L["REASON_MANUAL"] = "Erase List"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -202,7 +199,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "What Counts as Junk"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"Choose which kinds of items get erased. These are broad rules, so to fine-tune them, add any item to your Protect List to always keep it, or to your Erase List to always erase it."
+	"Choose which kinds of items get erased. These are broad rules. To fine-tune them, add an item to your Protect List to always keep it, or to your Erase List to always erase it."
 L["OPTIONS_KIND_QUEST"] = "Completed Quest Items"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Items left over once you've handed in the last quest that needs them."
 L["OPTIONS_KIND_STARTER"] = "Dead-End Quest Starters"
@@ -223,7 +220,7 @@ L["OPTIONS_KINDS_NONE_CHECKED"] = "No kind is checked, so only your Erase List i
 
 -- Maximum Value to Erase
 L["OPTIONS_VALUE_CAP_HEADER"] = "Maximum Value to Erase"
-L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Never erase an item or stack worth more than the limit you set below."
+L["OPTIONS_VALUE_CAP_DESCRIPTION"] = "Never erases an item or stack worth more than the limit you set below."
 L["OPTIONS_ENABLE_VALUE_CAP"] = "Enable Maximum Value to Erase"
 L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Turns the value limit on or off. Auto-Vend still sells anything it holds back, and your Erase List isn't limited by it."

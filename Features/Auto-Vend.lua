@@ -163,7 +163,11 @@ local function ProcessSellQueue(generation)
 		return
 	end
 
-	-- Stop if we are done or if the merchant window was closed
+	if not (ns.db and ns.db.profile.autoVendEnabled) then
+		isSelling = false
+	end
+
+	-- Stop if we are done, the merchant window was closed, or Auto-Vend was switched off
 	if not isSelling then
 		wipe(sellQueue)
 		return
@@ -248,6 +252,11 @@ end
 
 function ScanAndVend(generation)
 	if not isSelling or generation ~= visitGeneration then
+		return
+	end
+
+	if not (ns.db and ns.db.profile.autoVendEnabled) then
+		isSelling = false
 		return
 	end
 

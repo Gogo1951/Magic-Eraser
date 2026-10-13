@@ -155,6 +155,13 @@ ns.DIAGNOSTIC_API_CHECKS = {
 			return type(C_QuestLog) == "table" and type(C_QuestLog.IsQuestFlaggedCompleted) == "function"
 		end,
 	},
+	-- The quest-starter gate compares race and class masks with it.
+	{
+		"bit.band",
+		function()
+			return type(bit) == "table" and type(bit.band) == "function"
+		end,
+	},
 	{
 		"C_Item.RequestLoadItemDataByID",
 		function()
@@ -477,6 +484,12 @@ ns.DIAGNOSTIC_API_CHECKS = {
 -- Eraser Context
 --------------------------------------------------------------------------------
 
+--[[
+    The probes read feature state through the read-only accessors in the
+    feature files (ns:GetScanRetryState and the like), so a report shows the
+    exact values the features act on rather than a copy of their logic.
+]]
+
 -- The add-on's own example reports, appended to the shared Event Log intro.
 ns.DiagnosticsStrings.EVENT_LOG_EXAMPLES = "Best for 'nothing gets erased' or 'Auto-Vend didn't sell' reports."
 
@@ -495,33 +508,79 @@ local BINDING_NAMES = {
 }
 
 --[[
-    Carried-bag stacks whose item info has not loaded yet. Every scan skips
-    these and retries a bounded number of times, so a count that stays above
-    zero with the retries spent explains an item the eraser never offers. Read
+    One walk over some containers through the verdict every feature shares
+    (ns:IsIgnored, then ns:GetItemDeleteReason), tallying each stack the way
+    the features would see it: protected by a list, still loading its item
+    info (every scan skips these and retries a bounded number of times),
+    flagged by reason, flagged but held back by the value cap (the eraser and
+    the tooltip honor it, Auto-Vend and Bank Retrieval don't), and flagged
+    with or without a vendor price (Auto-Vend sells only what has one). Read
     only: nothing is requested.
 ]]
-local function CountLoadingStacks()
-	local count = 0
-	for _, bag in ipairs(ns.CARRIED_BAGS) do
+local function TallyContainers(containers)
+	local tally = {
+		stacks = 0,
+		protected = 0,
+		loading = 0,
+		flagged = 0,
+		overCap = 0,
+		sellable = 0,
+		sellValue = 0,
+		noPrice = 0,
+		reasons = {},
+	}
+	for _, bag in ipairs(containers) do
 		for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
 			local info = C_Container.GetContainerItemInfo(bag, slot)
-			if info and info.hyperlink and not C_Item.GetItemInfo(info.hyperlink) then
-				count = count + 1
+			if info and info.hyperlink then
+				tally.stacks = tally.stacks + 1
+				local name, _, rarity, _, _, _, _, _, _, _, sellPrice = C_Item.GetItemInfo(info.hyperlink)
+				local isProtected = ns:IsIgnored(info.itemID)
+				local reason = name and not isProtected and ns:GetItemDeleteReason(info.itemID, rarity, sellPrice)
+				local value = (sellPrice or 0) * (info.stackCount or 1)
+				if isProtected then
+					tally.protected = tally.protected + 1
+				elseif not name then
+					tally.loading = tally.loading + 1
+				elseif reason then
+					tally.flagged = tally.flagged + 1
+					tally.reasons[reason] = (tally.reasons[reason] or 0) + 1
+					if ns:IsOverValueCap(value, reason) then
+						tally.overCap = tally.overCap + 1
+					end
+					if (sellPrice or 0) > 0 then
+						tally.sellable = tally.sellable + 1
+						tally.sellValue = tally.sellValue + value
+					else
+						tally.noPrice = tally.noPrice + 1
+					end
+				end
 			end
 		end
 	end
-	return count
+	return tally
+end
+
+-- The flagged count per reason, in the Erasing panel's order with Erase List entries first.
+local function ReasonBreakdown(tally)
+	local parts = { "manual=" .. (tally.reasons.manual or 0) }
+	for _, kind in ipairs(ns.ERASE_KINDS) do
+		parts[#parts + 1] = kind[1] .. "=" .. (tally.reasons[kind[1]] or 0)
+	end
+	return table.concat(parts, ", ")
 end
 
 --[[
     The state most likely to explain a "nothing gets erased" report: the player
     context the rules read (level, combat, and the race and class bits the
-    quest-starter gate compares), every switch that can quiet a feature, the
-    key bindings, which tooltip hook installed, the sizes of the curated
-    databases, and the item the eraser would act on right now. A race or class
-    bit of 0 is one the add-on doesn't know, which makes every starter gated on
-    it read as junk. Existence/value reads only. The candidate's link has its
-    pipes escaped so it pastes as plain text rather than a clickable swatch.
+    quest-starter gate compares), the profile every switch is read from, every
+    switch that can quiet a feature, whether the white-gear rule has its two
+    reads, the key bindings, which tooltip hook installed, where /eraser goes,
+    what the bags hold by verdict, the sizes of the curated databases, and the
+    item the eraser would act on right now. A race or class bit of 0 is one the
+    add-on doesn't know, which makes every starter gated on it read as junk.
+    Existence/value reads only. The candidate's link has its pipes escaped so
+    it pastes as plain text rather than a clickable swatch.
 ]]
 function ns:BuildEraserContextReport()
 	local lines = { GetClientHeader(), "" }
@@ -545,6 +604,7 @@ function ns:BuildEraserContextReport()
 
 	local profile = ns.db and ns.db.profile
 	if profile then
+		lines[#lines + 1] = "Profile: " .. tostring(ns.db:GetCurrentProfile())
 		local kinds = {}
 		for _, kind in ipairs(ns.ERASE_KINDS) do
 			kinds[#kinds + 1] = kind[1] .. "=" .. OnOff(ns:IsJunkKind(kind[1]))
@@ -567,22 +627,45 @@ function ns:BuildEraserContextReport()
 	else
 		lines[#lines + 1] = "Switches: (database not loaded)"
 	end
+	-- Missing either read, the white-gear rule keeps every white item.
+	lines[#lines + 1] = string.format(
+		"White-gear rule reads: GetItemSpell %s, GetItemStats %s",
+		type(C_Item.GetItemSpell) == "function" and "present" or "MISSING",
+		type(ns.GetItemStats) == "function" and "present" or "MISSING"
+	)
 
 	lines[#lines + 1] = "Key bindings:"
 	for _, bindingName in ipairs(BINDING_NAMES) do
 		lines[#lines + 1] = string.format("  %s: %s", bindingName, tostring(GetBindingKey(bindingName) or "not bound"))
 	end
 	lines[#lines + 1] = "Tooltip hook: " .. tostring(ns:GetTooltipHookPath() or "not installed")
+	-- The route ns:OpenOptionsPanel takes for /eraser and Shift+Middle-Click.
+	local settingsRoute = type(Settings) == "table" and Settings.OpenToCategory and ns.generalCategoryID
+	lines[#lines + 1] = string.format(
+		"Options panel: category id %s, opened through %s",
+		tostring(ns.generalCategoryID),
+		settingsRoute and "Settings.OpenToCategory" or "AceConfigDialog:Open"
+	)
 	lines[#lines + 1] = string.format("Quest starters announced this session: %d", ns:CountAnnouncedQuestStarters())
 	lines[#lines + 1] = "Manual Delete instruction pattern: "
 		.. (ns:GetManualDeleteInstructionPattern() and "found" or "NIL")
+
+	local bags = TallyContainers(ns.CARRIED_BAGS)
 	local retries, maxRetries, retryPending = ns:GetScanRetryState()
 	lines[#lines + 1] = string.format(
-		"Bag scan: %d stacks still loading item data; retries %d of %d, retry pending %s",
-		CountLoadingStacks(),
+		"Bags: %d stacks; %d protected, %d still loading item data (retries %d of %d, retry pending %s)",
+		bags.stacks,
+		bags.protected,
+		bags.loading,
 		retries,
 		maxRetries,
 		retryPending and "yes" or "no"
+	)
+	lines[#lines + 1] = string.format(
+		"  Flagged: %d (%s), %d of them over the value cap",
+		bags.flagged,
+		ReasonBreakdown(bags),
+		bags.overCap
 	)
 
 	--[[
@@ -662,10 +745,10 @@ end
 --[[
     The state behind a "Bank Retrieval moved nothing", "the bag warning never
     fires" or "Auto-Vend stopped" report: each feature's switches, the window
-    it waits on, the pass it may have in flight, the free bag slots both bag
-    features budget from, the move budget left after the warning threshold,
-    and the warning's baseline and post-loading-screen hold. Existence/value
-    reads only.
+    it waits on, the pass it may have in flight, what each would act on right
+    now, the free bag slots both bag features budget from, the move budget
+    left after the warning threshold, and the warning's baseline and
+    post-loading-screen hold. Existence/value reads only.
 ]]
 function ns:BuildMerchantBankContextReport()
 	local lines = { GetClientHeader(), "" }
@@ -688,13 +771,44 @@ function ns:BuildMerchantBankContextReport()
 	lines[#lines + 1] = "  Selling: " .. YesNo(selling)
 	lines[#lines + 1] = "  Waiting for combat to end: " .. YesNo(vendPending)
 	lines[#lines + 1] = string.format("  Passes used: %d of %d", vendPasses, maxVendPasses)
+	local bags = TallyContainers(ns.CARRIED_BAGS)
+	lines[#lines + 1] = string.format(
+		"  Would sell now: %d stacks for %d copper; %d flagged stacks have no vendor price, %d still loading",
+		bags.sellable,
+		bags.sellValue,
+		bags.noPrice,
+		bags.loading
+	)
 
 	lines[#lines + 1] = ""
 	lines[#lines + 1] = "Bank Retrieval:"
 	lines[#lines + 1] = "  Enabled: " .. YesNo(profile.bankRetrievalEnabled)
 	lines[#lines + 1] = "  Bank window open: " .. WindowOpen(BankFrame)
 	lines[#lines + 1] = "  Retrieving: " .. YesNo(ns:IsBankRetrieving())
-	lines[#lines + 1] = string.format("  Move budget now: %d", ns:GetBankMoveBudget())
+	-- The threshold is held back only while Bag-Space Warnings are on; see GetMoveBudget.
+	lines[#lines + 1] = string.format(
+		"  Move budget now: %d (free bag slots %s, less %d held for the bag-space warning)",
+		ns:GetBankMoveBudget(),
+		tostring(free),
+		profile.bagsFullNudgeEnabled and (profile.bagsFullThreshold or 0) or 0
+	)
+	--[[
+	    The bank's slots read empty while its window is closed, so the count
+	    only means something with it open. Protected like the container dump
+	    below, since a bank index this client numbers differently may throw.
+	]]
+	local bankOk, bank = pcall(TallyContainers, ns.BANK_CONTAINERS)
+	if bankOk then
+		lines[#lines + 1] = string.format(
+			"  Would move now: %d flagged stacks; %d protected, %d still loading%s",
+			bank.flagged,
+			bank.protected,
+			bank.loading,
+			WindowOpen(BankFrame) == "yes" and "" or " (bank window closed)"
+		)
+	else
+		lines[#lines + 1] = "  Would move now: (read failed: " .. (tostring(bank):gsub("|", "||")) .. ")"
+	end
 
 	local baseline, heldUntil = ns:GetBagWarningState()
 	lines[#lines + 1] = ""
@@ -744,11 +858,22 @@ function ns:BuildMerchantBankContextReport()
 	else
 		lines[#lines + 1] = "  Enum.BagIndex: (absent)"
 	end
-	-- pcall because an index this client does not define may throw rather than answer 0.
+	--[[
+	    pcall because an index this client does not define may throw rather
+	    than answer 0. A carried bag adds its free slots and bag family: only
+	    family 0 counts toward the warning and the move budget.
+	]]
 	local lastIndex = math.max(ns.LAST_BAG_INDEX + 8, ns.BANK_CONTAINERS[#ns.BANK_CONTAINERS] or 0)
 	for index = -1, lastIndex do
 		local ok, slots = pcall(C_Container.GetContainerNumSlots, index)
-		lines[#lines + 1] = string.format("  container %d: %s", index, ok and (tostring(slots) .. " slots") or "error")
+		local text = ok and (tostring(slots) .. " slots") or "error"
+		if ok and ns.IS_CARRIED_BAG[index] then
+			local freeOk, bagFree, bagFamily = pcall(C_Container.GetContainerNumFreeSlots, index)
+			if freeOk then
+				text = string.format("%s, %s free, family %s", text, tostring(bagFree), tostring(bagFamily))
+			end
+		end
+		lines[#lines + 1] = string.format("  container %d: %s", index, text)
 	end
 
 	return table.concat(lines, "\n")

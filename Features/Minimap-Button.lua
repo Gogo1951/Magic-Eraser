@@ -153,7 +153,7 @@ end
 --------------------------------------------------------------------------------
 
 function ns:RefreshDisplay()
-	if not ns.LDBObject then
+	if not ns.dataBrokerObject then
 		return
 	end
 
@@ -161,15 +161,15 @@ function ns:RefreshDisplay()
 	local item = ns:FindItemToDelete()
 
 	if item and item.icon then
-		ns.LDBObject.icon = item.icon
+		ns.dataBrokerObject.icon = item.icon
 	else
-		ns.LDBObject.icon = ns.DEFAULT_ICON
+		ns.dataBrokerObject.icon = ns.DEFAULT_ICON
 	end
 
 	local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
 	if button then
 		if button.icon then
-			button.icon:SetTexture(ns.LDBObject.icon)
+			button.icon:SetTexture(ns.dataBrokerObject.icon)
 		end
 
 		if GameTooltip:GetOwner() == button then
@@ -189,7 +189,7 @@ end
 -- LDB Data Object
 --------------------------------------------------------------------------------
 
-ns.LDBObject = LibDataBroker:NewDataObject(ADDON_NAME, {
+ns.dataBrokerObject = LibDataBroker:NewDataObject(ADDON_NAME, {
 	type = "data source",
 	text = ns.ADDON_TITLE,
 	icon = ns.DEFAULT_ICON,
@@ -219,6 +219,7 @@ ns.LDBObject = LibDataBroker:NewDataObject(ADDON_NAME, {
 				ns:ToggleIgnore(item.itemId)
 			end
 		elseif button == "MiddleButton" then
+			-- Deliberately one click, with no confirmation and no chat line.
 			ns:ClearIgnoreList()
 		end
 	end,

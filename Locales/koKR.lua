@@ -21,7 +21,7 @@ L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "안전을 위해 전투 중에는 단축키 
 L["KEY_BINDINGS_LOCATION"] = "게임 메뉴를 열고 %s, %s 순서로 들어가 Magic Eraser 항목을 찾으세요."
 
 -- Eraser
-L["COMBAT_LOCKOUT"] = "전투 중에는 아이템을 삭제할 수 없습니다."
+L["COMBAT_LOCKOUT"] = "안전을 위해 전투 중에는 아이템을 삭제할 수 없습니다."
 L["CONFIRM_ERASE"] = "%s%s 삭제하시겠습니까?"
 L["BAGS_FULL"] = "가방이 가득 찼습니다!"
 L["BAGS_FULL_NUDGE"] = "가방이 거의 찼습니다. %d칸 남았습니다."
@@ -82,8 +82,6 @@ L["RIGHT_CLICK"] = "우클릭"
 L["MIDDLE_CLICK"] = "휠클릭"
 L["SHIFT_RIGHT_CLICK"] = "Shift + 우클릭"
 L["SHIFT_MIDDLE_CLICK"] = "Shift + 휠클릭"
-L["ACTION_ERASE"] = "삭제"
-L["ACTION_IGNORE"] = "보호"
 L["ACTION_TOGGLE"] = "전환"
 L["ACTION_CLEAR_IGNORE"] = "보호 목록 초기화"
 L["BAGS_CLEAN_CONGRATS"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
@@ -113,6 +111,8 @@ L["TAB_IGNORE_LIST"] = "보호 목록"
 L["TAB_ERASE_LIST"] = "삭제 목록"
 L["ENABLED"] = "활성화"
 L["DISABLED"] = "비활성화"
+L["ACTION_ERASE"] = "삭제"
+L["ACTION_IGNORE"] = "보호"
 
 -- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "예시: %s"
@@ -134,11 +134,6 @@ L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "기능"
 
--- /Commands
-L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
-L["OPTIONS_COMMAND"] = "/eraser"
-L["OPTIONS_COMMAND_DESCRIPTION"] = "이 애드온의 설정 창을 엽니다."
-
 -- Key Bindings
 L["OPTIONS_KEY_BINDINGS_HEADER"] = "단축키 설정"
 L["OPTIONS_KEY_SET"] = "키 지정"
@@ -150,6 +145,11 @@ L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"마우스를 올린 아이템을 이 캐릭터에서 보호합니다. 가방, 은행, 상인, 전리품 창 어디서든 사용할 수 있습니다. 이 캐릭터의 삭제 목록에 있었다면 거기서 빠집니다."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"마우스를 올린 아이템을 가치와 상관없이 이 캐릭터의 삭제 목록에 추가합니다. 보호 목록이 여전히 우선합니다."
+
+-- /Commands
+L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
+L["OPTIONS_COMMAND"] = "/eraser"
+L["OPTIONS_COMMAND_DESCRIPTION"] = "이 애드온의 설정 창을 엽니다."
 
 -- Feedback & Support
 L["OPTIONS_FEEDBACK"] = "피드백 및 지원"
@@ -168,10 +168,8 @@ L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
 L["OPTIONS_UP_NEXT"] = "다음 차례"
 L["OPTIONS_CLUTTER_TOTAL"] = "합계"
 L["OPTIONS_STACKS"] = "(%d묶음)"
-L["OPTIONS_ERASE_BUTTON"] = "삭제"
 L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
 	"미니맵 버튼을 좌클릭하는 것과 똑같이 다음 아이템을 삭제합니다."
-L["OPTIONS_PROTECT_BUTTON"] = "보호"
 
 -- Everything in Your Bags
 L["OPTIONS_EVERYTHING_HEADER"] = "가방 속 모든 아이템"
@@ -196,7 +194,6 @@ L["REASON_QUEST_INELIGIBLE"] = "수락 불가"
 L["REASON_OUTGROWN"] = "저레벨"
 L["REASON_EQUIPMENT"] = "흰색 장비"
 L["REASON_GRAY"] = "회색"
-L["REASON_MANUAL"] = "삭제 목록"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -210,7 +207,7 @@ L["TAB_ERASING_RESTORE_NOTE"] =
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "잡동사니 기준"
 L["OPTIONS_JUNK_DESCRIPTION"] =
-	"어떤 종류의 아이템을 삭제할지 선택하세요. 큰 틀의 규칙이므로, 더 세밀하게 조정하려면 항상 남겨 둘 아이템은 보호 목록에, 항상 삭제할 아이템은 삭제 목록에 추가하세요."
+	"어떤 종류의 아이템을 삭제할지 선택하세요. 큰 틀의 규칙입니다. 더 세밀하게 조정하려면 항상 남겨 둘 아이템은 보호 목록에, 항상 삭제할 아이템은 삭제 목록에 추가하세요."
 L["OPTIONS_KIND_QUEST"] = "완료된 퀘스트 아이템"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"해당 아이템이 필요한 마지막 퀘스트를 완료한 뒤 남은 아이템입니다."

@@ -197,7 +197,6 @@ function ns.BuildGeneralOptions()
 	AddFeatureToggles(args, 12)
 	AddKeyBindingRows(args, 33)
 
-	-- Feedback & Support (Discord, GitHub, CurseForge, Wago, in that order)
 	args.spacerFeedback0 = ns.OptionsSpacer(100)
 	args.headerFeedback = ns.OptionsHeader(L["OPTIONS_FEEDBACK"], 101)
 	args.spacerFeedback1 = ns.OptionsSpacer(102)
