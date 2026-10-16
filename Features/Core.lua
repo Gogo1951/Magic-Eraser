@@ -113,9 +113,17 @@ function ns:OnPlayerLogin()
 		LibDBIcon:Register(ADDON_NAME, ns.dataBrokerObject, ns.db.global.minimap)
 
 		if ns.FLAVOR == "Camelot" or ns.FLAVOR == "Mainline" then
-			LibDBIcon:SetButtonIcon(ADDON_NAME, nil, 20, "CENTER", 1, -0.35)
+			--[[
+			    Size and anchor the icon directly rather than through
+			    SetButtonIcon: that first runs LibDBIcon's ResetButtonIcon, which
+			    calls icon:UpdateCoord() and errors when another add-on has
+			    rebuilt or replaced the button's icon without that method.
+			]]
 			local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
-			if button then
+			if button and button.icon then
+				button.icon:SetSize(20, 20)
+				button.icon:ClearAllPoints()
+				button.icon:SetPoint("CENTER", 1, -0.35)
 				local mask = button:CreateMaskTexture()
 				mask:SetTexture(130924, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE") -- Interface\CharacterFrame\TempPortraitAlphaMask
 				mask:SetAllPoints(button.icon)
