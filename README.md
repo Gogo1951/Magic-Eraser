@@ -2,7 +2,7 @@
 
 Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
 
-**TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need, and Marie Kondo would be so proud!
+**TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need. Marie Kondo would be so proud!
 
 <img width="800" src="https://github.com/user-attachments/assets/1b3091e3-79b3-443d-8fff-824e322aae3a" />
 
@@ -82,12 +82,13 @@ Find these under Key Bindings in the game menu, in the Magic Eraser section.
 Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`.
 
 * **General** // The welcome message and mini-map button, a switch for every feature, and your key bindings.
-* **Erasing** // What counts as junk, a maximum value to erase, Manual Delete Assistance, and Erase Confirmation.
+* **Erasing** // What counts as junk, a maximum value to erase, Manual Delete Assistance, and Erase Confirmation. Under it:
+    * **Erase List** and **Protect List** // One list per character, plus an All Characters list that applies everywhere.
 * **Merchant & Bank** // Auto-Vend and its chat report, and Bank Retrieval.
 * **Alerts & Tooltips** // Tooltip warnings, quest item alerts, and a heads-up as your last free bag slots fill.
-* **Protect List** and **Erase List** // One list per character, plus an All Characters list that applies everywhere.
 * **Your Current Bags** // Everything you carry, with an Erase and a Protect checkbox on every row.
 * **Profiles** // One shared Default profile, so a setting changed once applies on every character.
+* **Feedback & Support** // Ways to help Magic Eraser reach more players, plus the Discord, CurseForge, Wago and GitHub links.
 * **Diagnostic Tools** // Reports to paste into a bug report.
 
 <img width="800" src="https://github.com/user-attachments/assets/4835ad6a-0859-4a21-8c20-658e01cdee0e" />
@@ -122,7 +123,7 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 * Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
 * plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
-* Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/consumable-connoisseur)
+* Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/connoisseur-restocker)
 * Gogo1951's [GogoLoot](https://www.curseforge.com/wow/addons/gogoloot)
 
 ### 🟡 Overlaps

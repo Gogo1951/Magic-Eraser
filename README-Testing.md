@@ -1,16 +1,16 @@
 # Magic Eraser // Test Plan
 
-Magic Eraser spots the junk in your bags and erases it a click at a time, or sells it at your next merchant. This time we most want you on quest items from long quest chains, and on switching Auto-Vend off in the middle of a sale.
+Magic Eraser spots the junk in your bags and erases it a click at a time, or sells it at your next merchant. This time we most want you on the rearranged options pages, and on characters you made before this update.
 
 **Play on Classic Era, Season of Discovery, TBC Anniversary and WoW Forever.** If something looks wrong, tell us the check number and what you saw on [Discord](https://discord.gg/eh8hKq992Q).
 
 ## What's New
 
-1. On a Horde character, carry the Befouled Water Globe through The Befouled Element: it should only be offered once you've handed in Je'neu of the Earthen Ring.
-2. Make sure Evergreen Pouch, Dawn's Gambit, Blood of Innocents and Zorbin's Ultra-Shrinker are never offered, even after their quests are done.
-3. While Auto-Vend is selling a big pile of junk, Shift + Right-Click the mini-map button: the selling should stop straight away.
-4. Right after logging in, open the Protect List and Erase List: every item should show its name, in your character's list and the All Characters list alike.
-5. On WoW Forever, check that the mini-map button's ring and icon sit as neatly as the game's own buttons.
+1. Open the options and find the Erase List and Protect List under Erasing, and the new Feedback & Support page just above Diagnostic Tools.
+2. On a Classic Era character made before this update, open the Erase List: Maple Seed, Stranglethorn Seed and Soul Shard should be gone.
+3. Press Restore Defaults on the All Characters Erase List, then on another character's list: the first empties, the second refills with that character's starting items.
+4. On WoW Forever, press Restore Defaults on a character who isn't a Rogue: Rogue poison reagents such as Deathweed and Dust of Decay should join their Erase List.
+5. On WoW Forever, play alongside an add-on that gathers or restyles mini-map buttons: no error at login, and the mini-map button still looks right.
 
 ## Everything Else
 
