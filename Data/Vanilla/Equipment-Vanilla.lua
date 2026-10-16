@@ -45,7 +45,7 @@ ns.KEEP_EQUIPMENT = {
 How We Got the Data
 
 Last Validated
-	2026-10-13, Classic Era 1.15.9.70003
+	2026-10-16, Classic Era 1.15.9.70003
 
 Notes
 	- White weapons and armor are judged by rule in Features/Junk-Rules.lua, the way grays are, so this file lists no junk at all: only the white gear that rule would wrongly erase. The rule checks this table before anything else.
@@ -61,5 +61,8 @@ Wowhead
 	https://www.wowhead.com/classic/items/quality:1/slot:16:5:8:10:1:23:7:21:2:22:13:15:26:14:3:17:6:9?filter=85%3A1
 
 wago.tools
+	None.
+
+QuestieDB
 	None.
 ]]

@@ -4,6 +4,8 @@ local L = ns.L
 local format = string.format
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
@@ -106,6 +108,15 @@ function ns:OpenKeyBindings()
 	end
 
 	ns:PrintMessage(format(L["KEY_BINDINGS_LOCATION"], GAMEMENU_OPTIONS, KEY_BINDINGS_LABEL))
+end
+
+--[[
+    UPDATE_BINDINGS. The root panel shows each binding's key or Not Bound, and
+    the player changes them in the game's own Key Bindings list, so repaint the
+    panel when they come back from it.
+]]
+function ns:OnUpdateBindings()
+	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
 end
 
 --------------------------------------------------------------------------------

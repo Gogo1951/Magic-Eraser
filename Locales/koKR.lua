@@ -15,7 +15,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 
 -- System
 L["CHAT_LOADED"] =
-	"버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에서 찾을 수 있습니다. 애드온이 마음에 드시나요? 친구에게 알려주세요! (="
+	"버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에 있습니다. 이 애드온이 마음에 드시나요? 친구에게 알려 주시거나, CurseForge에서 즐겨찾기에 추가하거나, GitHub에서 별을 눌러 주세요. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "안전을 위해 전투 중에는 설정 창을 열 수 없습니다."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "안전을 위해 전투 중에는 단축키 목록을 열 수 없습니다."
 L["KEY_BINDINGS_LOCATION"] = "게임 메뉴를 열고 %s, %s 순서로 들어가 Magic Eraser 항목을 찾으세요."
@@ -151,12 +151,34 @@ L["OPTIONS_COMMANDS_HEADER"] = "/명령어"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "이 애드온의 설정 창을 엽니다."
 
--- Feedback & Support
+--------------------------------------------------------------------------------
+-- Options: Feedback & Support Panel
+--------------------------------------------------------------------------------
+
+-- Help Magic Eraser Level Up
+L["OPTIONS_LEVEL_UP_TITLE"] = "Magic Eraser의 레벨 업을 도와주세요"
+L["OPTIONS_LEVEL_UP_INTRO"] =
+	"이 애드온은 이 게임을 사랑하고 모두가 최대한 즐겁게 플레이하기를 바라는 플레이어들이 만들었습니다. 저희는 절대 후원을 요청하지 않습니다. 저희의 작업이 여러분의 게임을 조금 더 즐겁게 만든다는 것이 진정한 보람입니다. 그렇다면 꼭 이야기를 들려주세요!"
+L["OPTIONS_LEVEL_UP_WAYS"] =
+	"더 많은 플레이어에게 다가갈 수 있도록 도와주실 수 있는 몇 가지 방법을 소개합니다."
+L["OPTIONS_LEVEL_UP_FEEDBACK"] =
+	"• 피드백 공유: 버그를 발견했거나 아이디어가 있으신가요? Discord에서 알려 주세요. 여러분의 피드백은 애드온을 개선하는 데 도움이 되며, 풀 리퀘스트도 언제나 환영합니다."
+L["OPTIONS_LEVEL_UP_FRIEND"] =
+	"• 친구에게 알리기: 이 애드온을 좋아할 만한 사람이 있나요? 그분께 알려 주세요. 입소문은 더 많은 플레이어가 훌륭한 애드온을 발견하는 데 도움이 됩니다."
+L["OPTIONS_LEVEL_UP_CURSEFORGE"] =
+	'• CurseForge에서 즐겨찾기: 아래 CurseForge 링크를 열고 로그인한 다음 "Download" 버튼 아래의 별을 클릭하세요. 즐겨찾기는 더 많은 플레이어가 애드온을 발견하는 데 도움이 됩니다.'
+L["OPTIONS_LEVEL_UP_GITHUB"] =
+	'• GitHub에서 별 주기: 아래 GitHub 링크를 열고 로그인한 다음 오른쪽 위의 "Star"를 클릭하세요. 별은 프로젝트가 더 많은 무료 개발자 도구를 이용할 자격을 얻는 데 도움이 됩니다.'
+L["OPTIONS_LEVEL_UP_THANKS"] = "Magic Eraser를 선택해 주셔서 감사합니다!"
+
+-- Feedback & Support Links
 L["OPTIONS_FEEDBACK"] = "피드백 및 지원"
+L["OPTIONS_FEEDBACK_LINKS_HEADER"] = "피드백 및 지원 링크"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+L["OPTIONS_COPY_LINK"] = "링크를 복사하려면 해당 칸을 클릭한 다음 Ctrl+A와 Ctrl+C를 누르세요."
 L["OPTIONS_VERSION"] = "버전 %s"
 
 --------------------------------------------------------------------------------
@@ -358,3 +380,7 @@ L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"이 캐릭터의 삭제 목록을 Magic Eraser가 처음 넣어 주는 아이템으로 되돌립니다."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"이 캐릭터의 삭제 목록을 비우고 Magic Eraser가 처음 넣어 주는 아이템만 다시 넣을까요? 직접 추가한 항목은 모두 제거됩니다."
+L["OPTIONS_ERASE_RESTORE_GLOBAL_DESCRIPTION"] =
+	"모든 캐릭터 삭제 목록을 비웁니다. 이 목록은 Magic Eraser가 빈 상태로 시작합니다. 캐릭터별 목록은 그대로 유지됩니다."
+L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"] =
+	"모든 캐릭터 삭제 목록을 비울까요? 목록의 모든 항목이 제거되며, 캐릭터별 목록은 그대로 유지됩니다."

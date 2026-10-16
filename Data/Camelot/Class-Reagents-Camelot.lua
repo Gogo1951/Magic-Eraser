@@ -26,6 +26,11 @@ ns.CLASS_REAGENTS = {
 	},
 	ROGUE = {
 		[5530] = true, -- Blinding Powder
+		[5173] = true, -- Deathweed
+		[2928] = true, -- Dust of Decay
+		[8924] = true, -- Dust of Deterioration
+		[8923] = true, -- Essence of Agony
+		[2930] = true, -- Essence of Pain
 		[5140] = true, -- Flash Powder
 	},
 	SHAMAN = {
@@ -36,7 +41,6 @@ ns.CLASS_REAGENTS = {
 	WARLOCK = {
 		[16583] = true, -- Demonic Figurine
 		[5565] = true, -- Infernal Stone
-		[6265] = true, -- Soul Shard
 	},
 }
 
@@ -49,6 +53,8 @@ Last Validated
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.
 	- Shiny Fish Scales and Fish Oil are the Shaman's Water Breathing and Water Walking reagents, added by hand. Every other row came from the wago.tools tables below.
+	- Deathweed, Dust of Decay, Dust of Deterioration, Essence of Agony and Essence of Pain were missing here until 2026-10-16, though this client's SpellReagents table shows only Rogue poisons use them, the same as on Classic Era. They wait for this client's next Validate Data run to confirm them.
+	- A reagent that binds when picked up and only its own class can get is left out, because no other class ever carries one: Soul Shard (6265), which only a Warlock's Drain Soul makes.
 	- Only ns:SeedEraseList in Features/Erase-List.lua acts on this table: it puts other classes' reagents on a character's Erase List once, the first time that character plays. Diagnostics/Manifests.lua also reads it, for the Eraser Context count and Validate Data.
 	- Nothing filters on it while scanning bags, so a Shaman who puts Fish Oil on their own Erase List on purpose is obeyed, not overridden.
 	- Hand-maintained, and never merged into the regenerated tables beside it (Consumables, Quest-Items and Quest-Starting-Items come from SQL, Ammo from wago.tools): a hand-added row wouldn't survive the next regeneration, so an ID no query can find belongs in a file nothing regenerates.
@@ -64,4 +70,8 @@ wago.tools
 	https://wago.tools/db2/SkillRaceClassInfo?build=1.60.1.70291
 	https://wago.tools/db2/SpellReagents?build=1.60.1.70291
 	https://wago.tools/db2/SkillLine?build=1.60.1.70291
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70291
+
+QuestieDB
+	None.
 ]]

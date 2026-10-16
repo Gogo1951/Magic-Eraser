@@ -7,38 +7,16 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 --------------------------------------------------------------------------------
 
 --[[
-    Two ignore lists, and protection is additive: an item on either one is left
-    alone. The per-character list lives in char, AceDB's per-character scope,
-    as a flat table, so it stays with the character whatever profile is
-    active: every character shares the Default profile, which holds settings
-    only. The account-wide list is its mirror in global, shared by every
-    character.
-
-    Both are created on first use, so a brand-new character simply starts empty,
-    and both return nil only before the database exists.
+    Two ignore lists, this character's and the account-wide one, and protection
+    is additive: an item on either one is left alone. Both are stored through
+    the shared Character Lists helpers in Features/Utilities.lua.
 ]]
 function ns:GetIgnoreList()
-	if not ns.db then
-		return nil
-	end
-	local ignoreList = ns.db.char.ignoreList
-	if type(ignoreList) ~= "table" then
-		ignoreList = {}
-		ns.db.char.ignoreList = ignoreList
-	end
-	return ignoreList
+	return ns:GetCharacterList("ignoreList")
 end
 
 function ns:GetGlobalIgnoreList()
-	if not ns.db then
-		return nil
-	end
-	local ignoreList = ns.db.global.ignoreList
-	if type(ignoreList) ~= "table" then
-		ignoreList = {}
-		ns.db.global.ignoreList = ignoreList
-	end
-	return ignoreList
+	return ns:GetAccountList("ignoreList")
 end
 
 --[[
@@ -114,7 +92,7 @@ end
 
     Protecting an item also retires this character's Erase List row for it. The
     Ignore List always wins, so the row could no longer change any outcome --
-    the reason ClearFromAllCharacters clears rows on a promote. The account-wide
+    the reason a promote clears every character's rows. The account-wide
     Erase List is left alone, because it still decides the item on every other
     character.
 
@@ -153,84 +131,9 @@ end
 -- Ignore List Scopes
 --------------------------------------------------------------------------------
 
---[[
-    One list looked up by the scope key the Ignore List panel uses: the global
-    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played ("Name -
-    Realm", ns.db.keys.char), or any other character on the account.
-
-    The character being played resolves through ns.db.char rather than the raw
-    saved table, so an edit lands on the very list the eraser reads and applies
-    live. Every other character is read straight out of ns.db.sv.char, because
-    AceDB only materializes the character you are on -- and it strips
-    default-valued tables at logout, so a character who never added an entry
-    has no stored ignoreList. A read returns nil in those cases; a write passes
-    createIfMissing and builds what it needs on the spot.
-]]
+-- One list by the Ignore List panel's scope key; see ns:GetCharacterListForScope.
 function ns:GetIgnoreListForScope(scopeKey, createIfMissing)
-	if not (ns.db and scopeKey) then
-		return nil
-	end
-
-	if scopeKey == ns.LIST_SCOPE_GLOBAL then
-		return ns:GetGlobalIgnoreList()
-	end
-
-	if scopeKey == ns.db.keys.char then
-		return ns:GetIgnoreList()
-	end
-
-	local characters = ns.db.sv and ns.db.sv.char
-	if not characters then
-		return nil
-	end
-
-	local charData = characters[scopeKey]
-	if type(charData) ~= "table" then
-		if not createIfMissing then
-			return nil
-		end
-		charData = {}
-		characters[scopeKey] = charData
-	end
-
-	local ignoreList = charData.ignoreList
-	if type(ignoreList) ~= "table" then
-		if not createIfMissing then
-			return nil
-		end
-		ignoreList = {}
-		charData.ignoreList = ignoreList
-	end
-
-	return ignoreList
-end
-
---[[
-    Drop one item from every character's list. Called when the item joins the
-    account-wide list, which already protects it everywhere: protection is
-    additive, so a per-character entry for a globally ignored item can no longer
-    change any outcome, and all it does is clutter that character's pane with a
-    row that does nothing. Clearing them is what makes "add to Global" mean the
-    item lives in exactly one place.
-
-    The live table behind ns.db.char is the same table as its sv.char entry,
-    so the loop covers the current character too -- but only once AceDB has
-    materialized it, hence the direct pass afterwards.
-]]
-local function ClearFromAllCharacters(itemId)
-	local characters = ns.db.sv and ns.db.sv.char
-	if characters then
-		for _, charData in pairs(characters) do
-			if type(charData) == "table" and type(charData.ignoreList) == "table" then
-				charData.ignoreList[itemId] = nil
-			end
-		end
-	end
-
-	local ignoreList = ns:GetIgnoreList()
-	if ignoreList then
-		ignoreList[itemId] = nil
-	end
+	return ns:GetCharacterListForScope("ignoreList", scopeKey, createIfMissing)
 end
 
 --[[
@@ -238,6 +141,11 @@ end
     not just the current character's: an edit to the account-wide list changes
     what this character may erase, and an edit to another character's list is
     cheap enough that checking which scope it was is not worth the branch.
+
+    An item joining the account-wide list comes off every character's list,
+    since that list already protects it everywhere: a per-character entry could
+    no longer change any outcome and would only clutter that character's pane.
+    That is what makes "add to Global" mean the item lives in exactly one place.
 
     Removing from the account-wide list deliberately does not put the item back
     on anyone: there is no record of who held it, and re-adding to a list the
@@ -256,7 +164,7 @@ function ns:SetIgnoredInScope(scopeKey, itemId, isIgnored)
 	ignoreList[itemId] = isIgnored and true or nil
 
 	if isIgnored and scopeKey == ns.LIST_SCOPE_GLOBAL then
-		ClearFromAllCharacters(itemId)
+		ns:ClearFromEveryCharacter("ignoreList", itemId)
 	end
 
 	ns:InvalidateCache()

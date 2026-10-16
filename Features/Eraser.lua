@@ -66,7 +66,7 @@ local function ScheduleScanRetry()
 	C_Timer.After(1.0, function()
 		retryPending = false
 		inScanRetry = true
-		ns:RefreshDisplay()
+		ns:RefreshWhenOutOfCombat()
 		inScanRetry = false
 	end)
 end

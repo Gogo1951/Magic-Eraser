@@ -28,13 +28,12 @@ ns.Version = GetVersion()
 --------------------------------------------------------------------------------
 
 --[[
-    The add-on's complete event surface and the single source the dispatcher
-    registers from -- add an event here and it is registered, dispatched, and
-    covered by the Diagnostic Tools panel automatically, with no second list to
-    keep in sync. Feature files own their handlers (Auto-Vend.lua defines
-    ns:OnMerchantShow / ns:OnMerchantClosed); the dispatcher routes each event to
-    its handler so every event passes through one point, which is what makes the
-    diagnostics event log complete.
+    The add-on's complete event surface: the dispatcher registers every name
+    here, and the Diagnostic Tools panel reads the same list. Each event also
+    needs a row in EVENT_HANDLERS below naming its ns:OnXxx handler, which Core
+    or a feature file loaded after Core defines (Auto-Vend.lua defines
+    ns:OnMerchantShow / ns:OnMerchantClosed); an event listed here without one
+    is registered and logged but never handled.
 ]]
 ns.EVENT_NAMES = {
 	"PLAYER_LOGIN",
@@ -108,29 +107,7 @@ function ns:OnPlayerLogin()
 		ns.db.RegisterCallback(ns, message, "ApplyProfile")
 	end
 
-	local LibDBIcon = LibStub("LibDBIcon-1.0")
-	if ns.dataBrokerObject then
-		LibDBIcon:Register(ADDON_NAME, ns.dataBrokerObject, ns.db.global.minimap)
-
-		if ns.FLAVOR == "Camelot" or ns.FLAVOR == "Mainline" then
-			--[[
-			    Size and anchor the icon directly rather than through
-			    SetButtonIcon: that first runs LibDBIcon's ResetButtonIcon, which
-			    calls icon:UpdateCoord() and errors when another add-on has
-			    rebuilt or replaced the button's icon without that method.
-			]]
-			local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
-			if button and button.icon then
-				button.icon:SetSize(20, 20)
-				button.icon:ClearAllPoints()
-				button.icon:SetPoint("CENTER", 1, -0.35)
-				local mask = button:CreateMaskTexture()
-				mask:SetTexture(130924, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE") -- Interface\CharacterFrame\TempPortraitAlphaMask
-				mask:SetAllPoints(button.icon)
-				button.icon:AddMaskTexture(mask)
-			end
-		end
-	end
+	ns:RegisterMinimapButton()
 
 	ns:PrintWelcome()
 
@@ -141,6 +118,8 @@ function ns:OnPlayerLogin()
 	    cache and leaves the repaint to us. See ns:SeedEraseList.
 	]]
 	ns:SeedEraseList()
+	-- MIGRATION (remove after 2026-11-15)
+	ns:MigrateRetiredSeedReagents()
 
 	--[[
 	    Seed the bag-space warning baseline with the free count we log in with, so
@@ -185,19 +164,6 @@ function ns:ApplyProfile()
 end
 
 --[[
-    Consumable and ammo eligibility is gated on the player's level (see
-    GetConsumableEraseLevel and GetAmmoEraseLevel in Junk-Rules.lua), so leveling
-    up can newly qualify outgrown food or ammo, and a ding brings no bag update.
-    The rescan uses the event's own level, because UnitLevel may not be updated
-    yet when the event fires.
-]]
-function ns:OnPlayerLevelUp(level)
-	ns:NoteLevelUp(level)
-	ns:InvalidateCache()
-	ns:RefreshDisplay()
-end
-
---[[
     The debounced half of BAG_UPDATE_DELAYED. Nothing can be erased in combat,
     so there the two full bag walks, the mini-map repaint and the quest-starter
     check, wait for PLAYER_REGEN_ENABLED; dropping the cache is enough meanwhile,
@@ -233,8 +199,23 @@ function ns:OnBagUpdateDelayed()
 end
 
 --[[
-    PLAYER_REGEN_ENABLED. Replays the bag walks a fight held back, then lets
-    Auto-Vend resume a merchant pass that combat deferred.
+    A repaint that holds its bag walk for PLAYER_REGEN_ENABLED when asked in
+    combat, the same way a bag update does, for the level-up and the item-data
+    retry.
+]]
+function ns:RefreshWhenOutOfCombat()
+	ns:InvalidateCache()
+	if InCombatLockdown() then
+		refreshAfterCombat = true
+	else
+		ns:RefreshDisplay()
+	end
+end
+
+--[[
+    PLAYER_REGEN_ENABLED. Replays the bag walks a fight held back, whether a bag
+    update, a level-up or an item-data retry asked for them, then lets Auto-Vend
+    resume a merchant pass that combat deferred.
 ]]
 function ns:OnPlayerRegenEnabled()
 	if refreshAfterCombat then
@@ -243,15 +224,6 @@ function ns:OnPlayerRegenEnabled()
 		ns:CheckQuestStarters()
 	end
 	ns:ResumeDeferredVend()
-end
-
---[[
-    UPDATE_BINDINGS. The root panel shows each binding's key or Not Bound, and
-    the player changes them in the game's own Key Bindings list, so repaint the
-    panel when they come back from it.
-]]
-function ns:OnUpdateBindings()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
 end
 
 --[[

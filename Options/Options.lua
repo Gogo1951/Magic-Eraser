@@ -9,12 +9,24 @@ local D = ns.DiagnosticsStrings
 --[[
     Registration only -- panel content lives in the per-panel builder files.
     Called from ns:OnPlayerLogin once ns.db exists, because the Ignore List,
-    Erase List and Profiles builders need the AceDB database. Child order is
-    General (root) -> Erasing -> Merchant & Bank -> Alerts & Tooltips ->
-    Protect List -> Erase List -> Your Current Bags -> Profiles -> the
-    Diagnostic Tools panel last; each child's third AddToBlizOptions argument is the root's
-    display name (ns.ADDON_TITLE), so the eight children nest under Magic
-    Eraser. Registration order is tree order.
+    Erase List and Profiles builders need the AceDB database. The tree:
+
+      Magic Eraser (General, the root)
+        Erasing
+          Erase List
+          Protect List
+        Merchant & Bank
+        Alerts & Tooltips
+        Your Current Bags
+        Profiles
+        Feedback & Support
+        Diagnostic Tools
+
+    A top-level child's third AddToBlizOptions argument is the root's display
+    name (ns.ADDON_TITLE). Erasing's two children name Erasing by the category
+    ID its own AddToBlizOptions returned instead: AceConfigDialog maps only a
+    root's display name to its ID, while the Settings panel finds a category
+    at any depth by ID. Registration order is tree order within each level.
     The Profiles display name comes already localized from AceDBOptions-3.0.
 ]]
 local AceConfig = LibStub("AceConfig-3.0")
@@ -55,12 +67,29 @@ function ns:RegisterOptionsPanels()
 		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.ADDON_TITLE)
 
 	--[[
-	    The three feature pages, ahead of the two list panels: they are
-	    configuration, the lists are data. Built tables rather than builder
-	    functions, because nothing on them is drawn from a live list.
+	    Erasing holds everything about what gets erased, with the two lists that
+	    decide it nested beneath it. A built table rather than a builder
+	    function, because nothing on it is drawn from a live list.
 	]]
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Erasing, ns.BuildErasingOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Erasing, L["TAB_ERASING"], ns.ADDON_TITLE)
+	local _, erasingCategoryID =
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Erasing, L["TAB_ERASING"], ns.ADDON_TITLE)
+
+	--[[
+	    The two list panels are builder functions, not built tables: their rows
+	    are the lists themselves, so AceConfig re-invokes them on every open and
+	    every NotifyChange and neither ever renders a stale list. The Protect
+	    List is the Erase List in reverse, so both get the same treatment.
+	]]
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.EraseList, ns.BuildEraseListOptions)
+	local erasePanel =
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], erasingCategoryID)
+	PrepareListTree(ns.OPTIONS_REGISTRY.EraseList, erasePanel)
+
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
+	local ignorePanel =
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], erasingCategoryID)
+	PrepareListTree(ns.OPTIONS_REGISTRY.IgnoreList, ignorePanel)
 
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.MerchantBank, ns.BuildMerchantBankOptions())
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.MerchantBank, L["TAB_MERCHANT_BANK"], ns.ADDON_TITLE)
@@ -68,34 +97,16 @@ function ns:RegisterOptionsPanels()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.AlertsTooltips, ns.BuildAlertsTooltipsOptions())
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.AlertsTooltips, L["TAB_ALERTS"], ns.ADDON_TITLE)
 
-	--[[
-	    The builder function, not a built table: the Ignore List panel's rows are
-	    the ignore lists themselves, so AceConfig re-invokes it on every open and
-	    every NotifyChange and the panel never renders a stale list.
-	]]
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
-	local ignorePanel =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], ns.ADDON_TITLE)
-	PrepareListTree(ns.OPTIONS_REGISTRY.IgnoreList, ignorePanel)
-
-	-- The Erase List is the same panel in reverse, so it gets the same treatment.
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.EraseList, ns.BuildEraseListOptions)
-	local erasePanel =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], ns.ADDON_TITLE)
-	PrepareListTree(ns.OPTIONS_REGISTRY.EraseList, erasePanel)
-
-	--[[
-	    Your Current Bags right after the two lists, since its rows are where a
-	    player sorts what they carry onto them. A builder function, because its
-	    rows are the live bags; ns:RefreshDisplay repaints it on every bag
-	    change.
-	]]
+	-- A builder function, because its rows are the live bags; ns:RefreshDisplay repaints it on every bag change.
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.YourCurrentBags, ns.BuildYourCurrentBagsOptions)
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.YourCurrentBags, L["TAB_YOUR_CURRENT_BAGS"], ns.ADDON_TITLE)
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Profiles, profilesOptions.name, ns.ADDON_TITLE)
+
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.FeedbackSupport, ns.BuildFeedbackSupportOptions())
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.FeedbackSupport, L["OPTIONS_FEEDBACK"], ns.ADDON_TITLE)
 
 	-- A builder function, so the tabs come and go with the enable toggle (see Diagnostics/Options-Diagnostics.lua).
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Diagnostics, ns.BuildDiagnosticsOptions)

@@ -103,7 +103,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-13, Classic Era 1.15.9.70003
+	2026-10-16, Classic Era 1.15.9.70003
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -112,6 +112,7 @@ Notes
 	- questId is the quest the item starts. racesMask and classesMask are that quest's race and class limits (quest_template.RequiredRaces and RequiredClasses), left off when it has none.
 		- Race bits: Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32, Gnome 64, Troll 128, BloodElf 512, Draenei 1024. Alliance = 1101, Horde = 690, 0 = no restriction.
 		- Class bits: Warrior 1, Paladin 2, Hunter 4, Rogue 8, Priest 16, DeathKnight 32, Shaman 64, Mage 128, Warlock 256, Druid 1024.
+		- QuestieDB's raw quest data gives a faction to seven quests stored here with none (4264, 968, 708, 1423, 927, 7735, 7738), and marks 708, 1423, 5582, 7735, 7738, 7944 and 8784 repeatable. The client can't confirm either, so the rows stay as they are: a mask too wide only keeps an item longer, and a repeatable quest's row can only fire on race or class.
 	- Repeatable, daily and weekly quests are left out: their starter can come back, so a completed flag proves nothing. The repeatable flag has gaps (five Craftsman's Writs lack it while the other nineteen in the family have it); the bind rule catches all five.
 	- Only starters bound to the looter (bind on pickup, or quest item) are kept. One that doesn't bind can be handed to an alt or another player who does qualify, so deleting it destroys something still useful: Carefully Folded Note and Captain Sanders' Treasure Map, and the five unflagged Writs are unbound too.
 	- Poor and common quality only. Plenty of quest starters are epics and legendaries (Dormant Wind Kissed Blade, Frame of Atiesh, Shattered Fragments of Val'anyr, Battered Hilt), and none may ever be erased. Relax the cap only after reading every row.
@@ -206,6 +207,9 @@ Wowhead
 	None.
 
 wago.tools
-	Build 1.15.9.70003; the file never recorded which tables.
 	https://wago.tools/db2/ItemSparse?build=1.15.9.70003
+
+QuestieDB
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Classic/classicQuestDB.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Classic/classicItemDB.lua
 ]]

@@ -18,7 +18,8 @@ local L = ns.L
     AceConfig re-invokes this on every open and every NotifyChange and the panel
     is always current.
 
-    The rows come from ns:BuildItemListOptions, the shared builder every
+    The tree comes from ns.BuildCharacterListTree, shared with the Protect List
+    panel, and the rows from ns:BuildItemListOptions, the shared builder every
     player-managed item list renders through, so a list adds and removes the same
     way here as in any other panel. A pane spends ns.OPTIONS_TREE_ROW_WIDTH
     rather than the full row width, because the tree sidebar takes its share of
@@ -80,12 +81,15 @@ local function BuildScopeArgs(scopeKey)
 	local isGlobalScope = scopeKey == ns.LIST_SCOPE_GLOBAL
 
 	--[[
-	    Only the character being played gets Restore Defaults. ns:SeedEraseList
-	    reads that character's own class and writes ns.db.char, so it cannot
-	    re-seed another character's list, and the Global scope ships no defaults
-	    to restore in the first place.
+	    Every pane gets Restore Defaults, so a list is never left without a way
+	    back. On the All Characters pane it empties the list, which ships empty;
+	    on a character's pane it re-seeds that character's list (see
+	    ns:RestoreEraseListDefaults).
 	]]
-	local isCurrentCharacter = ns.db and scopeKey == ns.db.keys.char
+	local restoreDesc = isGlobalScope and L["OPTIONS_ERASE_RESTORE_GLOBAL_DESCRIPTION"]
+		or L["OPTIONS_ERASE_RESTORE_DESCRIPTION"]
+	local restoreConfirm = isGlobalScope and L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"]
+		or L["OPTIONS_ERASE_RESTORE_CONFIRM"]
 
 	local args = ns:BuildItemListOptions({
 		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
@@ -100,9 +104,9 @@ local function BuildScopeArgs(scopeKey)
 		onRemove = function(itemId)
 			ns:SetOnEraseListInScope(scopeKey, itemId, false)
 		end,
-		onRestore = isCurrentCharacter and function()
-			ns:RestoreEraseListDefaults()
-		end or nil,
+		onRestore = function()
+			ns:RestoreEraseListDefaults(scopeKey)
+		end,
 		addFromBags = true,
 		getRowTag = function(itemId)
 			return IsProtectedInScope(scopeKey, itemId) and L["OPTIONS_LIST_PROTECTED_TAG"] or nil
@@ -116,8 +120,8 @@ local function BuildScopeArgs(scopeKey)
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
 			restoreName = L["OPTIONS_ERASE_RESTORE"],
-			restoreDesc = L["OPTIONS_ERASE_RESTORE_DESCRIPTION"],
-			restoreConfirm = L["OPTIONS_ERASE_RESTORE_CONFIRM"],
+			restoreDesc = restoreDesc,
+			restoreConfirm = restoreConfirm,
 		},
 		--[[
 		    The Global pane has nowhere to promote to, so its item cell absorbs
@@ -131,70 +135,13 @@ local function BuildScopeArgs(scopeKey)
 	return args
 end
 
-local function ScopeGroup(name, order, scopeKey)
-	return {
-		type = "group",
-		name = name,
-		order = order,
-		args = BuildScopeArgs(scopeKey),
-	}
-end
-
 function ns.BuildEraseListOptions()
-	--[[
-	    The description lives on the root group, not in the scope panes: a tree
-	    group renders its own non-group args once, full width, between the panel
-	    title and the tree, so the copy reads once above the whole panel instead
-	    of repeating in every pane.
-	]]
-	local args = {
-		descIntro = ns.OptionsDesc(L["OPTIONS_ERASE_DESCRIPTION"], 1),
-		spacerIntro = ns.OptionsSpacer(2),
-	}
-
-	--[[
-	    Keyed by scope, not by position: the tree remembers the selected node by
-	    its arg key, so a key that moved when a character appeared or dropped out of
-	    the list would silently reselect a different character.
-	]]
-	args[ns.LIST_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_LIST_GLOBAL"], 3, ns.LIST_SCOPE_GLOBAL)
-
-	--[[
-	    A blank, unclickable row between All Characters and the characters.
-	    Disabled tree rows take no mouse input, so it can never be selected.
-	]]
-	args.spacerCharacters = {
-		type = "group",
-		name = " ",
-		order = 4,
-		disabled = true,
-		args = {},
-	}
-
-	if ns.db then
-		local currentCharacter = ns.db.keys.char
-		local order = 10
-
-		for _, charKey in ipairs(ns:GetCharacterKeys()) do
-			--[[
-			    A character with an empty list is noise in the tree, so it is left
-			    out -- except for the character playing right now, whose list has
-			    to be reachable to put a first item in it. Character keys
-			    ("Name - Realm") are never localized, so they are shown as-is
-			    in their class color and sorted as plain strings.
-			]]
-			local eraseList = ns:GetEraseListForScope(charKey)
-			if charKey == currentCharacter or (eraseList and next(eraseList) ~= nil) then
-				args[charKey] = ScopeGroup(ns:GetCharacterDisplayName(charKey), order, charKey)
-				order = order + 1
-			end
-		end
-	end
-
-	return {
-		type = "group",
+	return ns.BuildCharacterListTree({
 		name = L["TAB_ERASE_LIST"],
-		childGroups = "tree",
-		args = args,
-	}
+		description = L["OPTIONS_ERASE_DESCRIPTION"],
+		getListForScope = function(scopeKey)
+			return ns:GetEraseListForScope(scopeKey)
+		end,
+		buildScopeArgs = BuildScopeArgs,
+	})
 end
