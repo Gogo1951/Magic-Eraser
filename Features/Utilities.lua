@@ -279,6 +279,111 @@ do
 end
 
 --------------------------------------------------------------------------------
+-- Character Lists
+--------------------------------------------------------------------------------
+
+--[[
+    The Protect List and the Erase List are built to one shape, so both read
+    and write through these, named by their saved key ("ignoreList" or
+    "eraseList"). Each list has a per-character copy in char, AceDB's
+    per-character scope, so it stays with the character whatever profile is
+    active, and an account-wide twin in global. Both are created on first use,
+    so a brand-new character simply starts empty, and both return nil only
+    before the database exists.
+]]
+local function GetOrCreateList(scope, listKey)
+	local list = scope[listKey]
+	if type(list) ~= "table" then
+		list = {}
+		scope[listKey] = list
+	end
+	return list
+end
+
+function ns:GetCharacterList(listKey)
+	return ns.db and GetOrCreateList(ns.db.char, listKey) or nil
+end
+
+function ns:GetAccountList(listKey)
+	return ns.db and GetOrCreateList(ns.db.global, listKey) or nil
+end
+
+--[[
+    One list looked up by the scope key the list panels use: the global
+    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played ("Name -
+    Realm", ns.db.keys.char), or any other character on the account.
+
+    The character being played resolves through ns.db.char rather than the raw
+    saved table, so an edit lands on the very list the eraser reads and applies
+    live. Every other character is read straight out of ns.db.sv.char, because
+    AceDB only materializes the character you are on -- and it strips
+    default-valued tables at logout, so a character who never added an entry
+    has no stored list. A read returns nil in those cases; a write passes
+    createIfMissing and builds what it needs on the spot.
+]]
+function ns:GetCharacterListForScope(listKey, scopeKey, createIfMissing)
+	if not (ns.db and scopeKey) then
+		return nil
+	end
+
+	if scopeKey == ns.LIST_SCOPE_GLOBAL then
+		return ns:GetAccountList(listKey)
+	end
+
+	if scopeKey == ns.db.keys.char then
+		return ns:GetCharacterList(listKey)
+	end
+
+	local characters = ns.db.sv and ns.db.sv.char
+	if not characters then
+		return nil
+	end
+
+	local charData = characters[scopeKey]
+	if type(charData) ~= "table" then
+		if not createIfMissing then
+			return nil
+		end
+		charData = {}
+		characters[scopeKey] = charData
+	end
+
+	local list = charData[listKey]
+	if type(list) ~= "table" then
+		if not createIfMissing then
+			return nil
+		end
+		list = {}
+		charData[listKey] = list
+	end
+
+	return list
+end
+
+--[[
+    Drop one item from every character's copy of a list, for an item that has
+    just joined the account-wide twin. The live table behind ns.db.char is the
+    same table as its sv.char entry, so the loop covers the current character
+    too -- but only once AceDB has materialized it, hence the direct pass
+    afterwards.
+]]
+function ns:ClearFromEveryCharacter(listKey, itemId)
+	local characters = ns.db.sv and ns.db.sv.char
+	if characters then
+		for _, charData in pairs(characters) do
+			if type(charData) == "table" and type(charData[listKey]) == "table" then
+				charData[listKey][itemId] = nil
+			end
+		end
+	end
+
+	local list = ns:GetCharacterList(listKey)
+	if list then
+		list[itemId] = nil
+	end
+end
+
+--------------------------------------------------------------------------------
 -- Characters
 --------------------------------------------------------------------------------
 

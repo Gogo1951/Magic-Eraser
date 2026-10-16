@@ -115,6 +115,7 @@ Options/Options-Alerts-Tooltips.lua
 Options/Options-Ignore-List.lua
 Options/Options-Erase-List.lua
 Options/Options-Profiles.lua
+Options/Options-Feedback-Support.lua
 Diagnostics/Options-Diagnostics.lua
 Options/Options.lua
 

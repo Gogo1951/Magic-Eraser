@@ -3,16 +3,6 @@ local L = ns.L
 
 local GetColor = ns.GetColor
 
---[[
-    The four link rows split ns.OPTIONS_ROW_WIDTH unevenly: their labels are one
-    short word, while the box beside them holds a full URL the player is meant to
-    select and copy. The label takes 0.6 and the box takes the rest of the row,
-    the remaining width the guide gives a read-only URL input, so the row still
-    ends where every other row on the panel ends.
-]]
-local LINK_LABEL_WIDTH = 0.6
-local LINK_URL_WIDTH = ns.OPTIONS_ROW_WIDTH - LINK_LABEL_WIDTH
-
 --------------------------------------------------------------------------------
 -- Features
 --------------------------------------------------------------------------------
@@ -139,10 +129,11 @@ end
 --[[
     The root panel, in the order every Gogo1951 add-on's root panel uses: the
     pitch, the Welcome Message and Mini-map Button switches, a Features section
-    with every feature's switch, Key Bindings, /Commands, then Feedback &
-    Support and the version line at the bottom. Each feature's full settings
-    live on its own page under this one. The mini-map clicks are spelled out in
-    the button's own tooltip, so they aren't repeated here.
+    with every feature's switch, Key Bindings, then /Commands. The links and
+    the version line have their own Feedback & Support page. Each
+    feature's full settings live on its own page under this one. The mini-map
+    clicks are spelled out in the button's own tooltip, so they aren't repeated
+    here.
 ]]
 function ns.BuildGeneralOptions()
 	local args = {
@@ -196,71 +187,6 @@ function ns.BuildGeneralOptions()
 
 	AddFeatureToggles(args, 12)
 	AddKeyBindingRows(args, 33)
-
-	args.spacerFeedback0 = ns.OptionsSpacer(100)
-	args.headerFeedback = ns.OptionsHeader(L["OPTIONS_FEEDBACK"], 101)
-	args.spacerFeedback1 = ns.OptionsSpacer(102)
-	args.labelDiscord = ns.OptionsRowLabel(GetColor("TITLE") .. L["OPTIONS_DISCORD"] .. "|r", 103, LINK_LABEL_WIDTH)
-	args.linkDiscord = {
-		type = "input",
-		name = "",
-		width = LINK_URL_WIDTH,
-		order = 104,
-		get = function()
-			return ns.LINKS.DISCORD
-		end,
-		set = function() end,
-	}
-	args.spacerBetweenLinks1 = ns.OptionsSpacer(105)
-	args.labelGitHub = ns.OptionsRowLabel(GetColor("TITLE") .. L["OPTIONS_GITHUB"] .. "|r", 106, LINK_LABEL_WIDTH)
-	args.linkGitHub = {
-		type = "input",
-		name = "",
-		width = LINK_URL_WIDTH,
-		order = 107,
-		get = function()
-			return ns.LINKS.GITHUB
-		end,
-		set = function() end,
-	}
-	args.spacerBetweenLinks2 = ns.OptionsSpacer(108)
-	args.labelCurseForge =
-		ns.OptionsRowLabel(GetColor("TITLE") .. L["OPTIONS_CURSEFORGE"] .. "|r", 109, LINK_LABEL_WIDTH)
-	args.linkCurseForge = {
-		type = "input",
-		name = "",
-		width = LINK_URL_WIDTH,
-		order = 110,
-		get = function()
-			return ns.LINKS.CURSEFORGE
-		end,
-		set = function() end,
-	}
-	args.spacerBetweenLinks3 = ns.OptionsSpacer(111)
-	args.labelWago = ns.OptionsRowLabel(GetColor("TITLE") .. L["OPTIONS_WAGO"] .. "|r", 112, LINK_LABEL_WIDTH)
-	args.linkWago = {
-		type = "input",
-		name = "",
-		width = LINK_URL_WIDTH,
-		order = 113,
-		get = function()
-			return ns.LINKS.WAGO
-		end,
-		set = function() end,
-	}
-
-	args.spaceVersion0 = {
-		type = "description",
-		name = " ",
-		width = "full",
-		order = 998,
-	}
-	args.versionLine = {
-		type = "description",
-		name = GetColor("MUTED") .. L["OPTIONS_VERSION"]:format(ns.Version) .. "|r",
-		fontSize = "medium",
-		order = 999,
-	}
 
 	return {
 		type = "group",

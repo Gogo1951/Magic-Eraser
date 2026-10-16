@@ -39,6 +39,7 @@ ns.OPTIONS_REGISTRY = {
 	IgnoreList = ADDON_NAME .. "_IgnoreList",
 	EraseList = ADDON_NAME .. "_EraseList",
 	Profiles = ADDON_NAME .. "_Profiles",
+	FeedbackSupport = ADDON_NAME .. "_FeedbackSupport",
 	Diagnostics = ADDON_NAME .. "_Diagnostics",
 }
 

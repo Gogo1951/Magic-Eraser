@@ -30,8 +30,7 @@ local _, ns = ...
         profile never moves the button.
 
     Both pairs of lists are additive: ns:IsIgnored and ns:IsOnEraseList answer
-    for both scopes. Features/Migrations.lua carries saved data from the old
-    per-character-profile shape into this one.
+    for both scopes.
 ]]
 ns.DATABASE_DEFAULTS = {
 	profile = {

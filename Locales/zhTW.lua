@@ -15,7 +15,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 
 -- System
 L["CHAT_LOADED"] =
-	"版本 %s。設定（包含關閉此訊息的選項）可以在 選項 > 插件 > Magic Eraser 中找到。喜歡這個插件嗎？告訴朋友吧！(="
+	"版本 %s。設定（包含關閉此訊息的選項）位於 選項 > 插件 > Magic Eraser。喜歡這個插件嗎？告訴朋友，在 CurseForge 上收藏它，或在 GitHub 上為它加星。(="
 L["CHAT_OPTIONS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟選項介面。"
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟按鍵設定清單。"
 L["KEY_BINDINGS_LOCATION"] = "開啟遊戲選單，依序點選 %s、%s，然後找到 Magic Eraser 分類。"
@@ -146,12 +146,33 @@ L["OPTIONS_COMMANDS_HEADER"] = "/指令"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "開啟本插件的選項介面。"
 
--- Feedback & Support
+--------------------------------------------------------------------------------
+-- Options: Feedback & Support Panel
+--------------------------------------------------------------------------------
+
+-- Help Magic Eraser Level Up
+L["OPTIONS_LEVEL_UP_TITLE"] = "幫助 Magic Eraser 升級"
+L["OPTIONS_LEVEL_UP_INTRO"] =
+	"這個插件由熱愛這款遊戲的玩家打造，我們希望讓每個人都能盡情享受遊戲。我們永遠不會請求捐款。真正的成就感來自知道我們的成果讓你的遊戲體驗更好一點。如果真是如此，我們很樂意聽你分享！"
+L["OPTIONS_LEVEL_UP_WAYS"] = "以下是幾種幫助我們接觸更多玩家的方式。"
+L["OPTIONS_LEVEL_UP_FEEDBACK"] =
+	"• 分享回饋：發現錯誤或有新點子？在 Discord 上告訴我們。你的回饋能幫助我們改進插件，也隨時歡迎提交拉取請求。"
+L["OPTIONS_LEVEL_UP_FRIEND"] =
+	"• 告訴朋友：認識可能會喜歡這個插件的人嗎？告訴他們吧。口碑能幫助更多玩家發現優秀的插件。"
+L["OPTIONS_LEVEL_UP_CURSEFORGE"] =
+	'• 在 CurseForge 上收藏：開啟下方的 CurseForge 連結，登入後點擊 "Download" 按鈕下方的星號。收藏能幫助更多玩家發現這個插件。'
+L["OPTIONS_LEVEL_UP_GITHUB"] =
+	'• 在 GitHub 上加星：開啟下方的 GitHub 連結，登入後點擊右上角的 "Star"。星號能幫助專案取得更多免費開發者工具的資格。'
+L["OPTIONS_LEVEL_UP_THANKS"] = "感謝選擇 Magic Eraser！"
+
+-- Feedback & Support Links
 L["OPTIONS_FEEDBACK"] = "回饋與支援"
+L["OPTIONS_FEEDBACK_LINKS_HEADER"] = "回饋與支援連結"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+L["OPTIONS_COPY_LINK"] = "要複製連結，請點擊其文字框，然後按 Ctrl+A 和 Ctrl+C。"
 L["OPTIONS_VERSION"] = "版本 %s"
 
 --------------------------------------------------------------------------------
@@ -347,3 +368,7 @@ L["OPTIONS_ERASE_RESTORE"] = "恢復預設"
 L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] = "將此角色的刪除清單恢復為 Magic Eraser 的初始物品。"
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"清空此角色的刪除清單，只放回 Magic Eraser 的初始物品？你自己新增的物品都會被移除。"
+L["OPTIONS_ERASE_RESTORE_GLOBAL_DESCRIPTION"] =
+	"清空所有角色的刪除清單，Magic Eraser 初始時此清單為空。每個角色自己的清單不受影響。"
+L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"] =
+	"清空所有角色的刪除清單？其中的所有內容都會被移除，每個角色自己的清單不受影響。"

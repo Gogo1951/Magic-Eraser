@@ -15,7 +15,7 @@ L["ADDON_TITLE"] = "Magic Eraser"
 
 -- System
 L["CHAT_LOADED"] =
-	"Versión %s. Los ajustes (incluyendo la opción para desactivar este mensaje) se pueden encontrar en Opciones > AddOns > Magic Eraser. ¿Disfrutando del add-on? ¡Díselo a un amigo! (="
+	"Versión %s. Los ajustes (incluida la opción para desactivar este mensaje) están en Opciones > AddOns > Magic Eraser. ¿Te gusta este add-on? Díselo a un amigo, márcalo como favorito en CurseForge o dale una estrella en GitHub. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "Por seguridad, el panel de opciones no se puede abrir durante el combate."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"Por seguridad, la lista de asignación de teclas no se puede abrir durante el combate."
@@ -149,12 +149,33 @@ L["OPTIONS_COMMANDS_HEADER"] = "/Comandos"
 L["OPTIONS_COMMAND"] = "/eraser"
 L["OPTIONS_COMMAND_DESCRIPTION"] = "Abre el panel de opciones de este add-on."
 
--- Feedback & Support
+--------------------------------------------------------------------------------
+-- Options: Feedback & Support Panel
+--------------------------------------------------------------------------------
+
+-- Help Magic Eraser Level Up
+L["OPTIONS_LEVEL_UP_TITLE"] = "Ayuda a Magic Eraser a subir de nivel"
+L["OPTIONS_LEVEL_UP_INTRO"] =
+	"Este add-on lo han creado jugadores que aman este juego y quieren que sea lo más divertido posible para todos. Nunca pediremos donaciones. La verdadera satisfacción es saber que nuestro trabajo hace el juego un poco mejor para ti. Si es así, ¡nos encantaría saberlo!"
+L["OPTIONS_LEVEL_UP_WAYS"] = "Aquí tienes algunas formas de ayudarnos a llegar a más jugadores."
+L["OPTIONS_LEVEL_UP_FEEDBACK"] =
+	"• Comparte tus comentarios: ¿has encontrado un error o tienes una idea? Cuéntanoslo en Discord. Tus comentarios nos ayudan a mejorar el add-on, y los pull requests siempre son bienvenidos."
+L["OPTIONS_LEVEL_UP_FRIEND"] =
+	"• Cuéntaselo a un amigo: ¿conoces a alguien a quien le podría gustar este add-on? Háblale de él. El boca a boca ayuda a que más jugadores descubran grandes add-ons."
+L["OPTIONS_LEVEL_UP_CURSEFORGE"] =
+	'• Márcalo como favorito en CurseForge: abre el enlace de CurseForge de abajo, inicia sesión y haz clic en la estrella que hay bajo el botón "Download". Los favoritos ayudan a que más jugadores descubran el add-on.'
+L["OPTIONS_LEVEL_UP_GITHUB"] =
+	'• Dale una estrella en GitHub: abre el enlace de GitHub de abajo, inicia sesión y haz clic en "Star", arriba a la derecha. Las estrellas ayudan al proyecto a acceder a más herramientas gratuitas para desarrolladores.'
+L["OPTIONS_LEVEL_UP_THANKS"] = "¡Gracias por elegir Magic Eraser!"
+
+-- Feedback & Support Links
 L["OPTIONS_FEEDBACK"] = "Comentarios y soporte"
+L["OPTIONS_FEEDBACK_LINKS_HEADER"] = "Enlaces de comentarios y soporte"
 L["OPTIONS_CURSEFORGE"] = "CurseForge"
 L["OPTIONS_GITHUB"] = "GitHub"
 L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
+L["OPTIONS_COPY_LINK"] = "Para copiar un enlace, haz clic en su casilla y luego pulsa Ctrl+A y Ctrl+C."
 L["OPTIONS_VERSION"] = "Versión %s"
 
 --------------------------------------------------------------------------------
@@ -355,3 +376,7 @@ L["OPTIONS_ERASE_RESTORE_DESCRIPTION"] =
 	"Devuelve la Lista de eliminación de este personaje a los objetos con los que Magic Eraser la empieza."
 L["OPTIONS_ERASE_RESTORE_CONFIRM"] =
 	"¿Vaciar la Lista de eliminación de este personaje y dejar solo los objetos con los que Magic Eraser la empieza? Se quitará todo lo que hayas añadido tú."
+L["OPTIONS_ERASE_RESTORE_GLOBAL_DESCRIPTION"] =
+	"Vacía la Lista de eliminación de Todos los personajes, que Magic Eraser empieza vacía. La lista propia de cada personaje no se toca."
+L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"] =
+	"¿Vaciar la Lista de eliminación de Todos los personajes? Se quitará todo lo que contiene, y la lista propia de cada personaje no se toca."

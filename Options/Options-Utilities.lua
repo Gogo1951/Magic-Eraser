@@ -340,10 +340,10 @@ end
         box, listing what the player carries that isn't on the list yet
         (labels then carry fromBagsName and fromBagsDesc)
 
-    Restore Defaults appears only for a list that ships defaults, which is why
-    onRestore is optional rather than part of the shape: a list the player built
-    from nothing has none to restore, so the row would only offer to empty it.
-    Today the Erase List's per-character scope is the one caller that passes it.
+    onRestore is optional rather than part of the shape, so each panel decides
+    whether its lists get Restore Defaults. Today the Erase List is the one
+    caller that passes it, on every scope: a character's list re-seeds, and the
+    All Characters list, which ships empty, is emptied.
 ]]
 
 --[[
@@ -608,6 +608,84 @@ function ns:BuildItemListOptions(spec)
 	ns.WarmItemCache(coldItemIds, spec.notifyKey)
 
 	return args
+end
+
+--------------------------------------------------------------------------------
+-- Character List Tree
+--------------------------------------------------------------------------------
+
+--[[
+    The panel both list pages share: childGroups = "tree", with the scope list
+    on the left (All Characters, a blank row, then the characters) and the
+    selected scope's items on the right. The caller supplies spec.name, the
+    spec.description shown above the tree, spec.getListForScope(scopeKey) to
+    read a list, and spec.buildScopeArgs(scopeKey) to build one pane.
+
+    The description lives on the root group, not in the scope panes: a tree
+    group renders its own non-group args once, full width, between the panel
+    title and the tree, so the copy reads once above the whole panel instead of
+    repeating in every pane.
+]]
+function ns.BuildCharacterListTree(spec)
+	local function ScopeGroup(name, order, scopeKey)
+		return {
+			type = "group",
+			name = name,
+			order = order,
+			args = spec.buildScopeArgs(scopeKey),
+		}
+	end
+
+	local args = {
+		descIntro = ns.OptionsDesc(spec.description, 1),
+		spacerIntro = ns.OptionsSpacer(2),
+	}
+
+	--[[
+	    Keyed by scope, not by position: the tree remembers the selected node by
+	    its arg key, so a key that moved when a character appeared or dropped out
+	    of the list would silently reselect a different character.
+	]]
+	args[ns.LIST_SCOPE_GLOBAL] = ScopeGroup(L["OPTIONS_LIST_GLOBAL"], 3, ns.LIST_SCOPE_GLOBAL)
+
+	--[[
+	    A blank, unclickable row between All Characters and the characters.
+	    Disabled tree rows take no mouse input, so it can never be selected.
+	]]
+	args.spacerCharacters = {
+		type = "group",
+		name = " ",
+		order = 4,
+		disabled = true,
+		args = {},
+	}
+
+	if ns.db then
+		local currentCharacter = ns.db.keys.char
+		local order = 10
+
+		for _, charKey in ipairs(ns:GetCharacterKeys()) do
+			--[[
+			    A character with an empty list is noise in the tree, so it is left
+			    out -- except for the character playing right now, whose list has
+			    to be reachable to put a first item in it. Character keys
+			    ("Name - Realm") are never localized, so they are shown as-is in
+			    their class color and sorted as plain strings.
+			]]
+			local list = spec.getListForScope(charKey)
+			if charKey == currentCharacter or (list and next(list) ~= nil) then
+				args[charKey] = ScopeGroup(ns:GetCharacterDisplayName(charKey), order, charKey)
+				order = order + 1
+			end
+		end
+	end
+
+	return {
+		type = "group",
+		name = spec.name,
+		childGroups = "tree",
+		args = args,
+	}
 end
 
 --------------------------------------------------------------------------------

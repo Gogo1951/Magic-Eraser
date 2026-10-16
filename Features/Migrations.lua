@@ -188,3 +188,58 @@ function ns:MigrateSavedVariables()
 
 	sv.global.storageVersion = STORAGE_VERSION
 end
+
+-- MIGRATION (remove after 2026-11-15)
+--[[
+    Three items left the class reagents, but a character seeded before then
+    still has them on its Erase List. Maple Seed and Stranglethorn Seed are
+    Enchanting reagents too, so an enchanter's oil reagents get erased or sold.
+    Soul Shard binds when picked up and only a Warlock can get one, so its row
+    only clutters the list. Each item comes back off every character's list once
+    the loaded class reagents no longer give it to a class other than that
+    character's, so a flavor whose folder still does leaves it alone. The class
+    is the one saved for the character at its last login, and a character with
+    none saved is skipped until it logs in. A Druid never had the seeds seeded,
+    nor a Warlock the shard, so each item names the class it belonged to, and
+    that class's lists keep what the player put there. No marker: taking an item off the Erase List never
+    destroys anything, so running again every login is harmless and leaves no
+    saved key behind.
+]]
+local RETIRED_SEED_REAGENTS = {
+	[17034] = "DRUID", -- Maple Seed
+	[17035] = "DRUID", -- Stranglethorn Seed
+	[6265] = "WARLOCK", -- Soul Shard
+}
+
+local function IsSeededByAnotherClass(itemId, playerClass)
+	for classToken, reagents in pairs(ns.CLASS_REAGENTS or {}) do
+		if classToken ~= playerClass and reagents[itemId] then
+			return true
+		end
+	end
+	return false
+end
+
+local function ClearRetiredSeedReagents(charData)
+	local playerClass = charData.classToken
+	local eraseList = charData.eraseList
+	if not (charData.eraseListSeeded and playerClass and type(eraseList) == "table") then
+		return
+	end
+
+	for itemId, ownerClass in pairs(RETIRED_SEED_REAGENTS) do
+		if eraseList[itemId] and playerClass ~= ownerClass and not IsSeededByAnotherClass(itemId, playerClass) then
+			eraseList[itemId] = nil
+			ns:InvalidateCache()
+		end
+	end
+end
+
+function ns:MigrateRetiredSeedReagents()
+	for _, charData in pairs((ns.db.sv and ns.db.sv.char) or {}) do
+		if type(charData) == "table" then
+			ClearRetiredSeedReagents(charData)
+		end
+	end
+	ClearRetiredSeedReagents(ns.db.char)
+end

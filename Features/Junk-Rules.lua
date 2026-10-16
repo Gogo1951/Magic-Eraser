@@ -129,6 +129,19 @@ function ns:NoteLevelUp(level)
 	end
 end
 
+--[[
+    Consumable and ammo eligibility is gated on the player's level (see
+    GetConsumableEraseLevel and GetAmmoEraseLevel above), so leveling up can
+    newly qualify outgrown food or ammo, and a ding brings no bag update. The
+    rescan uses the event's own level, because UnitLevel may not be updated yet
+    when the event fires. A ding in combat waits for combat to end, as a bag
+    update does.
+]]
+function ns:OnPlayerLevelUp(level)
+	ns:NoteLevelUp(level)
+	ns:RefreshWhenOutOfCombat()
+end
+
 -- The level the consumable and ammo rules compare against.
 function ns:GetJunkRulesLevel()
 	return math.max(UnitLevel("player"), levelUpLevel)

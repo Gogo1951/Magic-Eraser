@@ -20,11 +20,8 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
     case that proved it. A list the player owns is not derived from anything, so
     nothing can drop rows out of it.
 
-    The per-character list lives in char, AceDB's per-character scope, so it
-    stays with the character whatever profile is active. The account-wide list
-    is its mirror in global. Both are created on
-    first use, so a brand-new character simply starts empty, and both return nil
-    only before the database exists.
+    Both lists, this character's and the account-wide one, are stored through
+    the shared Character Lists helpers in Features/Utilities.lua.
 
     The Ignore List always wins, and nothing in this file enforces it. All three
     scanners gate on ns:IsIgnored before they ever call ns:GetItemDeleteReason,
@@ -35,27 +32,11 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
     is still overruled at the gates.
 ]]
 function ns:GetEraseList()
-	if not ns.db then
-		return nil
-	end
-	local eraseList = ns.db.char.eraseList
-	if type(eraseList) ~= "table" then
-		eraseList = {}
-		ns.db.char.eraseList = eraseList
-	end
-	return eraseList
+	return ns:GetCharacterList("eraseList")
 end
 
 function ns:GetGlobalEraseList()
-	if not ns.db then
-		return nil
-	end
-	local eraseList = ns.db.global.eraseList
-	if type(eraseList) ~= "table" then
-		eraseList = {}
-		ns.db.global.eraseList = eraseList
-	end
-	return eraseList
+	return ns:GetAccountList("eraseList")
 end
 
 --[[
@@ -112,83 +93,9 @@ end
 -- Erase List Scopes
 --------------------------------------------------------------------------------
 
---[[
-    One list looked up by the scope key the Erase List panel uses: the global
-    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played ("Name -
-    Realm", ns.db.keys.char), or any other character on the account.
-
-    The character being played resolves through ns.db.char rather than the raw
-    saved table, so an edit lands on the very list the eraser reads and applies
-    live. Every other character is read straight out of ns.db.sv.char, because
-    AceDB only materializes the character you are on -- and it strips
-    default-valued tables at logout, so a character who never added an entry
-    has no stored eraseList. A read returns nil in those cases; a write passes
-    createIfMissing and builds what it needs on the spot.
-]]
+-- One list by the Erase List panel's scope key; see ns:GetCharacterListForScope.
 function ns:GetEraseListForScope(scopeKey, createIfMissing)
-	if not (ns.db and scopeKey) then
-		return nil
-	end
-
-	if scopeKey == ns.LIST_SCOPE_GLOBAL then
-		return ns:GetGlobalEraseList()
-	end
-
-	if scopeKey == ns.db.keys.char then
-		return ns:GetEraseList()
-	end
-
-	local characters = ns.db.sv and ns.db.sv.char
-	if not characters then
-		return nil
-	end
-
-	local charData = characters[scopeKey]
-	if type(charData) ~= "table" then
-		if not createIfMissing then
-			return nil
-		end
-		charData = {}
-		characters[scopeKey] = charData
-	end
-
-	local eraseList = charData.eraseList
-	if type(eraseList) ~= "table" then
-		if not createIfMissing then
-			return nil
-		end
-		eraseList = {}
-		charData.eraseList = eraseList
-	end
-
-	return eraseList
-end
-
---[[
-    Drop one item from every character's list. Called when the item joins the
-    account-wide list, which already covers everyone: membership is additive, so
-    a per-character entry for a globally listed item can no longer change any
-    outcome, and all it does is clutter that character's pane with a row that
-    does nothing.
-
-    The live table behind ns.db.char is the same table as its sv.char entry,
-    so the loop covers the current character too -- but only once AceDB has
-    materialized it, hence the direct pass afterwards.
-]]
-local function ClearFromAllCharacters(itemId)
-	local characters = ns.db.sv and ns.db.sv.char
-	if characters then
-		for _, charData in pairs(characters) do
-			if type(charData) == "table" and type(charData.eraseList) == "table" then
-				charData.eraseList[itemId] = nil
-			end
-		end
-	end
-
-	local eraseList = ns:GetEraseList()
-	if eraseList then
-		eraseList[itemId] = nil
-	end
+	return ns:GetCharacterListForScope("eraseList", scopeKey, createIfMissing)
 end
 
 --[[
@@ -196,6 +103,10 @@ end
     not just the current character's: an edit to the account-wide list changes
     what this character may erase, and an edit to another character's list is
     cheap enough that checking which scope it was is not worth the branch.
+
+    An item joining the account-wide list comes off every character's list,
+    since that list already covers everyone: a per-character entry could no
+    longer change any outcome and would only clutter that character's pane.
 
     Removing from the account-wide list deliberately does not put the item back
     on anyone: there is no record of who held it, and re-adding to a list the
@@ -216,7 +127,7 @@ function ns:SetOnEraseListInScope(scopeKey, itemId, isOnList)
 	eraseList[itemId] = isOnList and true or nil
 
 	if isOnList and scopeKey == ns.LIST_SCOPE_GLOBAL then
-		ClearFromAllCharacters(itemId)
+		ns:ClearFromEveryCharacter("eraseList", itemId)
 	end
 
 	ns:InvalidateCache()
@@ -252,7 +163,42 @@ end
         class that happened to list it.
       - anything already ignored or already listed, since either state already
         decides the outcome.
+
+    SeedList does the work for any character's list, given that character's
+    class and Protect List, so Restore Defaults can re-seed a character other
+    than the one being played.
 ]]
+local function SeedList(eraseList, playerClass, characterIgnoreList)
+	local ownReagents = (ns.CLASS_REAGENTS and ns.CLASS_REAGENTS[playerClass]) or {}
+	local globalIgnoreList = ns:GetGlobalIgnoreList() or {}
+	local globalEraseList = ns:GetGlobalEraseList() or {}
+	if type(characterIgnoreList) ~= "table" then
+		characterIgnoreList = {}
+	end
+	local seeded = false
+
+	for classToken, reagents in pairs(ns.CLASS_REAGENTS or {}) do
+		if classToken ~= playerClass then
+			for itemId in pairs(reagents) do
+				if
+					not (
+						ownReagents[itemId]
+						or characterIgnoreList[itemId]
+						or globalIgnoreList[itemId]
+						or globalEraseList[itemId]
+						or eraseList[itemId]
+					)
+				then
+					eraseList[itemId] = true
+					seeded = true
+				end
+			end
+		end
+	end
+
+	return seeded
+end
+
 function ns:SeedEraseList()
 	if not ns.db or ns.db.char.eraseListSeeded then
 		return
@@ -265,19 +211,7 @@ function ns:SeedEraseList()
 	end
 
 	local _, playerClass = UnitClass("player")
-	local ownReagents = (ns.CLASS_REAGENTS and ns.CLASS_REAGENTS[playerClass]) or {}
-	local seeded = false
-
-	for classToken, reagents in pairs(ns.CLASS_REAGENTS or {}) do
-		if classToken ~= playerClass then
-			for itemId in pairs(reagents) do
-				if not (ownReagents[itemId] or ns:IsIgnored(itemId) or ns:IsOnEraseList(itemId)) then
-					eraseList[itemId] = true
-					seeded = true
-				end
-			end
-		end
-	end
+	local seeded = SeedList(eraseList, playerClass, ns:GetIgnoreList())
 
 	--[[
 	    Only the cache is dropped here. Both callers (ns:OnPlayerLogin and
@@ -290,24 +224,54 @@ function ns:SeedEraseList()
 end
 
 --[[
-    Restore Defaults for this character's list. A wipe and re-seed, not a
-    top-up: anything the player added by hand goes with it, which is what the
-    confirmation warns about.
+    Restore Defaults for one scope's list, offered on every pane. A wipe and
+    re-seed, not a top-up: anything the player added by hand goes with it, which
+    is what the confirmation warns about.
 
-    The marker has to be cleared before the call, because ns:SeedEraseList
-    returns early while it is set. Repainting is this function's job rather than
-    the seed's -- the seed only drops the cache, leaving the repaint to whoever
-    called it.
+      - The All Characters list ships empty, so restoring it just empties it.
+      - The character being played re-seeds through ns:SeedEraseList. The marker
+        has to be cleared before the call, because the seed returns early while
+        it is set.
+      - Any other character re-seeds with the class saved at its last login
+        (char.classToken) and its own Protect List. One with no class saved yet
+        is left empty with its marker cleared, so it seeds itself at its next
+        login.
+
+    Repainting is this function's job rather than the seed's -- the seed only
+    drops the cache, leaving the repaint to whoever called it.
 ]]
-function ns:RestoreEraseListDefaults()
-	local eraseList = ns:GetEraseList()
-	if not eraseList then
+function ns:RestoreEraseListDefaults(scopeKey)
+	if not ns.db then
 		return
 	end
 
-	wipe(eraseList)
-	ns.db.char.eraseListSeeded = false
-	ns:SeedEraseList()
+	if scopeKey == ns.LIST_SCOPE_GLOBAL then
+		local globalEraseList = ns:GetGlobalEraseList()
+		if globalEraseList then
+			wipe(globalEraseList)
+		end
+	elseif scopeKey == ns.db.keys.char then
+		local eraseList = ns:GetEraseList()
+		if not eraseList then
+			return
+		end
+		wipe(eraseList)
+		ns.db.char.eraseListSeeded = false
+		ns:SeedEraseList()
+	else
+		local eraseList = ns:GetEraseListForScope(scopeKey, true)
+		if not eraseList then
+			return
+		end
+		wipe(eraseList)
+		local charData = ns.db.sv.char[scopeKey]
+		if charData.classToken then
+			SeedList(eraseList, charData.classToken, charData.ignoreList)
+			charData.eraseListSeeded = true
+		else
+			charData.eraseListSeeded = false
+		end
+	end
 
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
