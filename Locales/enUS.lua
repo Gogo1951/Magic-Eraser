@@ -341,6 +341,14 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or Shift-click an item link in chat."
 L["OPTIONS_LIST_REMOVE"] = "Remove"
 L["OPTIONS_LIST_EMPTY"] = "This list is empty."
+L["OPTIONS_LIST_MISSING_ONE"] = "1 item on this list isn't in this version of the game."
+L["OPTIONS_LIST_MISSING_MANY"] = "%s items on this list aren't in this version of the game."
+L["OPTIONS_LIST_REMOVE_MISSING_ONE"] = "Remove It"
+L["OPTIONS_LIST_REMOVE_MISSING_MANY"] = "Remove Them"
+L["OPTIONS_LIST_REMOVE_MISSING_DESCRIPTION"] =
+	"Takes the item IDs this version of the game doesn't have off this list. Everything else on it stays."
+L["OPTIONS_LIST_REMOVE_MISSING_CONFIRM"] =
+	"Remove the item IDs this version of the game doesn't have from this list? Everything else on it stays."
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

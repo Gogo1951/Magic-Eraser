@@ -64,6 +64,7 @@ local function BuildScopeArgs(scopeKey)
 		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
 		startOrder = 3,
 		notifyKey = ns.OPTIONS_REGISTRY.IgnoreList,
+		paneKey = scopeKey,
 		getSourceTable = function()
 			return ns:GetIgnoreListForScope(scopeKey)
 		end,
@@ -72,6 +73,9 @@ local function BuildScopeArgs(scopeKey)
 		end,
 		onRemove = function(itemId)
 			ns:SetIgnoredInScope(scopeKey, itemId, false)
+		end,
+		onRemoveMany = function(itemIds)
+			ns:RemoveFromListInScope("ignoreList", scopeKey, itemIds)
 		end,
 		addFromBags = true,
 		labels = {
@@ -82,6 +86,12 @@ local function BuildScopeArgs(scopeKey)
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
+			missingOne = L["OPTIONS_LIST_MISSING_ONE"],
+			missingMany = L["OPTIONS_LIST_MISSING_MANY"],
+			removeMissingOne = L["OPTIONS_LIST_REMOVE_MISSING_ONE"],
+			removeMissingMany = L["OPTIONS_LIST_REMOVE_MISSING_MANY"],
+			removeMissingDesc = L["OPTIONS_LIST_REMOVE_MISSING_DESCRIPTION"],
+			removeMissingConfirm = L["OPTIONS_LIST_REMOVE_MISSING_CONFIRM"],
 		},
 		--[[
 		    The Global pane has nowhere to promote to, so its item cell absorbs

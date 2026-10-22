@@ -109,6 +109,9 @@ ns.OPTIONS_TREE_ROW_WIDTH = 2.5
 ]]
 ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
+-- The AceGUI widget that draws a whole item list, only its visible rows built.
+ns.ITEM_LIST_WIDGET_TYPE = ADDON_NAME .. "_ItemList"
+
 --------------------------------------------------------------------------------
 -- Item List Scopes
 --------------------------------------------------------------------------------

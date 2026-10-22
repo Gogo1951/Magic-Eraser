@@ -361,6 +361,27 @@ function ns:GetCharacterListForScope(listKey, scopeKey, createIfMissing)
 end
 
 --[[
+    Take several items off one scope's list with a single refresh, for the list
+    panels' Remove Them button: it clears every id this version of the game
+    doesn't have, which can run to hundreds, and removing them one at a time
+    would rescan the bags once per item. Removing an item never touches any
+    other list, so this serves the Erase List and the Protect List alike.
+]]
+function ns:RemoveFromListInScope(listKey, scopeKey, itemIds)
+	local list = ns:GetCharacterListForScope(listKey, scopeKey)
+	if not (list and itemIds) then
+		return
+	end
+
+	for _, itemId in ipairs(itemIds) do
+		list[itemId] = nil
+	end
+
+	ns:InvalidateCache()
+	ns:RefreshDisplay()
+end
+
+--[[
     Drop one item from every character's copy of a list, for an item that has
     just joined the account-wide twin. The live table behind ns.db.char is the
     same table as its sv.char entry, so the loop covers the current character
