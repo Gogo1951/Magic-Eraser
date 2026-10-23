@@ -107,6 +107,10 @@ local function BuildScopeArgs(scopeKey)
 		onRestore = function()
 			ns:RestoreEraseListDefaults(scopeKey)
 		end,
+		onClear = function()
+			ns:ClearEraseListInScope(scopeKey)
+			ns.LeaveClearedScope(ns.OPTIONS_REGISTRY.EraseList, scopeKey)
+		end,
 		addFromBags = true,
 		getRowTag = function(itemId)
 			return IsProtectedInScope(scopeKey, itemId) and L["OPTIONS_LIST_PROTECTED_TAG"] or nil
@@ -122,6 +126,9 @@ local function BuildScopeArgs(scopeKey)
 			restoreName = L["OPTIONS_ERASE_RESTORE"],
 			restoreDesc = restoreDesc,
 			restoreConfirm = restoreConfirm,
+			clearName = L["OPTIONS_LIST_CLEAR"],
+			clearDesc = L["OPTIONS_LIST_CLEAR_DESCRIPTION"],
+			clearConfirm = L["OPTIONS_LIST_CLEAR_CONFIRM"],
 		},
 		--[[
 		    The Global pane has nowhere to promote to, so its item cell absorbs

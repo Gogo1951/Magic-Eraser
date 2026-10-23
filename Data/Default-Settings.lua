@@ -35,7 +35,9 @@ local _, ns = ...
 ns.DATABASE_DEFAULTS = {
 	profile = {
 		showWelcome = true,
-		tooltipWarningEnabled = true,
+		tintJunkEnabled = true,
+		-- #0080FF at half opacity.
+		tintColor = { r = 0, g = 128 / 255, b = 1, a = 0.5 },
 		autoVendEnabled = true,
 		autoVendMessagesEnabled = true,
 		autoVendSummaryEnabled = true,

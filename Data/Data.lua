@@ -32,10 +32,9 @@ ns.LINKS = {
 ]]
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
-	YourCurrentBags = ADDON_NAME .. "_YourCurrentBags",
 	Erasing = ADDON_NAME .. "_Erasing",
 	MerchantBank = ADDON_NAME .. "_MerchantBank",
-	AlertsTooltips = ADDON_NAME .. "_AlertsTooltips",
+	AlertsTints = ADDON_NAME .. "_AlertsTints",
 	IgnoreList = ADDON_NAME .. "_IgnoreList",
 	EraseList = ADDON_NAME .. "_EraseList",
 	Profiles = ADDON_NAME .. "_Profiles",
@@ -120,9 +119,9 @@ ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
     list needs a key no character can collide with -- hence the asterisks, which
     no character or realm name can contain. One constant serves both panels
     because the two never share a table:
-    the key is only ever looked up against one list at a time. Read by
-    ns:GetIgnoreListForScope in Features/Ignore-List.lua and
-    ns:GetEraseListForScope in Features/Erase-List.lua.
+    the key is only ever looked up against one list at a time.
+    ns:GetCharacterListForScope in Features/Utilities.lua resolves it for both
+    lists.
 ]]
 ns.LIST_SCOPE_GLOBAL = "**global**"
 
@@ -278,21 +277,15 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
     purpose: an Erase List entry is always junk.
 
     The rows are listed in the order the panel draws them, each with the locale
-    keys for its caption, its tooltip and its Your Current Bags tag. They are
-    string values rather than literal L["..."] reads; search the key name, not
-    the L[] form.
+    keys for its caption and its tooltip. They are string values rather than
+    literal L["..."] reads; search the key name, not the L[] form.
 ]]
 ns.ERASE_KINDS = {
-	-- { deleteReason, labelKey, descKey, tagKey }
-	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESCRIPTION", "REASON_QUEST" },
-	{
-		"questIneligible",
-		"OPTIONS_KIND_STARTER",
-		"OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION",
-		"REASON_QUEST_INELIGIBLE",
-	},
-	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION", "REASON_OUTGROWN" },
-	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION", "REASON_OUTGROWN" },
-	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION", "REASON_EQUIPMENT" },
-	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION", "REASON_GRAY" },
+	-- { deleteReason, labelKey, descKey }
+	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESCRIPTION" },
+	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION" },
+	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION" },
+	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION" },
+	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION" },
+	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION" },
 }

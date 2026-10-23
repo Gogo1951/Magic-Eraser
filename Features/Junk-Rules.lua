@@ -10,7 +10,7 @@ local GetItemStats = ns.GetItemStats
 local ipairs = ipairs
 
 --[[
-    What counts as junk: the verdict the eraser, the item tooltip, Auto-Vend,
+    What counts as junk: the verdict the eraser, the junk tint, Auto-Vend,
     Bank Retrieval and the quest alerts all share. Features/Eraser.lua finds and
     erases the next item; this file only answers whether an item qualifies.
 ]]
@@ -163,8 +163,8 @@ end
         profession tools and 20 the fishing poles; armor subclass 0 holds rings,
         necks, trinkets, off-hand frills, shirts and tabards.
       - Shirt and tabard slots are vanity whatever subclass they carry.
-      - Item level 1 is developer junk and formal wear such as the Tuxedo
-        Jacket, which carries 3 armor. Real starter gear begins at 2.
+      - Item level 1 is developer junk. Real starter gear begins at 2. Formal
+        wear with real armor sits higher, so ns.KEEP_EQUIPMENT keeps it.
       - Quest binding or an on-use spell (Borrowed Broom) marks an item as
         something other than trash.
       - The weapon has to deal damage and the armor has to carry armor, read
@@ -178,8 +178,9 @@ end
     item gone lists it; the Erase List is checked ahead of every rule.
 
     The verdict depends only on static item data, so it is worked out once per
-    item id and remembered for the session: the tooltip asks again every 0.2s
-    while the player hovers, and GetItemStats builds a new table on every call.
+    item id and remembered for the session: every scan asks again (the eraser,
+    Auto-Vend, Bank Retrieval and each tint repaint), and GetItemStats builds
+    a new table on every call.
     A read the item cache cannot answer yet is not remembered, so the item is
     asked about again rather than settled as kept.
 ]]
@@ -299,8 +300,8 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice)
 	    needs rarity 0 -- so this is the only way one can ever be erased.
 
 	    The Ignore List still wins, and not by a check here. All three scanners
-	    gate on ns:IsIgnored before calling this, and Item-Tooltips.lua returns its
-	    protected line first, so an ignored item never reaches this line at all.
+	    gate on ns:IsIgnored before calling this, so an ignored item never
+	    reaches this line at all.
 	]]
 	if ns:IsOnEraseList(itemId) then
 		return "manual"
@@ -350,10 +351,10 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice)
 end
 
 --[[
-    The verdict every scanner, the tooltip and Auto-Vend share. A kind the player
-    unchecked is not junk anywhere, so it drops out here rather than at each
-    caller: never erased, never sold, never pulled from the bank, and never
-    marked in a tooltip.
+    The verdict every scanner, the junk tint and Auto-Vend share. A kind the
+    player unchecked is not junk anywhere, so it drops out here rather than at
+    each caller: never erased, never sold, never pulled from the bank, and
+    never tinted in the bags.
 ]]
 function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
 	local deleteReason = GetRuleDeleteReason(itemId, rarity, sellPrice)
@@ -382,8 +383,7 @@ end
 --[[
     Maximum Value to Erase. Off by default; switched on, anything worth more than
     the cap stops being an erase candidate, so it is never picked by the mini-map
-    button, never counted in the Clutter Report, and never warned about in a bag
-    tooltip.
+    button, never counted in the Clutter Report, and never tinted in the bags.
 
     Judged on the stack's total value rather than the unit price, because the
     stack is what the eraser would actually destroy -- forty grays at two silver
@@ -399,7 +399,7 @@ end
     passed in. Everything else the cap guards is the add-on picking an item out by
     rule, and a rule can be wrong about what the player values; a listed item is
     not a guess. Capping one would leave the player watching a list they built do
-    nothing, with no line in the tooltip and no message in chat to say why.
+    nothing, with no tint in the bags and no message in chat to say why.
 ]]
 function ns:IsOverValueCap(totalValue, deleteReason)
 	if deleteReason == "manual" then

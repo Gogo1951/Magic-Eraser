@@ -25,8 +25,8 @@ end
 
 --[[
     A kind's checkbox changes what counts as junk at all, so it drops the scan
-    cache and repaints like the value cap does: the mini-map icon and the Your
-    Current Bags queue move on the spot.
+    cache and repaints like the value cap does: the mini-map icon moves on the
+    spot.
 ]]
 local function SetJunkKind(deleteReason, isJunk)
 	ns.db.profile.junkKinds[deleteReason] = isJunk

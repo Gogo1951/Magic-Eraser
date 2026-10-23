@@ -166,7 +166,6 @@ function ns:OnQuestTurnedIn(questId)
 			end
 		end
 
-		ns:InvalidateCache()
-		ns:RefreshDisplay()
+		ns:RefreshWhenOutOfCombat()
 	end)
 end

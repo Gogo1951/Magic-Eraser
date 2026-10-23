@@ -16,8 +16,7 @@ local D = ns.DiagnosticsStrings
           Erase List
           Protect List
         Merchant & Bank
-        Alerts & Tooltips
-        Your Current Bags
+        Alerts & Tints
         Profiles
         Feedback & Support
         Diagnostic Tools
@@ -94,12 +93,8 @@ function ns:RegisterOptionsPanels()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.MerchantBank, ns.BuildMerchantBankOptions())
 	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.MerchantBank, L["TAB_MERCHANT_BANK"], ns.ADDON_TITLE)
 
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.AlertsTooltips, ns.BuildAlertsTooltipsOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.AlertsTooltips, L["TAB_ALERTS"], ns.ADDON_TITLE)
-
-	-- A builder function, because its rows are the live bags; ns:RefreshDisplay repaints it on every bag change.
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.YourCurrentBags, ns.BuildYourCurrentBagsOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.YourCurrentBags, L["TAB_YOUR_CURRENT_BAGS"], ns.ADDON_TITLE)
+	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.AlertsTints, ns.BuildAlertsTintsOptions())
+	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.AlertsTints, L["TAB_ALERTS"], ns.ADDON_TITLE)
 
 	local profilesOptions = ns.BuildProfilesOptions()
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)

@@ -161,14 +161,8 @@ end
     speaks, the ones that change nothing included, so a press is never met with
     silence.
 
-    The tooltip line catches up on its own. The client re-sets a hovered bag
-    item's tooltip every TOOLTIP_UPDATE_TIME through the button's UpdateTooltip
-    (ContainerFrameItemButton_OnEnter on Classic Era and TBC Anniversary,
-    ContainerFrameItemButtonMixin.OnUpdate on WoW Forever), and every re-set
-    runs the Item-Tooltips.lua hook again, so the new line lands while the
-    player is still hovering. Nothing here forces a repaint: calling Blizzard's
-    OnEnter from add-on code would taint the bag button to save a fifth of a
-    second.
+    The junk tint catches up on its own: every list edit ends in
+    ns:RefreshDisplay, which repaints the bag tints (Features/Tint-Junk.lua).
 
     Neither binding checks for combat. A list edit calls nothing protected, so
     protecting an item mid-fight works exactly as it does anywhere else.
@@ -178,18 +172,6 @@ local IGNORE_LIST_MESSAGE_KEYS = {
 	moved = "IGNORE_LIST_MOVED",
 	already = "IGNORE_LIST_ALREADY",
 }
-
---[[
-    Protect one item on this character and say so, exactly as the binding does.
-    The Your Current Bags panel's Protect button comes through here too, so a
-    click and a key press print the same sentence.
-]]
-function ns:ProtectItemWithMessage(itemId, link)
-	local outcome = ns:AddToIgnoreList(itemId)
-	if outcome then
-		ns:PrintMessage(format(L[IGNORE_LIST_MESSAGE_KEYS[outcome]], link))
-	end
-end
 
 local ERASE_LIST_MESSAGE_KEYS = {
 	added = "ERASE_LIST_ADDED",

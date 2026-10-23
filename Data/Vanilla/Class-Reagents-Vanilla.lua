@@ -50,11 +50,12 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-16, Classic Era 1.15.9.70003
+	2026-10-22, Classic Era 1.15.9.70003
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.
 	- Shiny Fish Scales and Fish Oil are the Shaman's Water Breathing and Water Walking reagents, added by hand. Every other row came from the wago.tools tables below.
+	- Light Feather (17056), the Mage's Slow Fall and the Priest's Levitate reagent, is left out on purpose: it sells well, so no class should have it erased.
 	- A reagent a profession also uses is left out, because any class can learn the profession: Maple Seed (Minor Wizard Oil, Minor Mana Oil) and Stranglethorn Seed (Lesser Wizard Oil) are Enchanting reagents as well as the Druid's Rebirth reagents. Found by checking each class reagent's SpellReagents uses against SkillLine category 7 (class skills).
 	- A reagent that binds when picked up and only its own class can get is left out, because no other class ever carries one: Soul Shard (6265), which only a Warlock's Drain Soul makes. It's the one class reagent with an ItemSparse Bonding.
 	- Only ns:SeedEraseList in Features/Erase-List.lua acts on this table: it puts other classes' reagents on a character's Erase List once, the first time that character plays. Diagnostics/Manifests.lua also reads it, for the Eraser Context count and Validate Data.
@@ -74,5 +75,5 @@ wago.tools
 	https://wago.tools/db2/SkillLine?build=1.15.9.70003
 
 QuestieDB
-	None.
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Classic/classicItemDB.lua
 ]]

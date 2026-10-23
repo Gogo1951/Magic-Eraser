@@ -12,8 +12,8 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    A fragment of the Alerts & Tooltips panel rather than a panel of its own: it
-    adds its widgets to the args table ns.BuildAlertsTooltipsOptions hands it,
+    A fragment of the Alerts & Tints panel rather than a panel of its own: it
+    adds its widgets to the args table ns.BuildAlertsTintsOptions hands it,
     and its order numbers are what place the section on that panel. See
     Features/Quest-Item-Alerts.lua for the behavior this setting drives. Its
     switch is also in the root panel's Features section.

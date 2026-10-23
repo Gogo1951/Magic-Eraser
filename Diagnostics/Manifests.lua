@@ -14,9 +14,10 @@ local TooltipLines = ns.DiagnosticTooltipLines
     lives -- nothing incidental, and nothing the add-on does not use.
 
     Every modern/legacy pair the add-on still picks between is listed as both
-    halves: the tooltip hook (TooltipDataProcessor with a data-driven
-    GameTooltip.ProcessInfo, or GameTooltip:SetBagItem)
-    and the list bindings' hovered-item read (TooltipUtil.GetDisplayedItem or
+    halves: the default bags' redraw that Tint Junk hooks (the global
+    ContainerFrame_Update, or each frame's UpdateItems and EnumerateValidItems),
+    the default bank's (BankFrameItemButton_Update, or the bank panel buttons'
+    Refresh), and the list bindings' hovered-item read (TooltipUtil.GetDisplayedItem or
     GameTooltip:GetItem, picked by ns.GetDisplayedItem in Features/Utilities.lua),
     and the tooltip-text read (C_TooltipInfo.GetItemByID and GetSpellByID, or
     the hidden scan tooltip, picked by ns.GetTooltipLines, which needs both
@@ -24,8 +25,8 @@ local TooltipLines = ns.DiagnosticTooltipLines
     through the GameTooltip methods it inherits, so the check creates nothing.
     A FAIL on one half is the report working rather than a defect: the pair is
     what tells a bug report which branch that client actually took. Reading the
-    tooltip pair as PASS legacy plus FAIL modern is how you know the SetBagItem
-    hook is the live path there. Never drop the half that fails on the client in
+    bags pair as PASS legacy plus FAIL modern is how you know ContainerFrame_Update
+    is the live path there. Never drop the half that fails on the client in
     front of you -- that is the half carrying the answer.
 ]]
 ns.DIAGNOSTIC_API_CHECKS = {
@@ -46,6 +47,13 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"C_AddOns.GetNumAddOns",
 		function()
 			return type(C_AddOns) == "table" and type(C_AddOns.GetNumAddOns) == "function"
+		end,
+	},
+	-- Tint Junk asks it which bag add-ons are loaded before hooking each one.
+	{
+		"C_AddOns.IsAddOnLoaded",
+		function()
+			return type(C_AddOns) == "table" and type(C_AddOns.IsAddOnLoaded) == "function"
 		end,
 	},
 	{
@@ -372,27 +380,30 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	{
-		"TooltipDataProcessor.AddTooltipPostCall",
+		"ContainerFrame1.UpdateItems and EnumerateValidItems (modern bags)",
 		function()
-			return type(TooltipDataProcessor) == "table" and type(TooltipDataProcessor.AddTooltipPostCall) == "function"
+			return type(ContainerFrame1) == "table"
+				and type(ContainerFrame1.UpdateItems) == "function"
+				and type(ContainerFrame1.EnumerateValidItems) == "function"
 		end,
 	},
 	{
-		"GameTooltip.ProcessInfo (data-driven tooltips)",
+		"ContainerFrame_Update (legacy bags)",
 		function()
-			return type(GameTooltip) == "table" and type(GameTooltip.ProcessInfo) == "function"
+			return type(ContainerFrame_Update) == "function"
 		end,
 	},
 	{
-		"Enum.TooltipDataType.Item",
+		"CamelotBankPanelItemButtonMixin.Refresh (modern bank)",
 		function()
-			return type(Enum) == "table" and type(Enum.TooltipDataType) == "table" and Enum.TooltipDataType.Item ~= nil
+			return type(CamelotBankPanelItemButtonMixin) == "table"
+				and type(CamelotBankPanelItemButtonMixin.Refresh) == "function"
 		end,
 	},
 	{
-		"GameTooltip.SetBagItem (legacy)",
+		"BankFrameItemButton_Update (legacy bank)",
 		function()
-			return type(GameTooltip) == "table" and type(GameTooltip.SetBagItem) == "function"
+			return type(BankFrameItemButton_Update) == "function"
 		end,
 	},
 	{
@@ -508,12 +519,38 @@ local BINDING_NAMES = {
 }
 
 --[[
+    The bag add-ons Tint Junk has an adapter for, by folder, mirroring
+    TINT_ADAPTERS in Features/Tint-Junk.lua, where each adapter is named after
+    its folder. One loaded but not hooked is a window the tint never reaches;
+    ElvUI with its own bags turned off reads that way on purpose, since the
+    default bags are then the ones on screen.
+]]
+local TINT_BAG_ADDONS = { "Baganator", "Bagnon", "Bagnonium", "AdiBags", "BetterBags", "ArkInventory", "ElvUI" }
+
+local function BagAddOnsReadout()
+	if not (type(C_AddOns) == "table" and type(C_AddOns.IsAddOnLoaded) == "function") then
+		return "(C_AddOns.IsAddOnLoaded MISSING)"
+	end
+	local hooked = {}
+	for _, name in ipairs(ns:GetTintAdapterNames()) do
+		hooked[name] = true
+	end
+	local parts = {}
+	for _, folder in ipairs(TINT_BAG_ADDONS) do
+		if C_AddOns.IsAddOnLoaded(folder) then
+			parts[#parts + 1] = folder .. (hooked[folder] and " (hooked)" or " (not hooked)")
+		end
+	end
+	return parts[1] and table.concat(parts, ", ") or "none"
+end
+
+--[[
     One walk over some containers through the verdict every feature shares
     (ns:IsIgnored, then ns:GetItemDeleteReason), tallying each stack the way
     the features would see it: protected by a list, still loading its item
     info (every scan skips these and retries a bounded number of times),
     flagged by reason, flagged but held back by the value cap (the eraser and
-    the tooltip honor it, Auto-Vend and Bank Retrieval don't), and flagged
+    the junk tint honor it, Auto-Vend and Bank Retrieval don't), and flagged
     with or without a vendor price (Auto-Vend sells only what has one). Read
     only: nothing is requested.
 ]]
@@ -575,7 +612,8 @@ end
     context the rules read (level, combat, and the race and class bits the
     quest-starter gate compares), the profile every switch is read from, every
     switch that can quiet a feature, whether the white-gear rule has its two
-    reads, the key bindings, which tooltip hook installed, where /eraser goes,
+    reads, the key bindings, which bag windows the junk tint hooked and which
+    loaded bag add-ons it didn't, where /eraser goes,
     what the bags hold by verdict, the sizes of the curated databases, and the
     item the eraser would act on right now. A race or class bit of 0 is one the
     add-on doesn't know, which makes every starter gated on it read as junk.
@@ -617,7 +655,15 @@ function ns:BuildEraserContextReport()
 			ns:GetValueCapGold()
 		)
 		lines[#lines + 1] = "  Erase confirmation: " .. OnOff(profile.eraseConfirmEnabled)
-		lines[#lines + 1] = "  Item tooltip line: " .. OnOff(profile.tooltipWarningEnabled)
+		local tint = profile.tintColor
+		lines[#lines + 1] = string.format(
+			"  Tint junk: %s (r %.2f, g %.2f, b %.2f, a %.2f)",
+			OnOff(profile.tintJunkEnabled),
+			tint.r,
+			tint.g,
+			tint.b,
+			tint.a
+		)
 		lines[#lines + 1] = "  Quest item alerts: " .. OnOff(profile.questAlertsEnabled)
 		lines[#lines + 1] = string.format(
 			"  Manual Delete: auto-fill %s, no-value only %s",
@@ -638,7 +684,9 @@ function ns:BuildEraserContextReport()
 	for _, bindingName in ipairs(BINDING_NAMES) do
 		lines[#lines + 1] = string.format("  %s: %s", bindingName, tostring(GetBindingKey(bindingName) or "not bound"))
 	end
-	lines[#lines + 1] = "Tooltip hook: " .. tostring(ns:GetTooltipHookPath() or "not installed")
+	local tintAdapters = ns:GetTintAdapterNames()
+	lines[#lines + 1] = "Tint hooks: " .. (tintAdapters[1] and table.concat(tintAdapters, ", ") or "none installed")
+	lines[#lines + 1] = "Bag add-ons loaded: " .. BagAddOnsReadout()
 	-- The route ns:OpenOptionsPanel takes for /eraser and Shift+Middle-Click.
 	local settingsRoute = type(Settings) == "table" and Settings.OpenToCategory and ns.generalCategoryID
 	lines[#lines + 1] = string.format(

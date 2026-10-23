@@ -30,6 +30,14 @@ local cachedReclaimItems = 0
 local cachedReclaimValue = 0
 
 --[[
+    Every erasable stack the same scan found, keyed by bag and slot, holding
+    the item id that was there. Tint Junk asks it about each bag button it
+    paints, so the tint and the eraser can never disagree about what is junk.
+]]
+local SLOT_KEY_STRIDE = 1000
+local cachedJunkSlots = {}
+
+--[[
     Cold item-data misses reschedule a rescan. Without a cap, an item whose
     item info never resolves would reschedule forever; without a pending
     guard, concurrent cold-cache triggers would stack timers. So: cap the
@@ -47,6 +55,7 @@ function ns:InvalidateCache()
 	cachedReclaimSlots = 0
 	cachedReclaimItems = 0
 	cachedReclaimValue = 0
+	cachedJunkSlots = {}
 	if not inScanRetry then
 		scanRetries = 0
 	end
@@ -86,10 +95,9 @@ local function IsBetterDeletionCandidate(candidate, current)
 end
 
 --[[
-    One walk of the carried bags, handing each erasable stack to visit. Shared
-    by the cached single-best scan below and the ranked queue the Your Current
-    Bags panel draws, so the two can never disagree about what counts. Returns
-    true when some item's data was still loading.
+    One walk of the carried bags, handing each erasable stack to visit, for the
+    cached single-best scan below. Returns true when some item's data was still
+    loading.
 ]]
 local function ForEachCandidate(visit)
 	local isDataMissing = false
@@ -142,8 +150,10 @@ function ns:FindItemToDelete()
 
 	local best = nil
 	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
+	local junkSlots = {}
 
 	local isDataMissing = ForEachCandidate(function(candidate)
+		junkSlots[candidate.bag * SLOT_KEY_STRIDE + candidate.slot] = candidate.itemId
 		reclaimSlots = reclaimSlots + 1
 		reclaimItems = reclaimItems + candidate.count
 		reclaimValue = reclaimValue + candidate.value
@@ -160,8 +170,21 @@ function ns:FindItemToDelete()
 	cachedReclaimSlots = reclaimSlots
 	cachedReclaimItems = reclaimItems
 	cachedReclaimValue = reclaimValue
+	cachedJunkSlots = junkSlots
 	isCacheValid = true
 	return best
+end
+
+--[[
+    Whether the stack in one carried bag slot is junk the eraser would take.
+    itemId is the item the caller sees there: the scan can be a moment older
+    than the bags, so a slot whose item has changed since answers false until
+    the next scan rather than lending its old verdict to a new item.
+]]
+function ns:IsJunkSlot(bag, slot, itemId)
+	ns:FindItemToDelete()
+	local junkItemId = cachedJunkSlots[bag * SLOT_KEY_STRIDE + slot]
+	return junkItemId ~= nil and junkItemId == itemId
 end
 
 --[[
@@ -174,43 +197,14 @@ function ns:GetReclaimSummary()
 	return cachedReclaimSlots or 0, cachedReclaimItems or 0, cachedReclaimValue or 0
 end
 
---[[
-    Every erasable stack in the bags, in the order the eraser would take them,
-    for the Your Current Bags panel. Not cached: the panel asks only while it is
-    on screen, and the mini-map's single-best scan keeps its own cache. The first
-    entry is always the one FindItemToDelete picks, because both rank through
-    IsBetterDeletionCandidate; bag position breaks the last tie so the order
-    holds still between repaints.
-]]
-function ns:GetEraseQueue()
-	local queue = {}
-	ForEachCandidate(function(candidate)
-		queue[#queue + 1] = candidate
-	end)
-	table.sort(queue, function(a, b)
-		if IsBetterDeletionCandidate(a, b) then
-			return true
-		end
-		if IsBetterDeletionCandidate(b, a) then
-			return false
-		end
-		if a.bag ~= b.bag then
-			return a.bag < b.bag
-		end
-		return a.slot < b.slot
-	end)
-	return queue
-end
-
 --------------------------------------------------------------------------------
 -- Deletion
 --------------------------------------------------------------------------------
 
 --[[
     Erase Confirmation. With the switch on, every erase pops a confirmation
-    first, Erase List entries included, from the mini-map button, the key
-    binding and the Your Current Bags panel alike, since all three enter
-    through ns:RunEraser.
+    first, Erase List entries included, from the mini-map button and the key
+    binding alike, since both enter through ns:RunEraser.
 ]]
 function ns:NeedsSafetyConfirm(item)
 	return item ~= nil and (ns.db and ns.db.profile.eraseConfirmEnabled) and true or false

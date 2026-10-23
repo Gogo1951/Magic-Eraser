@@ -25,9 +25,9 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
     The Ignore List always wins, and nothing in this file enforces it. All three
     scanners gate on ns:IsIgnored before they ever call ns:GetItemDeleteReason,
-    and the item tooltip returns its protected line first, so an ignored item
-    never reaches this list at all. Each of those four gates says so where it
-    stands. ns:AddToEraseList turns a protected item away as well, but only so
+    so an ignored item never reaches this list at all, and the junk tint reads
+    the eraser's scan, so it inherits that gate. Each of those three gates says
+    so where it stands. ns:AddToEraseList turns a protected item away as well, but only so
     the key binding can tell the player why; a row that got in through the panel
     is still overruled at the gates.
 ]]
@@ -128,6 +128,28 @@ function ns:SetOnEraseListInScope(scopeKey, itemId, isOnList)
 
 	if isOnList and scopeKey == ns.LIST_SCOPE_GLOBAL then
 		ns:ClearFromEveryCharacter("eraseList", itemId)
+	end
+
+	ns:InvalidateCache()
+	ns:RefreshDisplay()
+end
+
+--[[
+    Clear List for one scope. The seed marker is set as well, so a cleared list
+    stays empty at that character's next login; only Restore Defaults seeds it
+    again. The All Characters list has no marker.
+]]
+function ns:ClearEraseListInScope(scopeKey)
+	local eraseList = ns:GetEraseListForScope(scopeKey)
+	if not eraseList then
+		return
+	end
+	wipe(eraseList)
+
+	if scopeKey == ns.db.keys.char then
+		ns.db.char.eraseListSeeded = true
+	elseif scopeKey ~= ns.LIST_SCOPE_GLOBAL then
+		ns.db.sv.char[scopeKey].eraseListSeeded = true
 	end
 
 	ns:InvalidateCache()

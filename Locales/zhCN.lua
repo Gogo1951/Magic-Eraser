@@ -56,14 +56,6 @@ L["ERASE_LIST_PROTECTED"] = "%s 在你的保护列表中，保护列表始终优
 L["NO_HOVERED_ITEM"] = "请将鼠标悬停在物品上，然后再按一次该按键。"
 
 --------------------------------------------------------------------------------
--- Item Tooltips
---------------------------------------------------------------------------------
-
-L["TOOLTIP_WILL_ERASE"] = "可能会被删除。"
-L["TOOLTIP_IGNORED"] = "在你的保护列表中。"
-L["TOOLTIP_ON_ERASE_LIST"] = "在你的删除列表中，可能会被删除。"
-
---------------------------------------------------------------------------------
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
@@ -100,10 +92,9 @@ L["BINDING_ADD_TO_ERASE_LIST"] = "将鼠标悬停的物品加入删除列表"
 
 L["AUTO_VEND"] = "自动售卖"
 L["AUTO_VEND_DESCRIPTION"] = "打开商人窗口时立即出售你的杂物，从最便宜的开始。"
-L["TAB_YOUR_CURRENT_BAGS"] = "当前背包"
 L["TAB_ERASING"] = "删除"
 L["TAB_MERCHANT_BANK"] = "商人与银行"
-L["TAB_ALERTS"] = "提醒与提示"
+L["TAB_ALERTS"] = "提醒与着色"
 L["TAB_IGNORE_LIST"] = "保护列表"
 L["TAB_ERASE_LIST"] = "删除列表"
 L["ENABLED"] = "已启用"
@@ -111,7 +102,7 @@ L["DISABLED"] = "已禁用"
 L["ACTION_ERASE"] = "删除"
 L["ACTION_IGNORE"] = "保护"
 
--- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
+-- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "示例：%s"
 L["OPTIONS_EXAMPLE_ITEM"] = "示例物品"
 
@@ -125,7 +116,7 @@ L["OPTIONS_ENABLE_WELCOME"] = "启用欢迎消息"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登录时在聊天框中显示一行包含版本号的欢迎消息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "启用小地图按钮"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"在小地图上显示 Magic Eraser 按钮。它的图标就是下一件要删除的物品，鼠标悬停时会显示杂物报告。"
+	"在小地图上显示 Magic Eraser 按钮。它的图标就是你的最低价值物品，鼠标悬停时会显示杂物报告。"
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "功能"
@@ -135,7 +126,7 @@ L["OPTIONS_KEY_BINDINGS_HEADER"] = "按键设置"
 L["OPTIONS_KEY_SET"] = "设置按键"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "打开游戏的按键设置列表，Magic Eraser 在其中有自己的分类。"
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"删除下一件物品，与左键点击小地图按钮相同。按键前没有预览，所以请把它绑定在不容易误按的位置。"
+	"删除你的最低价值物品，与左键点击小地图按钮相同。按键前没有预览，所以请把它绑定在不容易误按的位置。"
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"在此角色上保护鼠标指向的物品，无论它出现在哪里：背包、银行、商人或拾取窗口。如果它在此角色的删除列表中，会被移出。"
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -174,41 +165,6 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_COPY_LINK"] = "要复制链接，请点击其文本框，然后按 Ctrl+A 和 Ctrl+C。"
 L["OPTIONS_VERSION"] = "版本 %s"
-
---------------------------------------------------------------------------------
--- Options: Your Current Bags Panel
---------------------------------------------------------------------------------
-
-L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
-	"小地图按钮接下来要删除的物品及排在其后的杂物，然后是你携带的其他所有物品，随时可以删除或保护。"
-L["OPTIONS_UP_NEXT"] = "下一件"
-L["OPTIONS_CLUTTER_TOTAL"] = "总计"
-L["OPTIONS_STACKS"] = "(%d 组)"
-L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "删除下一件物品，与左键点击小地图按钮相同。"
-
--- Everything in Your Bags
-L["OPTIONS_EVERYTHING_HEADER"] = "背包中的所有物品"
-L["OPTIONS_EVERYTHING_DESCRIPTION"] =
-	"你携带的每一件物品，无论是不是杂物。勾选删除或保护，即可将其加入此角色的列表。"
-L["OPTIONS_COLUMN_ITEM"] = "物品"
-L["OPTIONS_COLUMN_TYPE"] = "类型"
-L["OPTIONS_COLUMN_ERASE"] = "删除"
-L["OPTIONS_COLUMN_PROTECT"] = "保护"
-L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
-	"将此物品加入此角色的删除列表，使其无论价值多少都始终被视为杂物。同时会将它移出此角色的保护列表。"
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
-	"此物品在所有角色列表中。请在删除列表或保护列表页面修改它，因为该列表对每个角色都生效。"
-L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
-	"将此物品加入此角色的保护列表，使其永远不会被删除或出售。同时会将它移出此角色的删除列表。"
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
-	"此物品在所有角色保护列表中。请在保护列表页面修改它，因为该列表对每个角色都生效。"
-
--- Why an item counts as junk, beside it in the queue.
-L["REASON_QUEST"] = "任务已完成"
-L["REASON_QUEST_INELIGIBLE"] = "无法接取"
-L["REASON_OUTGROWN"] = "已用不上"
-L["REASON_EQUIPMENT"] = "白色装备"
-L["REASON_GRAY"] = "灰色"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -270,7 +226,7 @@ L["OPTIONS_ERASE_CONFIRM_HEADER"] = "删除确认"
 L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "删除任何物品前先询问是或否。"
 L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "启用删除确认"
 L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
-	"每次删除前都显示是或否确认，无论来自小地图按钮、快捷键还是当前背包，删除列表中的物品也包括在内。"
+	"每次删除前都显示是或否确认，无论来自小地图按钮还是快捷键，删除列表中的物品也包括在内。"
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -300,17 +256,21 @@ L["OPTIONS_BANK_CUSHION_NOTE"] = "由于背包空间警告已开启，会保留 
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "由于背包空间警告已开启，会保留 1 个空余背包格子。"
 
 --------------------------------------------------------------------------------
--- Options: Alerts & Tooltips Panel
+-- Options: Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ALERTS_DESCRIPTION"] = "Magic Eraser 会主动在聊天框和物品提示中告诉你的信息。"
+L["TAB_ALERTS_DESCRIPTION"] = "Magic Eraser 会主动在聊天框和背包中告诉你的信息。"
 
--- Tooltip Warnings
-L["OPTIONS_TOOLTIP_HEADER"] = "物品提示警告"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"为背包中 Magic Eraser 可能删除的物品，或受你的保护列表保护的物品，在其提示中添加一行说明。"
-L["OPTIONS_ENABLE_TOOLTIPS"] = "启用物品提示警告"
-L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "开启或关闭背包物品提示中的 Magic Eraser 说明行。"
+-- Junk Item Tint
+L["OPTIONS_TINT_HEADER"] = "杂物着色"
+L["OPTIONS_TINT_DESCRIPTION"] =
+	"为 Magic Eraser 会删除的杂物着色，让你在背包和银行中一眼认出它们。"
+L["OPTIONS_ENABLE_TINT"] = "启用杂物着色"
+L["OPTIONS_ENABLE_TINT_DESCRIPTION"] =
+	"开启或关闭着色。适用于默认背包、Baganator、Bagnon、AdiBags、ArkInventory、BetterBags 和 ElvUI。"
+L["OPTIONS_TINT_COLOR"] = "着色颜色"
+L["OPTIONS_TINT_COLOR_DESCRIPTION"] = "着色的颜色和不透明度。不透明度越低，物品图标越清楚。"
+L["TINT_BAGANATOR_WIDGET_LABEL"] = "杂物着色 (Magic Eraser)"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "任务物品提醒"
@@ -345,6 +305,10 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "请输入物品 ID，或在聊天框中 Shift+点击物品链接。"
 L["OPTIONS_LIST_REMOVE"] = "移除"
 L["OPTIONS_LIST_EMPTY"] = "此列表为空。"
+L["OPTIONS_LIST_CLEAR"] = "清空列表"
+L["OPTIONS_LIST_CLEAR_DESCRIPTION"] =
+	"移除此列表中的所有物品。列表为空的角色会从左侧列表中消失，除非是你当前正在玩的角色。"
+L["OPTIONS_LIST_CLEAR_CONFIRM"] = "移除此列表中的所有物品？此操作无法撤销。"
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

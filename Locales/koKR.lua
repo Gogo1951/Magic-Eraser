@@ -59,14 +59,6 @@ L["ERASE_LIST_PROTECTED"] =
 L["NO_HOVERED_ITEM"] = "아이템 위에 마우스를 올린 다음 키를 다시 누르세요."
 
 --------------------------------------------------------------------------------
--- Item Tooltips
---------------------------------------------------------------------------------
-
-L["TOOLTIP_WILL_ERASE"] = "삭제될 수 있습니다."
-L["TOOLTIP_IGNORED"] = "보호 목록에 있습니다."
-L["TOOLTIP_ON_ERASE_LIST"] = "삭제 목록에 있으며, 삭제될 수 있습니다."
-
---------------------------------------------------------------------------------
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
@@ -103,10 +95,9 @@ L["BINDING_ADD_TO_ERASE_LIST"] = "마우스를 올린 아이템을 삭제 목록
 
 L["AUTO_VEND"] = "자동 판매"
 L["AUTO_VEND_DESCRIPTION"] = "상인 창을 여는 즉시 잡동사니를 가장 싼 것부터 판매합니다."
-L["TAB_YOUR_CURRENT_BAGS"] = "현재 가방"
 L["TAB_ERASING"] = "삭제"
 L["TAB_MERCHANT_BANK"] = "상인 및 은행"
-L["TAB_ALERTS"] = "알림 및 툴팁"
+L["TAB_ALERTS"] = "알림 및 색칠"
 L["TAB_IGNORE_LIST"] = "보호 목록"
 L["TAB_ERASE_LIST"] = "삭제 목록"
 L["ENABLED"] = "활성화"
@@ -114,7 +105,7 @@ L["DISABLED"] = "비활성화"
 L["ACTION_ERASE"] = "삭제"
 L["ACTION_IGNORE"] = "보호"
 
--- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
+-- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "예시: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "예시 아이템"
 
@@ -129,7 +120,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
 L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 다음에 삭제할 아이템이며, 마우스를 올리면 잡동사니 보고서가 표시됩니다."
+	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 최저가 아이템이며, 마우스를 올리면 잡동사니 보고서가 표시됩니다."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "기능"
@@ -140,7 +131,7 @@ L["OPTIONS_KEY_SET"] = "키 지정"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"게임의 단축키 목록을 엽니다. Magic Eraser 전용 항목이 있습니다."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"미니맵 버튼을 좌클릭하는 것과 똑같이 다음 아이템을 삭제합니다. 키를 누르기 전에는 미리 보기가 없으니, 실수로 누르지 않을 키에 지정하세요."
+	"미니맵 버튼을 좌클릭하는 것과 똑같이 최저가 아이템을 삭제합니다. 키를 누르기 전에는 미리 보기가 없으니, 실수로 누르지 않을 키에 지정하세요."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"마우스를 올린 아이템을 이 캐릭터에서 보호합니다. 가방, 은행, 상인, 전리품 창 어디서든 사용할 수 있습니다. 이 캐릭터의 삭제 목록에 있었다면 거기서 빠집니다."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -180,42 +171,6 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_COPY_LINK"] = "링크를 복사하려면 해당 칸을 클릭한 다음 Ctrl+A와 Ctrl+C를 누르세요."
 L["OPTIONS_VERSION"] = "버전 %s"
-
---------------------------------------------------------------------------------
--- Options: Your Current Bags Panel
---------------------------------------------------------------------------------
-
-L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
-	"미니맵 버튼이 다음에 삭제할 아이템과 그 뒤에 대기 중인 잡동사니, 그리고 가지고 있는 나머지 모든 아이템을 보여 줍니다. 여기서 바로 삭제하거나 보호할 수 있습니다."
-L["OPTIONS_UP_NEXT"] = "다음 차례"
-L["OPTIONS_CLUTTER_TOTAL"] = "합계"
-L["OPTIONS_STACKS"] = "(%d묶음)"
-L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
-	"미니맵 버튼을 좌클릭하는 것과 똑같이 다음 아이템을 삭제합니다."
-
--- Everything in Your Bags
-L["OPTIONS_EVERYTHING_HEADER"] = "가방 속 모든 아이템"
-L["OPTIONS_EVERYTHING_DESCRIPTION"] =
-	"잡동사니든 아니든 가지고 있는 모든 아이템입니다. 삭제 또는 보호에 체크하면 이 캐릭터의 목록에 추가됩니다."
-L["OPTIONS_COLUMN_ITEM"] = "아이템"
-L["OPTIONS_COLUMN_TYPE"] = "종류"
-L["OPTIONS_COLUMN_ERASE"] = "삭제"
-L["OPTIONS_COLUMN_PROTECT"] = "보호"
-L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
-	"이 아이템을 이 캐릭터의 삭제 목록에 넣어 가치와 상관없이 항상 잡동사니로 취급합니다. 이 캐릭터의 보호 목록에서는 빠집니다."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
-	"이 아이템은 모든 캐릭터 목록에 있습니다. 그 목록은 모든 캐릭터에 적용되므로 삭제 목록 또는 보호 목록 페이지에서 변경하세요."
-L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
-	"이 아이템을 이 캐릭터의 보호 목록에 넣어 절대 삭제하거나 판매하지 않습니다. 이 캐릭터의 삭제 목록에서는 빠집니다."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
-	"이 아이템은 모든 캐릭터 보호 목록에 있습니다. 그 목록은 모든 캐릭터에 적용되므로 보호 목록 페이지에서 변경하세요."
-
--- Why an item counts as junk, beside it in the queue.
-L["REASON_QUEST"] = "퀘스트 완료"
-L["REASON_QUEST_INELIGIBLE"] = "수락 불가"
-L["REASON_OUTGROWN"] = "저레벨"
-L["REASON_EQUIPMENT"] = "흰색 장비"
-L["REASON_GRAY"] = "회색"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -280,7 +235,7 @@ L["OPTIONS_ERASE_CONFIRM_HEADER"] = "삭제 확인"
 L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "무엇이든 삭제하기 전에 예/아니오를 묻습니다."
 L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "삭제 확인 활성화"
 L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
-	"미니맵 버튼, 단축키, 현재 가방 중 어디서 삭제하든 매번 삭제하기 전에 예/아니오를 표시하며, 삭제 목록에 있는 아이템도 마찬가지입니다."
+	"미니맵 버튼이나 단축키로 삭제할 때마다 삭제하기 전에 예/아니오를 표시하며, 삭제 목록에 있는 아이템도 마찬가지입니다."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -310,17 +265,22 @@ L["OPTIONS_BANK_CUSHION_NOTE"] = "가방 공간 경고가 켜져 있으므로 �
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "가방 공간 경고가 켜져 있으므로 가방 1칸을 비워 둡니다."
 
 --------------------------------------------------------------------------------
--- Options: Alerts & Tooltips Panel
+-- Options: Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ALERTS_DESCRIPTION"] = "Magic Eraser가 대화창과 툴팁으로 알아서 알려 주는 내용입니다."
+L["TAB_ALERTS_DESCRIPTION"] = "Magic Eraser가 대화창과 가방에서 알아서 알려 주는 내용입니다."
 
--- Tooltip Warnings
-L["OPTIONS_TOOLTIP_HEADER"] = "툴팁 경고"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"가방 속 아이템 중 Magic Eraser가 삭제할 수 있는 아이템이나 보호 목록이 보호하는 아이템의 툴팁에 한 줄을 추가합니다."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "툴팁 경고 활성화"
-L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "가방 툴팁의 Magic Eraser 줄을 켜거나 끕니다."
+-- Junk Item Tint
+L["OPTIONS_TINT_HEADER"] = "잡동사니 색칠"
+L["OPTIONS_TINT_DESCRIPTION"] =
+	"Magic Eraser가 삭제할 잡동사니에 색을 입혀 가방과 은행에서 한눈에 알아볼 수 있게 합니다."
+L["OPTIONS_ENABLE_TINT"] = "잡동사니 색칠 활성화"
+L["OPTIONS_ENABLE_TINT_DESCRIPTION"] =
+	"색칠을 켜거나 끕니다. 기본 가방, Baganator, Bagnon, AdiBags, ArkInventory, BetterBags, ElvUI에서 작동합니다."
+L["OPTIONS_TINT_COLOR"] = "색칠 색상"
+L["OPTIONS_TINT_COLOR_DESCRIPTION"] =
+	"색칠의 색상과 불투명도입니다. 불투명도를 낮추면 아이템 아이콘이 더 잘 보입니다."
+L["TINT_BAGANATOR_WIDGET_LABEL"] = "잡동사니 색칠 (Magic Eraser)"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "퀘스트 아이템 알림"
@@ -356,6 +316,10 @@ L["OPTIONS_LIST_ADD_ID_INVALID"] =
 	"아이템 ID를 입력하거나, 대화창의 아이템 링크를 Shift+클릭하세요."
 L["OPTIONS_LIST_REMOVE"] = "제거"
 L["OPTIONS_LIST_EMPTY"] = "이 목록은 비어 있습니다."
+L["OPTIONS_LIST_CLEAR"] = "목록 비우기"
+L["OPTIONS_LIST_CLEAR_DESCRIPTION"] =
+	"이 목록에서 모든 아이템을 제거합니다. 목록이 빈 캐릭터는 지금 플레이 중인 캐릭터가 아니면 왼쪽 목록에서 사라집니다."
+L["OPTIONS_LIST_CLEAR_CONFIRM"] = "이 목록에서 모든 아이템을 제거할까요? 되돌릴 수 없습니다."
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

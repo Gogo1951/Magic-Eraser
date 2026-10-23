@@ -58,14 +58,6 @@ L["ERASE_LIST_PROTECTED"] =
 L["NO_HOVERED_ITEM"] = "Fahre mit der Maus über einen Gegenstand und drücke die Taste dann erneut."
 
 --------------------------------------------------------------------------------
--- Item Tooltips
---------------------------------------------------------------------------------
-
-L["TOOLTIP_WILL_ERASE"] = "Kann gelöscht werden."
-L["TOOLTIP_IGNORED"] = "Auf deiner Schutzliste."
-L["TOOLTIP_ON_ERASE_LIST"] = "Auf deiner Löschliste, kann gelöscht werden."
-
---------------------------------------------------------------------------------
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
@@ -103,10 +95,9 @@ L["BINDING_ADD_TO_ERASE_LIST"] = "Gegenstand unter der Maus zur Löschliste hinz
 L["AUTO_VEND"] = "Auto-Verkauf"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Verkauft deinen Ramsch, sobald du ein Händlerfenster öffnest, die günstigsten Gegenstände zuerst."
-L["TAB_YOUR_CURRENT_BAGS"] = "Deine aktuellen Taschen"
 L["TAB_ERASING"] = "Löschen"
 L["TAB_MERCHANT_BANK"] = "Händler und Bank"
-L["TAB_ALERTS"] = "Hinweise und Tooltips"
+L["TAB_ALERTS"] = "Hinweise und Einfärbung"
 L["TAB_IGNORE_LIST"] = "Schutzliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
 L["ENABLED"] = "Aktiviert"
@@ -114,7 +105,7 @@ L["DISABLED"] = "Deaktiviert"
 L["ACTION_ERASE"] = "Löschen"
 L["ACTION_IGNORE"] = "Schützen"
 
--- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
+-- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Beispiel: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
 
@@ -129,7 +120,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist der nächste Gegenstand an der Reihe, und wenn du mit der Maus darüberfährst, siehst du den Ramsch-Bericht."
+	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist dein Gegenstand mit geringstem Wert, und wenn du mit der Maus darüberfährst, siehst du den Ramsch-Bericht."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funktionen"
@@ -140,7 +131,7 @@ L["OPTIONS_KEY_SET"] = "Taste festlegen"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Öffnet die Tastaturbelegung des Spiels, in der Magic Eraser einen eigenen Abschnitt hat."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
+	"Löscht deinen Gegenstand mit geringstem Wert, genau wie ein Linksklick auf die Minikarten-Schaltfläche. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Schützt den Gegenstand unter deiner Maus auf diesem Charakter, wo immer du ihn siehst: Taschen, Bank, Händler oder Beutefenster. Stand er auf der Löschliste dieses Charakters, wird er dort entfernt."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -179,42 +170,6 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_COPY_LINK"] = "Um einen Link zu kopieren, klicke in sein Feld und drücke dann Strg+A und Strg+C."
 L["OPTIONS_VERSION"] = "Version %s"
-
---------------------------------------------------------------------------------
--- Options: Your Current Bags Panel
---------------------------------------------------------------------------------
-
-L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
-	"Was die Minikarten-Schaltfläche als Nächstes löscht und der Ramsch dahinter, danach alles andere, was du bei dir trägst, bereit zum Löschen oder Schützen."
-L["OPTIONS_UP_NEXT"] = "Als Nächstes"
-L["OPTIONS_CLUTTER_TOTAL"] = "Gesamt"
-L["OPTIONS_STACKS"] = "(%d Stapel)"
-L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
-	"Löscht den nächsten Gegenstand an der Reihe, genau wie ein Linksklick auf die Minikarten-Schaltfläche."
-
--- Everything in Your Bags
-L["OPTIONS_EVERYTHING_HEADER"] = "Alles in deinen Taschen"
-L["OPTIONS_EVERYTHING_DESCRIPTION"] =
-	"Jeder Gegenstand, den du bei dir trägst, ob Ramsch oder nicht. Hake Löschen oder Schützen an, um ihn auf die Liste dieses Charakters zu setzen."
-L["OPTIONS_COLUMN_ITEM"] = "Gegenstand"
-L["OPTIONS_COLUMN_TYPE"] = "Typ"
-L["OPTIONS_COLUMN_ERASE"] = "Löschen"
-L["OPTIONS_COLUMN_PROTECT"] = "Schützen"
-L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
-	"Setzt diesen Gegenstand auf die Löschliste dieses Charakters, damit er immer als Ramsch gilt, egal was er wert ist. Entfernt ihn von der Schutzliste dieses Charakters."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
-	"Dieser Gegenstand steht auf einer Liste für Alle Charaktere. Ändere das auf der Seite Löschliste oder Schutzliste, da diese Liste für jeden Charakter gilt."
-L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
-	"Setzt diesen Gegenstand auf die Schutzliste dieses Charakters, damit er nie gelöscht oder verkauft wird. Entfernt ihn von der Löschliste dieses Charakters."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
-	"Dieser Gegenstand steht auf der Schutzliste für Alle Charaktere. Ändere das auf der Seite Schutzliste, da diese Liste für jeden Charakter gilt."
-
--- Why an item counts as junk, beside it in the queue.
-L["REASON_QUEST"] = "Quest erledigt"
-L["REASON_QUEST_INELIGIBLE"] = "Nicht annehmbar"
-L["REASON_OUTGROWN"] = "Ausgedient"
-L["REASON_EQUIPMENT"] = "Weiße Ausrüstung"
-L["REASON_GRAY"] = "Grau"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -278,7 +233,7 @@ L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Löschbestätigung"
 L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "Fragt Ja oder Nein, bevor etwas gelöscht wird."
 L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Löschbestätigung aktivieren"
 L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
-	"Zeigt vor jedem Löschen ein Ja oder Nein, ob über die Minikarten-Schaltfläche, die Tastenbelegung oder Deine aktuellen Taschen, auch für Gegenstände auf deiner Löschliste."
+	"Zeigt vor jedem Löschen ein Ja oder Nein, ob über die Minikarten-Schaltfläche oder die Tastenbelegung, auch für Gegenstände auf deiner Löschliste."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -308,17 +263,22 @@ L["OPTIONS_BANK_CUSHION_NOTE"] = "Lässt %d Taschenplätze frei, weil Taschenpla
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Lässt 1 Taschenplatz frei, weil Taschenplatz-Warnungen aktiviert sind."
 
 --------------------------------------------------------------------------------
--- Options: Alerts & Tooltips Panel
+-- Options: Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ALERTS_DESCRIPTION"] = "Was dir Magic Eraser von sich aus mitteilt, im Chat und in Tooltips."
+L["TAB_ALERTS_DESCRIPTION"] = "Was dir Magic Eraser von sich aus mitteilt, im Chat und in deinen Taschen."
 
--- Tooltip Warnings
-L["OPTIONS_TOOLTIP_HEADER"] = "Tooltip-Warnungen"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Fügt dem Tooltip jedes Gegenstands in deinen Taschen eine Zeile hinzu, den Magic Eraser löschen kann oder den deine Schutzliste schützt."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Tooltip-Warnungen aktivieren"
-L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Schaltet die Zeile von Magic Eraser in Taschen-Tooltips ein oder aus."
+-- Junk Item Tint
+L["OPTIONS_TINT_HEADER"] = "Ramsch-Einfärbung"
+L["OPTIONS_TINT_DESCRIPTION"] =
+	"Färbt den Ramsch ein, den Magic Eraser löschen würde, damit du ihn in deinen Taschen und deiner Bank auf einen Blick erkennst."
+L["OPTIONS_ENABLE_TINT"] = "Ramsch-Einfärbung aktivieren"
+L["OPTIONS_ENABLE_TINT_DESCRIPTION"] =
+	"Schaltet die Einfärbung ein oder aus. Funktioniert mit den Standardtaschen, Baganator, Bagnon, AdiBags, ArkInventory, BetterBags und ElvUI."
+L["OPTIONS_TINT_COLOR"] = "Farbe der Einfärbung"
+L["OPTIONS_TINT_COLOR_DESCRIPTION"] =
+	"Farbe und Deckkraft der Einfärbung. Mit geringerer Deckkraft bleibt das Symbol des Gegenstands besser erkennbar."
+L["TINT_BAGANATOR_WIDGET_LABEL"] = "Ramsch-Einfärbung (Magic Eraser)"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "Hinweise zu Questgegenständen"
@@ -354,6 +314,11 @@ L["OPTIONS_LIST_ADD_ID_INVALID"] =
 	"Gib eine Gegenstands-ID ein oder klicke mit Umschalt auf einen Gegenstandslink im Chat."
 L["OPTIONS_LIST_REMOVE"] = "Entfernen"
 L["OPTIONS_LIST_EMPTY"] = "Diese Liste ist leer."
+L["OPTIONS_LIST_CLEAR"] = "Liste leeren"
+L["OPTIONS_LIST_CLEAR_DESCRIPTION"] =
+	"Entfernt alle Gegenstände aus dieser Liste. Ein Charakter mit leerer Liste verschwindet aus der Liste links, außer es ist der, den du gerade spielst."
+L["OPTIONS_LIST_CLEAR_CONFIRM"] =
+	"Alle Gegenstände aus dieser Liste entfernen? Das lässt sich nicht rückgängig machen."
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

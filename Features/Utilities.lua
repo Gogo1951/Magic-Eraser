@@ -260,8 +260,10 @@ end
     plus the bank bags right after the carried bags, with fallbacks for a client
     that never defined those globals. The account-wide Warband tabs are never
     included: Bank Retrieval pulls from the character's own bank only.
+    ns.IS_BANK_BAG answers the same set as a lookup, for the junk tint.
 ]]
 ns.BANK_CONTAINERS = {}
+ns.IS_BANK_BAG = {}
 do
 	local bagIndex = Enum.BagIndex
 	if bagIndex and bagIndex.CharacterBankTab_1 then
@@ -275,6 +277,9 @@ do
 		for bag = BAG_SLOTS + 1, BAG_SLOTS + (NUM_BANKBAGSLOTS or 6) do
 			ns.BANK_CONTAINERS[#ns.BANK_CONTAINERS + 1] = bag
 		end
+	end
+	for _, bag in ipairs(ns.BANK_CONTAINERS) do
+		ns.IS_BANK_BAG[bag] = true
 	end
 end
 

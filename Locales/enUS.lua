@@ -55,14 +55,6 @@ L["ERASE_LIST_PROTECTED"] = "%s is on your Protect List, which always wins. Remo
 L["NO_HOVERED_ITEM"] = "Hover over an item, then press the key again."
 
 --------------------------------------------------------------------------------
--- Item Tooltips
---------------------------------------------------------------------------------
-
-L["TOOLTIP_WILL_ERASE"] = "May be erased."
-L["TOOLTIP_IGNORED"] = "On your Protect List."
-L["TOOLTIP_ON_ERASE_LIST"] = "On your Erase List, and may be erased."
-
---------------------------------------------------------------------------------
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
@@ -99,10 +91,9 @@ L["BINDING_ADD_TO_ERASE_LIST"] = "Add Hovered Item to Erase List"
 
 L["AUTO_VEND"] = "Auto-Vend"
 L["AUTO_VEND_DESCRIPTION"] = "Sells your junk the moment you open a merchant, cheapest first."
-L["TAB_YOUR_CURRENT_BAGS"] = "Your Current Bags"
 L["TAB_ERASING"] = "Erasing"
 L["TAB_MERCHANT_BANK"] = "Merchant & Bank"
-L["TAB_ALERTS"] = "Alerts & Tooltips"
+L["TAB_ALERTS"] = "Alerts & Tints"
 L["TAB_IGNORE_LIST"] = "Protect List"
 L["TAB_ERASE_LIST"] = "Erase List"
 L["ENABLED"] = "Enabled"
@@ -110,7 +101,7 @@ L["DISABLED"] = "Disabled"
 L["ACTION_ERASE"] = "Erase"
 L["ACTION_IGNORE"] = "Protect"
 
--- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
+-- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Example: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Example Item"
 
@@ -124,7 +115,7 @@ L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Shows the Magic Eraser button on your mini-map. Its icon is the next item up, and hovering it shows the Clutter Report."
+	"Shows the Magic Eraser button on your mini-map. Its icon is your Lowest-Value Item, and hovering it shows the Clutter Report."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Features"
@@ -134,7 +125,7 @@ L["OPTIONS_KEY_BINDINGS_HEADER"] = "Key Bindings"
 L["OPTIONS_KEY_SET"] = "Set Key"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "Opens the game's key binding list, where Magic Eraser has its own section."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Erases the next item up, same as a left-click on the mini-map button. There's no preview before a keypress, so bind it somewhere you won't hit by accident."
+	"Erases your Lowest-Value Item, same as a left-click on the mini-map button. There's no preview before a keypress, so bind it somewhere you won't hit by accident."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protects the item under your mouse on this character, wherever you see it: bags, bank, merchant or loot window. If it was on this character's Erase List, it comes off."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -173,41 +164,6 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_COPY_LINK"] = "To copy a link, click its box, then press Ctrl+A and Ctrl+C."
 L["OPTIONS_VERSION"] = "Version %s"
-
---------------------------------------------------------------------------------
--- Options: Your Current Bags Panel
---------------------------------------------------------------------------------
-
-L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
-	"What the mini-map button erases next and the junk behind it, then everything else you're carrying, ready to erase or protect."
-L["OPTIONS_UP_NEXT"] = "Up Next"
-L["OPTIONS_CLUTTER_TOTAL"] = "Total"
-L["OPTIONS_STACKS"] = "(%d Stacks)"
-L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] = "Erases the next item up, same as a left-click on the mini-map button."
-
--- Everything in Your Bags
-L["OPTIONS_EVERYTHING_HEADER"] = "Everything in Your Bags"
-L["OPTIONS_EVERYTHING_DESCRIPTION"] =
-	"Every item you're carrying, junk or not. Check Erase or Protect to put it on this character's list."
-L["OPTIONS_COLUMN_ITEM"] = "Item"
-L["OPTIONS_COLUMN_TYPE"] = "Type"
-L["OPTIONS_COLUMN_ERASE"] = "Erase"
-L["OPTIONS_COLUMN_PROTECT"] = "Protect"
-L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
-	"Puts this item on this character's Erase List, so it's always junk, whatever it's worth. Takes it off this character's Protect List."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
-	"This item is on an All Characters list. Change it on the Erase List or Protect List page, since that list applies to every character."
-L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
-	"Puts this item on this character's Protect List, so it's never erased or sold. Takes it off this character's Erase List."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
-	"This item is on the All Characters Protect List. Change it on the Protect List page, since that list applies to every character."
-
--- Why an item counts as junk, beside it in the queue.
-L["REASON_QUEST"] = "Quest Done"
-L["REASON_QUEST_INELIGIBLE"] = "Can't Take"
-L["REASON_OUTGROWN"] = "Outgrown"
-L["REASON_EQUIPMENT"] = "White Gear"
-L["REASON_GRAY"] = "Gray"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -266,7 +222,7 @@ L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Erase Confirmation"
 L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "Asks Yes or No before anything is erased."
 L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Enable Erase Confirmation"
 L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
-	"Shows a Yes or No before every erase, from the mini-map button, the key binding or Your Current Bags, including items on your Erase List."
+	"Shows a Yes or No before every erase, from the mini-map button or the key binding, including items on your Erase List."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -296,17 +252,22 @@ L["OPTIONS_BANK_CUSHION_NOTE"] = "Leaves %d bag slots free, because Bag-Space Wa
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Leaves 1 bag slot free, because Bag-Space Warnings are on."
 
 --------------------------------------------------------------------------------
--- Options: Alerts & Tooltips Panel
+-- Options: Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ALERTS_DESCRIPTION"] = "What Magic Eraser tells you on its own, in chat and in tooltips."
+L["TAB_ALERTS_DESCRIPTION"] = "What Magic Eraser tells you on its own, in chat and in your bags."
 
--- Tooltip Warnings
-L["OPTIONS_TOOLTIP_HEADER"] = "Tooltip Warnings"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Adds a line to the tooltip of anything in your bags that Magic Eraser may erase, or that your Protect List protects."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Tooltip Warnings"
-L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Turns the Magic Eraser line in bag tooltips on or off."
+-- Junk Item Tint
+L["OPTIONS_TINT_HEADER"] = "Junk Item Tint"
+L["OPTIONS_TINT_DESCRIPTION"] =
+	"Tints the junk Magic Eraser would erase, so you can spot it in your bags and bank at a glance."
+L["OPTIONS_ENABLE_TINT"] = "Enable Junk Item Tint"
+L["OPTIONS_ENABLE_TINT_DESCRIPTION"] =
+	"Turns the tint on or off. Works with the default bags, Baganator, Bagnon, AdiBags, ArkInventory, BetterBags and ElvUI."
+L["OPTIONS_TINT_COLOR"] = "Tint Color"
+L["OPTIONS_TINT_COLOR_DESCRIPTION"] =
+	"The tint's color and opacity. A lower opacity keeps the item's icon easier to see."
+L["TINT_BAGANATOR_WIDGET_LABEL"] = "Junk Item Tint (Magic Eraser)"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "Quest Item Alerts"
@@ -341,6 +302,10 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Type an item ID, or Shift-click an item link in chat."
 L["OPTIONS_LIST_REMOVE"] = "Remove"
 L["OPTIONS_LIST_EMPTY"] = "This list is empty."
+L["OPTIONS_LIST_CLEAR"] = "Clear List"
+L["OPTIONS_LIST_CLEAR_DESCRIPTION"] =
+	"Removes every item from this list. A character whose list is empty drops off the list on the left, unless it's the one you're playing."
+L["OPTIONS_LIST_CLEAR_CONFIRM"] = "Remove every item from this list? This can't be undone."
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

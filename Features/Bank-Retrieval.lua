@@ -240,6 +240,25 @@ end
     Maximum Value to Erase is not consulted here at all, so it needs no Erase
     List carve-out: retrieval moves an item rather than destroying it.
 ]]
+--[[
+    The one verdict on a bank item, shared by this pass and the junk tint so the
+    two never disagree: the delete reason and sale price when it is junk. The
+    Protect List goes first, so it wins over any Erase List entry. An item whose
+    data hasn't loaded yet answers only the third value, true, after asking the
+    client for it.
+]]
+function ns:IsBankJunk(itemId, hyperlink)
+	if ns:IsIgnored(itemId) then
+		return nil
+	end
+	local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(hyperlink)
+	if not name then
+		C_Item.RequestLoadItemDataByID(itemId)
+		return nil, nil, true
+	end
+	return ns:GetItemDeleteReason(itemId, rarity, sellPrice), sellPrice
+end
+
 local function ScanBank(generation)
 	if not isRetrieving or generation ~= passGeneration then
 		return
@@ -256,28 +275,19 @@ local function ScanBank(generation)
 			local itemInfo = GetContainerItemInfo(bag, slot)
 			if itemInfo and itemInfo.hyperlink then
 				local itemId = itemInfo.itemID
+				local deleteReason, sellPrice, isItemDataMissing = ns:IsBankJunk(itemId, itemInfo.hyperlink)
 
-				-- Ignore List first, so it wins over any Erase List entry.
-				if not ns:IsIgnored(itemId) then
-					local name, _, rarity, _, _, _, _, _, _, _, sellPrice = GetItemInfo(itemInfo.hyperlink)
-
-					if not name then
-						isDataMissing = true
-						C_Item.RequestLoadItemDataByID(itemId)
-					else
-						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
-
-						if deleteReason then
-							local count = itemInfo.stackCount or 1
-							moveQueue[#moveQueue + 1] = {
-								bag = bag,
-								slot = slot,
-								itemId = itemId,
-								count = count,
-								value = (sellPrice or 0) * count,
-							}
-						end
-					end
+				if isItemDataMissing then
+					isDataMissing = true
+				elseif deleteReason then
+					local count = itemInfo.stackCount or 1
+					moveQueue[#moveQueue + 1] = {
+						bag = bag,
+						slot = slot,
+						itemId = itemId,
+						count = count,
+						value = (sellPrice or 0) * count,
+					}
 				end
 			end
 		end
@@ -341,6 +351,12 @@ end
 ]]
 
 function ns:OnBankframeOpened()
+	-- The bank tints go ahead whether or not Bank Retrieval is on, once the slots have settled.
+	ns:SetTintBankOpen(true)
+	C_Timer.After(BANK_SETTLE_SECONDS, function()
+		ns:RefreshTints()
+	end)
+
 	if not (ns.db and ns.db.profile.bankRetrievalEnabled) then
 		return
 	end
@@ -367,6 +383,7 @@ function ns:OnBankframeClosed()
 	    window is gone.
 	]]
 	FinishPass()
+	ns:SetTintBankOpen(false)
 
 	--[[
 	    Bag-space warnings are held while the bank window is open (see

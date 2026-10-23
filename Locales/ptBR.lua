@@ -56,14 +56,6 @@ L["ERASE_LIST_PROTECTED"] = "%s está na sua Lista de proteção, que sempre tem
 L["NO_HOVERED_ITEM"] = "Passe o mouse sobre um item e pressione a tecla de novo."
 
 --------------------------------------------------------------------------------
--- Item Tooltips
---------------------------------------------------------------------------------
-
-L["TOOLTIP_WILL_ERASE"] = "Pode ser excluído."
-L["TOOLTIP_IGNORED"] = "Está na sua Lista de proteção."
-L["TOOLTIP_ON_ERASE_LIST"] = "Está na sua Lista de exclusão e pode ser excluído."
-
---------------------------------------------------------------------------------
 -- Minimap Button Tooltip
 --------------------------------------------------------------------------------
 
@@ -101,10 +93,9 @@ L["BINDING_ADD_TO_ERASE_LIST"] = "Adicionar item sob o mouse à Lista de exclus�
 L["AUTO_VEND"] = "Venda automática"
 L["AUTO_VEND_DESCRIPTION"] =
 	"Vende seu lixo assim que você abre a janela de um comerciante, do mais barato para o mais caro."
-L["TAB_YOUR_CURRENT_BAGS"] = "Suas bolsas atuais"
 L["TAB_ERASING"] = "Exclusão"
 L["TAB_MERCHANT_BANK"] = "Comerciante e banco"
-L["TAB_ALERTS"] = "Alertas e dicas"
+L["TAB_ALERTS"] = "Alertas e tingimento"
 L["TAB_IGNORE_LIST"] = "Lista de proteção"
 L["TAB_ERASE_LIST"] = "Lista de exclusão"
 L["ENABLED"] = "Ativado"
@@ -112,7 +103,7 @@ L["DISABLED"] = "Desativado"
 L["ACTION_ERASE"] = "Excluir"
 L["ACTION_IGNORE"] = "Proteger"
 
--- Example lines under features that print to chat or add a tooltip line. %s is that whole line.
+-- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Exemplo: %s"
 L["OPTIONS_EXAMPLE_ITEM"] = "Item de exemplo"
 
@@ -127,7 +118,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
 L["OPTIONS_ENABLE_MINIMAP"] = "Ativar botão do minimapa"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o próximo item da fila, e passar o mouse sobre ele mostra o Relatório de lixo."
+	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o seu Item de menor valor, e passar o mouse sobre ele mostra o Relatório de lixo."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Recursos"
@@ -138,7 +129,7 @@ L["OPTIONS_KEY_SET"] = "Definir tecla"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Abre a lista de teclas de atalho do jogo, onde o Magic Eraser tem sua própria seção."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Exclui o próximo item da fila, igual a um clique esquerdo no botão do minimapa. Não há prévia antes de apertar a tecla, então escolha uma tecla que você não vá apertar sem querer."
+	"Exclui o seu Item de menor valor, igual a um clique esquerdo no botão do minimapa. Não há prévia antes de apertar a tecla, então escolha uma tecla que você não vá apertar sem querer."
 L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
 	"Protege o item sob o mouse neste personagem, onde quer que você o veja: bolsas, banco, comerciante ou janela de saque. Se ele estava na Lista de exclusão deste personagem, sai dela."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -177,42 +168,6 @@ L["OPTIONS_DISCORD"] = "Discord"
 L["OPTIONS_WAGO"] = "Wago"
 L["OPTIONS_COPY_LINK"] = "Para copiar um link, clique na caixa dele e depois pressione Ctrl+A e Ctrl+C."
 L["OPTIONS_VERSION"] = "Versão %s"
-
---------------------------------------------------------------------------------
--- Options: Your Current Bags Panel
---------------------------------------------------------------------------------
-
-L["OPTIONS_YOUR_CURRENT_BAGS_DESCRIPTION"] =
-	"O que o botão do minimapa exclui a seguir e o lixo que vem depois, e então tudo o mais que você carrega, pronto para excluir ou proteger."
-L["OPTIONS_UP_NEXT"] = "A seguir"
-L["OPTIONS_CLUTTER_TOTAL"] = "Total"
-L["OPTIONS_STACKS"] = "(%d pilhas)"
-L["OPTIONS_ERASE_BUTTON_DESCRIPTION"] =
-	"Exclui o próximo item da fila, igual a um clique esquerdo no botão do minimapa."
-
--- Everything in Your Bags
-L["OPTIONS_EVERYTHING_HEADER"] = "Tudo nas suas bolsas"
-L["OPTIONS_EVERYTHING_DESCRIPTION"] =
-	"Todos os itens que você carrega, lixo ou não. Marque Excluir ou Proteger para colocar o item na lista deste personagem."
-L["OPTIONS_COLUMN_ITEM"] = "Item"
-L["OPTIONS_COLUMN_TYPE"] = "Tipo"
-L["OPTIONS_COLUMN_ERASE"] = "Excluir"
-L["OPTIONS_COLUMN_PROTECT"] = "Proteger"
-L["OPTIONS_CHECK_ERASE_DESCRIPTION"] =
-	"Coloca este item na Lista de exclusão deste personagem, para que ele seja sempre lixo, seja qual for o valor. Tira o item da Lista de proteção deste personagem."
-L["OPTIONS_CHECK_ERASE_GLOBAL_DESCRIPTION"] =
-	"Este item está em uma lista de Todos os personagens. Altere-o na página Lista de exclusão ou Lista de proteção, já que essa lista vale para todos os personagens."
-L["OPTIONS_CHECK_PROTECT_DESCRIPTION"] =
-	"Coloca este item na Lista de proteção deste personagem, para que ele nunca seja excluído nem vendido. Tira o item da Lista de exclusão deste personagem."
-L["OPTIONS_CHECK_PROTECT_GLOBAL_DESCRIPTION"] =
-	"Este item está na Lista de proteção de Todos os personagens. Altere-o na página Lista de proteção, já que essa lista vale para todos os personagens."
-
--- Why an item counts as junk, beside it in the queue.
-L["REASON_QUEST"] = "Missão concluída"
-L["REASON_QUEST_INELIGIBLE"] = "Indisponível"
-L["REASON_OUTGROWN"] = "Superado"
-L["REASON_EQUIPMENT"] = "Item branco"
-L["REASON_GRAY"] = "Cinza"
 
 --------------------------------------------------------------------------------
 -- Options: Erasing Panel
@@ -273,7 +228,7 @@ L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Confirmação de exclusão"
 L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"] = "Pergunta Sim ou Não antes de excluir qualquer coisa."
 L["OPTIONS_ENABLE_ERASE_CONFIRM"] = "Ativar confirmação de exclusão"
 L["OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION"] =
-	"Mostra um Sim ou Não antes de cada exclusão, pelo botão do minimapa, pela tecla de atalho ou por Suas bolsas atuais, incluindo itens da sua Lista de exclusão."
+	"Mostra um Sim ou Não antes de cada exclusão, pelo botão do minimapa ou pela tecla de atalho, incluindo itens da sua Lista de exclusão."
 
 --------------------------------------------------------------------------------
 -- Options: Merchant & Bank Panel
@@ -305,17 +260,22 @@ L["OPTIONS_BANK_CUSHION_NOTE_ONE"] =
 	"Deixa 1 espaço de bolsa livre, porque os Avisos de espaço na bolsa estão ativados."
 
 --------------------------------------------------------------------------------
--- Options: Alerts & Tooltips Panel
+-- Options: Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ALERTS_DESCRIPTION"] = "O que o Magic Eraser avisa por conta própria, no chat e nas dicas."
+L["TAB_ALERTS_DESCRIPTION"] = "O que o Magic Eraser avisa por conta própria, no chat e nas suas bolsas."
 
--- Tooltip Warnings
-L["OPTIONS_TOOLTIP_HEADER"] = "Avisos nas dicas"
-L["OPTIONS_TOOLTIP_DESCRIPTION"] =
-	"Adiciona uma linha à dica de qualquer item nas suas bolsas que o Magic Eraser possa excluir, ou que sua Lista de proteção proteja."
-L["OPTIONS_ENABLE_TOOLTIPS"] = "Ativar avisos nas dicas"
-L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Liga ou desliga a linha do Magic Eraser nas dicas das bolsas."
+-- Junk Item Tint
+L["OPTIONS_TINT_HEADER"] = "Tingimento do lixo"
+L["OPTIONS_TINT_DESCRIPTION"] =
+	"Tinge o lixo que o Magic Eraser excluiria, para você identificá-lo num relance nas bolsas e no banco."
+L["OPTIONS_ENABLE_TINT"] = "Ativar tingimento do lixo"
+L["OPTIONS_ENABLE_TINT_DESCRIPTION"] =
+	"Liga ou desliga o tingimento. Funciona com as bolsas padrão, Baganator, Bagnon, AdiBags, ArkInventory, BetterBags e ElvUI."
+L["OPTIONS_TINT_COLOR"] = "Cor do tingimento"
+L["OPTIONS_TINT_COLOR_DESCRIPTION"] =
+	"A cor e a opacidade do tingimento. Com menos opacidade, o ícone do item fica mais visível."
+L["TINT_BAGANATOR_WIDGET_LABEL"] = "Tingimento do lixo (Magic Eraser)"
 
 -- Quest Item Alerts
 L["OPTIONS_QUEST_ALERTS_HEADER"] = "Alertas de itens de missão"
@@ -350,6 +310,10 @@ L["OPTIONS_LIST_ADD_ID_DESCRIPTION"] =
 L["OPTIONS_LIST_ADD_ID_INVALID"] = "Digite um ID de item, ou dê Shift+clique em um link de item no chat."
 L["OPTIONS_LIST_REMOVE"] = "Remover"
 L["OPTIONS_LIST_EMPTY"] = "Esta lista está vazia."
+L["OPTIONS_LIST_CLEAR"] = "Limpar lista"
+L["OPTIONS_LIST_CLEAR_DESCRIPTION"] =
+	"Remove todos os itens desta lista. Um personagem com a lista vazia sai da lista à esquerda, a menos que seja o que você está jogando."
+L["OPTIONS_LIST_CLEAR_CONFIRM"] = "Remover todos os itens desta lista? Isso não pode ser desfeito."
 
 --------------------------------------------------------------------------------
 -- Options: Protect List

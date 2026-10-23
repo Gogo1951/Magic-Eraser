@@ -78,7 +78,7 @@ Features/Manual-Delete.lua
 Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
-Features/Item-Tooltips.lua
+Features/Tint-Junk.lua
 Features/Key-Bindings.lua
 Features/Minimap-Button.lua
 
@@ -98,14 +98,13 @@ Options/Options-Eraser.lua
 Options/Options-Manual-Delete.lua
 Options/Options-Auto-Vend.lua
 Options/Options-Bank-Retrieval.lua
-Options/Options-Item-Tooltips.lua
+Options/Options-Tint-Junk.lua
 Options/Options-Quest-Item-Alerts.lua
 Options/Options-Bag-Warnings.lua
 Options/Options-General.lua
-Options/Options-Your-Current-Bags.lua
 Options/Options-Erasing.lua
 Options/Options-Merchant-Bank.lua
-Options/Options-Alerts-Tooltips.lua
+Options/Options-Alerts-Tints.lua
 Options/Options-Ignore-List.lua
 Options/Options-Erase-List.lua
 Options/Options-Profiles.lua

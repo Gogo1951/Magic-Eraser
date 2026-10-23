@@ -12,11 +12,11 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 💰 **Auto-Vend & Bank Retrieval** // Junk sells itself the moment you open a merchant, and junk hiding in your bank comes home to go along with it.
 
-🔔 **Smart Alerts** // Chat tells you when a quest item is safe to toss, and a tooltip line marks anything ready to go.
+🔔 **Smart Alerts** // Chat tells you when a quest item is safe to toss, and a colored tint marks the junk in your bags and bank.
 
 ✍️ **Manual Delete Assistance** // No more typing DELETE: binning a Rare or better item that no vendor will buy takes a simple Yes or No.
 
-🦺 **Safety First** // Never touches anything green or better, white trade goods, or quest items you still need unless you list them yourself, and your Protect List guards anything you name.
+🦺 **Safety First** // Never touches green-or-better gear, white trade goods, or quest items you still need unless you list them yourself, and your Protect List guards anything you name.
 
 ## Setup
 
@@ -85,8 +85,7 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 * **Erasing** // What counts as junk, a maximum value to erase, Manual Delete Assistance, and Erase Confirmation. Under it:
     * **Erase List** and **Protect List** // One list per character, plus an All Characters list that applies everywhere.
 * **Merchant & Bank** // Auto-Vend and its chat report, and Bank Retrieval.
-* **Alerts & Tooltips** // Tooltip warnings, quest item alerts, and a heads-up as your last free bag slots fill.
-* **Your Current Bags** // Everything you carry, with an Erase and a Protect checkbox on every row.
+* **Alerts & Tints** // A tint on the junk in your bags, quest item alerts, and a heads-up as your last free bag slots fill.
 * **Profiles** // One shared Default profile, so a setting changed once applies on every character.
 * **Feedback & Support** // Ways to help Magic Eraser reach more players, plus the Discord, CurseForge, Wago and GitHub links.
 * **Diagnostic Tools** // Reports to paste into a bug report.
@@ -128,8 +127,6 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 
 ### 🟡 Overlaps
 
-* IceDNicco's [Auto Sell Grey](https://www.curseforge.com/wow/addons/auto-sell-grey)
-* Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 * Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
 * Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 * Sapu94's [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskill-master)
@@ -137,7 +134,7 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 ### 🔴 Alternatives
 
 * moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
-* Kemayo's [DropTheCheapestThing](https://www.curseforge.com/wow/addons/dropthecheapestthing)
+* Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 * Cartas's [Peddler (Junk seller)](https://www.curseforge.com/wow/addons/peddler)
 * jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
 * typicalzergling's [Vendor](https://www.curseforge.com/wow/addons/vendor)
