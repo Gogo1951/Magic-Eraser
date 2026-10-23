@@ -177,12 +177,8 @@ function ns:RefreshDisplay()
 		end
 	end
 
-	--[[
-	    Every bag change lands here, which is exactly when the Your Current Bags
-	    panel's queue goes stale. It is a builder function, so NotifyChange
-	    rebuilds it from the live bags, and costs nothing while it isn't shown.
-	]]
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.YourCurrentBags)
+	-- Every bag change lands here, which is when the bag tints go stale; see Features/Tint-Junk.lua.
+	ns:RefreshTints()
 end
 
 --------------------------------------------------------------------------------

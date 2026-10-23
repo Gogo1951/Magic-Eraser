@@ -13,7 +13,7 @@ local GetColor = ns.GetColor
     as on its own page, so the two copies share one setting, caption and
     tooltip; the Bag-Space Warnings section also passes an onSet this copy
     doesn't. Listed Merchant & Bank first, then Erasing's Maximum Value to Erase,
-    Manual Delete Assistance and Erase Confirmation, then Alerts & Tooltips.
+    Manual Delete Assistance and Erase Confirmation, then Alerts & Tints.
 ]]
 local FEATURE_TOGGLES = {
 	-- { settingKey, nameKey, descKey, onSet }
@@ -26,7 +26,7 @@ local FEATURE_TOGGLES = {
 		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
 	},
 	{ "eraseConfirmEnabled", "OPTIONS_ENABLE_ERASE_CONFIRM", "OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION" },
-	{ "tooltipWarningEnabled", "OPTIONS_ENABLE_TOOLTIPS", "OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION" },
+	{ "tintJunkEnabled", "OPTIONS_ENABLE_TINT", "OPTIONS_ENABLE_TINT_DESCRIPTION", ns.OnTintJunkChanged },
 	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION" },
 	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION" },
 }

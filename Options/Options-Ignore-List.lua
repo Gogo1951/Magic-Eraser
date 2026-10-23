@@ -73,6 +73,10 @@ local function BuildScopeArgs(scopeKey)
 		onRemove = function(itemId)
 			ns:SetIgnoredInScope(scopeKey, itemId, false)
 		end,
+		onClear = function()
+			ns:ClearIgnoreListInScope(scopeKey)
+			ns.LeaveClearedScope(ns.OPTIONS_REGISTRY.IgnoreList, scopeKey)
+		end,
 		addFromBags = true,
 		labels = {
 			fromBagsName = L["OPTIONS_LIST_ADD_FROM_BAGS"],
@@ -82,6 +86,9 @@ local function BuildScopeArgs(scopeKey)
 			addInvalid = L["OPTIONS_LIST_ADD_ID_INVALID"],
 			removeDesc = L["OPTIONS_LIST_REMOVE"],
 			empty = L["OPTIONS_LIST_EMPTY"],
+			clearName = L["OPTIONS_LIST_CLEAR"],
+			clearDesc = L["OPTIONS_LIST_CLEAR_DESCRIPTION"],
+			clearConfirm = L["OPTIONS_LIST_CLEAR_CONFIRM"],
 		},
 		--[[
 		    The Global pane has nowhere to promote to, so its item cell absorbs

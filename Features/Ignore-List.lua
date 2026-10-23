@@ -170,3 +170,14 @@ function ns:SetIgnoredInScope(scopeKey, itemId, isIgnored)
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
 end
+
+function ns:ClearIgnoreListInScope(scopeKey)
+	local ignoreList = ns:GetIgnoreListForScope(scopeKey)
+	if not ignoreList then
+		return
+	end
+	wipe(ignoreList)
+
+	ns:InvalidateCache()
+	ns:RefreshDisplay()
+end

@@ -36,6 +36,7 @@ ns.Version = GetVersion()
     is registered and logged but never handled.
 ]]
 ns.EVENT_NAMES = {
+	"ADDON_LOADED",
 	"PLAYER_LOGIN",
 	"PLAYER_ENTERING_WORLD",
 	"PLAYER_LEVEL_UP",
@@ -47,11 +48,13 @@ ns.EVENT_NAMES = {
 	"MAIL_CLOSED",
 	"BANKFRAME_OPENED",
 	"BANKFRAME_CLOSED",
+	"PLAYERBANKSLOTS_CHANGED",
 	"PLAYER_REGEN_ENABLED",
 	"UPDATE_BINDINGS",
 }
 
 local EVENT_HANDLERS = {
+	ADDON_LOADED = "OnAddonLoaded",
 	PLAYER_LOGIN = "OnPlayerLogin",
 	PLAYER_ENTERING_WORLD = "OnPlayerEnteringWorld",
 	PLAYER_LEVEL_UP = "OnPlayerLevelUp",
@@ -63,6 +66,7 @@ local EVENT_HANDLERS = {
 	MAIL_CLOSED = "OnMailClosed",
 	BANKFRAME_OPENED = "OnBankframeOpened",
 	BANKFRAME_CLOSED = "OnBankframeClosed",
+	PLAYERBANKSLOTS_CHANGED = "OnPlayerbankslotsChanged",
 	PLAYER_REGEN_ENABLED = "OnPlayerRegenEnabled",
 	UPDATE_BINDINGS = "OnUpdateBindings",
 }
@@ -81,6 +85,8 @@ function ns:OnPlayerLogin()
 	-- MIGRATION (remove after 2026-11-30)
 	-- On the raw table, before AceDB picks each character's profile.
 	ns:MigrateSavedVariables()
+	-- MIGRATION (remove after 2026-11-21)
+	ns:MigrateRetiredTooltipSwitch()
 
 	--[[
 	    The third argument puts every character on one shared Default profile,
@@ -138,16 +144,18 @@ function ns:OnPlayerLogin()
 	ns:RefreshDisplay()
 
 	--[[
-	    Install the tooltip hooks after every other add-on has set up its own, not
-	    at file load. Two reasons: (1) another add-on may install
-	    TooltipDataProcessor on a client that lacks it natively (so it must exist
-	    by the time we check), and (2) our secure hook must wrap the outermost
-	    layer other add-ons installed, or a heavier tooltip add-on's
-	    post-processing rebuilds the tooltip after us and clears our line.
-	    PLAYER_LOGIN fires once all add-ons are loaded; the extra C_Timer.After(0)
-	    lets every add-on's own PLAYER_LOGIN setup finish first.
+	    Hook the bag windows once every add-on has loaded, rather than at file
+	    load, so a bag add-on that sorts after Magic Eraser is there to hook.
+	    The extra C_Timer.After(0) lets each one's own PLAYER_LOGIN setup finish
+	    first. A bag add-on loaded later on demand is caught by ADDON_LOADED.
 	]]
-	C_Timer.After(0, ns.SetupTooltipHooks)
+	C_Timer.After(0, ns.SetupTintHooks)
+end
+
+function ns:OnAddonLoaded()
+	if ns.db then
+		ns.SetupTintHooks()
+	end
 end
 
 --[[
@@ -167,7 +175,10 @@ end
     The debounced half of BAG_UPDATE_DELAYED. Nothing can be erased in combat,
     so there the two full bag walks, the mini-map repaint and the quest-starter
     check, wait for PLAYER_REGEN_ENABLED; dropping the cache is enough meanwhile,
-    because hovering the mini-map button rescans on demand.
+    because hovering the mini-map button rescans on demand. The bag tints are
+    the one repaint that goes ahead, at the cost of a single bag walk, so loot
+    taken mid-fight is marked as it lands. Asking the bag windows to redraw
+    (ns:RedrawTintWindows) waits for combat to end with the rest.
 ]]
 local function ProcessBagUpdate()
 	updatePending = false
@@ -175,9 +186,11 @@ local function ProcessBagUpdate()
 
 	if InCombatLockdown() then
 		refreshAfterCombat = true
+		ns:RefreshTints()
 	else
 		ns:RefreshDisplay()
 		ns:CheckQuestStarters()
+		ns:RedrawTintWindows()
 	end
 
 	--[[
@@ -198,6 +211,11 @@ function ns:OnBagUpdateDelayed()
 	end
 end
 
+-- A change to one of the bank's own slots, which needs the same debounced repaint for the bank tints.
+function ns:OnPlayerbankslotsChanged()
+	ns:OnBagUpdateDelayed()
+end
+
 --[[
     A repaint that holds its bag walk for PLAYER_REGEN_ENABLED when asked in
     combat, the same way a bag update does, for the level-up and the item-data
@@ -213,8 +231,9 @@ function ns:RefreshWhenOutOfCombat()
 end
 
 --[[
-    PLAYER_REGEN_ENABLED. Replays the bag walks a fight held back, whether a bag
-    update, a level-up or an item-data retry asked for them, then lets Auto-Vend
+    PLAYER_REGEN_ENABLED. Replays the bag walks and the bag windows' redraw a
+    fight held back, whether a bag update, a level-up or an item-data retry
+    asked for them, then lets Auto-Vend
     resume a merchant pass that combat deferred.
 ]]
 function ns:OnPlayerRegenEnabled()
@@ -222,6 +241,7 @@ function ns:OnPlayerRegenEnabled()
 		refreshAfterCombat = false
 		ns:RefreshDisplay()
 		ns:CheckQuestStarters()
+		ns:RedrawTintWindows()
 	end
 	ns:ResumeDeferredVend()
 end

@@ -325,10 +325,11 @@ end
       onAdd: function(itemId) adding an item to that source
       onRemove: function(itemId) removing one
       onRestore: optional function() putting the list back to its defaults
+      onClear: optional function() emptying the list
       notifyKey: AceConfigRegistry name to NotifyChange on every mutation
       labels: { addName, addHelp, addInvalid, removeDesc, empty }
         plus { restoreName, restoreDesc, restoreConfirm } when onRestore is
-        supplied
+        supplied, and { clearName, clearDesc, clearConfirm } when onClear is
       rowWidth: optional total row budget, default ns.OPTIONS_ROW_WIDTH
       startOrder: optional first order, so a panel can seat its own head above
       actionColumn: optional extra cell per row, either
@@ -340,10 +341,10 @@ end
         box, listing what the player carries that isn't on the list yet
         (labels then carry fromBagsName and fromBagsDesc)
 
-    onRestore is optional rather than part of the shape, so each panel decides
-    whether its lists get Restore Defaults. Today the Erase List is the one
-    caller that passes it, on every scope: a character's list re-seeds, and the
-    All Characters list, which ships empty, is emptied.
+    onRestore and onClear are optional rather than part of the shape, so each
+    panel decides which its lists get. The Erase List passes both on every
+    scope: Restore Defaults re-seeds a character's list and empties the All
+    Characters list, which ships empty. The Protect List passes onClear only.
 ]]
 
 --[[
@@ -394,13 +395,18 @@ function ns:BuildItemListOptions(spec)
 	local order = spec.startOrder or 1
 
 	--[[
-	    Restore Defaults goes last, under the rows, at normal width: the top of a
-	    list is for finding and adding, and a rarely used reset shouldn't be the
-	    first thing there. Ordered far past any row so it lands last however
-	    long the list is.
+	    Restore Defaults and Clear List go last, under the rows, at normal width
+	    and side by side: the top of a list is for finding and adding, and a
+	    rarely used reset shouldn't be the first thing there. Ordered far past
+	    any row so they land last however long the list is. Clear List shows only
+	    while the list holds something.
 	]]
-	if spec.onRestore then
+	local canClear = spec.onClear and next(spec.getSourceTable() or {}) ~= nil
+	if spec.onRestore or canClear then
 		args.spacerRestore = ns.OptionsSpacer(9998)
+	end
+
+	if spec.onRestore then
 		args.restoreDefaults = {
 			type = "execute",
 			name = labels.restoreName,
@@ -410,6 +416,21 @@ function ns:BuildItemListOptions(spec)
 			order = 9999,
 			func = function()
 				spec.onRestore()
+				AceConfigRegistry:NotifyChange(spec.notifyKey)
+			end,
+		}
+	end
+
+	if canClear then
+		args.clearList = {
+			type = "execute",
+			name = labels.clearName,
+			desc = labels.clearDesc,
+			confirm = true,
+			confirmText = labels.clearConfirm,
+			order = 10000,
+			func = function()
+				spec.onClear()
 				AceConfigRegistry:NotifyChange(spec.notifyKey)
 			end,
 		}
@@ -688,6 +709,20 @@ function ns.BuildCharacterListTree(spec)
 	}
 end
 
+--[[
+    Clear List on another character's pane drops that character from the tree,
+    since an empty list is left out of it, so the tree is pointed back at the
+    character being played rather than a pane that no longer exists.
+]]
+function ns.LeaveClearedScope(registryName, scopeKey)
+	if scopeKey == ns.LIST_SCOPE_GLOBAL or scopeKey == ns.db.keys.char then
+		return
+	end
+	local status = LibStub("AceConfigDialog-3.0"):GetStatusTable(registryName)
+	status.groups = status.groups or {}
+	status.groups.selected = ns.db.keys.char
+end
+
 --------------------------------------------------------------------------------
 -- Item Link Widget
 --------------------------------------------------------------------------------
@@ -733,17 +768,12 @@ function itemLinkMethods:OnRelease()
 	self.itemId = nil
 end
 
---[[
-    The text is the item id, optionally followed by ";" and a suffix drawn after
-    the item, such as a stack count ("1234; x20"). The suffix rides in the text
-    because AceConfig hands a dialogControl nothing but its get value.
-]]
+-- The text is the item id, the only thing AceConfig hands a dialogControl.
 function itemLinkMethods:SetText(text)
-	local idText, suffix = tostring(text or ""):match("^(%d+);(.*)$")
-	local itemId = tonumber(idText or text)
+	local itemId = tonumber(text)
 	if itemId then
 		self.itemId = itemId
-		self.label:SetText(ns:GetItemDisplayName(itemId) .. (suffix or ""))
+		self.label:SetText(ns:GetItemDisplayName(itemId))
 	else
 		self.label:SetText(text or "")
 	end

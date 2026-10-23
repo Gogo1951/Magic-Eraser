@@ -243,3 +243,28 @@ function ns:MigrateRetiredSeedReagents()
 	end
 	ClearRetiredSeedReagents(ns.db.char)
 end
+
+-- MIGRATION (remove after 2026-11-21)
+--[[
+    The bag-tooltip warning was replaced by Tint Junk, so its
+    tooltipWarningEnabled setting has nothing left to read it. Cleared from
+    every profile, and from global, where a table saved before storage version
+    2 still holds it: version 2 moves only the keys ns.DATABASE_DEFAULTS.profile
+    still names. No marker, since clearing a dead key twice is harmless.
+]]
+function ns:MigrateRetiredTooltipSwitch()
+	local sv = MagicEraserDB
+	if type(sv) ~= "table" then
+		return
+	end
+	if type(sv.global) == "table" then
+		sv.global.tooltipWarningEnabled = nil
+	end
+	if type(sv.profiles) == "table" then
+		for _, profile in pairs(sv.profiles) do
+			if type(profile) == "table" then
+				profile.tooltipWarningEnabled = nil
+			end
+		end
+	end
+end
