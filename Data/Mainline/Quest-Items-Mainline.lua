@@ -211,9 +211,12 @@ TWO RULES:
   those, and its rows are strictly better: they carry the race and class masks
   that make a wrong-faction starter erasable with no quest state at all. Every
   such row this query found had startquest equal to its granting quest, so the
-  line it wanted to emit was the same quest id with the masks stripped off. It
-  could never fire either way. GetQuestStarterReason returns "quest" on that
-  same id and runs first in the shared branch, see Junk-Rules.lua. The overlap
+  line it wanted to emit was the same quest id with the masks stripped off. The
+  exception is a starter a later quest still needs: Ensorcelled Parchment
+  (3706) starts 551 but is carried on to 554. Give one of those a row here,
+  keyed like any other; while it has one, GetQuestStarterReason in
+  Junk-Rules.lua leaves quest state to this row and answers only for race and
+  class. The overlap
   already in the two tables is deliberate and stays; this rule only stops the
   query proposing new duplicates.
 

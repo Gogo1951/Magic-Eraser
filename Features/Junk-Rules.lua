@@ -31,6 +31,11 @@ end
     Voucher on a Tauren is the cheap case, a Paladin-only Tome of Divinity on a
     Rogue the other.
 
+    The first reason gives way when the item also has a row in
+    ALLOWED_DELETE_QUEST_ITEMS: that row is keyed to the last quest that still
+    needs the item, which can come after the one it starts. Ensorcelled
+    Parchment starts 551 but is carried on to 554.
+
     Masks come from quest_template and are omitted from the data when the quest
     is unrestricted, so a nil or 0 mask always means "no gate here" rather than
     "nobody qualifies".
@@ -67,7 +72,7 @@ function ns:GetQuestStarterReason(itemId)
 		return "questIneligible"
 	end
 
-	if self:IsQuestCompleted(entry[1]) then
+	if not (ns.ALLOWED_DELETE_QUEST_ITEMS or {})[itemId] and self:IsQuestCompleted(entry[1]) then
 		return "quest"
 	end
 
