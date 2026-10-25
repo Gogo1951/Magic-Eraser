@@ -110,7 +110,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Example Item"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant."
+	"Sell and delete junk to free up bag space. Auto-sell grays and vendor trash at any merchant, and destroy completed quest items, outgrown food, drink and ammo, and white gear with one click of the mini-map button. A Protect List keeps what you need."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"

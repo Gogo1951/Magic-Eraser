@@ -114,7 +114,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Oggetto di esempio"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi con un clic sul pulsante della minimappa. Una lista di spazzatura curata a mano protegge ciò che ti serve, mentre la Vendita automatica vende il resto dal prossimo mercante."
+	"Vendi ed elimina la spazzatura per liberare spazio nelle borse. Vendi in automatico gli oggetti grigi e la spazzatura da mercante presso qualsiasi mercante, e distruggi oggetti di missioni completate, cibo, bevande e munizioni ormai superati ed equipaggiamento bianco con un clic sul pulsante della minimappa. Una Lista protetti conserva ciò che ti serve."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra in chat un messaggio di benvenuto di una riga con la versione ogni volta che accedi."
