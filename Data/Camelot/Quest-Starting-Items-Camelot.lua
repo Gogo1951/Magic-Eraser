@@ -140,7 +140,7 @@ Last Validated
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
-		- The quest they start is flagged complete, so the item is spent.
+		- The quest they start is flagged complete, so the item is spent. If the item also has a row in Quest-Items-Camelot.lua, that row decides instead, since a later quest can still need it: Ensorcelled Parchment starts 551 and is carried on to 554.
 		- The player's race or class can never take that quest, so the item is dead weight the moment it drops (an Alliance-only starter in a Horde player's bags, a Paladin tome on a Rogue). That needs no quest state at all.
 	- questId is the quest the item starts. racesMask and classesMask are that quest's race and class limits (quest_template.RequiredRaces and RequiredClasses), left off when it has none.
 		- Race bits: Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32, Gnome 64, Troll 128, BloodElf 512, Draenei 1024. Alliance = 1101, Horde = 690, 0 = no restriction.

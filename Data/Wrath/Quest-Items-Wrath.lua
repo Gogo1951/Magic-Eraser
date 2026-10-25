@@ -211,9 +211,12 @@ TWO RULES:
   those, and its rows are strictly better: they carry the race and class masks
   that make a wrong-faction starter erasable with no quest state at all. Every
   such row this query found had startquest equal to its granting quest, so the
-  line it wanted to emit was the same quest id with the masks stripped off. It
-  could never fire either way. GetQuestStarterReason returns "quest" on that
-  same id and runs first in the shared branch, see Junk-Rules.lua. The overlap
+  line it wanted to emit was the same quest id with the masks stripped off. The
+  exception is a starter a later quest still needs: Ensorcelled Parchment
+  (3706) starts 551 but is carried on to 554. Give one of those a row here,
+  keyed like any other; while it has one, GetQuestStarterReason in
+  Junk-Rules.lua leaves quest state to this row and answers only for race and
+  class. The overlap
   already in the two tables is deliberate and stays; this rule only stops the
   query proposing new duplicates.
 
@@ -384,7 +387,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[7668] = { 2201, 2339 }, -- Bloodstained Journal
 	[6928] = { 1689 }, -- Bloodstone Choker
 	[9282] = { 2930 }, -- Blue Punch Card
-	[12558] = { 4882 }, -- Blue-feathered Necklace
+	[12558] = { 4883 }, -- Blue-feathered Necklace
 	[13159] = { 5206 }, -- Bone Dust
 	[4649] = { 735 }, -- Bonegrip's Note
 	[11169] = { 4005 }, -- Book of Aquor
@@ -415,7 +418,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[5851] = { 1182 }, -- Cozzle's Key
 	[5877] = { 1148 }, -- Cracked Silithid Carapace
 	[7846] = { 2258, 2500 }, -- Crag Coyote Fang
-	[12842] = { 5123 }, -- Crudely-written Log
+	[12842] = { 5128 }, -- Crudely-written Log
 	[5185] = { 921 }, -- Crystal Phial
 	[11482] = { 4285, 4288, 4287 }, -- Crystal Pylon User's Manual
 	[15826] = { 6124, 6129 }, -- Curative Animal Salve
@@ -464,7 +467,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[4529] = { 696 }, -- Enchanted Agate
 	[16603] = { 6481 }, -- Enchanted Resonite Crystal
 	[20023] = { 8235 }, -- Encoded Fragment
-	[3706] = { 551 }, -- Ensorcelled Parchment
+	[3706] = { 554 }, -- Ensorcelled Parchment
 	[11617] = { 4005 }, -- Eridan's Supplies
 	[11682] = { 4441 }, -- Eridan's Vial
 	[10454] = { 3373 }, -- Essence of Eranikus

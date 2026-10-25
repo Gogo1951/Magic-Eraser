@@ -46,10 +46,10 @@ end
 
     Keyed by item id and living for the session, so moving a stack between bags or
     opening a merchant cannot make the same item announce twice.
-    ns:OnQuestTurnedIn reads the same set before its own walk: most starters
-    also carry a row in ALLOWED_DELETE_QUEST_ITEMS under the same quest id, so
-    without that check a starter still in the bags at turn-in would announce
-    twice.
+    ns:OnQuestTurnedIn reads the same set before its own walk, so a starter
+    already announced by the race and class gate never announces twice. A
+    starter that also has a row in ALLOWED_DELETE_QUEST_ITEMS is announced by
+    that walk instead, once the row's quest is done.
 
     An item on either Ignore List never announces, since the eraser will never
     act on it; it is left unmarked, so lifting the protection lets it speak on a
@@ -139,10 +139,9 @@ function ns:OnQuestTurnedIn(questId)
 					local itemId = itemInfo.itemID
 
 					--[[
-					    Skip anything the starter scan above already spoke for.
-					    Nearly every quest starter also has a row here under the
-					    same quest id, so without this the one line arrives twice.
-					    Ignored items never announce.
+					    Skip anything the starter scan above already spoke for, so
+					    the one line never arrives twice. Ignored items never
+					    announce.
 					]]
 					if
 						questItemDatabase[itemId]

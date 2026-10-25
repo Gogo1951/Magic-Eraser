@@ -9,7 +9,9 @@ local _, ns = ...
     [itemId] = { questId, racesMask, classesMask }
 
     questId     the quest the item starts. Erasable once it is flagged
-                complete, because the item is spent.
+                complete, because the item is spent. If the item also has a
+                row in ALLOWED_DELETE_QUEST_ITEMS, that row decides instead:
+                a later quest can still need it.
     racesMask   quest_template.RequiredRaces. Omitted when unrestricted. When
                 the player's race bit is absent the quest can never be taken,
                 so the item is dead weight from the moment it drops and needs
