@@ -1,36 +1,58 @@
 # Magic Eraser
 
-Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
+Sell and delete junk to free up bag space. Auto-sell grays and vendor trash at any merchant, and destroy completed quest items, outgrown food, drink and ammo, and white gear with one click of the mini-map button. A Protect List keeps what you need.
 
-**TL;DR**: For anyone whose bags are always full. It tosses the junk and keeps what you need. Marie Kondo would be so proud!
+**TL;DR:** For anyone whose bags are always full. It tosses the junk, keeps what you need, and Marie Kondo would be so proud!
 
 <img width="800" src="https://github.com/user-attachments/assets/1b3091e3-79b3-443d-8fff-824e322aae3a" />
 
-## Features
+### Example Messages
 
-🧹 **One-Click Cleanup** // The mini-map button shows the cheapest junk in your bags, and one click, or one key press, makes it vanish.
+> **Left-Click, Self:** Magic Eraser // Erased [Broken Fang] x4.
 
-💰 **Auto-Vend & Bank Retrieval** // Junk sells itself the moment you open a merchant, and junk hiding in your bank comes home to go along with it.
+> **Quest Turn-In, Self:** Magic Eraser // [Gold Dust] x2 can now be safely erased. It's left over from a quest you have completed.
 
-🔔 **Smart Alerts** // Chat tells you when a quest item is safe to toss, and a colored tint marks the junk in your bags and bank.
+> **Merchant Visit, Self:** Magic Eraser // Sold 14 items (9 bag slots), worth 2g 35s 40c.
 
-✍️ **Manual Delete Assistance** // No more typing DELETE: binning a Rare or better item that no vendor will buy takes a simple Yes or No.
-
-🦺 **Safety First** // Never touches green-or-better gear, white trade goods, or quest items you still need unless you list them yourself, and your Protect List guards anything you name.
+> **Bank Visit, Self:** Magic Eraser // Pulled 6 items (4 bag slots) out of your bank, worth 48s 12c.
 
 ## Setup
 
 1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
-2. Log in. The mini-map button wears the icon of the cheapest junk in your bags.
-3. Left-click to erase it, or right-click to protect it.
-4. Visit a merchant. Auto-Vend and Bank Retrieval are already on, so the rest sells itself.
+2. Type `/eraser`, or Shift + Middle-Click the mini-map button, to open the Options Interface.
+3. Hover the mini-map button to see your cheapest junk, then left-click to erase it, or right-click to protect it.
+4. Visit a merchant, and the rest sells itself.
 5. _"But wait, there's more... bag space!"_
 
-## How It Works
+## Features
+
+🧹 **One-Click Cleanup** // The mini-map button always wears the icon of your cheapest junk. One click, or one key press, and it's gone.
+
+💰 **Auto-Vend & Bank Retrieval** // Junk sells itself the moment you open a merchant, and junk hiding in your bank comes home to go with it.
+
+🔔 **Smart Alerts** // Chat tells you the moment a quest item is safe to toss, and a tint marks the junk in your bags and bank, Baganator, Bagnon and friends included.
+
+✍️ **Manual Delete Assistance** // No more typing DELETE. Binning a Rare or better item that no vendor will buy takes a simple Yes or No.
+
+🦺 **Safety First** // Never touches green-or-better gear, white trade goods, or quest items you still need unless you list them yourself, and your Protect List guards anything you name.
+
+## Tips & Tricks
+
+### Mini-Map Button
+
+| Action | Effect |
+| --- | --- |
+| Left-Click | Erase the lowest-value junk item. |
+| Right-Click | Add that item to this character's Protect List. |
+| Middle-Click | Clear this character's Protect List. |
+| Shift + Right-Click | Toggle Auto-Vend on or off. |
+| Shift + Middle-Click | Open the Options Interface. |
+
+- Hover the button to see what's next, what it's worth, and a Clutter Report of the bag slots and gold still tied up in junk.
 
 ### What Gets Erased
 
-Six kinds of clutter, plus anything you put on your Erase List. The quest, food and ammo lists are hand-curated.
+Six kinds of clutter, plus anything you put on your Erase List. The quest, food and ammo lists are hand-curated. Everything is configurable!
 
 | Clutter | When it goes |
 | --- | --- |
@@ -42,55 +64,6 @@ Six kinds of clutter, plus anything you put on your Erase List. The quest, food 
 | Gray trash | Whenever a vendor will buy it. |
 
 - The cheapest stack always goes first, and nothing is erased in combat.
-
-### Mini-Map Button
-
-| Action | Effect |
-| --- | --- |
-| Left-Click | Erase the lowest-value flagged item. |
-| Right-Click | Add the flagged item to this character's Protect List. |
-| Middle-Click | Clear this character's Protect List. |
-| Shift + Right-Click | Toggle Auto-Vend on or off. |
-| Shift + Middle-Click | Open the Options Interface. |
-
-- Hover the button to see what's next, what it's worth, and a Clutter Report of the bag slots and gold still tied up in junk.
-
-<img width="250" src="https://github.com/user-attachments/assets/83cc9c8d-e815-4b03-a385-4f3ea06e180d" />
-
-### Auto-Vend & Bank Retrieval
-
-- Auto-Vend sells every bit of flagged junk the moment a merchant window opens.
-- Bank Retrieval pulls junk out of your bank when you open it, as much as your bags can hold.
-- A chat line sums up each visit: what went, and what it was worth.
-
-<img width="250" src="https://github.com/user-attachments/assets/a055e043-2f13-4b51-8f10-3a964951e6a4" />
-
-### Key Bindings
-
-Find these under Key Bindings in the game menu, in the Magic Eraser section.
-
-| Binding | Effect |
-| --- | --- |
-| Erase Lowest-Value Item | Erase the lowest-value flagged item, just like a left-click. |
-| Add Hovered Item to Protect List | Protect the item under your mouse on this character. |
-| Add Hovered Item to Erase List | Flag the item under your mouse as junk on this character. |
-
-<img width="500" src="https://github.com/user-attachments/assets/e12ff917-7e3b-4b2c-81d6-a311e1b3fc81" />
-
-### Options
-
-Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type `/eraser`.
-
-* **General** // The welcome message and mini-map button, a switch for every feature, and your key bindings.
-* **Erasing** // What counts as junk, a maximum value to erase, Manual Delete Assistance, and Erase Confirmation. Under it:
-    * **Erase List** and **Protect List** // One list per character, plus an All Characters list that applies everywhere.
-* **Merchant & Bank** // Auto-Vend and its chat report, and Bank Retrieval.
-* **Alerts & Tints** // A tint on the junk in your bags, quest item alerts, and a heads-up as your last free bag slots fill.
-* **Profiles** // One shared Default profile, so a setting changed once applies on every character.
-* **Feedback & Support** // Ways to help Magic Eraser reach more players, plus the Discord, CurseForge, Wago and GitHub links.
-* **Diagnostic Tools** // Reports to paste into a bug report.
-
-<img width="800" src="https://github.com/user-attachments/assets/4835ad6a-0859-4a21-8c20-658e01cdee0e" />
 
 ## Testing & Localization Status
 
@@ -127,14 +100,16 @@ Find the Options Interface at **Options > AddOns > Magic Eraser**, or just type 
 
 ### 🟡 Overlaps
 
+* MooreaTV's [Better Vendor Price](https://www.curseforge.com/wow/addons/better-vendor-price)
+* Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 * Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
 * Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 * Sapu94's [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskill-master)
 
 ### 🔴 Alternatives
 
+* Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
 * moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
-* Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 * Cartas's [Peddler (Junk seller)](https://www.curseforge.com/wow/addons/peddler)
 * jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
 * typicalzergling's [Vendor](https://www.curseforge.com/wow/addons/vendor)

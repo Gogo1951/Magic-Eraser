@@ -114,7 +114,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume Gegenstände abgeschlossener Quests, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick auf die Minikarten-Schaltfläche weg. Eine kuratierte Ramschliste schützt, was du brauchst, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
+	"Verkaufe und lösche Ramsch, um Taschenplatz freizumachen. Verkaufe graue Gegenstände und Händlermüll automatisch bei jedem Händler, und vernichte Gegenstände abgeschlossener Quests, ausgediente Speisen, Getränke und Munition sowie weiße Ausrüstung mit einem Klick auf die Minikarten-Schaltfläche. Eine Schutzliste behält, was du brauchst."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."

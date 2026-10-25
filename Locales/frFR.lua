@@ -115,7 +115,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Objet d'exemple"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez les objets de quêtes terminées, les consommables devenus inutiles, la camelote de vendeur et les objets gris d'un clic sur le bouton de la minicarte. Une liste de rebut sélectionnée à la main protège ce dont vous avez besoin, tandis que la Vente auto écoule le reste chez votre prochain marchand."
+	"Vendez et supprimez le rebut pour libérer de la place dans vos sacs. Vendez automatiquement les objets gris et la camelote de vendeur chez n'importe quel marchand, et détruisez les objets de quêtes terminées, la nourriture, les boissons et les munitions devenues inutiles ainsi que l'équipement blanc d'un clic sur le bouton de la minicarte. Une Liste de protection garde ce dont vous avez besoin."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Affiche dans la discussion un message de bienvenue d'une ligne, avec la version, à chaque connexion."

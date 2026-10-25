@@ -112,7 +112,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Item de exemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Exclua o lixo e libere espaço nas bolsas instantaneamente. Limpe itens de missões concluídas, consumíveis que você já superou, lixo de comerciante e itens cinza com um clique no botão do minimapa. Uma lista de lixo revisada à mão protege o que você precisa, enquanto a Venda automática vende o resto no próximo comerciante que você visitar."
+	"Venda e exclua o lixo para liberar espaço nas bolsas. Venda automaticamente itens cinza e lixo de comerciante em qualquer comerciante, e destrua itens de missões concluídas, comida, bebida e munição que você já superou e equipamentos brancos com um clique no botão do minimapa. Uma Lista de proteção guarda o que você precisa."
 L["OPTIONS_ENABLE_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."

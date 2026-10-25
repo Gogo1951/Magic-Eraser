@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
+## Notes: Sell and delete junk to free up bag space. Auto-sell grays and vendor trash at any merchant, and destroy completed quest items, outgrown food, drink and ammo, and white gear with one click of the mini-map button. A Protect List keeps what you need.
 ## Author: Gogo1951
 
 ## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga

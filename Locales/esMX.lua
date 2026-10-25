@@ -112,7 +112,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Objeto de ejemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina la basura y libera espacio en las bolsas al instante. Quita objetos de misiones completadas, consumibles que ya has superado, basura de vendedor y objetos grises con un clic en el botón del minimapa. Una lista de basura revisada a mano protege lo que necesitas, mientras que la Auto-venta vende el resto al próximo vendedor que visites."
+	"Vende y elimina la basura para liberar espacio en las bolsas. Vende automáticamente los objetos grises y la basura de vendedor en cualquier vendedor, y destruye objetos de misiones completadas, comida, bebida y munición que ya has superado y equipo blanco con un clic en el botón del minimapa. Una Lista de protegidos conserva lo que necesitas."
 L["OPTIONS_ENABLE_WELCOME"] = "Habilitar mensaje de bienvenida"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Muestra en el chat una línea de bienvenida con la versión cada vez que inicias sesión."
