@@ -40,6 +40,8 @@ Sell and delete junk to free up bag space. Auto-sell grays and vendor trash at a
 
 ### Mini-Map Button
 
+<img width="260" src="https://github.com/user-attachments/assets/5f911dc9-a80e-4363-a38a-1357c25524cf" />
+
 | Action | Effect |
 | --- | --- |
 | Left-Click | Erase the lowest-value junk item. |
