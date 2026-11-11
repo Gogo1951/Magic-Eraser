@@ -175,10 +175,11 @@ local format, insert, floor = string.format, table.insert, math.floor
 
 --[[
     An item link without the square brackets around its name, which is how
-    Magic Eraser shows every item: Options rows and pickers, the mini-map
-    tooltip, the Erase Confirmation dialog and its chat lines. Only the brackets inside
-    a hyperlink's |h...|h text go; the link itself still hovers, clicks and
-    shift-clicks as before, and any other text passes through untouched.
+    Magic Eraser shows an item outside chat: Options rows and pickers, the
+    mini-map tooltip and the Erase Confirmation dialog. Chat lines keep the
+    brackets (ns:PrintMessage). Only the brackets inside a hyperlink's
+    |h...|h text go; the link itself still hovers, clicks and shift-clicks as
+    before, and any other text passes through untouched.
 ]]
 function ns:StripLinkBrackets(text)
 	return (text:gsub("(|H[^|]*|h)%[(.-)%]|h", "%1%2|h"))
