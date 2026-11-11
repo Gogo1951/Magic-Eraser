@@ -39,6 +39,7 @@ L["SOLD_ITEM"] = "已出售 %s%s，价值 %s。"
 L["SOLD_SUMMARY"] = "已出售 %s 件物品（%s 个背包格子），价值 %s。"
 L["SOLD_SUMMARY_ONE_SLOT"] = "已出售 %s 件物品（1 个背包格子），价值 %s。"
 L["SOLD_SUMMARY_ONE_ITEM"] = "已出售 1 件物品（1 个背包格子），价值 %s。"
+L["AUTO_VEND_SHIFT_HINT"] = "打开商人时按住 Shift 可跳过自动售卖。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "自动售卖将在战斗结束后进行。"
 
 -- Bank Retrieval
@@ -111,7 +112,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "示例物品"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"出售并删除杂物，腾出背包空间。在任何商人处自动出售灰色物品和可卖给商人的杂物，点击一下小地图按钮，即可摧毁已完成任务的物品、已经用不上的食物、饮料和弹药，以及白色装备。保护列表会保留你需要的物品。"
+	"删除杂物，瞬间腾出背包空间。点击一下小地图按钮，即可清理已完成任务的物品、已经用不上的消耗品、可卖给商人的杂物和灰色物品。精心整理的杂物清单会保护你需要的物品，自动售卖则会在你下次遇到商人时卖掉其余物品。"
 L["OPTIONS_ENABLE_WELCOME"] = "启用欢迎消息"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登录时在聊天框中显示一行包含版本号的欢迎消息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "启用小地图按钮"
@@ -192,6 +193,9 @@ L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 L["OPTIONS_KIND_WHITE"] = "白色武器与护甲"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"商人会收购的白色武器和护甲。专业工具、衬衣、礼服以及任务仍需要的白色物品会被保留。"
+L["OPTIONS_KIND_CRAFTED"] = "制造的武器与护甲"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"由玩家制造的白色武器与护甲，例如你为小号制作的装备。白色武器与护甲选项不包括这些物品，因此只由此选项决定如何处理它们。"
 L["OPTIONS_KIND_GRAY"] = "灰色垃圾"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "商人会收购的任何灰色物品。"
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =

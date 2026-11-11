@@ -39,6 +39,7 @@ L["SOLD_ITEM"] = "%s%s vendido, no valor de %s."
 L["SOLD_SUMMARY"] = "%s itens vendidos (%s espaços de bolsa), no valor de %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s itens vendidos (1 espaço de bolsa), no valor de %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 item vendido (1 espaço de bolsa), no valor de %s."
+L["AUTO_VEND_SHIFT_HINT"] = "Segure Shift ao abrir um mercador para pular a Venda automática."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "A Venda automática vai vender assim que o combate terminar."
 
 -- Bank Retrieval
@@ -112,7 +113,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Item de exemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Venda e exclua o lixo para liberar espaço nas bolsas. Venda automaticamente itens cinza e lixo de comerciante em qualquer comerciante, e destrua itens de missões concluídas, comida, bebida e munição que você já superou e equipamentos brancos com um clique no botão do minimapa. Uma Lista de proteção guarda o que você precisa."
+	"Exclua o lixo e libere espaço nas bolsas instantaneamente. Limpe itens de missões concluídas, consumíveis que você já superou, lixo de comerciante e itens cinza com um clique no botão do minimapa. Uma lista de lixo revisada à mão protege o que você precisa, enquanto a Venda automática vende o resto no próximo comerciante que você visitar."
 L["OPTIONS_ENABLE_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
@@ -195,6 +196,9 @@ L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 L["OPTIONS_KIND_WHITE"] = "Armas e armaduras brancas"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Armas e armaduras brancas que um comerciante compra. Ferramentas de profissão, camisas, trajes formais e itens brancos de que uma missão ainda precisa são mantidos."
+L["OPTIONS_KIND_CRAFTED"] = "Armas e armaduras fabricadas"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"Armas e armaduras brancas fabricadas por um jogador, como o equipamento que você fez para um personagem alternativo. A opção Armas e armaduras brancas as deixa de fora, então só esta caixa decide o que acontece com elas."
 L["OPTIONS_KIND_GRAY"] = "Lixo cinza"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Qualquer item cinza que um comerciante compre."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] = "Desmarcado, não é lixo: nunca é excluído, vendido nem retirado do banco."

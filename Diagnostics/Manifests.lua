@@ -282,6 +282,45 @@ ns.DIAGNOSTIC_API_CHECKS = {
 				and type(GameTooltip.NumLines) == "function"
 		end,
 	},
+	--[[
+	    The crafted check's bag-slot read (ns.GetSlotTooltipLines): the
+	    C_TooltipInfo getters, or the scan tooltip's SetBagItem, plus the
+	    inventory-slot route the main bank window takes on Classic Era and TBC
+	    Anniversary. ITEM_CREATED_BY is the client's own <Made by %s> line;
+	    without it every white weapon and armor piece is kept.
+	]]
+	{
+		"C_TooltipInfo.GetBagItem",
+		function()
+			return type(C_TooltipInfo) == "table" and type(C_TooltipInfo.GetBagItem) == "function"
+		end,
+	},
+	{
+		"C_TooltipInfo.GetInventoryItem",
+		function()
+			return type(C_TooltipInfo) == "table" and type(C_TooltipInfo.GetInventoryItem) == "function"
+		end,
+	},
+	{
+		"Hidden scan tooltip SetBagItem (legacy)",
+		function()
+			return type(GameTooltip) == "table"
+				and type(GameTooltip.SetBagItem) == "function"
+				and type(GameTooltip.SetInventoryItem) == "function"
+		end,
+	},
+	{
+		"BankButtonIDToInvSlotID (legacy)",
+		function()
+			return type(BankButtonIDToInvSlotID) == "function"
+		end,
+	},
+	{
+		"ITEM_CREATED_BY",
+		function()
+			return type(ITEM_CREATED_BY) == "string" and ITEM_CREATED_BY:find("%s", 1, true) ~= nil
+		end,
+	},
 	{
 		"C_QuestLog.GetTitleForQuestID",
 		function()
@@ -573,7 +612,9 @@ local function TallyContainers(containers)
 				tally.stacks = tally.stacks + 1
 				local name, _, rarity, _, _, _, _, _, _, _, sellPrice = C_Item.GetItemInfo(info.hyperlink)
 				local isProtected = ns:IsIgnored(info.itemID)
-				local reason = name and not isProtected and ns:GetItemDeleteReason(info.itemID, rarity, sellPrice)
+				local reason = name
+					and not isProtected
+					and ns:GetItemDeleteReason(info.itemID, rarity, sellPrice, bag, slot)
 				local value = (sellPrice or 0) * (info.stackCount or 1)
 				if isProtected then
 					tally.protected = tally.protected + 1
@@ -598,6 +639,57 @@ local function TallyContainers(containers)
 	return tally
 end
 
+--[[
+    The crafted check's input for every white weapon and armor piece in some
+    containers, read through the same slot reader (ns.GetSlotTooltipLines) and
+    pattern the check uses, protected per slot as the check is: how many carry
+    the <Made by> line, and how many slots gave back no tooltip at all. A white
+    the white-gear rule takes is kept while its slot reads as unreadable, and
+    kept while crafted unless the crafted kind is on.
+]]
+local ITEM_CLASS_WEAPON = 2
+local ITEM_CLASS_ARMOR = 4
+
+local function HasCraftedLine(lines, pattern)
+	for _, line in ipairs(lines) do
+		if line:find(pattern) then
+			return true
+		end
+	end
+	return false
+end
+
+local function TallyCraftedSlots(containers)
+	local tally = { whites = 0, crafted = 0, unreadable = 0 }
+	local pattern = ns:GetCraftedLinePattern()
+	for _, bag in ipairs(containers) do
+		for slot = 1, C_Container.GetContainerNumSlots(bag) or 0 do
+			local info = C_Container.GetContainerItemInfo(bag, slot)
+			local classId = info and info.quality == 1 and select(6, C_Item.GetItemInfoInstant(info.itemID))
+			if classId == ITEM_CLASS_WEAPON or classId == ITEM_CLASS_ARMOR then
+				tally.whites = tally.whites + 1
+				local isRead, lines = pcall(ns.GetSlotTooltipLines, bag, slot)
+				if not (isRead and type(lines) == "table" and lines[1] and lines[1] ~= "") then
+					tally.unreadable = tally.unreadable + 1
+				elseif pattern and HasCraftedLine(lines, pattern) then
+					tally.crafted = tally.crafted + 1
+				end
+			end
+		end
+	end
+	return tally
+end
+
+local function CraftedSlotsLine(label, tally)
+	return string.format(
+		"%s: %d (%d crafted, %d with an unreadable slot tooltip)",
+		label,
+		tally.whites,
+		tally.crafted,
+		tally.unreadable
+	)
+end
+
 -- The flagged count per reason, in the Erasing panel's order with Erase List entries first.
 local function ReasonBreakdown(tally)
 	local parts = { "manual=" .. (tally.reasons.manual or 0) }
@@ -612,9 +704,10 @@ end
     context the rules read (level, combat, and the race and class bits the
     quest-starter gate compares), the profile every switch is read from, every
     switch that can quiet a feature, whether the white-gear rule has its two
-    reads, the key bindings, which bag windows the junk tint hooked and which
+    reads and the crafted check its pattern, the key bindings, which bag windows the junk tint hooked and which
     loaded bag add-ons it didn't, where /eraser goes,
-    what the bags hold by verdict, the sizes of the curated databases, and the
+    what the bags hold by verdict, the crafted check's reading of every white
+    weapon and armor piece, the sizes of the curated databases, and the
     item the eraser would act on right now. A race or class bit of 0 is one the
     add-on doesn't know, which makes every starter gated on it read as junk.
     Existence/value reads only. The candidate's link has its pipes escaped so
@@ -679,6 +772,7 @@ function ns:BuildEraserContextReport()
 		type(C_Item.GetItemSpell) == "function" and "present" or "MISSING",
 		type(ns.GetItemStats) == "function" and "present" or "MISSING"
 	)
+	lines[#lines + 1] = "Crafted check pattern: " .. (ns:GetCraftedLinePattern() or "MISSING (every white is kept)")
 
 	lines[#lines + 1] = "Key bindings:"
 	for _, bindingName in ipairs(BINDING_NAMES) do
@@ -715,6 +809,7 @@ function ns:BuildEraserContextReport()
 		ReasonBreakdown(bags),
 		bags.overCap
 	)
+	lines[#lines + 1] = CraftedSlotsLine("  White weapons and armor", TallyCraftedSlots(ns.CARRIED_BAGS))
 
 	--[[
 	    Both scopes, because protection is additive: an unexpectedly skipped item
@@ -793,8 +888,9 @@ end
 --[[
     The state behind a "Bank Retrieval moved nothing", "the bag warning never
     fires" or "Auto-Vend stopped" report: each feature's switches, the window
-    it waits on, the pass it may have in flight, what each would act on right
-    now, the free bag slots both bag features budget from, the move budget
+    it waits on, the Shift key that skips a merchant visit, the pass it may
+    have in flight, what each would act on right now, the crafted check's
+    reading of the bank's white gear, the free bag slots both bag features budget from, the move budget
     left after the warning threshold, and the warning's baseline and
     post-loading-screen hold. Existence/value reads only.
 ]]
@@ -816,6 +912,8 @@ function ns:BuildMerchantBankContextReport()
 	lines[#lines + 1] = "  Enabled: " .. YesNo(profile.autoVendEnabled)
 	lines[#lines + 1] = "  Chat report: " .. ChatReport(profile)
 	lines[#lines + 1] = "  Merchant window open: " .. WindowOpen(MerchantFrame)
+	-- Shift held as the merchant opens skips that visit (ns:OnMerchantShow).
+	lines[#lines + 1] = "  Shift held now: " .. YesNo(IsShiftKeyDown())
 	lines[#lines + 1] = "  Selling: " .. YesNo(selling)
 	lines[#lines + 1] = "  Waiting for combat to end: " .. YesNo(vendPending)
 	lines[#lines + 1] = string.format("  Passes used: %d of %d", vendPasses, maxVendPasses)
@@ -856,6 +954,14 @@ function ns:BuildMerchantBankContextReport()
 		)
 	else
 		lines[#lines + 1] = "  Would move now: (read failed: " .. (tostring(bank):gsub("|", "||")) .. ")"
+	end
+	local craftedOk, crafted = pcall(TallyCraftedSlots, ns.BANK_CONTAINERS)
+	if craftedOk then
+		lines[#lines + 1] = CraftedSlotsLine("  White weapons and armor in the bank", crafted)
+	else
+		lines[#lines + 1] = "  White weapons and armor in the bank: (read failed: "
+			.. (tostring(crafted):gsub("|", "||"))
+			.. ")"
 	end
 
 	local baseline, heldUntil = ns:GetBagWarningState()
@@ -937,7 +1043,9 @@ end
     exactly as the features do. The client strings are Blizzard UI labels, so
     each one's id is its own constant name. TYPE_IT_OUT_LINE is the line Manual
     Delete Assistance cuts out of DELETE_GOOD_ITEM: NIL there means this
-    locale's prompt keeps its "type DELETE" instruction. A row whose name loads
+    locale's prompt keeps its "type DELETE" instruction. CRAFTED_LINE_PATTERN
+    is the crafted check's pattern built from ITEM_CREATED_BY: NIL there means
+    this locale keeps every white weapon and armor piece. A row whose name loads
     late (an item or a spell) adds request, which the report calls and polls.
 ]]
 local function UiLabel(constant)
@@ -955,6 +1063,7 @@ ns.DIAGNOSTIC_NAME_LOOKUPS = {
 	-- { constant, kind, id, lookup, request }
 	UiLabel("DELETE_GOOD_ITEM"),
 	UiLabel("DELETE_ITEM_CONFIRM_STRING"),
+	UiLabel("ITEM_CREATED_BY"),
 	UiLabel("ITEM_QUALITY3_DESC"),
 	UiLabel("KEY_BINDINGS"),
 	UiLabel("SETTINGS_KEYBINDINGS_LABEL"),
@@ -968,6 +1077,14 @@ ns.DIAGNOSTIC_NAME_LOOKUPS = {
 		id = "DELETE_GOOD_ITEM",
 		lookup = function()
 			return ns:GetManualDeleteInstructionPattern()
+		end,
+	},
+	{
+		constant = "CRAFTED_LINE_PATTERN",
+		kind = "derived",
+		id = "ITEM_CREATED_BY",
+		lookup = function()
+			return ns:GetCraftedLinePattern()
 		end,
 	},
 }

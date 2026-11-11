@@ -10,9 +10,13 @@ ns.KEEP_EQUIPMENT = {
 	-- FORMAL WEAR AND EFFECTS
 	--------------------------------------------------------------------------------
 
-	[7996] = true, -- Worn Fishing Hat
+	[6834] = true, -- Black Tuxedo
+	[23323] = true, -- Crown of the Fire Festival
+	[6836] = true, -- Dress Shoes
+	[23324] = true, -- Mantle of the Fire Festival
 	[10035] = true, -- Tuxedo Pants
 	[10040] = true, -- White Wedding Dress
+	[7996] = true, -- Worn Fishing Hat
 
 	--------------------------------------------------------------------------------
 	-- QUEST TURN-INS

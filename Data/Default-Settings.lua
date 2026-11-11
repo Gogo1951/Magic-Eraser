@@ -53,6 +53,8 @@ ns.DATABASE_DEFAULTS = {
 			consumable = true,
 			ammo = true,
 			equipment = true,
+			-- Off: gear a player crafted, usually for an alt, is kept unless asked.
+			crafted = false,
 			gray = true,
 		},
 		eraseConfirmEnabled = false,

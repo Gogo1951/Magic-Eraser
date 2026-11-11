@@ -245,9 +245,9 @@ end
     two never disagree: the delete reason and sale price when it is junk. The
     Protect List goes first, so it wins over any Erase List entry. An item whose
     data hasn't loaded yet answers only the third value, true, after asking the
-    client for it.
+    client for it. bag and slot are where it sits, for the crafted check.
 ]]
-function ns:IsBankJunk(itemId, hyperlink)
+function ns:IsBankJunk(itemId, hyperlink, bag, slot)
 	if ns:IsIgnored(itemId) then
 		return nil
 	end
@@ -256,7 +256,7 @@ function ns:IsBankJunk(itemId, hyperlink)
 		C_Item.RequestLoadItemDataByID(itemId)
 		return nil, nil, true
 	end
-	return ns:GetItemDeleteReason(itemId, rarity, sellPrice), sellPrice
+	return ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot), sellPrice
 end
 
 local function ScanBank(generation)
@@ -275,7 +275,7 @@ local function ScanBank(generation)
 			local itemInfo = GetContainerItemInfo(bag, slot)
 			if itemInfo and itemInfo.hyperlink then
 				local itemId = itemInfo.itemID
-				local deleteReason, sellPrice, isItemDataMissing = ns:IsBankJunk(itemId, itemInfo.hyperlink)
+				local deleteReason, sellPrice, isItemDataMissing = ns:IsBankJunk(itemId, itemInfo.hyperlink, bag, slot)
 
 				if isItemDataMissing then
 					isDataMissing = true

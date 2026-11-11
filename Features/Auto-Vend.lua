@@ -287,7 +287,7 @@ function ScanAndVend(generation)
 						isDataMissing = true
 						C_Item.RequestLoadItemDataByID(itemId)
 					elseif sellPrice and sellPrice > 0 then
-						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
+						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)
 
 						if deleteReason then
 							local count = itemInfo.stackCount or 1
@@ -375,6 +375,17 @@ function ns:OnMerchantShow()
 		return
 	end
 
+	--[[
+        Holding Shift as the merchant opens skips Auto-Vend for this visit, for
+        the times you want to buy back, repair or sell by hand. Returning before
+        BeginVisit leaves nothing to sell and no pending vend, so a combat end
+        mid-visit resumes nothing and the close flush finds no summary to print.
+    ]]
+
+	if IsShiftKeyDown() then
+		return
+	end
+
 	BeginVisit()
 
 	--[[
@@ -450,7 +461,8 @@ function ns:OnMerchantClosed()
 					ns:FormatCurrency(summaryValue)
 				)
 			end
-			PrintVendMessage(message)
+			-- Every visit that sells says how to skip the next one (see ns:OnMerchantShow).
+			PrintVendMessage(message .. " " .. L["AUTO_VEND_SHIFT_HINT"])
 		end
 		summaryCount = 0
 		summarySlots = 0

@@ -52,7 +52,7 @@ local function IsJunk(bag, slot, itemId, link)
 	if ns.IS_CARRIED_BAG[bag] then
 		return ns:IsJunkSlot(bag, slot, itemId)
 	end
-	return link and (ns:IsBankJunk(itemId, link))
+	return link and (ns:IsBankJunk(itemId, link, bag, slot))
 end
 
 local function FindIcon(button)

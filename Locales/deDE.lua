@@ -40,6 +40,8 @@ L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
 L["SOLD_SUMMARY"] = "%s Gegenstände (%s Taschenplätze) verkauft, Wert %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) verkauft, Wert %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) verkauft, Wert %s."
+L["AUTO_VEND_SHIFT_HINT"] =
+	"Halte beim Öffnen eines Händlers Umschalt gedrückt, um den Auto-Verkauf zu überspringen."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
 
 -- Bank Retrieval
@@ -114,7 +116,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Verkaufe und lösche Ramsch, um Taschenplatz freizumachen. Verkaufe graue Gegenstände und Händlermüll automatisch bei jedem Händler, und vernichte Gegenstände abgeschlossener Quests, ausgediente Speisen, Getränke und Munition sowie weiße Ausrüstung mit einem Klick auf die Minikarten-Schaltfläche. Eine Schutzliste behält, was du brauchst."
+	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume Gegenstände abgeschlossener Quests, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick auf die Minikarten-Schaltfläche weg. Eine kuratierte Ramschliste schützt, was du brauchst, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
@@ -192,13 +194,16 @@ L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"Gegenstände, die eine Quest starten, die dein Volk oder deine Klasse niemals annehmen kann."
 L["OPTIONS_KIND_FOOD"] = "Ausgediente Speisen und Getränke"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Speisen und Getränke, sobald du zehn Stufen über der Stufe bist, ab der du sie benutzen konntest. Anfängerbrot und -wasser gehen ab Stufe 5."
+	"Speisen und Getränke, sobald du zehn Stufen über der Stufe bist, ab der du sie zum ersten Mal benutzen konntest. Anfängerbrot und -wasser gehen ab Stufe 5."
 L["OPTIONS_KIND_AMMO"] = "Ausgediente Pfeile und Kugeln"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Pfeile und Kugeln, sobald du eine bessere Sorte benutzen kannst, die Händler verkaufen. Die beste Händlermunition für deine Stufe wird nie gelöscht."
 L["OPTIONS_KIND_WHITE"] = "Weiße Waffen und Rüstungen"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Weiße Waffen und Rüstungen, die ein Händler ankauft. Berufswerkzeuge, Hemden, festliche Kleidung und weiße Gegenstände, die eine Quest noch braucht, werden behalten."
+L["OPTIONS_KIND_CRAFTED"] = "Hergestellte Waffen und Rüstungen"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"Weiße Waffen und Rüstungen, die ein Spieler hergestellt hat, etwa Ausrüstung, die du für einen Twink gemacht hast. Die Option Weiße Waffen und Rüstungen lässt sie aus, daher entscheidet nur dieses Kästchen über sie."
 L["OPTIONS_KIND_GRAY"] = "Grauer Müll"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Jeder graue Gegenstand, den ein Händler ankauft."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =

@@ -87,22 +87,25 @@ local function JoinTooltipLine(left, right)
 	return left
 end
 
-local function ReadTooltipData(kind, id)
+local function CollectDataLines(data)
 	local lines = {}
-	local data = TOOLTIP_DATA_GETTERS[kind](id)
 	for _, line in ipairs(data and data.lines or {}) do
 		lines[#lines + 1] = JoinTooltipLine(line.leftText, line.rightText)
 	end
 	return lines
 end
 
-local function ReadScanTooltip(kind, id)
+-- The hidden scan tooltip, cleared and ready for one Set* call.
+local function PrepareScanTooltip()
 	if not scanTooltip then
 		scanTooltip = CreateFrame("GameTooltip", SCAN_TOOLTIP_NAME, nil, "GameTooltipTemplate")
 	end
 	scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 	scanTooltip:ClearLines()
-	scanTooltip:SetHyperlink(kind .. ":" .. id)
+	return scanTooltip
+end
+
+local function CollectScanLines()
 	local lines = {}
 	for index = 1, scanTooltip:NumLines() do
 		local left = _G[SCAN_TOOLTIP_NAME .. "TextLeft" .. index]
@@ -113,7 +116,56 @@ local function ReadScanTooltip(kind, id)
 	return lines
 end
 
+local function ReadTooltipData(kind, id)
+	return CollectDataLines(TOOLTIP_DATA_GETTERS[kind](id))
+end
+
+local function ReadScanTooltip(kind, id)
+	PrepareScanTooltip():SetHyperlink(kind .. ":" .. id)
+	return CollectScanLines()
+end
+
 ns.GetTooltipLines = TOOLTIP_DATA_GETTERS and ReadTooltipData or ReadScanTooltip
+
+--[[
+    The same plain lines, read off one container slot rather than an item id,
+    for what belongs to that one copy alone: the <Made by> line a crafted
+    item carries is never on the item id's tooltip. Same split as above:
+    C_TooltipInfo.GetBagItem where the client ships it, the hidden scan tooltip
+    elsewhere.
+
+    The one slot neither GetBagItem nor SetBagItem reaches is the main bank
+    window on Classic Era and TBC Anniversary (ns.LEGACY_BANK_CONTAINER below),
+    which the client reads as an inventory slot, the way its own BankFrame does.
+    Returns nil when the slot cannot be read at all. Callers protect it.
+]]
+local GetBankInventorySlot = BankButtonIDToInvSlotID
+local SLOT_DATA_GETTERS = C_TooltipInfo
+	and C_TooltipInfo.GetBagItem
+	and { bag = C_TooltipInfo.GetBagItem, inventory = C_TooltipInfo.GetInventoryItem }
+
+function ns.GetSlotTooltipLines(bag, slot)
+	local inventorySlot = bag == ns.LEGACY_BANK_CONTAINER and GetBankInventorySlot and GetBankInventorySlot(slot)
+	if bag == ns.LEGACY_BANK_CONTAINER and not inventorySlot then
+		return nil
+	end
+
+	if SLOT_DATA_GETTERS then
+		if inventorySlot then
+			local getInventory = SLOT_DATA_GETTERS.inventory
+			return getInventory and CollectDataLines(getInventory("player", inventorySlot)) or nil
+		end
+		return CollectDataLines(SLOT_DATA_GETTERS.bag(bag, slot))
+	end
+
+	local tooltip = PrepareScanTooltip()
+	if inventorySlot then
+		tooltip:SetInventoryItem("player", inventorySlot)
+	else
+		tooltip:SetBagItem(bag, slot)
+	end
+	return CollectScanLines()
+end
 
 --------------------------------------------------------------------------------
 -- Formatting
@@ -273,7 +325,8 @@ do
 			tab = tab + 1
 		end
 	else
-		ns.BANK_CONTAINERS[1] = BANK_CONTAINER or -1
+		ns.LEGACY_BANK_CONTAINER = BANK_CONTAINER or -1
+		ns.BANK_CONTAINERS[1] = ns.LEGACY_BANK_CONTAINER
 		for bag = BAG_SLOTS + 1, BAG_SLOTS + (NUM_BANKBAGSLOTS or 6) do
 			ns.BANK_CONTAINERS[#ns.BANK_CONTAINERS + 1] = bag
 		end

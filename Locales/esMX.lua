@@ -40,6 +40,7 @@ L["SOLD_ITEM"] = "%s%s vendido, con un valor de %s."
 L["SOLD_SUMMARY"] = "%s objetos (%s espacios de bolsa) vendidos, con un valor de %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s objetos (1 espacio de bolsa) vendidos, con un valor de %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 objeto (1 espacio de bolsa) vendido, con un valor de %s."
+L["AUTO_VEND_SHIFT_HINT"] = "Mantén presionado Mayús al abrir un vendedor para omitir la Auto-venta."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La Auto-venta venderá en cuanto termine el combate."
 
 -- Bank Retrieval
@@ -112,7 +113,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Objeto de ejemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Vende y elimina la basura para liberar espacio en las bolsas. Vende automáticamente los objetos grises y la basura de vendedor en cualquier vendedor, y destruye objetos de misiones completadas, comida, bebida y munición que ya has superado y equipo blanco con un clic en el botón del minimapa. Una Lista de protegidos conserva lo que necesitas."
+	"Elimina la basura y libera espacio en las bolsas al instante. Quita objetos de misiones completadas, consumibles que ya superaste, basura de vendedor y objetos grises con un clic en el botón del minimapa. Una lista de basura revisada a mano protege lo que necesitas, mientras que la Auto-venta vende el resto al próximo vendedor que visites."
 L["OPTIONS_ENABLE_WELCOME"] = "Habilitar mensaje de bienvenida"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Muestra en el chat una línea de bienvenida con la versión cada vez que inicias sesión."
@@ -195,6 +196,9 @@ L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 L["OPTIONS_KIND_WHITE"] = "Armas y armaduras blancas"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Armas y armaduras blancas que un vendedor compre. Se conservan las herramientas de profesión, las camisas, la ropa formal y los objetos blancos que aún necesita una misión."
+L["OPTIONS_KIND_CRAFTED"] = "Armas y armaduras fabricadas"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"Armas y armaduras blancas fabricadas por un jugador, como el equipo que hiciste para un personaje alternativo. La opción Armas y armaduras blancas las deja fuera, así que solo esta casilla decide qué pasa con ellas."
 L["OPTIONS_KIND_GRAY"] = "Basura gris"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Cualquier objeto gris que un vendedor compre."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] = "Sin marcar, no es basura: nunca se elimina, se vende ni se saca del banco."

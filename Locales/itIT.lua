@@ -41,6 +41,7 @@ L["SOLD_ITEM"] = "%s%s venduto, valore %s."
 L["SOLD_SUMMARY"] = "%s oggetti (%s slot borse) venduti, valore %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s oggetti (1 slot borsa) venduti, valore %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 oggetto (1 slot borsa) venduto, valore %s."
+L["AUTO_VEND_SHIFT_HINT"] = "Tieni premuto Maiusc mentre apri un mercante per saltare la Vendita automatica."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La Vendita automatica venderà al termine del combattimento."
 
 -- Bank Retrieval
@@ -114,7 +115,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Oggetto di esempio"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Vendi ed elimina la spazzatura per liberare spazio nelle borse. Vendi in automatico gli oggetti grigi e la spazzatura da mercante presso qualsiasi mercante, e distruggi oggetti di missioni completate, cibo, bevande e munizioni ormai superati ed equipaggiamento bianco con un clic sul pulsante della minimappa. Una Lista protetti conserva ciò che ti serve."
+	"Elimina la spazzatura e libera spazio nelle borse all'istante. Rimuovi oggetti di missioni completate, consumabili ormai superati, spazzatura da mercante e oggetti grigi con un clic sul pulsante della minimappa. Una lista di spazzatura curata a mano protegge ciò che ti serve, mentre la Vendita automatica vende il resto dal prossimo mercante."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra in chat un messaggio di benvenuto di una riga con la versione ogni volta che accedi."
@@ -197,6 +198,9 @@ L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 L["OPTIONS_KIND_WHITE"] = "Armi e armature bianche"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Armi e armature bianche che un mercante compra. Strumenti di professione, camicie, abiti eleganti e oggetti bianchi ancora richiesti da una missione vengono tenuti."
+L["OPTIONS_KIND_CRAFTED"] = "Armi e armature create"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"Armi e armature bianche create da un giocatore, come l'equipaggiamento che hai creato per un alt. L'opzione Armi e armature bianche le esclude, quindi decide solo questa casella."
 L["OPTIONS_KIND_GRAY"] = "Spazzatura grigia"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Qualsiasi oggetto grigio che un mercante compra."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =

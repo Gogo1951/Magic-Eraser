@@ -6,12 +6,16 @@ ns.KEEP_EQUIPMENT = {
 	-- FORMAL WEAR AND EFFECTS
 	--------------------------------------------------------------------------------
 
+	[6834] = true, -- Black Tuxedo
+	[23323] = true, -- Crown of the Fire Festival
+	[6836] = true, -- Dress Shoes
 	[30760] = true, -- Formal Draenic Robe
 	[38277] = true, -- Haliscan Jacket
 	[38278] = true, -- Haliscan Pantaloons
-	[7996] = true, -- Worn Fishing Hat
+	[23324] = true, -- Mantle of the Fire Festival
 	[10035] = true, -- Tuxedo Pants
 	[10040] = true, -- White Wedding Dress
+	[7996] = true, -- Worn Fishing Hat
 
 	--------------------------------------------------------------------------------
 	-- QUEST TURN-INS

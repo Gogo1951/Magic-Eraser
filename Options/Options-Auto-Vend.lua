@@ -109,6 +109,8 @@ function ns.BuildAutoVendOptions(args)
 	args.exampleAutoVendSummary = ns.OptionsExample(
 		function()
 			return format(L["SOLD_SUMMARY"], "9", "4", ns:FormatCurrency(EXAMPLE_SUMMARY_VALUE))
+				.. " "
+				.. L["AUTO_VEND_SHIFT_HINT"]
 		end,
 		18,
 		function()
