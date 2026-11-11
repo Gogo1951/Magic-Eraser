@@ -41,6 +41,7 @@ L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
 L["SOLD_SUMMARY"] = "%s개 아이템 (가방 %s칸) 판매됨, 가치 %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s개 아이템 (가방 1칸) 판매됨, 가치 %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1개 아이템 (가방 1칸) 판매됨, 가치 %s."
+L["AUTO_VEND_SHIFT_HINT"] = "상인 창을 열 때 Shift를 누르고 있으면 자동 판매를 건너뜁니다."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩니다."
 
 -- Bank Retrieval
@@ -114,7 +115,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "예시 아이템"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"잡동사니를 판매하고 삭제해 가방 공간을 확보하세요. 회색 아이템과 상인에게 팔 물건을 어느 상인에게서나 자동으로 판매하고, 완료된 퀘스트 아이템, 이제는 필요 없는 음식, 음료, 탄약, 흰색 장비를 미니맵 버튼 클릭 한 번으로 파기하세요. 보호 목록이 필요한 아이템을 지켜 줍니다."
+	"잡동사니를 삭제하고 가방 공간을 즉시 확보하세요. 완료된 퀘스트 아이템, 이제는 필요 없는 소모품, 상인에게 팔 물건, 회색 아이템을 미니맵 버튼 클릭 한 번으로 정리하세요. 엄선된 잡동사니 목록이 필요한 아이템을 안전하게 지켜 주고, 자동 판매가 나머지를 다음 상인에게 판매합니다."
 L["OPTIONS_ENABLE_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
@@ -200,6 +201,9 @@ L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 L["OPTIONS_KIND_WHITE"] = "흰색 무기 및 방어구"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"상인이 구매하는 흰색 무기와 방어구입니다. 전문 기술 도구, 셔츠, 정장, 퀘스트에 아직 필요한 흰색 아이템은 남겨 둡니다."
+L["OPTIONS_KIND_CRAFTED"] = "제작한 무기 및 방어구"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"플레이어가 제작한 흰색 무기와 방어구입니다. 부캐릭터를 위해 만든 장비 등이 해당됩니다. 흰색 무기 및 방어구 항목에서는 제외되므로, 이 항목으로만 처리 여부가 정해집니다."
 L["OPTIONS_KIND_GRAY"] = "회색 잡동사니"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "상인이 구매하는 모든 회색 아이템입니다."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =

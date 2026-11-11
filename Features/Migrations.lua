@@ -126,32 +126,6 @@ local function MigrateToVersion2(sv)
 	RetireCharacterProfiles(sv)
 end
 
--- MIGRATION (remove after 2026-11-03)
---[[
-    Storage version 3: the per-kind erase action ("erase", "ask" or "keep" in
-    profile.eraseActions) became a junkKinds checkbox per kind plus one
-    eraseConfirmEnabled switch. Every profile is converted, a player's own
-    one-offs included: a kind set to Keep comes in unchecked, and any kind set
-    to Ask First turns Erase Confirmation on, so nobody loses a confirmation
-    they chose. AceDB stores only values that differ from the defaults, so
-    eraseActions holds nothing but "ask" and "keep" rows.
-]]
-local function MigrateToVersion3(sv)
-	for _, profile in pairs(sv.profiles or {}) do
-		if type(profile) == "table" and type(profile.eraseActions) == "table" then
-			for reason, action in pairs(profile.eraseActions) do
-				if action == "keep" then
-					profile.junkKinds = profile.junkKinds or {}
-					profile.junkKinds[reason] = false
-				elseif action == "ask" then
-					profile.eraseConfirmEnabled = true
-				end
-			end
-			profile.eraseActions = nil
-		end
-	end
-end
-
 -- MIGRATION (remove after 2026-11-30)
 --[[
     storageVersion marks which steps have run. It is needed rather than
@@ -180,10 +154,6 @@ function ns:MigrateSavedVariables()
 
 	if version < 2 then
 		MigrateToVersion2(sv)
-	end
-	-- MIGRATION (remove after 2026-11-03)
-	if version < 3 then
-		MigrateToVersion3(sv)
 	end
 
 	sv.global.storageVersion = STORAGE_VERSION

@@ -247,6 +247,7 @@ ns.DELETE_PRIORITY = {
 	consumable = 3,
 	ammo = 3,
 	equipment = 3,
+	crafted = 3,
 }
 
 --------------------------------------------------------------------------------
@@ -276,6 +277,10 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
     delete reason ns:GetItemDeleteReason returns. "manual" is absent on
     purpose: an Erase List entry is always junk.
 
+    "crafted" is the white-gear rule's match with a <Made by> line on the
+    stack's own tooltip, split out so gear made for an alt survives a trip to
+    the vendor. It is the one kind unchecked by default (Data/Default-Settings.lua).
+
     The rows are listed in the order the panel draws them, each with the locale
     keys for its caption and its tooltip. They are string values rather than
     literal L["..."] reads; search the key name, not the L[] form.
@@ -287,5 +292,6 @@ ns.ERASE_KINDS = {
 	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION" },
 	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION" },
 	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION" },
+	{ "crafted", "OPTIONS_KIND_CRAFTED", "OPTIONS_KIND_CRAFTED_DESCRIPTION" },
 	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION" },
 }

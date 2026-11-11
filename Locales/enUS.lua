@@ -38,6 +38,7 @@ L["SOLD_ITEM"] = "Sold %s%s, worth %s."
 L["SOLD_SUMMARY"] = "Sold %s items (%s bag slots), worth %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "Sold %s items (1 bag slot), worth %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "Sold 1 item (1 bag slot), worth %s."
+L["AUTO_VEND_SHIFT_HINT"] = "Hold Shift when opening a merchant to skip Auto-Vend."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
 
 -- Bank Retrieval
@@ -110,7 +111,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Example Item"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Sell and delete junk to free up bag space. Auto-sell grays and vendor trash at any merchant, and destroy completed quest items, outgrown food, drink and ammo, and white gear with one click of the mini-map button. A Protect List keeps what you need."
+	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
@@ -183,13 +184,16 @@ L["OPTIONS_KIND_STARTER"] = "Dead-End Quest Starters"
 L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] = "Items that start a quest your race or class can never take."
 L["OPTIONS_KIND_FOOD"] = "Outgrown Food & Drink"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Food and drink ten levels past the level you could first use it. Starter bread and water go at level 5."
+	"Food and drink ten levels past the level you could first use them. Starter bread and water go at level 5."
 L["OPTIONS_KIND_AMMO"] = "Outgrown Arrows & Bullets"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Arrows and bullets the moment you can use a better kind sold by vendors. The best vendor ammo for your level is never erased."
 L["OPTIONS_KIND_WHITE"] = "White Weapons & Armor"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"White weapons and armor a vendor will buy. Profession tools, shirts, formal wear and whites a quest still needs are kept."
+L["OPTIONS_KIND_CRAFTED"] = "Crafted Weapons & Armor"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"White weapons and armor a player crafted, such as gear you made for an alt. White Weapons & Armor leaves these out, so only this box decides them."
 L["OPTIONS_KIND_GRAY"] = "Gray Trash"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Any gray item a vendor will buy."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] = "Unchecked, it isn't junk: never erased, sold or pulled from the bank."
@@ -213,9 +217,9 @@ L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Manual Delete Assistance"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
 	"Turns Manual Delete Assistance on or off. The game still asks Yes or No; only the typing goes away."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
-	"Items with No Sale Value simplifies only items no vendor will buy. All Items simplifies every typed prompt."
+	"Items With No Sale Value simplifies only items no vendor will buy. All Items simplifies every typed prompt."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
-L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Items with No Sale Value"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Items With No Sale Value"
 
 -- Erase Confirmation
 L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Erase Confirmation"
@@ -293,7 +297,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "All Characters"
-L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Add from Bags"
+L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Add From Bags"
 L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"Pick anything you're carrying. The bags close when the Options Interface opens, so this stands in for dragging an item here."
 L["OPTIONS_LIST_ADD_ID"] = "Add by Item ID"

@@ -120,7 +120,7 @@ local function ForEachCandidate(visit)
 					else
 						local count = itemInfo.stackCount or 1
 						local totalValue = (sellPrice or 0) * count
-						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice)
+						local deleteReason = ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)
 
 						if deleteReason and not ns:IsOverValueCap(totalValue, deleteReason) then
 							visit({
@@ -251,7 +251,7 @@ local function IsCandidateCurrent(item)
 	if not name then
 		return false
 	end
-	local deleteReason = ns:GetItemDeleteReason(item.itemId, rarity, sellPrice)
+	local deleteReason = ns:GetItemDeleteReason(item.itemId, rarity, sellPrice, item.bag, item.slot)
 	return deleteReason ~= nil and not ns:IsOverValueCap((sellPrice or 0) * item.count, deleteReason)
 end
 

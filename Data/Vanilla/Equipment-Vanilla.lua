@@ -10,10 +10,14 @@ ns.KEEP_EQUIPMENT = {
 	-- FORMAL WEAR AND EFFECTS
 	--------------------------------------------------------------------------------
 
-	[7996] = true, -- Worn Fishing Hat
+	[6834] = true, -- Black Tuxedo
+	[23323] = true, -- Crown of the Fire Festival
+	[6836] = true, -- Dress Shoes
+	[23324] = true, -- Mantle of the Fire Festival
 	[10036] = true, -- Tuxedo Jacket
 	[10035] = true, -- Tuxedo Pants
 	[10040] = true, -- White Wedding Dress
+	[7996] = true, -- Worn Fishing Hat
 
 	--------------------------------------------------------------------------------
 	-- QUEST TURN-INS
@@ -55,6 +59,7 @@ Notes
 	- QUEST TURN-INS: the rule can't see quest data, so a white item a quest takes back would be erased or sold before the player hands it in. A row here keeps it for good. One Quest-Items also lists still goes once its quest is done: that check runs first, so this table never sees it.
 	- The QUEST TURN-INS rows are Wowhead's white quest turn-in gear with a sell price for this client, from the listing below, read 2026-10-02.
 	- Rechecked against the tables below: white gear the rule would judge (its weapon and armor subclasses, item level above 1, no quest binding, no Use: spell) that a QuestieDB quest takes as an objective and that sells, or that has an Equip: effect. That finds every QUEST TURN-INS row, the Worn Fishing Hat and the Tuxedo Jacket. The test chests it also finds are left out, and so is Season of Discovery's Geode Hammer (220912).
+	- Item level 1 rechecked 2026-11-11 against Wowhead Forever's white weapons and armor at that level: Classic starter boots and the Worn Wooden Shield and Buckler are trash, and Black Tuxedo, Dress Shoes and the Fire Festival crown and mantle are kept above. The rest of that list is unobtainable developer gear.
 
 SQL (CMaNGOS)
 	TODO: Add SQL Query

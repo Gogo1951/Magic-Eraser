@@ -41,6 +41,7 @@ L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
 L["SOLD_SUMMARY"] = "%s objets (%s emplacements de sac) vendus, valeur %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s objets (1 emplacement de sac) vendus, valeur %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 objet (1 emplacement de sac) vendu, valeur %s."
+L["AUTO_VEND_SHIFT_HINT"] = "Maintenez Maj en ouvrant un marchand pour ignorer la Vente auto."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La Vente auto s'effectuera à la fin du combat."
 
 -- Bank Retrieval
@@ -115,7 +116,7 @@ L["OPTIONS_EXAMPLE_ITEM"] = "Objet d'exemple"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Vendez et supprimez le rebut pour libérer de la place dans vos sacs. Vendez automatiquement les objets gris et la camelote de vendeur chez n'importe quel marchand, et détruisez les objets de quêtes terminées, la nourriture, les boissons et les munitions devenues inutiles ainsi que l'équipement blanc d'un clic sur le bouton de la minicarte. Une Liste de protection garde ce dont vous avez besoin."
+	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez les objets de quêtes terminées, les consommables devenus inutiles, la camelote de vendeur et les objets gris d'un clic sur le bouton de la minicarte. Une liste de rebut sélectionnée à la main protège ce dont vous avez besoin, tandis que la Vente auto écoule le reste chez votre prochain marchand."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Affiche dans la discussion un message de bienvenue d'une ligne, avec la version, à chaque connexion."
@@ -191,13 +192,16 @@ L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
 	"Objets qui démarrent une quête que votre race ou votre classe ne pourra jamais accepter."
 L["OPTIONS_KIND_FOOD"] = "Nourriture et boissons dépassées"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Nourriture et boissons dix niveaux au-delà du niveau où vous pouviez les utiliser. Le pain et l'eau de départ partent au niveau 5."
+	"Nourriture et boissons dix niveaux au-delà du niveau où vous pouviez les utiliser pour la première fois. Le pain et l'eau de départ partent au niveau 5."
 L["OPTIONS_KIND_AMMO"] = "Flèches et balles dépassées"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Flèches et balles dès que vous pouvez utiliser un meilleur type vendu par les marchands. Les meilleures munitions de marchand pour votre niveau ne sont jamais supprimées."
 L["OPTIONS_KIND_WHITE"] = "Armes et armures blanches"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
 	"Armes et armures blanches qu'un marchand achète. Les outils de métier, les chemises, les tenues de soirée et les objets blancs encore utiles à une quête sont conservés."
+L["OPTIONS_KIND_CRAFTED"] = "Armes et armures fabriquées"
+L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
+	"Armes et armures blanches fabriquées par un joueur, comme l'équipement que vous avez créé pour un reroll. L'option Armes et armures blanches les laisse de côté, donc seule cette case en décide."
 L["OPTIONS_KIND_GRAY"] = "Camelote grise"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Tout objet gris qu'un marchand achète."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =

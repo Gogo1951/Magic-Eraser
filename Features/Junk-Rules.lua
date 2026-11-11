@@ -168,8 +168,11 @@ end
         profession tools and 20 the fishing poles; armor subclass 0 holds rings,
         necks, trinkets, off-hand frills, shirts and tabards.
       - Shirt and tabard slots are vanity whatever subclass they carry.
-      - Item level 1 is developer junk. Real starter gear begins at 2. Formal
-        wear with real armor sits higher, so ns.KEEP_EQUIPMENT keeps it.
+      - An item level of 0, or none at all, is kept as unreadable. Item level
+        1 is not a keep signal: every Classic starter boot and the Worn
+        Wooden Shield and Buckler sit there. The ilvl-1 whites worth keeping
+        (Black Tuxedo, Dress Shoes, the Fire Festival crown and mantle) are
+        in ns.KEEP_EQUIPMENT with the rest of the formal wear.
       - Quest binding or an on-use spell (Borrowed Broom) marks an item as
         something other than trash.
       - The weapon has to deal damage and the armor has to carry armor, read
@@ -244,7 +247,7 @@ local function ReadWhiteGearVerdict(itemId)
 	if not (isWeapon or isArmor) or VANITY_SLOTS[equipLoc] then
 		return false
 	end
-	if (itemLevel or 0) <= 1 or bindType == BIND_TYPE_QUEST then
+	if (itemLevel or 0) < 1 or bindType == BIND_TYPE_QUEST then
 		return false
 	end
 
@@ -272,6 +275,57 @@ local function IsWhiteGearTrash(itemId)
 	return verdict == true
 end
 
+--[[
+    Crafted gear is the white-gear rule's match that someone made with a
+    profession: the stack's own tooltip carries the client's <Made by %s>
+    line (ITEM_CREATED_BY). Low tailoring, leatherworking and blacksmithing
+    gear is white, so without this split a Linen Cloak made for an alt reads
+    as trash and sells the moment the crafter opens a vendor for more thread.
+    The "crafted" kind is unchecked by default, so that gear is kept.
+
+    The line belongs to one copy, not to the item id, so it is read off the
+    bag slot (ns.GetSlotTooltipLines) on every ask rather than remembered: the
+    same slot can hold a crafted copy one moment and a looted one the next.
+    Only items the white-gear rule already took are read, which is a handful
+    per scan. The pattern comes from the client's own string, so every locale
+    matches with no strings of ours.
+
+    Every failure keeps the item: no pattern, no slot, a read that throws, or
+    a tooltip that came back empty answers nil, and the rule then names no
+    reason at all, so the item is kept until a later scan can read it.
+]]
+local CREATED_BY_PATTERN
+do
+	local createdBy = type(ITEM_CREATED_BY) == "string" and ITEM_CREATED_BY
+	if createdBy and createdBy:find("%%%d?%$?s") then
+		createdBy = createdBy:gsub("%%%d?%$?s", "\001")
+		createdBy = createdBy:gsub("[%^%$%(%)%.%[%]%*%+%-%?%%]", "%%%0")
+		CREATED_BY_PATTERN = (createdBy:gsub("\001", ".+"))
+	end
+end
+
+-- The pattern the crafted check matches, for the Diagnostic Tools Eraser Context.
+function ns:GetCraftedLinePattern()
+	return CREATED_BY_PATTERN
+end
+
+-- True when the copy in this slot was crafted, false when it wasn't, nil when that can't be told yet.
+local function IsCraftedSlot(bag, slot)
+	if not (CREATED_BY_PATTERN and bag and slot and ns.GetSlotTooltipLines) then
+		return nil
+	end
+	local isRead, lines = pcall(ns.GetSlotTooltipLines, bag, slot)
+	if not (isRead and type(lines) == "table" and lines[1] and lines[1] ~= "") then
+		return nil
+	end
+	for _, line in ipairs(lines) do
+		if line:find(CREATED_BY_PATTERN) then
+			return true
+		end
+	end
+	return false
+end
+
 --------------------------------------------------------------------------------
 -- Junk Kinds
 --------------------------------------------------------------------------------
@@ -279,15 +333,22 @@ end
 --[[
     Whether the player counts one kind as junk, from the Erasing panel's
     checkboxes: see ns.ERASE_KINDS in Data/Data.lua. An Erase List entry has no
-    checkbox and is always junk, and anything unreadable counts as junk, the
-    default for every kind.
+    checkbox and is always junk. A kind with no saved answer takes its default
+    from Data/Default-Settings.lua, which is junk for every kind but "crafted",
+    and anything else unreadable counts as junk.
 ]]
+local DEFAULT_JUNK_KINDS = ns.DATABASE_DEFAULTS.profile.junkKinds
+
 function ns:IsJunkKind(deleteReason)
 	if deleteReason == "manual" then
 		return true
 	end
 	local kinds = ns.db and ns.db.profile.junkKinds
-	return not (kinds and kinds[deleteReason] == false)
+	local isJunk = kinds and kinds[deleteReason]
+	if isJunk == nil then
+		isJunk = DEFAULT_JUNK_KINDS[deleteReason]
+	end
+	return isJunk ~= false
 end
 
 --[[
@@ -295,7 +356,7 @@ end
     the player unchecked, so this only ever answers what the curated data and
     the gray and white-gear rules say.
 ]]
-local function GetRuleDeleteReason(itemId, rarity, sellPrice)
+local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	--[[
 	    The Erase List first, and outside the chain below rather than a branch in
 	    it: a listed item is the player's own instruction, so it matches whatever
@@ -347,7 +408,11 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice)
 			return "ammo"
 		end
 	elseif rarity == 1 and (sellPrice or 0) > 0 and IsWhiteGearTrash(itemId) then
-		return "equipment"
+		local isCrafted = IsCraftedSlot(bag, slot)
+		if isCrafted == nil then
+			return nil
+		end
+		return isCrafted and "crafted" or "equipment"
 	elseif rarity == 0 and (sellPrice or 0) > 0 then
 		return "gray"
 	end
@@ -360,9 +425,13 @@ end
     player unchecked is not junk anywhere, so it drops out here rather than at
     each caller: never erased, never sold, never pulled from the bank, and
     never tinted in the bags.
+
+    bag and slot name the container slot the item sits in. Only the crafted
+    check reads them, and a white weapon or armor piece asked about without
+    them is kept, since nothing else can tell a crafted copy from a looted one.
 ]]
-function ns:GetItemDeleteReason(itemId, rarity, sellPrice)
-	local deleteReason = GetRuleDeleteReason(itemId, rarity, sellPrice)
+function ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)
+	local deleteReason = GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	if deleteReason and not ns:IsJunkKind(deleteReason) then
 		return nil
 	end
