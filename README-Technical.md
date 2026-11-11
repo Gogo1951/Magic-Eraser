@@ -291,7 +291,7 @@ Magic-Eraser/
 - `%s%s` in `CONFIRM_ERASE`, `ERASED_ITEM`, `SOLD_ITEM`, `QUEST_ITEM_READY`, `QUEST_STARTER_UNAVAILABLE` is one unit: link, then `" xN"` or empty.
 - Counts and money arrive pre-formatted (`ns:FormatCommaNumber`, `ns:FormatCurrency`) as `%s`; the raw `%d`s never get commas.
 - Count of one has its own key (`*_ONE`, `*_ONE_ITEM`, `*_ONE_SLOT`, `BAGS_FULL` for zero).
-- Links shown without brackets: `ns:StripLinkBrackets`, applied by `ns:PrintMessage`, the tooltip, the popup and `ns:GetItemDisplayName`.
+- Links shown without brackets: `ns:StripLinkBrackets`, applied by the tooltip, the popup and `ns:GetItemDisplayName`. Chat lines from `ns:PrintMessage` keep them.
 - Game names never go in `Locales/`: items by id, classes and races by token, Blizzard labels from GlobalStrings.
 
 ## Files That Change Together
