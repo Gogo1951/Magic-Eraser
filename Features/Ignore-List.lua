@@ -1,6 +1,5 @@
 local _, ns = ...
-
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+local L = ns.L
 
 --------------------------------------------------------------------------------
 -- Ignore List
@@ -34,39 +33,37 @@ function ns:IsIgnored(itemId)
 end
 
 --[[
-    The mini-map button's right-click (toggle) and middle-click (clear) act on
-    the current character's list only, which is exactly what the mini-map
-    tooltip's Ignore List section shows -- so both keep meaning what the player just read.
-    The account-wide list is edited from the Ignore List panel instead, through
-    ns:SetIgnoredInScope below.
+    The mini-map menu's Protect List rows (click one to remove it) and its Clear
+    Protect List (the row or the button's Middle-Click) act on the current
+    character's list only, which is exactly what the menu's Protect List shows
+    -- so both keep meaning what the player just read. The account-wide list is
+    edited from the Protect List panel instead, through ns:SetIgnoredInScope
+    below.
 
-    Both repaint that panel as well. It is registered as a builder function, so a
-    repaint rebuilds its rows straight off the live lists -- but something has to
-    ask for one, and an edit made outside the panel while it is on screen, a
-    mini-map click here or a key press through ns:AddToIgnoreList below, has
-    nothing else that does. Opening the panel builds it, and an
-    edit made in the panel is followed by AceConfigDialog re-opening the frame,
-    which is why ns:SetIgnoredInScope does not repeat this; without it here, the
-    panel would keep showing the rows it drew when it opened until the player
-    closed and reopened it. NotifyChange costs nothing while nothing is
-    displaying the table.
+    Both end in ns.RefreshSettings, which repaints that panel as well. It is
+    registered as a builder function, so a repaint rebuilds its rows straight
+    off the live lists -- but something has to ask for one, and an edit made
+    outside the panel while it is on screen, a menu click here or a key press
+    through ns:AddToIgnoreList below, has nothing else that does. An edit made
+    in the panel is refreshed by the item-list builder in
+    Options/Options-Utilities.lua, which is why ns:SetIgnoredInScope does not
+    repeat this; without it here, the panel would
+    keep showing the rows it drew when it opened until the player closed and
+    reopened it. NotifyChange costs nothing while nothing is displaying the
+    table.
+
+    True when the item was on this character's list and is now off it.
 ]]
-function ns:ToggleIgnore(itemId)
-	if not itemId then
-		return
-	end
+function ns:RemoveFromIgnoreList(itemId)
 	local ignoreList = ns:GetIgnoreList()
-	if not ignoreList then
-		return
+	if not (itemId and ignoreList and ignoreList[itemId]) then
+		return false
 	end
-	if ignoreList[itemId] then
-		ignoreList[itemId] = nil
-	else
-		ignoreList[itemId] = true
-	end
+	ignoreList[itemId] = nil
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
+	ns.RefreshSettings()
+	return true
 end
 
 function ns:ClearIgnoreList()
@@ -76,19 +73,49 @@ function ns:ClearIgnoreList()
 	end
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
+	ns.RefreshSettings()
+end
+
+--[[
+    Clear Protect List from the mini-map menu's row or the button's
+    Middle-Click asks first, in the words the Protect List page's Clear List
+    uses: the row sits right under the item rows, where a stray click is easy,
+    and everything it protected could be erased or sold on the very next click.
+    With nothing on the list there is nothing to ask about. preferredIndex = 3
+    avoids tainting the shared dialog stack.
+]]
+StaticPopupDialogs["MAGICERASER_CLEAR_PROTECT_LIST"] = { -- luacheck: ignore 122
+	text = L["OPTIONS_LIST_CLEAR_CONFIRM"],
+	button1 = YES,
+	button2 = NO,
+	OnAccept = function()
+		ns:ClearIgnoreList()
+	end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	showAlert = true,
+	preferredIndex = 3,
+}
+
+function ns:ConfirmClearIgnoreList()
+	local ignoreList = ns:GetIgnoreList()
+	if ignoreList and next(ignoreList) ~= nil then
+		StaticPopup_Show("MAGICERASER_CLEAR_PROTECT_LIST")
+	end
 end
 
 --[[
     The Add Hovered Item to Ignore List binding (Features/Key-Bindings.lua), onto
-    this character's list: the list the mini-map right-click writes, so a click
+    this character's list: the list the mini-map Right-Click writes, so a click
     and a key press land in one place, and the account-wide list stays something
     the player chooses in the panel.
 
     Add-only, never a toggle. A second press reports the item is already
     protected rather than taking the protection away, since that is the one edit
     where a stray press costs the player an item they meant to keep; removing
-    stays in the panel. An item either list protects counts as already there.
+    takes a click on the item's own row, in the menu or the panel. An item
+    either list protects counts as already there.
 
     Protecting an item also retires this character's Erase List row for it. The
     Ignore List always wins, so the row could no longer change any outcome --
@@ -98,7 +125,7 @@ end
 
     Returns "already", "moved" or "added" for the caller's chat line, or nil
     before the database exists. A key press is an edit made outside both panels,
-    so this repaints whichever of them it changed.
+    so this ends in ns.RefreshSettings, which repaints both and the menu.
 ]]
 function ns:AddToIgnoreList(itemId)
 	local ignoreList = ns:GetIgnoreList()
@@ -119,10 +146,7 @@ function ns:AddToIgnoreList(itemId)
 
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.IgnoreList)
-	if wasOnEraseList then
-		AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.EraseList)
-	end
+	ns.RefreshSettings()
 
 	return wasOnEraseList and "moved" or "added"
 end

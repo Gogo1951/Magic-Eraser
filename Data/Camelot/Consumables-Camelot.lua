@@ -27,7 +27,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[19306] = { 35 }, -- Crunchy Frog
 	[4599] = { 35 }, -- Cured Ham Steak
 	[414] = { 5 }, -- Dalaran Sharp
-	[13888] = { 45 }, -- Darkclaw Lobster
 	[19223] = { 1 }, -- Darkmoon Dog
 	[12238] = { 5 }, -- Darkshore Grouper
 	[2070] = { 1 }, -- Darnassian Bleu
@@ -68,7 +67,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[17406] = { 5 }, -- Holiday Cheesewheel
 	[8950] = { 45 }, -- Homemade Cherry Pie
 	[249796] = { 45 }, -- Hyjal Berries
-	[13893] = { 45 }, -- Large Raw Mightfish
 	[7097] = { 1 }, -- Leg Meat
 	[248613] = { 15 }, -- Lightning in a Bottle
 	[11415] = { 45 }, -- Mixed Berries
@@ -84,22 +82,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[252030] = { 5 }, -- Pungent Skycheddar
 	[21033] = { 45 }, -- Radish Kimchi
 	[4608] = { 35 }, -- Raw Black Truffle
-	[6291] = { 1 }, -- Raw Brilliant Smallfish
-	[6308] = { 15 }, -- Raw Bristle Whisker Catfish
-	[13754] = { 35 }, -- Raw Glossy Mightfish
-	[6317] = { 5 }, -- Raw Loch Frenzy
-	[6289] = { 5 }, -- Raw Longjaw Mud Snapper
-	[8365] = { 25 }, -- Raw Mithril Head Trout
-	[13759] = { 35 }, -- Raw Nightfin Snapper
-	[6361] = { 5 }, -- Raw Rainbow Fin Albacore
-	[13758] = { 35 }, -- Raw Redgill
-	[6362] = { 25 }, -- Raw Rockscale Cod
-	[6303] = { 1 }, -- Raw Slitherskin Mackerel
-	[8959] = { 45 }, -- Raw Spinefin Halibut
-	[4603] = { 35 }, -- Raw Spotted Yellowtail
-	[13756] = { 35 }, -- Raw Summer Bass
-	[13760] = { 35 }, -- Raw Sunscale Salmon
-	[13889] = { 45 }, -- Raw Whitescale Salmon
 	[252032] = { 5 }, -- Red Delicious Stormapple
 	[19224] = { 25 }, -- Red Hot Wings
 	[4605] = { 5 }, -- Red-speckled Mushroom
@@ -138,7 +120,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[3771] = { 25 }, -- Wild Hog Shank
 	[16169] = { 25 }, -- Wild Ricecake
 	[22324] = { 45 }, -- Winter Kimchi
-	[13755] = { 35 }, -- Raw Winter Squid
 	[278569] = { 1 }, -- Yesterday's Leftovers
 	[252023] = { 1 }, -- Zaalanarr Sharp
 
@@ -188,15 +169,13 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[20226] = { 25 }, -- Highlander's Field Ration
 	[20227] = { 35 }, -- Highlander's Iron Ration
 	[262433] = { 50 }, -- Ketharas' Hyjal Stew
-	[21153] = { 30 }, -- Raw Greater Sagefish
-	[21071] = { 10 }, -- Raw Sagefish
 	[3448] = { 5 }, -- Senggin Root
 	[19060] = { 45 }, -- Warsong Gulch Enriched Ration
 	[19062] = { 25 }, -- Warsong Gulch Field Ration
 	[19061] = { 35 }, -- Warsong Gulch Iron Ration
 
 	-- Alcohol
-	[281282] = { 36 }, -- A Little Somethin'
+	[281282] = { 37 }, -- A Little Somethin'
 	[260631] = { 5 }, -- Arcane Wine
 	[2723] = { 1 }, -- Bottle of Dalaran Noir
 	[19222] = { 1 }, -- Cheap Beer
@@ -230,12 +209,13 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, WoW Forever 1.60.1.70291
+	2026-11-14, WoW Forever 1.60.1.70938
 
 Notes
 	- Food, water, food-and-water, and alcohol, one section each: items whose use only restores health or mana, or makes you drunk, so outgrowing one costs nothing. Test and placeholder items are left out.
 	- Forever's cooked food gives a Well Fed buff and bonus XP from kills, so it's left out: buff food stays worth eating.
 	- Item Use Level is the item level minus 10, never below 1. Where the game sets a required level, the row holds that instead.
+	- Raw fish a cooking recipe uses are in Meat-Fish-Camelot.lua instead, even though this query finds them: they go with the Outgrown Meat & Fish kind.
 	- A consumable becomes junk ten levels past its use level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
 	- Roasted Quail 287963 and Morning Glory Dew 287964, this client's soulbound copies of 8952 and 8766, hold 45 by hand like their twins: the game sets their required level to 1, which would make them junk at level 11.
 	- Rows outside the query were added from wago.tools builds 1.60.1.70205 and 1.60.1.70291.
@@ -307,10 +287,12 @@ Wowhead
 	None.
 
 wago.tools
-	Build 1.60.1.70205; the file never recorded which tables.
-	https://wago.tools/db2/Item?build=1.60.1.70291
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70291
-	https://wago.tools/db2/ItemEffect?build=1.60.1.70291
-	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70291
-	https://wago.tools/db2/SpellEffect?build=1.60.1.70291
+	https://wago.tools/db2/Item?build=1.60.1.70938
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
+	https://wago.tools/db2/ItemEffect?build=1.60.1.70938
+	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70938
+	https://wago.tools/db2/SpellEffect?build=1.60.1.70938
+
+QuestieDB
+	None.
 ]]

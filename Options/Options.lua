@@ -87,7 +87,7 @@ function ns:RegisterOptionsPanels()
 
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
 	local ignorePanel =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_IGNORE_LIST"], erasingCategoryID)
+		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_PROTECT_LIST"], erasingCategoryID)
 	PrepareListTree(ns.OPTIONS_REGISTRY.IgnoreList, ignorePanel)
 
 	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.MerchantBank, ns.BuildMerchantBankOptions())

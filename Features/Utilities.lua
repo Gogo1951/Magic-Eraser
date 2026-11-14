@@ -176,7 +176,7 @@ local format, insert, floor = string.format, table.insert, math.floor
 --[[
     An item link without the square brackets around its name, which is how
     Magic Eraser shows an item outside chat: Options rows and pickers, the
-    mini-map tooltip and the Erase Confirmation dialog. Chat lines keep the
+    mini-map menu and the Erase Confirmation dialog. Chat lines keep the
     brackets (ns:PrintMessage). Only the brackets inside a hyperlink's
     |h...|h text go; the link itself still hovers, clicks and shift-clicks as
     before, and any other text passes through untouched.
@@ -448,7 +448,8 @@ end
 
 --[[
     Every character on the account that has per-character data, plus the one
-    being played, as "Name - Realm" keys sorted as plain strings. The list
+    being played, as AceDB char keys ("Name - Realm" on realm clients, "First
+    Last" on WoW Forever) sorted as plain strings. The list
     panels draw one tree node per key. Characters live in AceDB's char scope,
     not in profiles: every character shares the Default profile, so profile
     names say nothing about who has a list.
@@ -490,4 +491,32 @@ function ns:GetCharacterDisplayName(charKey)
 		return charKey
 	end
 	return COLOR_PREFIX .. hex .. charKey .. "|r"
+end
+
+--------------------------------------------------------------------------------
+-- Refresh
+--------------------------------------------------------------------------------
+
+--[[
+    Every settings change ends here, from the options, the mini-map menu, a
+    button click, a key binding, or a profile switch. AceConfig re-reads a
+    widget's get and name only when it redraws, so every registered panel is
+    notified, the open menu redraws with the new value, and the button takes
+    the next item's icon (ns.UpdateMinimapIcon). NotifyChange costs nothing for
+    a panel that isn't on screen.
+
+    Bag changes don't come here: ns:RefreshDisplay redraws only the menu, so an
+    item ID being typed into a list page survives the loot that lands meanwhile.
+]]
+function ns.RefreshSettings()
+	local registry = LibStub("AceConfigRegistry-3.0")
+	for _, name in pairs(ns.OPTIONS_REGISTRY or {}) do
+		registry:NotifyChange(name)
+	end
+	if ns.RefreshMenu then
+		ns.RefreshMenu()
+	end
+	if ns.UpdateMinimapIcon then
+		ns.UpdateMinimapIcon()
+	end
 end

@@ -48,12 +48,12 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, WoW Forever 1.60.1.70291
+	2026-11-14, WoW Forever 1.60.1.70938
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.
 	- Shiny Fish Scales and Fish Oil are the Shaman's Water Breathing and Water Walking reagents, added by hand. Every other row came from the wago.tools tables below.
-	- Deathweed, Dust of Decay, Dust of Deterioration, Essence of Agony and Essence of Pain were missing here until 2026-10-16, though this client's SpellReagents table shows only Rogue poisons use them, the same as on Classic Era. They wait for this client's next Validate Data run to confirm them.
+	- Deathweed, Dust of Decay, Dust of Deterioration, Essence of Agony and Essence of Pain were missing here until 2026-10-16, though this client's SpellReagents table shows only Rogue poisons use them, the same as on Classic Era. This client's Validate Data confirmed all five on 2026-11-14.
 	- A reagent that binds when picked up and only its own class can get is left out, because no other class ever carries one: Soul Shard (6265), which only a Warlock's Drain Soul makes.
 	- Only ns:SeedEraseList in Features/Erase-List.lua acts on this table: it puts other classes' reagents on a character's Erase List once, the first time that character plays. Diagnostics/Manifests.lua also reads it, for the Eraser Context count and Validate Data.
 	- Nothing filters on it while scanning bags, so a Shaman who puts Fish Oil on their own Erase List on purpose is obeyed, not overridden.
@@ -66,11 +66,11 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/SkillLineAbility?build=1.60.1.70291
+	https://wago.tools/db2/SkillLineAbility?build=1.60.1.70938
 	https://wago.tools/db2/SkillRaceClassInfo?build=1.60.1.70291
-	https://wago.tools/db2/SpellReagents?build=1.60.1.70291
-	https://wago.tools/db2/SkillLine?build=1.60.1.70291
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70291
+	https://wago.tools/db2/SpellReagents?build=1.60.1.70938
+	https://wago.tools/db2/SkillLine?build=1.60.1.70938
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
 
 QuestieDB
 	None.

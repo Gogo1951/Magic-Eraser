@@ -6,8 +6,21 @@ ns.L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 --------------------------------------------------------------------------------
 
 ns.ADDON_TITLE = ns.L["ADDON_TITLE"]
+ns.ADDON_SHORT_NAME = ns.L["ADDON_SHORT_NAME"]
 ns.SAVED_VARIABLES_NAME = "MagicEraserDB"
 ns.DEFAULT_ICON = "Interface/Icons/inv_misc_bag_07_green"
+
+--------------------------------------------------------------------------------
+-- Example Items
+--------------------------------------------------------------------------------
+
+--[[
+    The item the Auto-Vend example sells: Ruined Pelt, a gray drop from beasts
+    on every client Magic Eraser ships for, so the example shows the kind of
+    junk a visit really sells. The quest-item examples take theirs from the
+    flavor's own quest-item tables instead (Options/Options-Quest-Item-Alerts.lua).
+]]
+ns.EXAMPLE_JUNK_ITEM_ID = 4865
 
 --------------------------------------------------------------------------------
 -- Links
@@ -114,8 +127,9 @@ ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
 --[[
     The Ignore List and Erase List panels each name one scope per list on the
-    account. Every scope but one is an AceDB char key ("Name - Realm", from
-    ns.db.keys.char and ns.db.sv.char, never localized), so the account-wide
+    account. Every scope but one is an AceDB char key ("Name - Realm" on realm
+    clients, "First Last" on WoW Forever, from ns.db.keys.char and
+    ns.db.sv.char, never localized), so the account-wide
     list needs a key no character can collide with -- hence the asterisks, which
     no character or realm name can contain. One constant serves both panels
     because the two never share a table:
@@ -245,6 +259,7 @@ ns.DELETE_PRIORITY = {
 	questIneligible = 1,
 	gray = 2,
 	consumable = 3,
+	meatFish = 3,
 	ammo = 3,
 	equipment = 3,
 	crafted = 3,
@@ -279,7 +294,11 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
 
     "crafted" is the white-gear rule's match with a <Made by> line on the
     stack's own tooltip, split out so gear made for an alt survives a trip to
-    the vendor. It is the one kind unchecked by default (Data/Default-Settings.lua).
+    the vendor. Unchecked by default (Data/Default-Settings.lua).
+
+    "meatFish" is meat and fish a cooking recipe uses, raw fish you can eat
+    included, split out of food and drink so a fisher or cook keeps what they
+    gather. Also unchecked by default.
 
     The rows are listed in the order the panel draws them, each with the locale
     keys for its caption and its tooltip. They are string values rather than
@@ -288,10 +307,11 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
 ns.ERASE_KINDS = {
 	-- { deleteReason, labelKey, descKey }
 	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESCRIPTION" },
-	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION" },
+	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_DESCRIPTION" },
 	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION" },
 	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION" },
 	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION" },
 	{ "crafted", "OPTIONS_KIND_CRAFTED", "OPTIONS_KIND_CRAFTED_DESCRIPTION" },
 	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION" },
+	{ "meatFish", "OPTIONS_KIND_MEAT_FISH", "OPTIONS_KIND_MEAT_FISH_DESCRIPTION" },
 }

@@ -7,6 +7,31 @@ local function QuestAlertsOff()
 	return not (ns.db and ns.db.profile.questAlertsEnabled)
 end
 
+--[[
+    Each example names a real item of the kind its alert is about: the lowest
+    item id in the flavor's quest-item table for the ready alert, and in its
+    quest-starting table for the unavailable one. The lowest id is a fixed
+    choice that every flavor's data holds, and is looked up once.
+]]
+local exampleItemIds = {}
+
+local function ExampleItemId(listName)
+	if exampleItemIds[listName] == nil then
+		local lowest = false
+		for itemId in pairs(ns[listName] or {}) do
+			if not lowest or itemId < lowest then
+				lowest = itemId
+			end
+		end
+		exampleItemIds[listName] = lowest
+	end
+	return exampleItemIds[listName] or nil
+end
+
+local function ExampleLink(listName)
+	return ns.ExampleItemLink(ExampleItemId(listName), ns.OPTIONS_REGISTRY.AlertsTints)
+end
+
 --------------------------------------------------------------------------------
 -- Quest Item Alerts Section
 --------------------------------------------------------------------------------
@@ -37,11 +62,11 @@ function ns.BuildQuestItemAlertsOptions(args)
 	-- One example per kind, a blank line above each.
 	args.spacerQuestReady = ns.OptionsSpacer(25.5, QuestAlertsOff)
 	args.exampleQuestReady = ns.OptionsExample(function()
-		return format(L["QUEST_ITEM_READY"], ns.EXAMPLE_ITEM_LINK, "")
+		return format(L["QUEST_ITEM_READY"], ExampleLink("ALLOWED_DELETE_QUEST_ITEMS"), "")
 	end, 26, QuestAlertsOff)
 
 	args.spacerQuestUnavailable = ns.OptionsSpacer(27.5, QuestAlertsOff)
 	args.exampleQuestUnavailable = ns.OptionsExample(function()
-		return format(L["QUEST_STARTER_UNAVAILABLE"], ns.EXAMPLE_ITEM_LINK, "")
+		return format(L["QUEST_STARTER_UNAVAILABLE"], ExampleLink("ALLOWED_DELETE_QUEST_STARTING_ITEMS"), "")
 	end, 28, QuestAlertsOff)
 end

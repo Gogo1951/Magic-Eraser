@@ -49,7 +49,7 @@ local function PromoteColumn()
 	return {
 		type = "execute",
 		name = L["OPTIONS_LIST_GLOBAL"],
-		desc = L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"],
+		desc = L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"],
 		width = ns.OPTIONS_PROMOTE_WIDTH,
 		func = function(itemId)
 			ns:SetIgnoredInScope(ns.LIST_SCOPE_GLOBAL, itemId, true)
@@ -104,8 +104,8 @@ end
 
 function ns.BuildIgnoreListOptions()
 	return ns.BuildCharacterListTree({
-		name = L["TAB_IGNORE_LIST"],
-		description = L["OPTIONS_IGNORE_DESCRIPTION"],
+		name = L["TAB_PROTECT_LIST"],
+		description = L["OPTIONS_PROTECT_DESCRIPTION"],
 		getListForScope = function(scopeKey)
 			return ns:GetIgnoreListForScope(scopeKey)
 		end,

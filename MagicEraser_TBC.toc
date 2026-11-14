@@ -58,6 +58,7 @@ Data/Data.lua
 Data/TBC/Quest-Items-TBC.lua
 Data/TBC/Quest-Starting-Items-TBC.lua
 Data/TBC/Consumables-TBC.lua
+Data/TBC/Meat-Fish-TBC.lua
 Data/TBC/Ammo-TBC.lua
 Data/TBC/Equipment-TBC.lua
 Data/TBC/Class-Reagents-TBC.lua
@@ -80,6 +81,8 @@ Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
 Features/Tint-Junk.lua
 Features/Key-Bindings.lua
+Features/Menu-Kit.lua
+Features/Minimap-Menu.lua
 Features/Minimap-Button.lua
 
 # Diagnostics

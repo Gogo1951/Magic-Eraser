@@ -1,183 +1,43 @@
 local ADDON_NAME, ns = ...
-local L = ns.L
-local GetColor = ns.GetColor
-
-local format = string.format
-local insert = table.insert
-local GetItemInfo = C_Item.GetItemInfo
-local GetItemQualityColor = C_Item.GetItemQualityColor
 
 local LibDataBroker = LibStub("LibDataBroker-1.1")
 local LibDBIcon = LibStub("LibDBIcon-1.0")
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-
---------------------------------------------------------------------------------
--- Tooltip
---------------------------------------------------------------------------------
-
-local function RefreshTooltip(anchor)
-	local tooltip = GameTooltip
-
-	tooltip:SetOwner(anchor, "ANCHOR_BOTTOMLEFT")
-	tooltip:ClearLines()
-
-	tooltip:AddDoubleLine(GetColor("TITLE") .. ns.ADDON_TITLE .. "|r", GetColor("MUTED") .. ns.Version .. "|r")
-	tooltip:AddLine(" ")
-	tooltip:AddLine(" ")
-
-	local item = ns:FindItemToDelete()
-
-	if item then
-		-- Lowest Value Item
-		tooltip:AddLine(GetColor("TITLE") .. L["LOWEST_VALUE_ITEM"] .. "|r")
-
-		local iconString = format("|T%s:14:14|t", item.icon)
-		local countString = (item.count > 1) and format("%sx%d|r", GetColor("TEXT"), item.count) or ""
-
-		local leftText = iconString .. " " .. ns:StripLinkBrackets(item.link) .. " " .. countString
-		local rightText = (item.value > 0) and ns:FormatCurrency(item.value)
-			or (GetColor("MUTED") .. L["NO_VALUE"] .. "|r")
-
-		tooltip:AddDoubleLine(leftText, rightText)
-
-		tooltip:AddDoubleLine(
-			GetColor("INFO") .. L["LEFT_CLICK"] .. "|r",
-			GetColor("INFO") .. L["ACTION_ERASE"] .. "|r"
-		)
-		tooltip:AddDoubleLine(
-			GetColor("INFO") .. L["RIGHT_CLICK"] .. "|r",
-			GetColor("INFO") .. L["ACTION_IGNORE"] .. "|r"
-		)
-	else
-		--[[
-		    Replaces the Lowest Value Item section when bags are clean. The
-		    congratulation leads and the Clutter Report below carries the
-		    follow-up hint, matching the order RunEraser prints the same two
-		    strings in, so they read the same way wherever the player meets them.
-		]]
-		tooltip:AddLine(GetColor("ON") .. L["BAGS_CLEAN_CONGRATS"] .. "|r", 1, 1, 1, true)
-	end
-
-	-- Auto-Vend
-	tooltip:AddLine(" ")
-	local autoVendStatus = (ns.db and ns.db.profile.autoVendEnabled) and (GetColor("ON") .. L["ENABLED"] .. "|r")
-		or (GetColor("OFF") .. L["DISABLED"] .. "|r")
-	tooltip:AddDoubleLine(GetColor("TITLE") .. L["AUTO_VEND"] .. "|r", autoVendStatus)
-	tooltip:AddLine(GetColor("BODY") .. L["AUTO_VEND_DESCRIPTION"] .. "|r", 1, 1, 1, true)
-
-	tooltip:AddDoubleLine(
-		GetColor("INFO") .. L["SHIFT_RIGHT_CLICK"] .. "|r",
-		GetColor("INFO") .. L["ACTION_TOGGLE"] .. "|r"
-	)
-
-	--[[
-	    Clutter Report. With clutter it summarizes the haul; with clean bags there
-	    is nothing to total, so it carries the hint about what to do instead.
-	]]
-	tooltip:AddLine(" ")
-	tooltip:AddLine(GetColor("TITLE") .. L["CLUTTER_REPORT"] .. "|r")
-	if item then
-		local reclaimSlots, reclaimItems, reclaimValue = ns:GetReclaimSummary()
-		local slotsLabel = (reclaimSlots == 1) and L["CLUTTER_SLOTS_ONE"]
-			or format(L["CLUTTER_SLOTS"], ns:FormatCommaNumber(reclaimSlots))
-		local itemsLabel = (reclaimItems == 1) and L["CLUTTER_ITEMS_ONE"]
-			or format(L["CLUTTER_ITEMS"], ns:FormatCommaNumber(reclaimItems))
-		local slotsText = GetColor("TEXT") .. slotsLabel .. "|r"
-		local itemsText = GetColor("MUTED") .. itemsLabel .. "|r"
-		tooltip:AddDoubleLine(
-			slotsText .. " " .. itemsText,
-			GetColor("TEXT") .. ns:FormatCurrency(reclaimValue) .. "|r"
-		)
-	else
-		tooltip:AddLine(GetColor("BODY") .. L["BAGS_CLEAN_HINT"] .. "|r", 1, 1, 1, true)
-	end
-
-	--[[
-	    Ignore List, this character's only -- which is what keeps the Middle-Click
-	    hint underneath it honest, since Clear Ignore List clears exactly what is
-	    listed here and never touches the account-wide list (see ns:ToggleIgnore
-	    and ns:ClearIgnoreList in Features/Ignore-List.lua). Last of the content
-	    sections because it is the only one whose length varies with how much the
-	    player has protected, so everything above it holds a fixed position no
-	    matter how long the list grows.
-	]]
-	local ignoreList = ns:GetIgnoreList()
-	local hasIgnoredItems = ignoreList and next(ignoreList) ~= nil
-
-	if hasIgnoredItems then
-		tooltip:AddLine(" ")
-		tooltip:AddLine(GetColor("TITLE") .. L["TAB_IGNORE_LIST"] .. "|r")
-
-		local sortedItems = {}
-		local loadingItems = {}
-
-		for itemId in pairs(ignoreList) do
-			local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(itemId)
-			if name then
-				insert(sortedItems, { name = name, quality = quality, icon = icon })
-			else
-				insert(loadingItems, itemId)
-				C_Item.RequestLoadItemDataByID(itemId)
-			end
-		end
-
-		table.sort(sortedItems, function(a, b)
-			return a.name < b.name
-		end)
-
-		for _, ignoredItem in ipairs(sortedItems) do
-			local _, _, _, hexColor = GetItemQualityColor(ignoredItem.quality)
-			tooltip:AddLine(format("|T%s:14:14|t |c%s%s|r", ignoredItem.icon, hexColor, ignoredItem.name))
-		end
-
-		for _, itemId in ipairs(loadingItems) do
-			tooltip:AddLine(GetColor("MUTED") .. format(L["LOADING_ITEM"], itemId) .. "|r")
-		end
-
-		tooltip:AddDoubleLine(
-			GetColor("INFO") .. L["MIDDLE_CLICK"] .. "|r",
-			GetColor("INFO") .. L["ACTION_CLEAR_IGNORE"] .. "|r"
-		)
-	end
-
-	-- Options
-	tooltip:AddLine(" ")
-	tooltip:AddLine(GetColor("TITLE") .. L["MINIMAP_OPTIONS"] .. "|r")
-	tooltip:AddLine(GetColor("INFO") .. L["SHIFT_MIDDLE_CLICK"] .. "|r")
-
-	tooltip:Show()
-end
 
 --------------------------------------------------------------------------------
 -- Display Refresh
 --------------------------------------------------------------------------------
 
+--[[
+    The button wears the icon of the item a Left-Click will erase next, set
+    through the LDB object alone so LibDBIcon and every LDB display follow it.
+    Reads the scan cache as it stands; ns:RefreshDisplay drops the cache first,
+    and ns.RefreshSettings calls this after any writer that changed what counts.
+    Nothing to scan before the database opens: UPDATE_BINDINGS can reach
+    ns.RefreshSettings ahead of PLAYER_LOGIN.
+]]
+function ns.UpdateMinimapIcon()
+	if not (ns.dataBrokerObject and ns.db) then
+		return
+	end
+
+	local item = ns:FindItemToDelete()
+	ns.dataBrokerObject.icon = (item and item.icon) or ns.DEFAULT_ICON
+end
+
+--[[
+    Every bag change lands here. The scan cache is dropped, the button takes the
+    next item's icon (ns.UpdateMinimapIcon), the open menu redraws on the new
+    item, and the bag tints catch up (Features/Tint-Junk.lua).
+]]
 function ns:RefreshDisplay()
 	if not ns.dataBrokerObject then
 		return
 	end
 
 	ns:InvalidateCache()
-	local item = ns:FindItemToDelete()
+	ns.UpdateMinimapIcon()
 
-	if item and item.icon then
-		ns.dataBrokerObject.icon = item.icon
-	else
-		ns.dataBrokerObject.icon = ns.DEFAULT_ICON
-	end
-
-	local button = LibDBIcon:GetMinimapButton(ADDON_NAME)
-	if button then
-		if button.icon then
-			button.icon:SetTexture(ns.dataBrokerObject.icon)
-		end
-
-		if GameTooltip:GetOwner() == button then
-			RefreshTooltip(button)
-		end
-	end
-
-	-- Every bag change lands here, which is when the bag tints go stale; see Features/Tint-Junk.lua.
+	ns.RefreshMenu()
 	ns:RefreshTints()
 end
 
@@ -185,61 +45,47 @@ end
 -- LDB Data Object
 --------------------------------------------------------------------------------
 
+--[[
+    A launcher: hovering opens the menu (Features/Minimap-Menu.lua), and a click
+    runs its job from the menu's click table. Every click has a job except
+    Shift + Left-Click, which opens and holds the menu like a launcher's
+    Left-Click. OnEnter rather than OnTooltipShow, since LibDBIcon and every LDB
+    display call it on hover, and the menu closes itself once the cursor leaves,
+    so OnLeave has nothing to do.
+]]
 ns.dataBrokerObject = LibDataBroker:NewDataObject(ADDON_NAME, {
-	type = "data source",
-	text = ns.ADDON_TITLE,
+	type = "launcher",
+	label = ns.ADDON_TITLE,
 	icon = ns.DEFAULT_ICON,
 
 	OnClick = function(self, button)
-		if IsShiftKeyDown() and button == "MiddleButton" then
-			ns:OpenOptionsPanel()
-			return
-		end
-
-		if IsShiftKeyDown() and button == "RightButton" then
-			if not ns.db then
-				return
-			end
-			ns.db.profile.autoVendEnabled = not ns.db.profile.autoVendEnabled
-			AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
-			AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.MerchantBank)
-			RefreshTooltip(self)
-			return
-		end
-
-		if button == "LeftButton" then
-			ns:RunEraser()
-		elseif button == "RightButton" then
-			local item = ns:FindItemToDelete()
-			if item then
-				ns:ToggleIgnore(item.itemId)
-			end
-		elseif button == "MiddleButton" then
-			-- Deliberately one click, with no confirmation and no chat line.
-			ns:ClearIgnoreList()
+		if not ns.RunButtonClick(button) and button == "LeftButton" then
+			ns.ShowMenu(self, "click")
 		end
 	end,
 
 	OnEnter = function(self)
-		RefreshTooltip(self)
+		ns.ShowMenu(self, "hover")
 	end,
 
-	OnLeave = function()
-		GameTooltip:Hide()
-	end,
+	OnLeave = function() end,
 })
 
 --------------------------------------------------------------------------------
 -- Button Registration
 --------------------------------------------------------------------------------
 
--- Called from ns:OnPlayerLogin once ns.db exists, since the button's position lives in ns.db.global.minimap.
+--[[
+    Called from ns:OnPlayerLogin once ns.db exists. The button's position and
+    its Enable Mini-map Button switch live in the profile, so a profile switch
+    or reset moves it too (ns:ApplyMinimapButton).
+]]
 function ns:RegisterMinimapButton()
 	if not ns.dataBrokerObject then
 		return
 	end
 
-	LibDBIcon:Register(ADDON_NAME, ns.dataBrokerObject, ns.db.global.minimap)
+	LibDBIcon:Register(ADDON_NAME, ns.dataBrokerObject, ns.db.profile.minimap)
 
 	if ns.FLAVOR == "Camelot" or ns.FLAVOR == "Mainline" then
 		--[[
@@ -259,4 +105,12 @@ function ns:RegisterMinimapButton()
 			button.icon:AddMaskTexture(mask)
 		end
 	end
+end
+
+-- Puts the button where the active profile has it, shown or hidden as its switch says.
+function ns:ApplyMinimapButton()
+	if not ns.db then
+		return
+	end
+	LibDBIcon:Refresh(ADDON_NAME, ns.db.profile.minimap)
 end

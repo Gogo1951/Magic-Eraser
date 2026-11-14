@@ -482,6 +482,37 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	--[[
+	    The mini-map menu's reads (Features/Minimap-Menu.lua and Menu-Kit.lua):
+	    the cursor position that keeps it open while hovered, the tooltip an item
+	    row shows, the Escape list it joins, and the Shift key the button's
+	    clicks and Auto-Vend's skip read. Without the cursor read the menu closes
+	    the moment it opens.
+	]]
+	{
+		"GetCursorPosition",
+		function()
+			return type(GetCursorPosition) == "function"
+		end,
+	},
+	{
+		"GameTooltip.SetItemByID",
+		function()
+			return type(GameTooltip) == "table" and type(GameTooltip.SetItemByID) == "function"
+		end,
+	},
+	{
+		"UISpecialFrames",
+		function()
+			return type(UISpecialFrames) == "table"
+		end,
+	},
+	{
+		"IsShiftKeyDown",
+		function()
+			return type(IsShiftKeyDown) == "function"
+		end,
+	},
+	--[[
 	    Auto-Vend, Bank Retrieval and the bag-space warning read whether these
 	    windows are open, and a window a client names differently reads as
 	    closed, so the feature waiting on it never runs.
@@ -741,6 +772,7 @@ function ns:BuildEraserContextReport()
 			kinds[#kinds + 1] = kind[1] .. "=" .. OnOff(ns:IsJunkKind(kind[1]))
 		end
 		lines[#lines + 1] = "Switches:"
+		lines[#lines + 1] = "  Welcome message: " .. OnOff(profile.showWelcome)
 		lines[#lines + 1] = "  Junk kinds: " .. table.concat(kinds, ", ")
 		lines[#lines + 1] = string.format(
 			"  Maximum value to erase: %s (%d gold)",
@@ -832,10 +864,11 @@ function ns:BuildEraserContextReport()
 		tostring((ns.db and ns.db.char.eraseListSeeded) and true or false)
 	)
 	lines[#lines + 1] = string.format(
-		"Databases: quest=%d, questStarting=%d, consumables=%d, ammo=%d, keepEquipment=%d",
+		"Databases: quest=%d, questStarting=%d, consumables=%d, meatFish=%d, ammo=%d, keepEquipment=%d",
 		CountKeys(ns.ALLOWED_DELETE_QUEST_ITEMS),
 		CountKeys(ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS),
 		CountKeys(ns.ALLOWED_DELETE_CONSUMABLES),
+		CountKeys(ns.ALLOWED_DELETE_MEAT_FISH),
 		CountKeys(ns.ALLOWED_DELETE_AMMO),
 		CountKeys(ns.KEEP_EQUIPMENT)
 	)
@@ -1045,7 +1078,9 @@ end
     Delete Assistance cuts out of DELETE_GOOD_ITEM: NIL there means this
     locale's prompt keeps its "type DELETE" instruction. CRAFTED_LINE_PATTERN
     is the crafted check's pattern built from ITEM_CREATED_BY: NIL there means
-    this locale keeps every white weapon and armor piece. A row whose name loads
+    this locale keeps every white weapon and armor piece. EXAMPLE_JUNK_ITEM_ID
+    is the item the Auto-Vend example line sells, read with the same
+    C_Item.GetItemInfo call ns.ExampleItemLink makes. A row whose name loads
     late (an item or a spell) adds request, which the report calls and polls.
 ]]
 local function UiLabel(constant)
@@ -1085,6 +1120,17 @@ ns.DIAGNOSTIC_NAME_LOOKUPS = {
 		id = "ITEM_CREATED_BY",
 		lookup = function()
 			return ns:GetCraftedLinePattern()
+		end,
+	},
+	{
+		constant = "EXAMPLE_JUNK_ITEM_ID",
+		kind = "item",
+		id = ns.EXAMPLE_JUNK_ITEM_ID,
+		lookup = function()
+			return (C_Item.GetItemInfo(ns.EXAMPLE_JUNK_ITEM_ID))
+		end,
+		request = function()
+			C_Item.RequestLoadItemDataByID(ns.EXAMPLE_JUNK_ITEM_ID)
 		end,
 	},
 }
@@ -1216,6 +1262,17 @@ ns.DIAGNOSTIC_DATA_SOURCES = {
 				kind = "item",
 				rowId = KeyIsId,
 				dataColumns = { { "DATA_USE_LEVEL", RowField(1) } },
+			},
+		},
+	},
+	{
+		label = "Meat-Fish",
+		sources = {
+			{
+				table = "ALLOWED_DELETE_MEAT_FISH",
+				kind = "item",
+				rowId = KeyIsId,
+				dataColumns = { { "DATA_LEVEL", RowField(1) } },
 			},
 		},
 	},

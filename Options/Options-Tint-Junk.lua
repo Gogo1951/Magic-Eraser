@@ -58,6 +58,7 @@ function ns.BuildTintJunkOptions(args)
 				local color = ns.db.profile.tintColor
 				color.r, color.g, color.b, color.a = r, g, b, a
 				ns.OnTintJunkChanged()
+				ns.RefreshSettings()
 			end,
 		},
 	})

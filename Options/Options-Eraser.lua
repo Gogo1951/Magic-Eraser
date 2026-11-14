@@ -26,12 +26,13 @@ end
 --[[
     A kind's checkbox changes what counts as junk at all, so it drops the scan
     cache and repaints like the value cap does: the mini-map icon moves on the
-    spot.
+    spot. Ends in ns.RefreshSettings like every other writer.
 ]]
 local function SetJunkKind(deleteReason, isJunk)
 	ns.db.profile.junkKinds[deleteReason] = isJunk
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
+	ns.RefreshSettings()
 end
 
 --[[
@@ -62,7 +63,7 @@ end
 --[[
     The two Erasing-panel sections owned by Features/Junk-Rules.lua: What Counts as
     Junk, one checkbox per kind, two to a line, then Maximum Value to Erase.
-    Manual Delete Assistance follows them from its own fragment, and Erase
+    Delete Without Typing follows them from its own fragment, and Erase
     Confirmation closes the panel from ns.BuildEraseConfirmOptions below.
 ]]
 function ns.BuildEraserOptions(args)
@@ -142,6 +143,7 @@ function ns.BuildEraserOptions(args)
 			ns.db.profile.valueCapGold = value
 			ns:InvalidateCache()
 			ns:RefreshDisplay()
+			ns.RefreshSettings()
 		end,
 	}
 end

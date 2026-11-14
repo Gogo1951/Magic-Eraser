@@ -30,7 +30,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[19306] = { 35 }, -- Crunchy Frog
 	[4599] = { 35 }, -- Cured Ham Steak
 	[414] = { 5 }, -- Dalaran Sharp
-	[13888] = { 45 }, -- Darkclaw Lobster
 	[19223] = { 1 }, -- Darkmoon Dog
 	[12238] = { 5 }, -- Darkshore Grouper
 	[2070] = { 1 }, -- Darnassian Bleu
@@ -73,7 +72,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[8950] = { 45 }, -- Homemade Cherry Pie
 	[20857] = { 1 }, -- Honey Bread
 	[29412] = { 55 }, -- Jessen's Special Slop
-	[13893] = { 45 }, -- Large Raw Mightfish
 	[7097] = { 1 }, -- Leg Meat
 	[13933] = { 45 }, -- Lobster Stew
 	[6316] = { 5 }, -- Loch Frenzy Delight
@@ -96,22 +94,7 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[21033] = { 45 }, -- Radish Kimchi
 	[5095] = { 5 }, -- Rainbow Fin Albacore
 	[4608] = { 35 }, -- Raw Black Truffle
-	[6291] = { 1 }, -- Raw Brilliant Smallfish
-	[6308] = { 15 }, -- Raw Bristle Whisker Catfish
-	[13754] = { 35 }, -- Raw Glossy Mightfish
-	[6317] = { 5 }, -- Raw Loch Frenzy
-	[6289] = { 5 }, -- Raw Longjaw Mud Snapper
-	[8365] = { 25 }, -- Raw Mithril Head Trout
-	[13759] = { 35 }, -- Raw Nightfin Snapper
-	[6361] = { 5 }, -- Raw Rainbow Fin Albacore
-	[13758] = { 35 }, -- Raw Redgill
-	[6362] = { 25 }, -- Raw Rockscale Cod
-	[6303] = { 1 }, -- Raw Slitherskin Mackerel
 	[8959] = { 45 }, -- Raw Spinefin Halibut
-	[4603] = { 35 }, -- Raw Spotted Yellowtail
-	[13756] = { 35 }, -- Raw Summer Bass
-	[13760] = { 35 }, -- Raw Sunscale Salmon
-	[13889] = { 45 }, -- Raw Whitescale Salmon
 	[19224] = { 25 }, -- Red Hot Wings
 	[4605] = { 5 }, -- Red-speckled Mushroom
 	[5057] = { 1 }, -- Ripe Watermelon
@@ -163,7 +146,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[3771] = { 25 }, -- Wild Hog Shank
 	[16169] = { 25 }, -- Wild Ricecake
 	[22324] = { 45 }, -- Winter Kimchi
-	[13755] = { 35 }, -- Winter Squid
 	[27859] = { 55 }, -- Zangar Caps
 	[29452] = { 65 }, -- Zangar Trout
 
@@ -230,8 +212,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[33053] = { 65 }, -- Hot Buttered Trout
 	[34780] = { 65 }, -- Naaru Ration
 	[13931] = { 35 }, -- Nightfin Soup
-	[21153] = { 30 }, -- Raw Greater Sagefish
-	[21071] = { 10 }, -- Raw Sagefish
 	[3448] = { 5 }, -- Senggin Root
 	[28112] = { 60 }, -- Underspore Pod
 	[19060] = { 45 }, -- Warsong Gulch Enriched Ration
@@ -290,6 +270,7 @@ Notes
 	- Item Use Level is the item level minus 10, never below 1. Where the game sets a required level, the row holds that instead.
 	- Underspore Pod holds 60 by hand: it has no required level and an item level of 100.
 	- Edible Stalks holds 55 by hand: it has no required level and an item level of 0, and it casts the same food spell as the level-55 rows (Smoked Talbuk Venison, Sunspring Carp).
+	- Raw fish a cooking recipe uses are in Meat-Fish-TBC.lua instead, even though this query finds them: they go with the Outgrown Meat & Fish kind.
 	- A consumable becomes junk ten levels past its use level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
 	- Rows outside the query were added from wago.tools build 2.5.6.69795.
 	- Found in the wago.tools tables below: Item class 0 whose first use spell (ItemEffect, SpellEffect) only applies the eating or drinking aura (84 or 85), directly or through a spell it triggers, or makes you drunk (effect 100).

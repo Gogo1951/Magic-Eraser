@@ -16,7 +16,9 @@ local _, ns = ...
         flag, so every character on the account lands on the one Default
         profile: a setting changed once applies everywhere. A player who wants a
         one-off, such as a bank alt with Auto-Vend off, makes a new profile by
-        hand in the Profiles panel.
+        hand in the Profiles panel. minimap, the button's position and its
+        Enable Mini-map Button switch, is a setting like the rest, so a profile
+        switch or reset moves the button too.
       - char holds what belongs to one character whatever profile it is on: its
         own Protect List (ignoreList) and Erase List (eraseList), and
         eraseListSeeded, the marker that ns:SeedEraseList has run for it. The
@@ -26,8 +28,7 @@ local _, ns = ...
         character's class at each login, so the list panels can color its name
         while another character is being played.
       - global holds the All Characters twins of both lists, which apply on
-        every character at once, and minimap, so switching or resetting a
-        profile never moves the button.
+        every character at once.
 
     Both pairs of lists are additive: ns:IsIgnored and ns:IsOnEraseList answer
     for both scopes.
@@ -56,10 +57,13 @@ ns.DATABASE_DEFAULTS = {
 			-- Off: gear a player crafted, usually for an alt, is kept unless asked.
 			crafted = false,
 			gray = true,
+			-- Off: a fisher or cook keeps the meat and fish they gather unless asked.
+			meatFish = false,
 		},
 		eraseConfirmEnabled = false,
 		manualDeleteAutoFillEnabled = true,
 		manualDeleteNoValueOnly = true,
+		minimap = {},
 	},
 	char = {
 		ignoreList = {},
@@ -70,6 +74,5 @@ ns.DATABASE_DEFAULTS = {
 	global = {
 		ignoreList = {},
 		eraseList = {},
-		minimap = {},
 	},
 }

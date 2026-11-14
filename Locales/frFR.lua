@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -34,7 +37,7 @@ L["ERASED_ITEM"] = "%s%s supprimé."
 L["QUEST_ITEM_READY"] =
 	"%s%s peut maintenant être supprimé en toute sécurité. C'est un reste d'une quête que vous avez terminée."
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s%s peut maintenant être supprimé en toute sécurité. Il démarre une quête que votre personnage ne peut pas accepter."
+	"%s%s peut maintenant être supprimé en toute sécurité. Il démarre une quête que votre race ou votre classe ne pourra jamais accepter."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendu, valeur %s."
@@ -49,10 +52,11 @@ L["BANK_RETRIEVED"] = "%s objets (%s emplacements de sac) retirés de votre banq
 L["BANK_RETRIEVED_ONE_SLOT"] = "%s objets (1 emplacement de sac) retirés de votre banque, valeur %s."
 L["BANK_RETRIEVED_ONE_ITEM"] = "1 objet (1 emplacement de sac) retiré de votre banque, valeur %s."
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "%s ajouté à votre Liste de protection."
-L["IGNORE_LIST_MOVED"] = "%s déplacé de votre Liste de suppression vers votre Liste de protection."
-L["IGNORE_LIST_ALREADY"] = "%s est déjà sur votre Liste de protection."
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "%s ajouté à votre Liste de protection."
+L["PROTECT_LIST_MOVED"] = "%s déplacé de votre Liste de suppression vers votre Liste de protection."
+L["PROTECT_LIST_ALREADY"] = "%s est déjà sur votre Liste de protection."
+L["PROTECT_LIST_REMOVED"] = "%s retiré de votre Liste de protection."
 L["ERASE_LIST_ADDED"] = "%s ajouté à votre Liste de suppression."
 L["ERASE_LIST_ALREADY"] = "%s est déjà sur votre Liste de suppression."
 L["ERASE_LIST_PROTECTED"] =
@@ -60,7 +64,7 @@ L["ERASE_LIST_PROTECTED"] =
 L["NO_HOVERED_ITEM"] = "Survolez un objet, puis appuyez de nouveau sur la touche."
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Objet de plus faible valeur"
@@ -70,24 +74,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1 objet)"
 L["CLUTTER_SLOTS"] = "%s emplacements de sac"
 L["CLUTTER_SLOTS_ONE"] = "1 emplacement de sac"
 L["NO_VALUE"] = "Aucune valeur"
-L["LEFT_CLICK"] = "Clic gauche"
-L["RIGHT_CLICK"] = "Clic droit"
-L["MIDDLE_CLICK"] = "Clic central"
-L["SHIFT_RIGHT_CLICK"] = "Maj + Clic droit"
-L["SHIFT_MIDDLE_CLICK"] = "Maj + Clic central"
-L["ACTION_TOGGLE"] = "Basculer"
-L["ACTION_CLEAR_IGNORE"] = "Vider la Liste de protection"
-L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
-L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer plus d'espace."
-L["LOADING_ITEM"] = "Chargement ID : %d"
-L["MINIMAP_OPTIONS"] = "Options de Magic Eraser"
+L["MENU_CLICK_LEFT"] = "Clic gauche"
+L["MENU_CLICK_RIGHT"] = "Clic droit"
+L["MENU_CLICK_MIDDLE"] = "Clic central"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Maj + Clic droit"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Maj + Clic central"
+L["MENU_TOGGLE"] = "Basculer"
+L["ACTION_CLEAR_PROTECT_LIST"] = "Vider la Liste de protection"
+L["MENU_OPTIONS"] = "Options de Magic Eraser"
+L["MENU_ON"] = "Activé"
+L["MENU_OFF"] = "Désactivé"
+L["MENU_MORE"] = "%d autres"
+L["MENU_MORE_FEATURES"] = "Autres fonctionnalités"
+L["MENU_FEATURE_COUNT_ON"] = "%d activées"
+L["MENU_FEATURE_COUNT_OFF"] = "%d désactivées"
+L["MENU_UNPROTECT_HINT"] = "Cliquez pour le retirer de votre Liste de protection."
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "Supprimer l'objet de plus faible valeur"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "Ajouter l'objet survolé à la Liste de protection"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "Ajouter l'objet survolé à la Liste de protection"
 L["BINDING_ADD_TO_ERASE_LIST"] = "Ajouter l'objet survolé à la Liste de suppression"
 
 --------------------------------------------------------------------------------
@@ -100,16 +108,16 @@ L["AUTO_VEND_DESCRIPTION"] =
 L["TAB_ERASING"] = "Suppression"
 L["TAB_MERCHANT_BANK"] = "Marchand et banque"
 L["TAB_ALERTS"] = "Alertes et teintes"
-L["TAB_IGNORE_LIST"] = "Liste de protection"
+L["TAB_PROTECT_LIST"] = "Liste de protection"
 L["TAB_ERASE_LIST"] = "Liste de suppression"
-L["ENABLED"] = "Activé"
-L["DISABLED"] = "Désactivé"
 L["ACTION_ERASE"] = "Supprimer"
-L["ACTION_IGNORE"] = "Protéger"
+L["ACTION_PROTECT"] = "Protéger"
+L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
+L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer plus d'espace."
+L["LOADING_ITEM"] = "Chargement ID : %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "Exemple : %s"
-L["OPTIONS_EXAMPLE_ITEM"] = "Objet d'exemple"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -133,7 +141,7 @@ L["OPTIONS_KEY_SET"] = "Assigner une touche"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "Ouvre la liste des raccourcis clavier du jeu, où Magic Eraser a sa propre section."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Supprime votre Objet de plus faible valeur, comme un clic gauche sur le bouton de la minicarte. Il n'y a aucun aperçu avant d'appuyer sur la touche, alors choisissez-en une que vous ne toucherez pas par accident."
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protège l'objet sous votre souris sur ce personnage, où que vous le voyiez : sacs, banque, marchand ou fenêtre de butin. S'il était sur la Liste de suppression de ce personnage, il en est retiré."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Ajoute l'objet sous votre souris à la Liste de suppression de ce personnage, quelle que soit sa valeur. Votre Liste de protection l'emporte toujours."
@@ -178,7 +186,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 
 L["TAB_ERASING_DESCRIPTION"] = "Chaque clic supprime le rebut le moins cher de vos sacs, une pile à la fois."
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"Bon à savoir : presque tout objet supprimé par erreur peut encore être récupéré via le service de restauration d'objets de Blizzard."
+	"Bon à savoir : presque tout objet supprimé par erreur peut encore être récupéré via le service de Restauration d'objets de Blizzard !"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Ce qui compte comme rebut"
@@ -188,11 +196,11 @@ L["OPTIONS_KIND_QUEST"] = "Objets de quête terminée"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Objets restants une fois que vous avez rendu la dernière quête qui en a besoin."
 L["OPTIONS_KIND_STARTER"] = "Déclencheurs de quête sans issue"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] =
 	"Objets qui démarrent une quête que votre race ou votre classe ne pourra jamais accepter."
 L["OPTIONS_KIND_FOOD"] = "Nourriture et boissons dépassées"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Nourriture et boissons dix niveaux au-delà du niveau où vous pouviez les utiliser pour la première fois. Le pain et l'eau de départ partent au niveau 5."
+	"Nourriture et boissons une fois que vous dépassez de dix niveaux le niveau requis. Le pain et l'eau de départ partent au niveau 5."
 L["OPTIONS_KIND_AMMO"] = "Flèches et balles dépassées"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Flèches et balles dès que vous pouvez utiliser un meilleur type vendu par les marchands. Les meilleures munitions de marchand pour votre niveau ne sont jamais supprimées."
@@ -204,6 +212,9 @@ L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"Armes et armures blanches fabriquées par un joueur, comme l'équipement que vous avez créé pour un reroll. L'option Armes et armures blanches les laisse de côté, donc seule cette case en décide."
 L["OPTIONS_KIND_GRAY"] = "Camelote grise"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Tout objet gris qu'un marchand achète."
+L["OPTIONS_KIND_MEAT_FISH"] = "Viande et poisson dépassés"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"Viande et poisson utilisés par une recette de cuisine, poisson cru comestible compris, une fois que vous les dépassez de dix niveaux. Le poisson comestible qu'aucune recette n'utilise compte comme Nourriture et boissons dépassées."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
 	"Décoché, ce n'est pas du rebut : jamais supprimé, vendu ni retiré de la banque."
 L["OPTIONS_KINDS_NONE_CHECKED"] =
@@ -220,13 +231,13 @@ L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Les piles valant plus que ce montant, en comptant la valeur de vente de toute la pile, ne sont jamais supprimées."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Aide à la suppression manuelle"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Suppression sans saisie"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Par défaut, le jeu vous oblige à taper "%s" pour supprimer un objet de qualité %s ou supérieure. Cette option transforme cette demande en un simple Oui ou Non.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer l'aide à la suppression manuelle"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer la suppression sans saisie"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Active ou désactive l'Aide à la suppression manuelle. Le jeu demande toujours Oui ou Non, seule la saisie disparaît."
+	"Active ou désactive la Suppression sans saisie. Le jeu demande toujours Oui ou Non, seule la saisie disparaît."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Objets sans valeur de vente ne simplifie que les objets qu'aucun marchand n'achète. Tous les objets simplifie chaque demande de saisie."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tous les objets"
@@ -327,9 +338,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] = "Retirer tous les objets de cette liste ? Cett
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"Les objets d'une Liste de protection ne sont jamais supprimés ni vendus. La liste Tous les personnages protège un objet partout, et la liste propre à un personnage le protège uniquement sur celui-ci."
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] =
 	"Déplace cet objet vers la liste Tous les personnages, pour qu'il soit protégé partout."
 
 --------------------------------------------------------------------------------

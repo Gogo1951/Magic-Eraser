@@ -8,7 +8,7 @@ local function ManualDeleteOff()
 end
 
 --------------------------------------------------------------------------------
--- Manual Delete Assistance Section
+-- Delete Without Typing Section
 --------------------------------------------------------------------------------
 
 --[[
@@ -62,6 +62,7 @@ function ns.BuildManualDeleteOptions(args)
 		end,
 		set = function(_, value)
 			ns.db.profile.manualDeleteNoValueOnly = (value == "noValue")
+			ns.RefreshSettings()
 		end,
 	}
 end

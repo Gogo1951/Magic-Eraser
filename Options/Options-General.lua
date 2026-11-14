@@ -1,4 +1,4 @@
-local ADDON_NAME, ns = ...
+local _, ns = ...
 local L = ns.L
 
 local GetColor = ns.GetColor
@@ -8,33 +8,78 @@ local GetColor = ns.GetColor
 --------------------------------------------------------------------------------
 
 --[[
-    Every feature's on/off switch, two to a line, so the front page shows at a
-    glance what Magic Eraser is doing. Each is built by ns.OptionsFeatureToggle,
-    as on its own page, so the two copies share one setting, caption and
-    tooltip; the Bag-Space Warnings section also passes an onSet this copy
-    doesn't. Listed Merchant & Bank first, then Erasing's Maximum Value to Erase,
-    Manual Delete Assistance and Erase Confirmation, then Alerts & Tints.
+    Every feature's on/off switch, the one list the root panel's Features
+    section and the mini-map menu both draw from (Features Mirror): same
+    features, same order, same names. Listed Merchant & Bank first, then
+    Erasing's Maximum Value to Erase, Delete Without Typing and Erase Confirmation,
+    then Alerts & Tints.
+
+    Each switch is built by ns.OptionsFeatureToggle, as on its own page, so the
+    copies share one setting, caption and tooltip. Auto-Vend is a block, with
+    its own title, description and Toggle row in the menu; the rest are one
+    On/Off row each under More Features, named by their page's heading. onSet
+    runs after the write for a switch whose change has to reach something
+    beyond the saved value, from either place.
 ]]
-local FEATURE_TOGGLES = {
-	-- { settingKey, nameKey, descKey, onSet }
-	{ "autoVendEnabled", "OPTIONS_ENABLE_AUTO_VEND", "OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION" },
-	{ "bankRetrievalEnabled", "OPTIONS_ENABLE_BANK_RETRIEVAL", "OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION" },
-	{ "valueCapEnabled", "OPTIONS_ENABLE_VALUE_CAP", "OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION", ns.OnValueCapToggled },
+ns.FEATURES = {
 	{
-		"manualDeleteAutoFillEnabled",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
+		setting = "autoVendEnabled",
+		name = "AUTO_VEND",
+		caption = "OPTIONS_ENABLE_AUTO_VEND",
+		desc = "OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION",
+		block = true,
 	},
-	{ "eraseConfirmEnabled", "OPTIONS_ENABLE_ERASE_CONFIRM", "OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION" },
-	{ "tintJunkEnabled", "OPTIONS_ENABLE_TINT", "OPTIONS_ENABLE_TINT_DESCRIPTION", ns.OnTintJunkChanged },
-	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION" },
-	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION" },
+	{
+		setting = "bankRetrievalEnabled",
+		name = "OPTIONS_BANK_HEADER",
+		caption = "OPTIONS_ENABLE_BANK_RETRIEVAL",
+		desc = "OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION",
+	},
+	{
+		setting = "valueCapEnabled",
+		name = "OPTIONS_VALUE_CAP_HEADER",
+		caption = "OPTIONS_ENABLE_VALUE_CAP",
+		desc = "OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION",
+		onSet = ns.OnValueCapToggled,
+	},
+	{
+		setting = "manualDeleteAutoFillEnabled",
+		name = "OPTIONS_MANUAL_DELETE_HEADER",
+		caption = "OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
+		desc = "OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
+	},
+	{
+		setting = "eraseConfirmEnabled",
+		name = "OPTIONS_ERASE_CONFIRM_HEADER",
+		caption = "OPTIONS_ENABLE_ERASE_CONFIRM",
+		desc = "OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION",
+	},
+	{
+		setting = "tintJunkEnabled",
+		name = "OPTIONS_TINT_HEADER",
+		caption = "OPTIONS_ENABLE_TINT",
+		desc = "OPTIONS_ENABLE_TINT_DESCRIPTION",
+		onSet = ns.OnTintJunkChanged,
+	},
+	{
+		setting = "questAlertsEnabled",
+		name = "OPTIONS_QUEST_ALERTS_HEADER",
+		caption = "OPTIONS_ENABLE_QUEST_ALERTS",
+		desc = "OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION",
+	},
+	{
+		setting = "bagsFullNudgeEnabled",
+		name = "OPTIONS_BAGS_FULL_HEADER",
+		caption = "OPTIONS_ENABLE_BAGS_FULL_WARNINGS",
+		desc = "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION",
+	},
 }
 
 local function AddFeatureToggles(args, startOrder)
 	local toggles = {}
-	for index, entry in ipairs(FEATURE_TOGGLES) do
-		toggles[index] = ns.OptionsFeatureToggle(entry[1], entry[2], entry[3], nil, nil, entry[4])
+	for index, feature in ipairs(ns.FEATURES) do
+		toggles[index] =
+			ns.OptionsFeatureToggle(feature.setting, feature.caption, feature.desc, nil, nil, feature.onSet)
 	end
 	ns.OptionsTogglePairs(args, "rowFeatures", startOrder, toggles)
 end
@@ -55,7 +100,7 @@ end
 local KEY_BINDINGS = {
 	-- { bindingName, captionKey, descKey }
 	{ "MAGICERASER_ERASE", "BINDING_ERASE", "OPTIONS_KEY_BINDING_ERASE_DESCRIPTION" },
-	{ "MAGICERASER_ADD_TO_IGNORE_LIST", "BINDING_ADD_TO_IGNORE_LIST", "OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION" },
+	{ "MAGICERASER_ADD_TO_IGNORE_LIST", "BINDING_ADD_TO_PROTECT_LIST", "OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION" },
 	{ "MAGICERASER_ADD_TO_ERASE_LIST", "BINDING_ADD_TO_ERASE_LIST", "OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION" },
 }
 
@@ -132,8 +177,7 @@ end
     with every feature's switch, Key Bindings, then /Commands. The links and
     the version line have their own Feedback & Support page. Each
     feature's full settings live on its own page under this one. The mini-map
-    clicks are spelled out in the button's own tooltip, so they aren't repeated
-    here.
+    clicks are named on the menu's rows, so they aren't repeated here.
 ]]
 function ns.BuildGeneralOptions()
 	local args = {
@@ -151,6 +195,7 @@ function ns.BuildGeneralOptions()
 			end,
 			set = function(_, value)
 				ns.db.profile.showWelcome = value
+				ns.RefreshSettings()
 			end,
 		},
 		toggleMinimap = {
@@ -160,11 +205,12 @@ function ns.BuildGeneralOptions()
 			width = "full",
 			order = 7,
 			get = function()
-				return ns.db and not ns.db.global.minimap.hide
+				return ns.db and not ns.db.profile.minimap.hide
 			end,
 			set = function(_, value)
-				ns.db.global.minimap.hide = not value
-				LibStub("LibDBIcon-1.0"):Refresh(ADDON_NAME, ns.db.global.minimap)
+				ns.db.profile.minimap.hide = not value
+				ns:ApplyMinimapButton()
+				ns.RefreshSettings()
 			end,
 		},
 

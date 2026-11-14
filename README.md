@@ -10,64 +10,47 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 * **One Click, One Free Slot** // The mini-map button wears the icon of your cheapest junk. Click it, or press your key, and it's gone.
 * **Knows What's Junk** // Completed quest items, quest starters you can never take, outgrown food, drink and ammo, white gear, and grays.
-* **Your Lists Win** // Anything on your Erase List always goes, and anything on your Protect List always stays.
+* **Your Lists Win** // Anything on your Erase List always goes, and anything on your Protect List always stays. Pick which kinds of junk count, too.
 * **Safety First** // Never touches green-or-better gear or quest items you still need, and nothing is erased in combat.
-
-#### Example Messages
-
-> **Left-Click, 🔊 & Self:** Magic Eraser // Erased [Broken Fang] x4.
-
-### Auto-Vend & Bank Retrieval
-
-* **Junk Sells Itself** // Open any merchant and your junk is sold, with one line in chat saying what it made.
-* **Bank Junk Comes Home** // Junk hiding in your bank hops back into your bags to sell with the rest.
-* **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time.
-
-#### Example Messages
-
-> **Merchant Visit, Self:** Magic Eraser // Sold 14 items (9 bag slots), worth 2g 35s 40c.
-
-> **Bank Visit, Self:** Magic Eraser // Pulled 6 items (4 bag slots) out of your bank, worth 48s 12c.
 
 ### Alerts & Tints
 
 * **Spot Junk at a Glance** // A tint marks the junk in your bags and bank, in Baganator, Bagnon, AdiBags, ArkInventory, BetterBags and ElvUI too.
 * **Quest Leftovers Called Out** // Chat tells you the moment a quest item is safe to toss.
-* **Never Caught Full** // A countdown in chat as your last few bag slots fill up.
+* **Never Caught Full** // Turn on a countdown in chat as your last few bag slots fill up.
+* **Your Colors, Your Call** // Pick your own tint color, or switch any alert off.
 
-#### Example Messages
+### Auto-Vend & Bank Retrieval
 
-> **Quest Turn-In, Self:** Magic Eraser // [Gold Dust] x2 can now be safely erased. It's left over from a quest you have completed.
+* **Junk Sells Itself** // Open any merchant and your junk is sold, with one line in chat saying what it made.
+* **Bank Junk Comes Home** // Junk hiding in your bank hops back into your bags to sell with the rest.
+* **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time, or switch Auto-Vend off entirely.
 
-> **Bags Filling Up, Self:** Magic Eraser // Your bags are nearly full. You have 2 slots remaining.
-
-### Manual Delete Assistance
+### Delete Without Typing
 
 * **No More Typing DELETE** // Binning a Rare or better item that no vendor will buy takes a simple Yes or No.
+* **Your Call** // Stretch it to every item, or switch it off.
 
 ## Setup
 
 1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
-2. Type `/eraser`, or Shift + Middle-Click the mini-map button, to open the Options Interface.
+2. Type `/eraser`, or pick Magic Eraser Options in the mini-map menu, to open the Options Interface.
 3. Hover the mini-map button to see your cheapest junk, then left-click to erase it.
 4. Visit a merchant, and the rest sells itself.
-5. _"But wait, there's more... bag space!"_
+5. _"But wait, there's more bag space!"_
 
 ## Tips & Tricks
 
-### Mini-Map Button
+### Mini-map Button
 
 <img width="260" src="https://github.com/user-attachments/assets/5f911dc9-a80e-4363-a38a-1357c25524cf" />
 
 | Action | Effect |
 | --- | --- |
-| Left-Click | Erase the lowest-value junk item. |
-| Right-Click | Add that item to this character's Protect List. |
-| Middle-Click | Clear this character's Protect List. |
-| Shift + Right-Click | Toggle Auto-Vend on or off. |
-| Shift + Middle-Click | Open the Options Interface. |
+| Hover | Opens the mini-map menu |
+| Left-Click | Erases your cheapest junk |
 
-- Hover the button to see what's next, what it's worth, and a Clutter Report of the bag slots and gold still tied up in junk.
+The menu shows what's next and what it's worth, a Clutter Report of the bag slots still tied up in junk, your Protect List, and a quick switch for every feature.
 
 ### Good to Know
 
@@ -104,9 +87,8 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 
 * plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
-* Gogo1951's [Connoisseur & Restocker](https://www.curseforge.com/wow/addons/connoisseur-restocker)
 * Gogo1951's [GogoLoot](https://www.curseforge.com/wow/addons/gogoloot)
-* Gogo1951's [Open Sesame](https://www.curseforge.com/wow/addons/open-sesame)
+* Gogo1951's [Good to Go](https://www.curseforge.com/wow/addons/good-to-go)
 
 ### 🟡 Overlaps
 

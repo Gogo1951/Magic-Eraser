@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -32,7 +35,7 @@ L["ERASE_CANDIDATE_CHANGED"] =
 L["ERASED_ITEM"] = "已删除 %s%s。"
 L["QUEST_ITEM_READY"] = "%s%s 现在可以安全删除了。它是你已完成任务的遗留物品。"
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s%s 现在可以安全删除了。它会开启一个你的角色无法接取的任务。"
+	"%s%s 现在可以安全删除了。它会开启一个你的种族或职业永远无法接取的任务。"
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "已出售 %s%s，价值 %s。"
@@ -47,17 +50,18 @@ L["BANK_RETRIEVED"] = "已从银行取出 %s 件物品（%s 个背包格子）�
 L["BANK_RETRIEVED_ONE_SLOT"] = "已从银行取出 %s 件物品（1 个背包格子），价值 %s。"
 L["BANK_RETRIEVED_ONE_ITEM"] = "已从银行取出 1 件物品（1 个背包格子），价值 %s。"
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "已将 %s 加入你的保护列表。"
-L["IGNORE_LIST_MOVED"] = "已将 %s 从你的删除列表移到保护列表。"
-L["IGNORE_LIST_ALREADY"] = "%s 已在你的保护列表中。"
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "已将 %s 加入你的保护列表。"
+L["PROTECT_LIST_MOVED"] = "已将 %s 从你的删除列表移到保护列表。"
+L["PROTECT_LIST_ALREADY"] = "%s 已在你的保护列表中。"
+L["PROTECT_LIST_REMOVED"] = "已将 %s 从你的保护列表移除。"
 L["ERASE_LIST_ADDED"] = "已将 %s 加入你的删除列表。"
 L["ERASE_LIST_ALREADY"] = "%s 已在你的删除列表中。"
 L["ERASE_LIST_PROTECTED"] = "%s 在你的保护列表中，保护列表始终优先。请先将它从那里移除。"
 L["NO_HOVERED_ITEM"] = "请将鼠标悬停在物品上，然后再按一次该按键。"
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "最低价值物品"
@@ -67,24 +71,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1 件物品)"
 L["CLUTTER_SLOTS"] = "%s 个背包格子"
 L["CLUTTER_SLOTS_ONE"] = "1 个背包格子"
 L["NO_VALUE"] = "无价值"
-L["LEFT_CLICK"] = "左键点击"
-L["RIGHT_CLICK"] = "右键点击"
-L["MIDDLE_CLICK"] = "中键点击"
-L["SHIFT_RIGHT_CLICK"] = "Shift + 右键点击"
-L["SHIFT_MIDDLE_CLICK"] = "Shift + 中键点击"
-L["ACTION_TOGGLE"] = "切换"
-L["ACTION_CLEAR_IGNORE"] = "清空保护列表"
-L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包里都是好东西！"
-L["BAGS_CLEAN_HINT"] = "如果想腾出更多空间，你需要手动删除一些物品。"
-L["LOADING_ITEM"] = "加载中 ID: %d"
-L["MINIMAP_OPTIONS"] = "Magic Eraser 选项"
+L["MENU_CLICK_LEFT"] = "左键点击"
+L["MENU_CLICK_RIGHT"] = "右键点击"
+L["MENU_CLICK_MIDDLE"] = "中键点击"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 右键点击"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 中键点击"
+L["MENU_TOGGLE"] = "切换"
+L["ACTION_CLEAR_PROTECT_LIST"] = "清空保护列表"
+L["MENU_OPTIONS"] = "Magic Eraser 选项"
+L["MENU_ON"] = "开启"
+L["MENU_OFF"] = "关闭"
+L["MENU_MORE"] = "还有 %d 件"
+L["MENU_MORE_FEATURES"] = "更多功能"
+L["MENU_FEATURE_COUNT_ON"] = "%d 项开启"
+L["MENU_FEATURE_COUNT_OFF"] = "%d 项关闭"
+L["MENU_UNPROTECT_HINT"] = "点击将其从你的保护列表中移除。"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "删除最低价值物品"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "将鼠标悬停的物品加入保护列表"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "将鼠标悬停的物品加入保护列表"
 L["BINDING_ADD_TO_ERASE_LIST"] = "将鼠标悬停的物品加入删除列表"
 
 --------------------------------------------------------------------------------
@@ -96,16 +104,16 @@ L["AUTO_VEND_DESCRIPTION"] = "打开商人窗口时立即出售你的杂物，�
 L["TAB_ERASING"] = "删除"
 L["TAB_MERCHANT_BANK"] = "商人与银行"
 L["TAB_ALERTS"] = "提醒与着色"
-L["TAB_IGNORE_LIST"] = "保护列表"
+L["TAB_PROTECT_LIST"] = "保护列表"
 L["TAB_ERASE_LIST"] = "删除列表"
-L["ENABLED"] = "已启用"
-L["DISABLED"] = "已禁用"
 L["ACTION_ERASE"] = "删除"
-L["ACTION_IGNORE"] = "保护"
+L["ACTION_PROTECT"] = "保护"
+L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包里都是好东西！"
+L["BAGS_CLEAN_HINT"] = "如果想腾出更多空间，你需要手动删除一些物品。"
+L["LOADING_ITEM"] = "加载中 ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
 L["OPTIONS_EXAMPLE"] = "示例：%s"
-L["OPTIONS_EXAMPLE_ITEM"] = "示例物品"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -128,7 +136,7 @@ L["OPTIONS_KEY_SET"] = "设置按键"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "打开游戏的按键设置列表，Magic Eraser 在其中有自己的分类。"
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"删除你的最低价值物品，与左键点击小地图按钮相同。按键前没有预览，所以请把它绑定在不容易误按的位置。"
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"在此角色上保护鼠标指向的物品，无论它出现在哪里：背包、银行、商人或拾取窗口。如果它在此角色的删除列表中，会被移出。"
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"将鼠标指向的物品加入此角色的删除列表，无论它价值多少。你的保护列表仍然优先。"
@@ -173,7 +181,7 @@ L["OPTIONS_VERSION"] = "版本 %s"
 
 L["TAB_ERASING_DESCRIPTION"] = "每次点击都会删除背包中最便宜的杂物，一次一组。"
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"提示：几乎所有误删的物品都仍然可以通过暴雪的物品恢复服务找回。"
+	"提示：几乎所有误删的物品都仍然可以通过暴雪的物品恢复服务找回！"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "哪些算杂物"
@@ -182,11 +190,10 @@ L["OPTIONS_JUNK_DESCRIPTION"] =
 L["OPTIONS_KIND_QUEST"] = "已完成任务的物品"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "交付最后一个需要它们的任务后剩下的物品。"
 L["OPTIONS_KIND_STARTER"] = "无法接取的任务起始物品"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
-	"会开启一个你的种族或职业永远无法接取的任务的物品。"
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] = "会开启一个你的种族或职业永远无法接取的任务的物品。"
 L["OPTIONS_KIND_FOOD"] = "已用不上的食物与饮料"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"超过最初可使用等级十级的食物和饮料。新手面包和水在 5 级时删除。"
+	"你的等级超过其需求等级十级后的食物和饮料。新手面包和水在 5 级时删除。"
 L["OPTIONS_KIND_AMMO"] = "已用不上的箭与子弹"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"一旦你能使用商人出售的更好弹药，旧的箭和子弹就会被删除。适合你当前等级的最佳商人弹药永远不会被删除。"
@@ -198,6 +205,9 @@ L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"由玩家制造的白色武器与护甲，例如你为小号制作的装备。白色武器与护甲选项不包括这些物品，因此只由此选项决定如何处理它们。"
 L["OPTIONS_KIND_GRAY"] = "灰色垃圾"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "商人会收购的任何灰色物品。"
+L["OPTIONS_KIND_MEAT_FISH"] = "已用不上的肉类与鱼类"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"烹饪配方会用到的肉类和鱼类（包括可直接食用的生鱼），在你超过其等级十级后删除。没有配方用到的可食用鱼类归入已用不上的食物与饮料。"
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
 	"不勾选时，它就不算杂物：永远不会被删除、出售或从银行取出。"
 L["OPTIONS_KINDS_NONE_CHECKED"] =
@@ -213,13 +223,13 @@ L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"按整组物品的出售价值计算，价值超过此数额的物品组永远不会被删除。"
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "手动删除辅助"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "免输入删除"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'默认情况下，游戏会要求你输入"%s"才能删除%s或更高品质的物品。此功能会把这个提示变成简单的是或否确认。'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "启用手动删除辅助"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "启用免输入删除"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"开启或关闭手动删除辅助。游戏仍会询问是或否，只是不用再输入文字。"
+	"开启或关闭免输入删除。游戏仍会询问是或否，只是不用再输入文字。"
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"无出售价值的物品：只简化商人不收购的物品。所有物品：简化每一个需要输入文字的提示。"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"
@@ -318,9 +328,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] = "移除此列表中的所有物品？此操作
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"保护列表中的物品永远不会被删除或出售。所有角色列表会在每个角色上保护该物品，而角色自己的列表只在该角色上保护它。"
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] =
 	"将此物品移到所有角色列表，使其在每个角色上都受保护。"
 
 --------------------------------------------------------------------------------

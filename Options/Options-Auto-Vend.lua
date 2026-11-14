@@ -85,6 +85,7 @@ function ns.BuildAutoVendOptions(args)
 		get = GetReportMode,
 		set = function(_, value)
 			SetReportMode(value)
+			ns.RefreshSettings()
 		end,
 	}
 
@@ -98,7 +99,12 @@ function ns.BuildAutoVendOptions(args)
 
 	args.exampleAutoVendSale = ns.OptionsExample(
 		function()
-			return format(L["SOLD_ITEM"], ns.EXAMPLE_ITEM_LINK, " x3", ns:FormatCurrency(EXAMPLE_SALE_VALUE))
+			return format(
+				L["SOLD_ITEM"],
+				ns.ExampleItemLink(ns.EXAMPLE_JUNK_ITEM_ID, ns.OPTIONS_REGISTRY.MerchantBank),
+				" x3",
+				ns:FormatCurrency(EXAMPLE_SALE_VALUE)
+			)
 		end,
 		17,
 		function()

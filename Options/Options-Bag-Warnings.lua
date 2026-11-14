@@ -3,8 +3,6 @@ local L = ns.L
 
 local format = string.format
 
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-
 local GetColor = ns.GetColor
 
 --------------------------------------------------------------------------------
@@ -80,13 +78,9 @@ end
     Features/Bank-Retrieval.lua, which is why a hidden slider never holds back a
     visible feature. Bank Retrieval's own section says so while it applies.
 
-    Toggling or moving the threshold repaints Merchant & Bank, so that line is
-    right the next time the player opens it.
+    Toggling or moving the threshold ends in ns.RefreshSettings, which repaints
+    Merchant & Bank, so that line is right the next time the player opens it.
 ]]
-local function NotifyMerchantBank()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.MerchantBank)
-end
-
 function ns.BuildBagWarningsOptions(args)
 	args.spacerBagsFull0 = ns.OptionsSpacer(30)
 	args.headerBagsFull = ns.OptionsHeader(L["OPTIONS_BAGS_FULL_HEADER"], 31)
@@ -98,9 +92,7 @@ function ns.BuildBagWarningsOptions(args)
 		"bagsFullNudgeEnabled",
 		"OPTIONS_ENABLE_BAGS_FULL_WARNINGS",
 		"OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION",
-		35,
-		nil,
-		NotifyMerchantBank
+		35
 	)
 
 	args.rowBagsFullThreshold = SubRow(36, BagsFullOff, {
@@ -118,7 +110,7 @@ function ns.BuildBagWarningsOptions(args)
 			end,
 			set = function(_, value)
 				ns.db.profile.bagsFullThreshold = value
-				NotifyMerchantBank()
+				ns.RefreshSettings()
 			end,
 		},
 	})

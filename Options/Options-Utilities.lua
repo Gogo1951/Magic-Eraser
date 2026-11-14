@@ -56,8 +56,9 @@ end
     ns.db.profile[settingKey]; onSet runs after the write for a switch whose
     change has to reach something beyond the saved value.
 
-    Both copies read the live setting on every draw, so flipping one and then
-    opening the other page never shows a stale box.
+    Both copies read the live setting on every draw, and a flip ends in
+    ns.RefreshSettings, so the other copy and the mini-map menu's row follow at
+    once.
 ]]
 function ns.OptionsFeatureToggle(settingKey, nameKey, descKey, order, width, onSet)
 	return {
@@ -74,6 +75,7 @@ function ns.OptionsFeatureToggle(settingKey, nameKey, descKey, order, width, onS
 			if onSet then
 				onSet(value)
 			end
+			ns.RefreshSettings()
 		end,
 	}
 end
@@ -121,7 +123,24 @@ end
     Callers put an ns.OptionsSpacer with the same hidden above the first
     example, so the example sits one blank line below the control it shows.
 ]]
-ns.EXAMPLE_ITEM_LINK = GetColor("TEXT") .. L["OPTIONS_EXAMPLE_ITEM"] .. "|r"
+--[[
+    An example line's item: the client's own quality-colored link for itemId,
+    brackets kept as a chat line keeps them (ns:PrintMessage), with the body
+    color opened again after the link's |r so the rest of the line keeps it. A
+    cold item shows its name, or nothing, while ns.WarmItemCache asks the
+    server and repaints registryName's panel once the link is in.
+]]
+function ns.ExampleItemLink(itemId, registryName)
+	if not itemId then
+		return ""
+	end
+	local name, link = GetItemInfo(itemId)
+	if link then
+		return link .. GetColor("TEXT")
+	end
+	ns.WarmItemCache({ itemId }, registryName)
+	return name or ""
+end
 
 function ns.OptionsExample(getText, order, hidden)
 	return {
@@ -326,7 +345,8 @@ end
       onRemove: function(itemId) removing one
       onRestore: optional function() putting the list back to its defaults
       onClear: optional function() emptying the list
-      notifyKey: AceConfigRegistry name to NotifyChange on every mutation
+      notifyKey: the panel's AceConfigRegistry name, repainted as cold item
+        rows load (ns.WarmItemCache); every mutation ends in ns.RefreshSettings
       labels: { addName, addHelp, addInvalid, removeDesc, empty }
         plus { restoreName, restoreDesc, restoreConfirm } when onRestore is
         supplied, and { clearName, clearDesc, clearConfirm } when onClear is
@@ -416,7 +436,7 @@ function ns:BuildItemListOptions(spec)
 			order = 9999,
 			func = function()
 				spec.onRestore()
-				AceConfigRegistry:NotifyChange(spec.notifyKey)
+				ns.RefreshSettings()
 			end,
 		}
 	end
@@ -431,7 +451,7 @@ function ns:BuildItemListOptions(spec)
 			order = 10000,
 			func = function()
 				spec.onClear()
-				AceConfigRegistry:NotifyChange(spec.notifyKey)
+				ns.RefreshSettings()
 			end,
 		}
 	end
@@ -466,7 +486,7 @@ function ns:BuildItemListOptions(spec)
 			end,
 			set = function(_, itemId)
 				spec.onAdd(itemId)
-				AceConfigRegistry:NotifyChange(spec.notifyKey)
+				ns.RefreshSettings()
 			end,
 		}
 		order = order + 1
@@ -498,7 +518,7 @@ function ns:BuildItemListOptions(spec)
 				return
 			end
 			spec.onAdd(itemId)
-			AceConfigRegistry:NotifyChange(spec.notifyKey)
+			ns.RefreshSettings()
 		end,
 	}
 	order = order + 1
@@ -578,7 +598,7 @@ function ns:BuildItemListOptions(spec)
 					order = 2,
 					func = function()
 						actionColumn.func(capturedId)
-						AceConfigRegistry:NotifyChange(spec.notifyKey)
+						ns.RefreshSettings()
 					end,
 				}
 			else
@@ -612,7 +632,7 @@ function ns:BuildItemListOptions(spec)
 			order = 3,
 			func = function()
 				spec.onRemove(capturedId)
-				AceConfigRegistry:NotifyChange(spec.notifyKey)
+				ns.RefreshSettings()
 			end,
 		}
 
@@ -690,8 +710,9 @@ function ns.BuildCharacterListTree(spec)
 			    A character with an empty list is noise in the tree, so it is left
 			    out -- except for the character playing right now, whose list has
 			    to be reachable to put a first item in it. Character keys
-			    ("Name - Realm") are never localized, so they are shown as-is in
-			    their class color and sorted as plain strings.
+			    ("Name - Realm", or "First Last" on WoW Forever) are never
+			    localized, so they are shown as-is in their class color and
+			    sorted as plain strings.
 			]]
 			local list = spec.getListForScope(charKey)
 			if charKey == currentCharacter or (list and next(list) ~= nil) then

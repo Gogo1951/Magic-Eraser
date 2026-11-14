@@ -14,7 +14,7 @@ local GetColor = ns.GetColor
     same way every panel is, so each section's settings still live beside the
     feature that owns them. Order on screen comes from the order numbers those
     fragments carry, in blocks of ten: the kind checkboxes and the value cap
-    from Options-Eraser.lua at 10 and 30, Manual Delete Assistance at 40, then
+    from Options-Eraser.lua at 10 and 30, Delete Without Typing at 40, then
     Erase Confirmation from Options-Eraser.lua at 50.
 
     Registered as a built table rather than a builder function (see

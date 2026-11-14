@@ -58,12 +58,14 @@ Data/Data.lua
 Data/Vanilla/Quest-Items-Vanilla.lua
 Data/Vanilla/Quest-Starting-Items-Vanilla.lua
 Data/Vanilla/Consumables-Vanilla.lua
+Data/Vanilla/Meat-Fish-Vanilla.lua
 Data/Vanilla/Ammo-Vanilla.lua
 Data/Vanilla/Equipment-Vanilla.lua
 Data/Vanilla/Class-Reagents-Vanilla.lua
 Data/Discovery/Quest-Items-Discovery.lua
 Data/Discovery/Quest-Starting-Items-Discovery.lua
 Data/Discovery/Consumables-Discovery.lua
+Data/Discovery/Meat-Fish-Discovery.lua
 Data/Discovery/Ammo-Discovery.lua
 Data/Discovery/Equipment-Discovery.lua
 Data/Discovery/Class-Reagents-Discovery.lua
@@ -86,6 +88,8 @@ Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
 Features/Tint-Junk.lua
 Features/Key-Bindings.lua
+Features/Menu-Kit.lua
+Features/Minimap-Menu.lua
 Features/Minimap-Button.lua
 
 # Diagnostics

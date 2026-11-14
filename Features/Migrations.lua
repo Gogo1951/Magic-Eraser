@@ -21,7 +21,9 @@ local _, ns = ...
       - Each character's own lists and seed marker live in char, AceDB's
         per-character scope, so they stay per-character whatever profile is
         active.
-      - The All Characters lists and the mini-map button stay in global.
+      - The All Characters lists stay in global. The mini-map button stayed
+        there too until its own move into the profile (MoveMinimapToProfiles,
+        Features/Core.lua).
 
     Steps, in order:
 
@@ -135,7 +137,7 @@ end
     fresh install, with no saved table yet, is stamped current rather than
     migrated, so its second login never runs the steps either.
 ]]
-local STORAGE_VERSION = 3
+local STORAGE_VERSION = 4
 
 function ns:MigrateSavedVariables()
 	local sv = MagicEraserDB

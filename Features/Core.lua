@@ -7,8 +7,6 @@ local L = ns.L
 
 local ipairs = ipairs
 
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-
 --------------------------------------------------------------------------------
 -- Version
 --------------------------------------------------------------------------------
@@ -156,10 +154,63 @@ end
 -- Login
 --------------------------------------------------------------------------------
 
+-- MIGRATION (remove after 2026-12-14)
+--[[
+    Moves the mini-map button's position and its Enable Mini-map Button switch
+    from global into the profile, so a profile switch or reset moves the button
+    like every other setting. The saved placement is copied into every profile
+    a character uses or the table holds, Default included, so whichever profile
+    a character opens on finds the button where it was, and then cleared from
+    global. A profile that somehow already has its own is left alone.
+
+    It lives here rather than in Features/Migrations.lua, and keys on
+    global.minimap still being there rather than on storageVersion, so it keeps
+    running after that file's earlier-dated steps are deleted. A second run
+    finds global.minimap gone and does nothing.
+]]
+local function MoveMinimapToProfiles(sv)
+	local saved = sv.global.minimap
+	sv.global.minimap = nil
+	if type(saved) ~= "table" or next(saved) == nil then
+		return
+	end
+
+	local names = { Default = true }
+	for name in pairs(sv.profiles) do
+		names[name] = true
+	end
+	for _, name in pairs(sv.profileKeys or {}) do
+		if type(name) == "string" then
+			names[name] = true
+		end
+	end
+
+	for name in pairs(names) do
+		local profile = sv.profiles[name]
+		if profile == nil then
+			profile = {}
+			sv.profiles[name] = profile
+		end
+		if type(profile) == "table" and profile.minimap == nil then
+			local copy = {}
+			for key, value in pairs(saved) do
+				copy[key] = value
+			end
+			profile.minimap = copy
+		end
+	end
+end
+
 function ns:OnPlayerLogin()
 	-- MIGRATION (remove after 2026-11-30)
 	-- On the raw table, before AceDB picks each character's profile.
 	ns:MigrateSavedVariables()
+	-- MIGRATION (remove after 2026-12-14)
+	local sv = MagicEraserDB
+	if type(sv) == "table" and type(sv.global) == "table" and sv.global.minimap ~= nil then
+		sv.profiles = sv.profiles or {}
+		MoveMinimapToProfiles(sv)
+	end
 	-- MIGRATION (remove after 2026-11-21)
 	ns:MigrateRetiredTooltipSwitch()
 
@@ -241,10 +292,9 @@ end
 ]]
 function ns:ApplyProfile()
 	ns:InvalidateCache()
+	ns:ApplyMinimapButton()
 	ns:RefreshDisplay()
-	for _, registryName in pairs(ns.OPTIONS_REGISTRY) do
-		AceConfigRegistry:NotifyChange(registryName)
-	end
+	ns.RefreshSettings()
 end
 
 --[[

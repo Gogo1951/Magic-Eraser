@@ -109,6 +109,15 @@ local function GetConsumableEraseLevel(useLevel)
 end
 
 --[[
+    Meat and fish a cooking recipe uses outgrow the same way food does, ten
+    levels on (five flat for the lowest), from the level in the flavor
+    folder's Meat-Fish file ([itemId] = { level }): the use level for raw fish
+    you can eat as caught, the item level for meat you can only cook. Their
+    own kind, unchecked by default, so a fisher or cook keeps what they gather.
+]]
+local GetMeatFishEraseLevel = GetConsumableEraseLevel
+
+--[[
     The player level at which an arrow or bullet counts as outgrown: the moment
     the player can use a better kind a vendor sells, with no ten-level wait the
     way food has. A hunter buys the new tier on the spot, so the old stack is
@@ -334,7 +343,8 @@ end
     Whether the player counts one kind as junk, from the Erasing panel's
     checkboxes: see ns.ERASE_KINDS in Data/Data.lua. An Erase List entry has no
     checkbox and is always junk. A kind with no saved answer takes its default
-    from Data/Default-Settings.lua, which is junk for every kind but "crafted",
+    from Data/Default-Settings.lua, which is junk for every kind but "crafted"
+    and "meatFish",
     and anything else unreadable counts as junk.
 ]]
 local DEFAULT_JUNK_KINDS = ns.DATABASE_DEFAULTS.profile.junkKinds
@@ -361,9 +371,10 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	    The Erase List first, and outside the chain below rather than a branch in
 	    it: a listed item is the player's own instruction, so it matches whatever
 	    its rarity and whatever the curated databases do or do not say about it.
-	    That is the entire point of the list. A white trade good matches no branch
-	    below -- not quest, not consumable, not ammo, not equipment, and the gray fallback
-	    needs rarity 0 -- so this is the only way one can ever be erased.
+	    That is the entire point of the list. A white trade good that isn't meat
+	    or fish matches no branch below -- not quest, not consumable, not ammo,
+	    not equipment, and the gray fallback needs rarity 0 -- so this is the only
+	    way one can ever be erased.
 
 	    The Ignore List still wins, and not by a check here. All three scanners
 	    gate on ns:IsIgnored before calling this, so an ignored item never
@@ -377,6 +388,7 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	local questItemDatabase = ns.ALLOWED_DELETE_QUEST_ITEMS or {}
 	local questStarterDatabase = ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS or {}
 	local consumableDatabase = ns.ALLOWED_DELETE_CONSUMABLES or {}
+	local meatFishDatabase = ns.ALLOWED_DELETE_MEAT_FISH or {}
 	local ammoDatabase = ns.ALLOWED_DELETE_AMMO or {}
 
 	--[[
@@ -396,6 +408,11 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 			if ns:IsQuestCompleted(questId) then
 				return "quest"
 			end
+		end
+	elseif meatFishDatabase[itemId] then
+		local level = meatFishDatabase[itemId][1] or 1
+		if playerLevel >= GetMeatFishEraseLevel(level) then
+			return "meatFish"
 		end
 	elseif consumableDatabase[itemId] then
 		local useLevel = consumableDatabase[itemId][1] or 1

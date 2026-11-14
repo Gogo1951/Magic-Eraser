@@ -103,7 +103,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-22, Classic Era 1.15.9.70003
+	2026-11-14, Classic Era 1.15.9.70576
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -118,6 +118,7 @@ Notes
 	- Poor and common quality only. Plenty of quest starters are epics and legendaries (Dormant Wind Kissed Blade, Frame of Atiesh, Shattered Fragments of Val'anyr, Battered Hilt), and none may ever be erased. Relax the cap only after reading every row.
 	- Disabled quests, quest 1 (a dev test entry), and dev-marked or placeholder quests and items are left out.
 	- Rows outside the query were added from wago.tools build 1.15.9.70003.
+	- Season of Discovery's own starters, which this client's tables list too (211269, 211454, 215468, 216661, 219930, 220379, 221350 to 221352, 227911 and 236750), are left out of this folder. So are Simple Parchment (6497), which starts dev quest 1, and Book of Deathstones: Mask of Death (191550) and Mud-covered notebook (202641), which QuestieDB has no source or quest for.
 	- Read by Features/Junk-Rules.lua and Features/Quest-Item-Alerts.lua.
 
 SQL (CMaNGOS)
@@ -207,7 +208,7 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/ItemSparse?build=1.15.9.70003
+	https://wago.tools/db2/ItemSparse?build=1.15.9.70576
 
 QuestieDB
 	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Classic/classicQuestDB.lua

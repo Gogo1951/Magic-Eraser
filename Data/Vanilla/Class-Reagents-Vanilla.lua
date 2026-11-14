@@ -50,7 +50,7 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-22, Classic Era 1.15.9.70003
+	2026-11-14, Classic Era 1.15.9.70576
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.
@@ -69,10 +69,10 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/SkillLineAbility?build=1.15.9.70003
+	https://wago.tools/db2/SkillLineAbility?build=1.15.9.70576
 	https://wago.tools/db2/SkillRaceClassInfo?build=1.15.9.70003
-	https://wago.tools/db2/SpellReagents?build=1.15.9.70003
-	https://wago.tools/db2/SkillLine?build=1.15.9.70003
+	https://wago.tools/db2/SpellReagents?build=1.15.9.70576
+	https://wago.tools/db2/SkillLine?build=1.15.9.70576
 
 QuestieDB
 	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Classic/classicItemDB.lua
