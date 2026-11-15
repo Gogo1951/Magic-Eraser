@@ -2,13 +2,15 @@ local _, ns = ...
 local L = ns.L
 local D = ns.DiagnosticsStrings
 
+local Kit = ns.OptionsKit
+
 --------------------------------------------------------------------------------
 -- Registration
 --------------------------------------------------------------------------------
 
 --[[
     Registration only -- panel content lives in the per-panel builder files.
-    Called from ns:OnPlayerLogin once ns.db exists, because the Ignore List,
+    Called from ns:OnPlayerLogin once ns.db exists, because the Protect List,
     Erase List and Profiles builders need the AceDB database. The tree:
 
       Magic Eraser (General, the root)
@@ -21,114 +23,53 @@ local D = ns.DiagnosticsStrings
         Feedback & Support
         Diagnostic Tools
 
-    A top-level child's third AddToBlizOptions argument is the root's display
-    name (ns.ADDON_TITLE). Erasing's two children name Erasing by the category
-    ID its own AddToBlizOptions returned instead: AceConfigDialog maps only a
-    root's display name to its ID, while the Settings panel finds a category
-    at any depth by ID. Registration order is tree order within each level.
-    The Profiles display name comes already localized from AceDBOptions-3.0.
+    Kit.RegisterPanel registers each panel's builder function, so every repaint
+    (ns.RefreshSettings) rebuilds it and no panel ever draws a stale value,
+    then adds it to the Settings tree under the root, or under the panel its
+    parent key names, by the category ID that panel's registration returned.
+    Registration order is tree order within each level. The Profiles display
+    name comes already localized from AceDBOptions-3.0.
 ]]
-local AceConfig = LibStub("AceConfig-3.0")
-local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-
---[[
-    Seeds a list panel's tree status before it is first drawn:
-      - treewidth sizes the tree (see ns.OPTIONS_TREE_WIDTH). AceGUI's
-        SetStatusTable fills it in only when the key is absent, so seeding it
-        here wins, while a player dragging the splitter still overwrites it.
-      - selected opens the tree on the character being played. It is set
-        again every time the panel hides, so each visit starts there, while
-        picking another character holds until the player leaves the page.
-]]
-local function PrepareListTree(registryName, panel)
-	local status = AceConfigDialog:GetStatusTable(registryName)
-	status.groups = status.groups or {}
-	status.groups.treewidth = ns.OPTIONS_TREE_WIDTH
-	status.groups.selected = ns.db.keys.char
-
-	if panel then
-		panel:HookScript("OnHide", function()
-			status.groups.selected = ns.db.keys.char
-		end)
-	end
-end
-
 function ns:RegisterOptionsPanels()
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.General, ns.BuildGeneralOptions())
 	--[[
-	    AddToBlizOptions returns (frame, categoryID). The ID is what
-	    Settings.OpenToCategory expects; relying on the display name matching the
-	    ID is fragile -- the library only aliases the ID to the name on clients
-	    without C_SettingsUtil.OpenSettingsPanel (Era), so on TBC Anniversary a
-	    name-based lookup returns nil. Capture the real references here.
+	    The root's category ID is kept for the Eraser Context report, which
+	    prints the route ns:OpenOptionsPanel takes (Diagnostics/Manifests.lua).
 	]]
-	ns.generalPanel, ns.generalCategoryID =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.General, ns.ADDON_TITLE)
+	local _, generalCategoryID = Kit.RegisterPanel("General", ns.BuildGeneralOptions, L["ADDON_TITLE"])
+	ns.generalCategoryID = generalCategoryID
 
-	--[[
-	    Erasing holds everything about what gets erased, with the two lists that
-	    decide it nested beneath it. A built table rather than a builder
-	    function, because nothing on it is drawn from a live list.
-	]]
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Erasing, ns.BuildErasingOptions())
-	local _, erasingCategoryID =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Erasing, L["TAB_ERASING"], ns.ADDON_TITLE)
+	-- Erasing holds everything about what gets erased, with the two lists that decide it nested beneath it.
+	Kit.RegisterPanel("Erasing", ns.BuildErasingOptions, L["TAB_ERASING"])
 
 	--[[
-	    The two list panels are builder functions, not built tables: their rows
-	    are the lists themselves, so AceConfig re-invokes them on every open and
-	    every NotifyChange and neither ever renders a stale list. The Protect
-	    List is the Erase List in reverse, so both get the same treatment.
+	    The two list pages are trees: All Characters, then each character, with
+	    the selected list's items beside them. Each opens on the character being
+	    played, every visit.
 	]]
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.EraseList, ns.BuildEraseListOptions)
-	local erasePanel =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.EraseList, L["TAB_ERASE_LIST"], erasingCategoryID)
-	PrepareListTree(ns.OPTIONS_REGISTRY.EraseList, erasePanel)
+	local function CurrentCharacter()
+		return ns.db.keys.char
+	end
+	Kit.RegisterPanel("EraseList", ns.BuildEraseListOptions, L["TAB_ERASE_LIST"], "Erasing")
+	Kit.PrepareTree("EraseList", CurrentCharacter)
+	Kit.RegisterPanel("IgnoreList", ns.BuildIgnoreListOptions, L["TAB_PROTECT_LIST"], "Erasing")
+	Kit.PrepareTree("IgnoreList", CurrentCharacter)
 
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.IgnoreList, ns.BuildIgnoreListOptions)
-	local ignorePanel =
-		AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.IgnoreList, L["TAB_PROTECT_LIST"], erasingCategoryID)
-	PrepareListTree(ns.OPTIONS_REGISTRY.IgnoreList, ignorePanel)
-
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.MerchantBank, ns.BuildMerchantBankOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.MerchantBank, L["TAB_MERCHANT_BANK"], ns.ADDON_TITLE)
-
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.AlertsTints, ns.BuildAlertsTintsOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.AlertsTints, L["TAB_ALERTS"], ns.ADDON_TITLE)
+	Kit.RegisterPanel("MerchantBank", ns.BuildMerchantBankOptions, L["TAB_MERCHANT_BANK"])
+	Kit.RegisterPanel("AlertsTints", ns.BuildAlertsTintsOptions, L["TAB_ALERTS"])
 
 	local profilesOptions = ns.BuildProfilesOptions()
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Profiles, profilesOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Profiles, profilesOptions.name, ns.ADDON_TITLE)
-
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.FeedbackSupport, ns.BuildFeedbackSupportOptions())
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.FeedbackSupport, L["OPTIONS_FEEDBACK"], ns.ADDON_TITLE)
+	Kit.RegisterPanel("Profiles", profilesOptions, profilesOptions.name)
+	Kit.RegisterPanel("FeedbackSupport", ns.BuildFeedbackSupportOptions, L["OPTIONS_FEEDBACK"])
 
 	-- A builder function, so the tabs come and go with the enable toggle (see Diagnostics/Options-Diagnostics.lua).
-	AceConfig:RegisterOptionsTable(ns.OPTIONS_REGISTRY.Diagnostics, ns.BuildDiagnosticsOptions)
-	AceConfigDialog:AddToBlizOptions(ns.OPTIONS_REGISTRY.Diagnostics, D.TAB, ns.ADDON_TITLE)
+	Kit.RegisterPanel("Diagnostics", ns.BuildDiagnosticsOptions, D.TAB)
 end
 
 --------------------------------------------------------------------------------
 -- Slash Commands
 --------------------------------------------------------------------------------
 
-function ns:OpenOptionsPanel()
-	--[[
-	    Combat first: the Settings panel is protected there, so every route below
-	    is blocked and the player would get an ADDON_ACTION_BLOCKED error instead.
-	]]
-	if InCombatLockdown() then
-		ns:PrintMessage(L["CHAT_OPTIONS_IN_COMBAT"])
-		return
-	end
-
-	if Settings and Settings.OpenToCategory and ns.generalCategoryID then
-		Settings.OpenToCategory(ns.generalCategoryID)
-		return
-	end
-	AceConfigDialog:Open(ns.OPTIONS_REGISTRY.General)
-end
-
+-- ns:OpenOptionsPanel is Options-Kit's: the Combat Guard first, then the root panel by its category ID.
 SLASH_MAGICERASER1 = "/eraser"
 SlashCmdList.MAGICERASER = function()
 	ns:OpenOptionsPanel()

@@ -1,7 +1,7 @@
 local _, ns = ...
 local L = ns.L
 
-local GetColor = ns.GetColor
+local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
 -- Erasing Panel
@@ -17,8 +17,8 @@ local GetColor = ns.GetColor
     from Options-Eraser.lua at 10 and 30, Delete Without Typing at 40, then
     Erase Confirmation from Options-Eraser.lua at 50.
 
-    Registered as a built table rather than a builder function (see
-    Options/Options.lua): nothing here is drawn from a live list.
+    Registered as its builder function (Kit.RegisterPanel), so every repaint
+    rebuilds it.
 ]]
 local ERASING_SECTIONS = {
 	"BuildEraserOptions",
@@ -28,9 +28,9 @@ local ERASING_SECTIONS = {
 
 function ns.BuildErasingOptions()
 	local args = {
-		descIntro = ns.OptionsDesc(L["TAB_ERASING_DESCRIPTION"], 1),
-		spacerRestore = ns.OptionsSpacer(1.5),
-		descRestore = ns.OptionsDesc(GetColor("HELP") .. L["TAB_ERASING_RESTORE_NOTE"] .. "|r", 2),
+		descIntro = Kit.Desc(L["TAB_ERASING_DESCRIPTION"], 1),
+		spacerRestore = Kit.Spacer(1.5),
+		descRestore = Kit.Desc(Kit.Color("HELP", L["TAB_ERASING_RESTORE_NOTE"]), 2),
 	}
 
 	for _, builder in ipairs(ERASING_SECTIONS) do

@@ -112,7 +112,7 @@ L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to f
 L["LOADING_ITEM"] = "Loading ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Example: %s"
+L["SAMPLE_EXAMPLE"] = "Example"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -124,7 +124,7 @@ L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Shows the Magic Eraser button on your mini-map. Its icon is your Lowest-Value Item, and hovering it shows the Clutter Report."
+	"Shows the Magic Eraser button on your mini-map. Its icon is your Lowest-Value Item, and hovering it opens a menu with everything the button does."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Features"
@@ -254,7 +254,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary in Chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Every Sale in Chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "No Chat Report"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"What Auto-Vend prints in chat. Summary in Chat prints one total per visit. Every Sale in Chat prints each sale, then the total. No Chat Report prints nothing."
+	"What Auto-Vend prints in chat. Summary in Chat prints one total per visit. Every Sale in Chat prints the total, then each sale. No Chat Report prints nothing."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"

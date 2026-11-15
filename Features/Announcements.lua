@@ -13,6 +13,11 @@ ns.BRAND_PREFIX = string.format("%s%s|r %s//|r ", GetColor("INFO"), ns.ADDON_TIT
     is no Announce/whisper path. Item links keep their brackets here, the way
     the game prints loot.
 ]]
+function ns:FormatMessage(message)
+	return ns.BRAND_PREFIX .. GetColor("TEXT") .. message .. "|r"
+end
+
+-- The options' Example lines draw this same finished line (ns.ExampleLine), so they match chat exactly.
 function ns:PrintMessage(message)
-	print(ns.BRAND_PREFIX .. GetColor("TEXT") .. message .. "|r")
+	print(ns:FormatMessage(message))
 end

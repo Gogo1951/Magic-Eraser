@@ -3,7 +3,7 @@ local L = ns.L
 
 local format, ipairs = string.format, ipairs
 
-local GetColor = ns.GetColor
+local Kit = ns.OptionsKit
 
 --[[
     The value cap's dropdown, built once from ns.VALUE_CAP_CHOICES rather than
@@ -19,10 +19,6 @@ for index, gold in ipairs(ns.VALUE_CAP_CHOICES) do
 	VALUE_CAP_SORTING[index] = gold
 end
 
-local function ValueCapOff()
-	return not (ns.db and ns.db.profile.valueCapEnabled)
-end
-
 --[[
     A kind's checkbox changes what counts as junk at all, so it drops the scan
     cache and repaints like the value cap does: the mini-map icon moves on the
@@ -36,8 +32,9 @@ local function SetJunkKind(deleteReason, isJunk)
 end
 
 --[[
-    The value-cap switch's onSet, shared by its Erasing-page copy and its copy
-    in the root panel's Features section. The cap changes which items are
+    The value-cap switch's side effect, run by its ns.FEATURES apply, so every
+    copy of the switch (its Erasing page, the root panel's Features section and
+    the mini-map menu's More Features) shares it. The cap changes which items are
     candidates at all, so without this the mini-map button keeps wearing the
     icon of something the eraser will no longer touch until the next bag update
     happens to clear it.
@@ -67,21 +64,8 @@ end
     Confirmation closes the panel from ns.BuildEraseConfirmOptions below.
 ]]
 function ns.BuildEraserOptions(args)
-	args.spacerKinds0 = ns.OptionsSpacer(10)
-	args.headerKinds = ns.OptionsHeader(L["OPTIONS_JUNK_HEADER"], 11)
-	args.spacerKinds1 = ns.OptionsSpacer(12)
-	args.descKinds = ns.OptionsDesc(L["OPTIONS_JUNK_DESCRIPTION"], 13)
-	args.spacerKinds2 = ns.OptionsSpacer(14)
-
-	args.descNoneChecked = {
-		type = "description",
-		name = GetColor("OFF") .. L["OPTIONS_KINDS_NONE_CHECKED"] .. "|r",
-		fontSize = "medium",
-		order = 15,
-		hidden = function()
-			return not NoKindChecked()
-		end,
-	}
+	Kit.Section(args, "Kinds", 10, L["OPTIONS_JUNK_HEADER"], L["OPTIONS_JUNK_DESCRIPTION"])
+	args.descNoneChecked = Kit.WarningLine(L["OPTIONS_KINDS_NONE_CHECKED"], NoKindChecked, 15)
 
 	local toggles = {}
 	for index, kind in ipairs(ns.ERASE_KINDS) do
@@ -98,54 +82,33 @@ function ns.BuildEraserOptions(args)
 			end,
 		}
 	end
-	ns.OptionsTogglePairs(args, "rowKinds", 15, toggles)
+	args.rowKinds = Kit.Pairs(16, nil, toggles)
 
 	--[[
 	    Maximum Value to Erase. Both controls invalidate the scan cache and
 	    repaint rather than only writing the setting (see ns.OnValueCapToggled).
+	    The switch and its limit share one line (Kit.ToggleRow); the dropdown
+	    hides while the switch is off: a setting for a feature that is not
+	    running is not shown at all.
 	]]
-	args.spacerValueCap0 = ns.OptionsSpacer(30)
-	args.headerValueCap = ns.OptionsHeader(L["OPTIONS_VALUE_CAP_HEADER"], 31)
-	args.spacerValueCap1 = ns.OptionsSpacer(32)
-	args.descValueCap = ns.OptionsDesc(L["OPTIONS_VALUE_CAP_DESCRIPTION"], 33)
-	args.spacerValueCap2 = ns.OptionsSpacer(34)
-
-	--[[
-	    The switch and its limit share one line, the switch at
-	    ns.OPTIONS_LABEL_WIDTH where a caption would sit and the dropdown at
-	    ns.OPTIONS_CONTROL_WIDTH, so the dropdown still ends where every other
-	    row's does. The
-	    dropdown hides while the switch is off: a setting for a feature that is
-	    not running is not shown at all.
-	]]
-	args.toggleValueCap = ns.OptionsFeatureToggle(
-		"valueCapEnabled",
-		"OPTIONS_ENABLE_VALUE_CAP",
-		"OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION",
-		35,
-		ns.OPTIONS_LABEL_WIDTH,
-		ns.OnValueCapToggled
-	)
-
-	args.selectValueCap = {
-		type = "select",
-		name = "",
-		desc = L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"],
-		width = ns.OPTIONS_CONTROL_WIDTH,
-		order = 36,
-		hidden = ValueCapOff,
-		values = VALUE_CAP_VALUES,
-		sorting = VALUE_CAP_SORTING,
-		get = function()
-			return ns:GetValueCapGold()
-		end,
-		set = function(_, value)
-			ns.db.profile.valueCapGold = value
-			ns:InvalidateCache()
-			ns:RefreshDisplay()
-			ns.RefreshSettings()
-		end,
-	}
+	Kit.Section(args, "ValueCap", 30, L["OPTIONS_VALUE_CAP_HEADER"], L["OPTIONS_VALUE_CAP_DESCRIPTION"])
+	args.rowValueCap = Kit.ToggleRow(35, Kit.FeatureSwitch("valueCapEnabled"), {
+		control = {
+			type = "select",
+			desc = L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"],
+			values = VALUE_CAP_VALUES,
+			sorting = VALUE_CAP_SORTING,
+			get = function()
+				return ns:GetValueCapGold()
+			end,
+			set = function(_, value)
+				ns.db.profile.valueCapGold = value
+				ns:InvalidateCache()
+				ns:RefreshDisplay()
+				ns.RefreshSettings()
+			end,
+		},
+	})
 end
 
 --[[
@@ -153,15 +116,6 @@ end
     Erase List included, rather than one per kind.
 ]]
 function ns.BuildEraseConfirmOptions(args)
-	args.spacerEraseConfirm0 = ns.OptionsSpacer(50)
-	args.headerEraseConfirm = ns.OptionsHeader(L["OPTIONS_ERASE_CONFIRM_HEADER"], 51)
-	args.spacerEraseConfirm1 = ns.OptionsSpacer(52)
-	args.descEraseConfirm = ns.OptionsDesc(L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"], 53)
-	args.spacerEraseConfirm2 = ns.OptionsSpacer(54)
-	args.toggleEraseConfirm = ns.OptionsFeatureToggle(
-		"eraseConfirmEnabled",
-		"OPTIONS_ENABLE_ERASE_CONFIRM",
-		"OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION",
-		55
-	)
+	Kit.Section(args, "EraseConfirm", 50, L["OPTIONS_ERASE_CONFIRM_HEADER"], L["OPTIONS_ERASE_CONFIRM_DESCRIPTION"])
+	args.toggleEraseConfirm = Kit.FeatureSwitch("eraseConfirmEnabled", 55)
 end

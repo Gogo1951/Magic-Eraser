@@ -114,7 +114,7 @@ L["BAGS_CLEAN_HINT"] = "Tendrás que eliminar algo manualmente si quieres libera
 L["LOADING_ITEM"] = "Cargando ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Ejemplo: %s"
+L["SAMPLE_EXAMPLE"] = "Ejemplo"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -127,7 +127,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Muestra en el chat una línea de bienvenida con la versión cada vez que inicias sesión."
 L["OPTIONS_ENABLE_MINIMAP"] = "Habilitar botón del minimapa"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Muestra el botón de Magic Eraser en tu minimapa. Su ícono es tu Objeto de menor valor, y al pasar el cursor por encima se muestra el Informe de basura."
+	"Muestra el botón de Magic Eraser en tu minimapa. Su ícono es tu Objeto de menor valor, y al pasar el cursor por encima se abre un menú con todo lo que hace el botón."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funciones"
@@ -260,7 +260,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Resumen en el chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Cada venta en el chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Sin informe en el chat"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"Lo que la Auto-venta muestra en el chat. Resumen en el chat muestra un total por visita. Cada venta en el chat muestra cada venta y luego el total. Sin informe en el chat no muestra nada."
+	"Lo que la Auto-venta muestra en el chat. Resumen en el chat muestra un total por visita. Cada venta en el chat muestra el total y luego cada venta. Sin informe en el chat no muestra nada."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Recuperación del banco"

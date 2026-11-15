@@ -3,15 +3,16 @@ local L = ns.L
 
 local format = string.format
 
+local Kit = ns.OptionsKit
+
 local function QuestAlertsOff()
 	return not (ns.db and ns.db.profile.questAlertsEnabled)
 end
 
 --[[
-    Each example names a real item of the kind its alert is about: the lowest
-    item id in the flavor's quest-item table for the ready alert, and in its
-    quest-starting table for the unavailable one. The lowest id is a fixed
-    choice that every flavor's data holds, and is looked up once.
+    The Example names a real quest item: the lowest item id in the flavor's
+    quest-item table, a fixed choice that every flavor's data holds, looked
+    up once.
 ]]
 local exampleItemIds = {}
 
@@ -43,30 +44,15 @@ end
     Features/Quest-Item-Alerts.lua for the behavior this setting drives. Its
     switch is also in the root panel's Features section.
 
-    Two examples, one per alert, since the two sentences say different things.
+    One Example line, the ready alert: the unavailable-starter alert is the
+    same message with a different reason, so a second line would only repeat
+    it.
 ]]
 function ns.BuildQuestItemAlertsOptions(args)
-	args.spacerQuestAlerts0 = ns.OptionsSpacer(20)
-	args.headerQuestAlerts = ns.OptionsHeader(L["OPTIONS_QUEST_ALERTS_HEADER"], 21)
-	args.spacerQuestAlerts1 = ns.OptionsSpacer(22)
-	args.descQuestAlerts = ns.OptionsDesc(L["OPTIONS_QUEST_ALERTS_DESCRIPTION"], 23)
-	args.spacerQuestAlerts2 = ns.OptionsSpacer(24)
+	Kit.Section(args, "QuestAlerts", 20, L["OPTIONS_QUEST_ALERTS_HEADER"], L["OPTIONS_QUEST_ALERTS_DESCRIPTION"])
+	args.toggleQuestAlerts = Kit.FeatureSwitch("questAlertsEnabled", 25)
 
-	args.toggleQuestAlerts = ns.OptionsFeatureToggle(
-		"questAlertsEnabled",
-		"OPTIONS_ENABLE_QUEST_ALERTS",
-		"OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION",
-		25
-	)
-
-	-- One example per kind, a blank line above each.
-	args.spacerQuestReady = ns.OptionsSpacer(25.5, QuestAlertsOff)
-	args.exampleQuestReady = ns.OptionsExample(function()
-		return format(L["QUEST_ITEM_READY"], ExampleLink("ALLOWED_DELETE_QUEST_ITEMS"), "")
-	end, 26, QuestAlertsOff)
-
-	args.spacerQuestUnavailable = ns.OptionsSpacer(27.5, QuestAlertsOff)
-	args.exampleQuestUnavailable = ns.OptionsExample(function()
-		return format(L["QUEST_STARTER_UNAVAILABLE"], ExampleLink("ALLOWED_DELETE_QUEST_STARTING_ITEMS"), "")
-	end, 28, QuestAlertsOff)
+	args.exampleQuestAlerts = Kit.Example(26, QuestAlertsOff, function()
+		return ns.ExampleLine(format(L["QUEST_ITEM_READY"], ExampleLink("ALLOWED_DELETE_QUEST_ITEMS"), ""))
+	end)
 end

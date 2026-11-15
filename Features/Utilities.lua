@@ -498,25 +498,12 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Every settings change ends here, from the options, the mini-map menu, a
-    button click, a key binding, or a profile switch. AceConfig re-reads a
-    widget's get and name only when it redraws, so every registered panel is
-    notified, the open menu redraws with the new value, and the button takes
-    the next item's icon (ns.UpdateMinimapIcon). NotifyChange costs nothing for
-    a panel that isn't on screen.
+    Every settings change ends in ns.RefreshSettings, from the options, the
+    mini-map menu, a button click, a key binding, or a profile switch. It
+    belongs to Options-Kit (Options/Options-Kit.lua): every registered panel
+    repaints, the open menu redraws (ns.RefreshMenu) and the button takes the
+    next item's icon (ns.UpdateMinimapIcon).
 
-    Bag changes don't come here: ns:RefreshDisplay redraws only the menu, so an
+    Bag changes don't go there: ns:RefreshDisplay redraws only the menu, so an
     item ID being typed into a list page survives the loot that lands meanwhile.
 ]]
-function ns.RefreshSettings()
-	local registry = LibStub("AceConfigRegistry-3.0")
-	for _, name in pairs(ns.OPTIONS_REGISTRY or {}) do
-		registry:NotifyChange(name)
-	end
-	if ns.RefreshMenu then
-		ns.RefreshMenu()
-	end
-	if ns.UpdateMinimapIcon then
-		ns.UpdateMinimapIcon()
-	end
-end

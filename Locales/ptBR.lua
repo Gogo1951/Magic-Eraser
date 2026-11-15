@@ -114,7 +114,7 @@ L["BAGS_CLEAN_HINT"] = "Você precisará excluir algo manualmente para liberar m
 L["LOADING_ITEM"] = "Carregando ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Exemplo: %s"
+L["SAMPLE_EXAMPLE"] = "Exemplo"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -127,7 +127,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
 L["OPTIONS_ENABLE_MINIMAP"] = "Ativar botão do minimapa"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o seu Item de menor valor, e passar o mouse sobre ele mostra o Relatório de lixo."
+	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o seu Item de menor valor, e passar o mouse sobre ele abre um menu com tudo o que o botão faz."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Recursos"
@@ -259,7 +259,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Resumo no chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Cada venda no chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Sem relatório no chat"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"O que a Venda automática mostra no chat. Resumo no chat mostra um total por visita. Cada venda no chat mostra cada venda e depois o total. Sem relatório no chat não mostra nada."
+	"O que a Venda automática mostra no chat. Resumo no chat mostra um total por visita. Cada venda no chat mostra o total e depois cada venda. Sem relatório no chat não mostra nada."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Retirada do banco"

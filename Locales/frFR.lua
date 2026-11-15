@@ -117,7 +117,7 @@ L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour li
 L["LOADING_ITEM"] = "Chargement ID : %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Exemple : %s"
+L["SAMPLE_EXAMPLE"] = "Exemple"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -130,7 +130,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Affiche dans la discussion un message de bienvenue d'une ligne, avec la version, à chaque connexion."
 L["OPTIONS_ENABLE_MINIMAP"] = "Activer le bouton de la minicarte"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Affiche le bouton Magic Eraser sur votre minicarte. Son icône montre votre Objet de plus faible valeur, et le survoler affiche le Rapport de rebut."
+	"Affiche le bouton Magic Eraser sur votre minicarte. Son icône montre votre Objet de plus faible valeur, et le survoler ouvre un menu avec tout ce que fait le bouton."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Fonctionnalités"
@@ -265,7 +265,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Résumé dans la discussion"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Chaque vente dans la discussion"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Aucun rapport dans la discussion"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"Ce que la Vente auto affiche dans la discussion. Résumé dans la discussion affiche un total par visite. Chaque vente dans la discussion affiche chaque vente, puis le total. Aucun rapport dans la discussion n'affiche rien."
+	"Ce que la Vente auto affiche dans la discussion. Résumé dans la discussion affiche un total par visite. Chaque vente dans la discussion affiche le total, puis chaque vente. Aucun rapport dans la discussion n'affiche rien."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Récupération à la banque"

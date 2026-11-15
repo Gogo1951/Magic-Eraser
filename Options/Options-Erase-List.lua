@@ -1,5 +1,6 @@
 local _, ns = ...
 local L = ns.L
+local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
 -- Erase List Panel
@@ -19,9 +20,9 @@ local L = ns.L
     is always current.
 
     The tree comes from ns.BuildCharacterListTree, shared with the Protect List
-    panel, and the rows from ns:BuildItemListOptions, the shared builder every
+    panel, and the rows from Kit.ItemList, the shared builder every
     player-managed item list renders through, so a list adds and removes the same
-    way here as in any other panel. A pane spends ns.OPTIONS_TREE_ROW_WIDTH
+    way here as in any other panel. A pane spends Kit.TREE_ROW_WIDTH
     rather than the full row width, because the tree sidebar takes its share of
     the panel first.
 
@@ -91,10 +92,10 @@ local function BuildScopeArgs(scopeKey)
 	local restoreConfirm = isGlobalScope and L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"]
 		or L["OPTIONS_ERASE_RESTORE_CONFIRM"]
 
-	local args = ns:BuildItemListOptions({
-		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
+	local args = Kit.ItemList({
+		rowWidth = Kit.TREE_ROW_WIDTH,
 		startOrder = 3,
-		notifyKey = ns.OPTIONS_REGISTRY.EraseList,
+		registryName = ns.OPTIONS_REGISTRY.EraseList,
 		getSourceTable = function()
 			return ns:GetEraseListForScope(scopeKey)
 		end,
@@ -137,14 +138,15 @@ local function BuildScopeArgs(scopeKey)
 		actionColumn = (not isGlobalScope) and PromoteColumn() or nil,
 	})
 
-	args.spacerTop = ns.OptionsSpacer(2)
+	args.spacerTop = Kit.Spacer(2)
 
 	return args
 end
 
 function ns.BuildEraseListOptions()
 	return ns.BuildCharacterListTree({
-		name = L["TAB_ERASE_LIST"],
+		-- The page title names its parent (Decision 8); the Settings tree shows the plain name.
+		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_ERASE_LIST"]),
 		description = L["OPTIONS_ERASE_DESCRIPTION"],
 		getListForScope = function(scopeKey)
 			return ns:GetEraseListForScope(scopeKey)

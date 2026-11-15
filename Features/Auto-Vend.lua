@@ -76,12 +76,16 @@ local announcedSales = {}
 local pendingSales = {}
 
 --[[
-    Per-visit totals for summary mode. Accrued for every newly announced sale
-    whichever chat report is chosen, so changing the dropdown mid-visit still
-    produces a correct closing line. summarySlots counts one per
-    sale (each sold stack empties one bag slot). Visit scoped alongside
+    Per-visit totals for the closing summary, and the per-item sale lines
+    Every Sale in Chat prints under it. Both are accrued for every newly
+    announced sale whichever chat report is chosen, so changing the dropdown
+    mid-visit still produces a correct close: the report chosen when the
+    merchant closes decides whether the sale lines print. summarySlots counts
+    one per sale (each sold stack empties one bag slot). Visit scoped alongside
     announcedSales, and flushed in OnMerchantClosed.
 ]]
+
+local saleLines = {}
 
 local summaryCount = 0
 local summarySlots = 0
@@ -130,12 +134,11 @@ local function ConfirmSales()
 				summaryCount = summaryCount + sale.count
 				summarySlots = summarySlots + 1
 				summaryValue = summaryValue + sale.value
-				if not (ns.db and ns.db.profile.autoVendSummaryEnabled) then
-					local stackString = (sale.count > 1) and string.format(" x%d", sale.count) or ""
-					PrintVendMessage(
-						string.format(L["SOLD_ITEM"], sale.link, stackString, ns:FormatCurrency(sale.value))
-					)
-				end
+				local stackString = (sale.count > 1) and string.format(" x%d", sale.count) or ""
+				table.insert(
+					saleLines,
+					string.format(L["SOLD_ITEM"], sale.link, stackString, ns:FormatCurrency(sale.value))
+				)
 			end
 		end
 	end
@@ -333,6 +336,7 @@ local function BeginVisit()
 	visitGeneration = visitGeneration + 1
 	wipe(announcedSales)
 	wipe(pendingSales)
+	wipe(saleLines)
 	summaryCount = 0
 	summarySlots = 0
 	summaryValue = 0
@@ -437,11 +441,13 @@ function ns:OnMerchantClosed()
 		ConfirmSales()
 
 		--[[
-		    The per-visit summary prints one closing line whenever anything sold,
-		    under both chat reports: Summary in Chat shows it alone, and Every
-		    Sale in Chat shows it beneath the per-item lines. This deferred
-		    flush is the flush point. Routed through PrintVendMessage so No Chat
-		    Report silences it like all other vend output.
+		    The per-visit summary prints one line whenever anything sold, under
+		    both chat reports: Summary in Chat shows it alone, and Every Sale in
+		    Chat shows it first, with the per-item lines held until now and
+		    printed beneath it, so the visit reads as one block, total on top.
+		    This deferred flush is the flush point. Routed through
+		    PrintVendMessage so No Chat Report silences it like all other vend
+		    output.
 		]]
 		if summaryCount > 0 then
 			local message
@@ -463,7 +469,13 @@ function ns:OnMerchantClosed()
 			end
 			-- Every visit that sells says how to skip the next one (see ns:OnMerchantShow).
 			PrintVendMessage(message .. " " .. L["AUTO_VEND_SHIFT_HINT"])
+			if not (ns.db and ns.db.profile.autoVendSummaryEnabled) then
+				for _, line in ipairs(saleLines) do
+					PrintVendMessage(line)
+				end
+			end
 		end
+		wipe(saleLines)
 		summaryCount = 0
 		summarySlots = 0
 		summaryValue = 0

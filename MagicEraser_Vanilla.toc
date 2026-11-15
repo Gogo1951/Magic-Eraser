@@ -103,6 +103,7 @@ Diagnostics/Localization-Reports.lua
 Diagnostics/Report-Runner.lua
 
 # Options
+Options/Options-Kit.lua
 Options/Options-Utilities.lua
 Options/Options-Eraser.lua
 Options/Options-Manual-Delete.lua

@@ -113,7 +113,7 @@ L["BAGS_CLEAN_HINT"] = "如果想騰出更多空間，你得手動刪除一些�
 L["LOADING_ITEM"] = "正在載入 ID：%d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "範例：%s"
+L["SAMPLE_EXAMPLE"] = "範例"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -125,7 +125,7 @@ L["OPTIONS_ENABLE_WELCOME"] = "啟用歡迎訊息"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登入時，在聊天框顯示一行附帶版本號的歡迎訊息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"在小地圖上顯示 Magic Eraser 按鈕。按鈕圖示就是你的最低價值物品，滑鼠移到上面會顯示雜物報告。"
+	"在小地圖上顯示 Magic Eraser 按鈕。按鈕圖示就是你的最低價值物品，滑鼠移到上面會開啟選單，列出按鈕的所有功能。"
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "功能"
@@ -258,7 +258,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "在聊天框顯示總結"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "在聊天框顯示每筆出售"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "不在聊天框報告"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"自動售賣在聊天框顯示的內容。在聊天框顯示總結：每次造訪顯示一筆總計。在聊天框顯示每筆出售：逐筆顯示，最後再顯示總計。不在聊天框報告：不顯示任何內容。"
+	"自動售賣在聊天框顯示的內容。在聊天框顯示總結：每次造訪顯示一筆總計。在聊天框顯示每筆出售：先顯示總計，再逐筆顯示每筆出售。不在聊天框報告：不顯示任何內容。"
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "銀行取回"

@@ -25,7 +25,7 @@ Magic-Eraser/
 ├── Bindings.xml                              The three key bindings; found at the root by the client, never in a TOC
 ├── Data/
 │   ├── Flavor.lua                            Flavor identity from the TOC's X-Flavor: ns.FLAVOR, ns.IS_DISCOVERY, ns.DATA_FOLDER
-│   ├── Data.lua                              Locale init and shared constants: registry names, layout grid, bag range, race and class bits, kinds, example item
+│   ├── Data.lua                              Locale init and shared constants: registry names, the promote-button width, bag range, race and class bits, kinds, example item
 │   ├── Default-Settings.lua                  The AceDB defaults, ns.DATABASE_DEFAULTS: profile, char and global scopes
 │   ├── Vanilla/                              Classic Era; each file returns early on Season of Discovery
 │   │   ├── Quest-Items-Vanilla.lua           ALLOWED_DELETE_QUEST_ITEMS: item to the quests that make it safe
@@ -70,15 +70,16 @@ Magic-Eraser/
 │   ├── enUS.lua                              Source strings
 │   └── deDE.lua … zhTW.lua                   Translations
 ├── Options/
-│   ├── Options-Utilities.lua                 Row helpers, toggles, examples and example links, status lines, cache warming, item-list builder, list tree, ItemLink widget
+│   ├── Options-Kit.lua                       Options-Kit, copied unchanged from Common-Core (never edit here): grid, rows, switches, Examples, item list, registration, One Refresh
+│   ├── Options-Utilities.lua                 Kit strings, ns.FEATURES, Example item links and lines, character list tree
 │   ├── Options-Eraser.lua                    Junk kinds, value cap, Erase Confirmation sections
 │   ├── Options-Manual-Delete.lua             Delete Without Typing section
 │   ├── Options-Auto-Vend.lua                 Auto-Vend section and chat-report dropdown
 │   ├── Options-Bank-Retrieval.lua            Bank Retrieval section and cushion status line
 │   ├── Options-Tint-Junk.lua                 Junk Item Tint switch and color
-│   ├── Options-Quest-Item-Alerts.lua         Quest Item Alerts section; examples use each flavor's lowest quest-item id
-│   ├── Options-Bag-Warnings.lua              Bag-Space Warnings section; owns the file-local SubRow
-│   ├── Options-General.lua                   Root panel: welcome, mini-map, Features, Key Bindings, /Commands; owns ns.FEATURES
+│   ├── Options-Quest-Item-Alerts.lua         Quest Item Alerts section; its one Example line uses the flavor's lowest quest-item id
+│   ├── Options-Bag-Warnings.lua              Bag-Space Warnings section
+│   ├── Options-General.lua                   Root panel: welcome, mini-map, Features, Key Bindings, /Commands
 │   ├── Options-Erasing.lua                   Erasing panel from ERASING_SECTIONS
 │   ├── Options-Merchant-Bank.lua             Merchant & Bank panel from MERCHANT_BANK_SECTIONS
 │   ├── Options-Alerts-Tints.lua              Alerts & Tints panel from ALERTS_SECTIONS
@@ -86,7 +87,7 @@ Magic-Eraser/
 │   ├── Options-Erase-List.lua                Erase List panel, one tree node per list
 │   ├── Options-Profiles.lua                  Stock AceDBOptions table, unmodified
 │   ├── Options-Feedback-Support.lua          Level Up note, links, version
-│   └── Options.lua                           Registration, ns:OpenOptionsPanel, /eraser
+│   └── Options.lua                           Kit.RegisterPanel calls in tree order, /eraser
 ├── LICENSE                                   MIT
 ├── README.md                                 Players
 ├── README-Notes.md                           Exceptions to the Style Guide
@@ -98,7 +99,7 @@ Magic-Eraser/
 - No unsuffixed `MagicEraser.toc`, on purpose (see *Pitfalls & Why*). The three TOCs match line for line except `## Interface`, `## X-Flavor` and their data-folder lines.
 - Every data folder holds the same seven files, suffixed with the folder name, each declaring its table whole. Each TOC lists only its own folder, except Vanilla, which lists `Data/Vanilla/` then `Data/Discovery/`; each of those files opens with a guard on `ns.IS_DISCOVERY` so exactly one set of tables is built.
 - Load order: `Data/Default-Settings.lua` after the data folders, `Features/` after all of `Data/` (`Junk-Rules.lua` reads `ns.DATABASE_DEFAULTS` at file load). `Menu-Kit.lua` before `Minimap-Menu.lua` before `Minimap-Button.lua`: each takes the previous one's table or functions at file scope.
-- Inside `Options/`, fragments load before the panels that call their builders, and `Options-General.lua` after `Options-Eraser.lua` and `Options-Tint-Junk.lua`, because `ns.FEATURES` captures `ns.OnValueCapToggled` and `ns.OnTintJunkChanged` at file load. `Diagnostics/Options-Diagnostics.lua` loads inside the Options block, just before `Options/Options.lua` registers it.
+- Inside `Options/`, `Options-Kit.lua` loads first (every other file takes `ns.OptionsKit` at file scope), then `Options-Utilities.lua`, then fragments before the panels that call their builders. `ns.FEATURES`' `apply` closures look up `ns.OnValueCapToggled` and `ns.OnTintJunkChanged` when called, so their files' order does not matter. `Diagnostics/Options-Diagnostics.lua` loads inside the Options block, just before `Options/Options.lua` registers it.
 - **Expiring code:** everything tagged `MIGRATION (remove after …)`: `Features/Migrations.lua`, its TOC line and its calls in `Features/Core.lua`, plus `MoveMinimapToProfiles` and its call in `Core.lua`. Dates are on the tags; see *Migration Chain*. Nothing else is deprecated or dead.
 
 ## Architecture
@@ -135,11 +136,11 @@ Magic-Eraser/
 
 - **Two paths, never swapped:**
   - `ns:RefreshDisplay` (`Features/Minimap-Button.lua`), for bag changes: invalidate, `ns.UpdateMinimapIcon`, `ns.RefreshMenu`, `ns:RefreshTints`. Never notifies an options panel. Returns early with no data object.
-  - `ns.RefreshSettings` (`Features/Utilities.lua`), for settings changes: `NotifyChange` on every `ns.OPTIONS_REGISTRY` name, `ns.RefreshMenu`, `ns.UpdateMinimapIcon`. Does not invalidate.
+  - `ns.RefreshSettings` (Options-Kit), for settings changes: `NotifyChange` on every `ns.OPTIONS_REGISTRY` name, `ns.RefreshMenu`, `ns.UpdateMinimapIcon`. Does not invalidate.
 - **Why apart:** a `NotifyChange` redraws an open list page and clears the item ID half-typed into its add box; loot landing mid-typing must not do that.
-- Every settings writer ends in `ns.RefreshSettings`: `ns.OptionsFeatureToggle`'s `set`, every other options `set`, the item-list builder after each add, remove, restore or clear, every menu row and button click (`AfterChange`), the out-of-panel list writers, `ns:OnUpdateBindings`, `ns:ApplyProfile`.
+- Every settings writer ends in `ns.RefreshSettings`: `Kit.FeatureSwitch`'s `set`, every other options `set`, `Kit.ItemList` after each add, remove, restore or clear, every menu row and button click (`AfterChange`), the out-of-panel list writers, `ns:OnUpdateBindings`, `ns:ApplyProfile`.
 - A writer that changes the verdict calls `ns:InvalidateCache()` and `ns:RefreshDisplay()` first (junk kinds, value cap and its toggle's `ns.OnValueCapToggled`, every list write), since `ns.UpdateMinimapIcon` reads the cache as it stands.
-- `ns.WarmItemCache` is the one other `NotifyChange` caller: it repaints only its own panel as cold item rows load.
+- `Kit.WarmItems` is the one other `NotifyChange` caller: it repaints only its own panel as cold item rows load.
 
 ### Caching
 
@@ -149,7 +150,7 @@ Magic-Eraser/
   - The eraser's retry (`ScheduleScanRetry`) allows one pending timer (`retryPending`) and resets its count in `ns:InvalidateCache` unless the invalidation is the retry itself (`inScanRetry`). A retry firing in combat spends a try without scanning.
   - Tint: a cold item stays untinted until the next repaint.
   - Menu: a cold Protect List item draws a `LOADING_ITEM` row plus a request, and the menu redraws after `LOADING_RETRY`, one pending retry at a time (`state.retryPending`).
-  - Options: cold rows render `LOADING_ITEM` and go to `ns.WarmItemCache`, one poll chain per registry name over every cold id handed in (`warmingIds`), `NotifyChange` only when an id resolves; bounded by `WARM_MAX_ATTEMPTS`. `ns.ExampleItemLink` uses the same chain for the example lines' items.
+  - Options: cold rows render `LOADING_ITEM` and go to `Kit.WarmItems`, one poll chain per registry name over every cold id handed in, `NotifyChange` only when an id resolves, bounded by the kit's attempt cap. `ns.ExampleItemLink` uses the same chain for the example lines' items.
 - **Use levels never come from `GetItemInfo`** (`requiredLevel` is nil when cold); consumables, meat and fish, and ammo carry them in their data rows.
 - **White-gear verdict** (`whiteGearVerdicts`, `Junk-Rules.lua`): per item id for the session; a nil read (still loading) is not stored.
 - **Scan cache** (`cachedItem`, `isCacheValid`, Clutter totals, `cachedJunkSlots`): dropped by `ns:InvalidateCache`, which every list edit, junk-kind or value-cap change, profile change, erase, bag update, level-up, turn-in, seed that added rows and retrieval pass that moved something calls. `ns:RefreshDisplay` invalidates before recomputing, so the cache only serves reads between repaints (menu, click, tint, diagnostics).
@@ -207,7 +208,7 @@ Magic-Eraser/
 - **Confirmed sales:** `UseContainerItem` is optimistic (a dead vendor accepts silently). Attempts go to `pendingSales` (`"bag:slot:itemId"`); `ConfirmSales` counts one only when the slot no longer holds it. Runs at the top of every `ScanAndVend` and once more `CLOSE_CONFIRM_SECONDS` after close. `announcedSales` stops double counts.
 - **Multi-pass:** the server drops bulk sells, so it re-scans from live bags up to `MAX_VEND_PASSES`.
 - **Switch off mid-visit** (panel, the menu's Toggle row, or Shift + Right-Click): `ScanAndVend` and `ProcessSellQueue` re-read `autoVendEnabled` each tick and stop; attempted sales still confirm at close.
-- **Chat:** all output through file-local `PrintVendMessage` (no-op unless `autoVendMessagesEnabled`). The dropdown maps No Chat / Summary / Every Sale onto `autoVendMessagesEnabled` + `autoVendSummaryEnabled`. Totals accrue whatever the mode.
+- **Chat:** all output through file-local `PrintVendMessage` (no-op unless `autoVendMessagesEnabled`). The dropdown maps No Chat / Summary / Every Sale onto `autoVendMessagesEnabled` + `autoVendSummaryEnabled`. Totals and sale lines accrue whatever the mode; at the close flush the summary prints first, then, under Every Sale, the held sale lines (`saleLines`), so the visit reads total on top.
 
 ### Maximum Value to Erase
 
@@ -266,7 +267,7 @@ Magic-Eraser/
   - Before `ns.db` exists every click but Options does nothing.
 - **Protect List rows:** a click removes the item (`ns:RemoveFromIgnoreList`, prints `PROTECT_LIST_REMOVED`). Their remove icon shows only on hover (`rightOnHover`), done after each draw in `ApplyHoverIcons` by hooking the pooled rows, because Menu-Kit stays unchanged. The kit has already measured the icon, so the width never shifts.
 - **Clear Protect List** (row or Middle-Click) asks first through `MAGICERASER_CLEAR_PROTECT_LIST` (the panel's `OPTIONS_LIST_CLEAR_CONFIRM` text, `preferredIndex = 3`), and does nothing on an empty list.
-- **More Features flyout** (`FLYOUTS.features`): every `ns.FEATURES` entry without `block`, one toggle row each, its page heading as the label, caption and description as the tooltip, its `onSet` after the write. A child of the menu, so it hides with it; entering any other row closes it (`menu.onEnterRow`).
+- **More Features flyout** (`FLYOUTS.features`): every `ns.FEATURES` entry without `block`, one toggle row each, its page heading as the label, caption and description as the tooltip; its `apply` writes the value where it has one, else the row writes it. A child of the menu, so it hides with it; entering any other row closes it (`menu.onEnterRow`).
 - **Open and close:** `ns.ShowMenu(anchor, how)` positions away from the screen edges (`PositionMenu`, which also picks the flyout side and tooltip anchor); a launcher already showing it keeps its place. An `OnUpdate` closes it `HOVER_CLOSE_DELAY` (or `CLICK_CLOSE_DELAY` after a click) once the cursor is off the button, menu and flyout, or as soon as the anchor hides. Escape closes it through `UISpecialFrames` (frame name `ADDON_NAME .. "Menu"`).
 - `Kit.IsCursorOver` reads `GetCursorPosition` rather than `IsMouseOver`, so a controller's virtual cursor keeps the menu open; every row is a plain left click for the same reason.
 - `ns.RefreshMenu` redraws in place and is a no-op while hidden; `ns.IsMenuShown`, `ns.IsMenuFrame` and `ns.HideMenu` round out the API.
@@ -294,14 +295,14 @@ Magic-Eraser/
 
 - `ns:RegisterOptionsPanels` (`Options/Options.lua`) runs at login, after `ns.db`. Tree: General (root) → Erasing (→ Erase List, Protect List) → Merchant & Bank → Alerts & Tints → Profiles → Feedback & Support → Diagnostic Tools. Registration order is tree order.
 - The two nested panels pass Erasing's **category ID** as parent: AceConfigDialog maps only a root's display name to an ID.
-- `ns:OpenOptionsPanel` opens `Settings.OpenToCategory(ns.generalCategoryID)` (captured from `AddToBlizOptions`), `AceConfigDialog:Open` as last resort. Never by display name.
+- `ns:OpenOptionsPanel` is Options-Kit's: the Combat Guard, then `Settings.OpenToCategory` by the category ID `Kit.RegisterPanel` captured. Never by display name. `ns.generalCategoryID` is still kept for the Eraser Context report.
 - Built tables: General, Erasing, Merchant & Bank, Alerts & Tints, Profiles, Feedback & Support. **Builder functions** (re-run on every open and `NotifyChange`): both list panels and Diagnostic Tools.
 - **Fragments:** each `Options-{Feature}.lua` exposes `ns.Build…Options(args)` adding widgets in its own block of ten orders; panel files call them from `ERASING_SECTIONS`, `MERCHANT_BANK_SECTIONS`, `ALERTS_SECTIONS`. `Options-Eraser.lua` holds two builders, placed around Delete Without Typing.
-- **Features Mirror:** `ns.FEATURES` (`Options-General.lua`) is the one list the root panel's Features section and the menu's More Features flyout both draw: `{ setting, name, caption, desc, onSet, block }`. `name` is the page heading the menu row shows, `caption`/`desc` the switch's; `block` (Auto-Vend) keeps an entry out of the flyout because the menu gives it its own block. Each switch is built by `ns.OptionsFeatureToggle`, which also builds the copy on the feature's own page, paired two to a line by `ns.OptionsTogglePairs`. Shared onSets: `ns.OnValueCapToggled` (invalidate + repaint), `ns.OnTintJunkChanged` (`ns:RefreshTints`).
-- `ns.OptionsExample` builds an example from the very locale string printed; `ns.ExampleItemLink(itemId, registryName)` gives it a real quality-colored link (`ns.EXAMPLE_JUNK_ITEM_ID` for Auto-Vend, the flavor's lowest quest-item and quest-starter ids for Quest Item Alerts). `ns.OptionsStatusLine` states a cross-feature coupling and hides on nil.
-- Layout grid constants live in `Data/Data.lua`; a captioned control is `ns.OptionsRowLabel` + control with `name = ""`. `SubRow` (file-local, `Options-Bag-Warnings.lua`) indents a gated control with `ns.OPTIONS_SUB_INDENT_WIDTH`; move it to `Options-Utilities.lua` when a second panel needs it. Gated settings are hidden, never greyed. Tint's switch-plus-picker line is a `README-Notes.md` exception.
-- **List panels:** `ns.BuildCharacterListTree` (tree keyed by scope, not position; All Characters, blank row, characters with a list plus the played one, class-colored via `ns:GetCharacterDisplayName`). `PrepareListTree` seeds `treewidth` and re-selects the played character on every hide. `ns.LeaveClearedScope` re-points selection after clearing another character. Panes from `ns:BuildItemListOptions(spec)`; its comment documents the spec. **Add from Bags** picker replaces drag-and-drop (the game closes bags when options open).
-- `ItemLink` AceGUI widget registered as `ns.ITEM_LINK_WIDGET_TYPE` (named off the add-on to avoid collisions).
+- **Features Mirror:** `ns.FEATURES` (`Options-Utilities.lua`) is the one list the root panel's Features section (`Kit.FeatureSwitches`), each feature's own Enable switch (`Kit.FeatureSwitch`) and the menu's More Features flyout all draw: `{ store, setting, name, caption, desc, block, apply }`. `name` is the page heading the menu row shows, `caption`/`desc` the switch's; `block` (Auto-Vend) keeps an entry out of the flyout because the menu gives it its own block. `apply`, where present, writes the value itself and then the side effect: `ns.OnValueCapToggled` (invalidate + repaint), `ns.OnTintJunkChanged` (`ns:RefreshTints`). Pairs go two to a line with `Kit.Pairs`; a switch with a control beside it uses `Kit.ToggleRow`, which drops the control to its own line when the caption is too long.
+- `Kit.Example` draws a silver "Example" label under its control, then the lines indented (`SAMPLE_EXAMPLE` is the bare word, no colon; the kit trims what a `%s` would leave); each line is `ns.ExampleLine(message)`, the very locale string printed, through `ns:FormatMessage`. Not through `Kit.PrintedLine`: its color reopening overflows the game's color stack on a two-line Example and strips the second line's coin colors. `ns.ExampleItemLink(itemId, registryName)` gives it a real quality-colored link (`ns.EXAMPLE_JUNK_ITEM_ID` for Auto-Vend, the flavor's lowest quest-item id for Quest Item Alerts). `Kit.StatusLine` states a cross-feature coupling and hides on nil; `Kit.WarningLine` flags a wrong state (no junk kind checked).
+- The layout grid is Options-Kit's (`Kit.ROW_WIDTH` and the rest, also published as `ns.OPTIONS_*`); only `ns.OPTIONS_PROMOTE_WIDTH` stays in `Data/Data.lua`. A captioned control is `Kit.Label` + control with `name = ""`; `Kit.SubLabelRow` indents a gated control. Gated settings are hidden, never greyed. Tint's switch-plus-picker line is a `README-Notes.md` exception.
+- **List panels:** `ns.BuildCharacterListTree` (tree keyed by scope, not position; All Characters, blank row, characters with a list plus the played one, class-colored via `ns:GetCharacterDisplayName`). `Kit.PrepareTree` seeds the 176-point sidebar and re-selects the played character on every hide. `ns.LeaveClearedScope` re-points selection after clearing another character. Panes from `Kit.ItemList(spec)`; the kit's comment documents the spec. Page titles read "Erasing > Erase List" and "Erasing > Protect List" (`Kit.SubPanelTitle`). **Add from Bags** picker replaces drag-and-drop (the game closes bags when options open).
+- The item rows' `ItemLink` AceGUI widget is the kit's, registered as `Kit.ITEM_LINK_WIDGET` (named off the add-on to avoid collisions).
 
 ### Diagnostic Tools (`Diagnostics/Manifests.lua`)
 
@@ -326,7 +327,7 @@ Magic-Eraser/
 
 - **New event:** `ns.EVENT_NAMES` + `EVENT_HANDLERS` (`Features/Core.lua`) + its `ns:OnXxx` in a file loaded after Core.
 - **New setting:** `ns.DATABASE_DEFAULTS.profile` key + its fragment row + `Locales/enUS.lua` keys + `ns.RefreshSettings()` at the end of its `set` (preceded by `ns:InvalidateCache()`/`ns:RefreshDisplay()` if it changes the verdict, or `ns:RefreshTints()` if it changes only the tint's look).
-- **New feature switch:** its page's `ns.OptionsFeatureToggle` + an `ns.FEATURES` entry with the same setting, keys and `onSet` (root panel and menu flyout both follow) + its page heading key as `name`.
+- **New feature switch:** an `ns.FEATURES` entry (`store`, `setting`, its page heading key as `name`, `caption`, `desc`, and `apply` if the change must reach beyond the saved value) + `Kit.FeatureSwitch(setting, order)` on its page (root panel and menu flyout both follow).
 - **New feature panel section:** new `Options-{Feature}.lua` fragment + its TOC line before the panel + the panel's section list.
 - **New junk kind:** a reason from `GetRuleDeleteReason` + `ns.DELETE_PRIORITY` + `ns.ERASE_KINDS` + `junkKinds` default + two locale keys.
 - **New data table:** a file in all seven `Data/{Game}/` folders (empty where it has no rows) + each TOC's folder lines + `ns.DIAGNOSTIC_DATA_SOURCES` + the Eraser Context `Databases:` line.

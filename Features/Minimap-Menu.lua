@@ -359,7 +359,7 @@ local FLYOUTS = {}
 --[[
     More Features: every feature on the options' main page that isn't a block
     above, one On/Off row each, in the main page's order, with its switch's
-    caption and description as the tooltip (ns.FEATURES, Options/Options-General.lua).
+    caption and description as the tooltip (ns.FEATURES, Options/Options-Utilities.lua).
     They live in a flyout so the main menu stays short; its label counts how
     many are on and off, so the main menu still says where they stand.
 ]]
@@ -383,9 +383,11 @@ function FLYOUTS.features()
 			on = profile[feature.setting] and true or false,
 			tooltip = OptionTooltip(L[feature.caption], L[feature.desc]),
 			onClick = function()
-				profile[feature.setting] = not profile[feature.setting]
-				if feature.onSet then
-					feature.onSet(profile[feature.setting])
+				local value = not profile[feature.setting]
+				if feature.apply then
+					feature.apply(value)
+				else
+					profile[feature.setting] = value
 				end
 				AfterChange()
 			end,

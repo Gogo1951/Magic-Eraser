@@ -3,6 +3,8 @@ local L = ns.L
 
 local format = string.format
 
+local Kit = ns.OptionsKit
+
 local function AutoVendOff()
 	return not (ns.db and ns.db.profile.autoVendEnabled)
 end
@@ -51,76 +53,53 @@ local EXAMPLE_SUMMARY_VALUE = 79
     Its switch is also in the root panel's Features section.
 ]]
 function ns.BuildAutoVendOptions(args)
-	args.spacerAutoVend0 = ns.OptionsSpacer(10)
-	args.headerAutoVend = ns.OptionsHeader(L["AUTO_VEND"], 11)
-	args.spacerAutoVend1 = ns.OptionsSpacer(12)
-	args.descAutoVend = ns.OptionsDesc(L["AUTO_VEND_DESCRIPTION"], 13)
-	args.spacerAutoVend2 = ns.OptionsSpacer(14)
+	Kit.Section(args, "AutoVend", 10, L["AUTO_VEND"], L["AUTO_VEND_DESCRIPTION"])
 
 	--[[
-	    The switch and its chat report share one line, the switch at
-	    ns.OPTIONS_LABEL_WIDTH where a caption would sit and the dropdown at
-	    ns.OPTIONS_CONTROL_WIDTH. With no caption, each choice names chat itself,
-	    so "No Chat Report" never reads as Auto-Vend being off. The
-	    dropdown hides while the switch is off: a setting for a feature that is
-	    not running is not shown at all.
+	    The switch and its chat report share one line (Kit.ToggleRow). With no
+	    caption, each choice names chat itself, so "No Chat Report" never reads
+	    as Auto-Vend being off. The dropdown hides while the switch is off: a
+	    setting for a feature that is not running is not shown at all.
 	]]
-	args.toggleAutoVend = ns.OptionsFeatureToggle(
-		"autoVendEnabled",
-		"OPTIONS_ENABLE_AUTO_VEND",
-		"OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION",
-		15,
-		ns.OPTIONS_LABEL_WIDTH
-	)
-
-	args.selectAutoVendReport = {
-		type = "select",
-		name = "",
-		desc = L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"],
-		width = ns.OPTIONS_CONTROL_WIDTH,
-		order = 16,
-		hidden = AutoVendOff,
-		values = REPORT_VALUES,
-		sorting = REPORT_SORTING,
-		get = GetReportMode,
-		set = function(_, value)
-			SetReportMode(value)
-			ns.RefreshSettings()
-		end,
-	}
+	args.rowAutoVend = Kit.ToggleRow(15, Kit.FeatureSwitch("autoVendEnabled"), {
+		control = {
+			type = "select",
+			desc = L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"],
+			values = REPORT_VALUES,
+			sorting = REPORT_SORTING,
+			get = GetReportMode,
+			set = function(_, value)
+				SetReportMode(value)
+				ns.RefreshSettings()
+			end,
+		},
+	})
 
 	--[[
-	    What the chosen report prints, from the real sale strings. Every Sale in
-	    Chat shows a sale line above the closing total, as a visit does.
+	    What the chosen report prints, from the real sale strings, closing the
+	    switch's field set. Every Sale in Chat shows the total with a sale
+	    line beneath it, as a visit prints them. One sale line is enough to
+	    show the shape.
 	]]
-	args.spacerAutoVendExample = ns.OptionsSpacer(16.5, function()
+	args.exampleAutoVend = Kit.Example(16, function()
 		return AutoVendOff() or GetReportMode() == "off"
-	end)
-
-	args.exampleAutoVendSale = ns.OptionsExample(
-		function()
-			return format(
+	end, function()
+		local summary = ns.ExampleLine(
+			format(L["SOLD_SUMMARY"], "9", "4", ns:FormatCurrency(EXAMPLE_SUMMARY_VALUE))
+				.. " "
+				.. L["AUTO_VEND_SHIFT_HINT"]
+		)
+		if GetReportMode() ~= "verbose" then
+			return summary
+		end
+		local sale = ns.ExampleLine(
+			format(
 				L["SOLD_ITEM"],
 				ns.ExampleItemLink(ns.EXAMPLE_JUNK_ITEM_ID, ns.OPTIONS_REGISTRY.MerchantBank),
 				" x3",
 				ns:FormatCurrency(EXAMPLE_SALE_VALUE)
 			)
-		end,
-		17,
-		function()
-			return AutoVendOff() or GetReportMode() ~= "verbose"
-		end
-	)
-
-	args.exampleAutoVendSummary = ns.OptionsExample(
-		function()
-			return format(L["SOLD_SUMMARY"], "9", "4", ns:FormatCurrency(EXAMPLE_SUMMARY_VALUE))
-				.. " "
-				.. L["AUTO_VEND_SHIFT_HINT"]
-		end,
-		18,
-		function()
-			return AutoVendOff() or GetReportMode() == "off"
-		end
-	)
+		)
+		return { summary, sale }
+	end)
 end

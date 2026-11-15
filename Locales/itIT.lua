@@ -116,7 +116,7 @@ L["BAGS_CLEAN_HINT"] = "Dovrai eliminare qualcosa manualmente se vuoi liberare p
 L["LOADING_ITEM"] = "Caricamento ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Esempio: %s"
+L["SAMPLE_EXAMPLE"] = "Esempio"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -129,7 +129,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra in chat un messaggio di benvenuto di una riga con la versione ogni volta che accedi."
 L["OPTIONS_ENABLE_MINIMAP"] = "Abilita pulsante della minimappa"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Mostra il pulsante di Magic Eraser sulla minimappa. La sua icona è il tuo Oggetto di minor valore, e passandoci sopra il mouse vedi il Rapporto spazzatura."
+	"Mostra il pulsante di Magic Eraser sulla minimappa. La sua icona è il tuo Oggetto di minor valore, e passandoci sopra il mouse si apre un menu con tutto ciò che fa il pulsante."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funzionalità"
@@ -263,7 +263,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Riepilogo in chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Ogni vendita in chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Nessun resoconto in chat"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"Cosa scrive in chat la Vendita automatica. Riepilogo in chat scrive un totale per visita. Ogni vendita in chat scrive ogni vendita, poi il totale. Nessun resoconto in chat non scrive nulla."
+	"Cosa scrive in chat la Vendita automatica. Riepilogo in chat scrive un totale per visita. Ogni vendita in chat scrive il totale, poi ogni vendita. Nessun resoconto in chat non scrive nulla."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Prelievo dalla banca"

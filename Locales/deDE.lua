@@ -117,7 +117,7 @@ L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, wenn du mehr Platz scha
 L["LOADING_ITEM"] = "Lade ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Beispiel: %s"
+L["SAMPLE_EXAMPLE"] = "Beispiel"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -130,7 +130,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist dein Gegenstand mit geringstem Wert, und wenn du mit der Maus darüberfährst, siehst du den Ramsch-Bericht."
+	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist dein Gegenstand mit geringstem Wert, und wenn du mit der Maus darüberfährst, öffnet sich ein Menü mit allem, was die Schaltfläche kann."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funktionen"
@@ -266,7 +266,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Zusammenfassung im Chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Jeder Verkauf im Chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Kein Chatbericht"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"Was der Auto-Verkauf im Chat ausgibt. Zusammenfassung im Chat gibt eine Summe pro Besuch aus. Jeder Verkauf im Chat gibt jeden Verkauf und dann die Summe aus. Kein Chatbericht gibt nichts aus."
+	"Was der Auto-Verkauf im Chat ausgibt. Zusammenfassung im Chat gibt eine Summe pro Besuch aus. Jeder Verkauf im Chat gibt die Summe und dann jeden Verkauf aus. Kein Chatbericht gibt nichts aus."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bankentnahme"

@@ -1,5 +1,6 @@
 local _, ns = ...
 local L = ns.L
+local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
 -- Ignore List Panel
@@ -19,9 +20,9 @@ local L = ns.L
     is always current.
 
     The tree comes from ns.BuildCharacterListTree, shared with the Erase List
-    panel, and the rows from ns:BuildItemListOptions, the shared builder every
+    panel, and the rows from Kit.ItemList, the shared builder every
     player-managed item list renders through, so a list adds and removes the same
-    way here as in any other panel. A pane spends ns.OPTIONS_TREE_ROW_WIDTH
+    way here as in any other panel. A pane spends Kit.TREE_ROW_WIDTH
     rather than the full row width, because the tree sidebar takes its share of
     the panel first.
 
@@ -60,10 +61,10 @@ end
 local function BuildScopeArgs(scopeKey)
 	local isGlobalScope = scopeKey == ns.LIST_SCOPE_GLOBAL
 
-	local args = ns:BuildItemListOptions({
-		rowWidth = ns.OPTIONS_TREE_ROW_WIDTH,
+	local args = Kit.ItemList({
+		rowWidth = Kit.TREE_ROW_WIDTH,
 		startOrder = 3,
-		notifyKey = ns.OPTIONS_REGISTRY.IgnoreList,
+		registryName = ns.OPTIONS_REGISTRY.IgnoreList,
 		getSourceTable = function()
 			return ns:GetIgnoreListForScope(scopeKey)
 		end,
@@ -97,14 +98,15 @@ local function BuildScopeArgs(scopeKey)
 		actionColumn = (not isGlobalScope) and PromoteColumn() or nil,
 	})
 
-	args.spacerTop = ns.OptionsSpacer(2)
+	args.spacerTop = Kit.Spacer(2)
 
 	return args
 end
 
 function ns.BuildIgnoreListOptions()
 	return ns.BuildCharacterListTree({
-		name = L["TAB_PROTECT_LIST"],
+		-- The page title names its parent (Decision 8); the Settings tree shows the plain name.
+		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_PROTECT_LIST"]),
 		description = L["OPTIONS_PROTECT_DESCRIPTION"],
 		getListForScope = function(scopeKey)
 			return ns:GetIgnoreListForScope(scopeKey)

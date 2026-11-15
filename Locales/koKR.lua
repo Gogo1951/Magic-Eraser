@@ -116,7 +116,7 @@ L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를
 L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "예시: %s"
+L["SAMPLE_EXAMPLE"] = "예시"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -129,7 +129,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
 L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 최저가 아이템이며, 마우스를 올리면 잡동사니 보고서가 표시됩니다."
+	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 최저가 아이템이며, 마우스를 올리면 버튼의 모든 기능이 담긴 메뉴가 열립니다."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "기능"
@@ -267,7 +267,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "대화창에 요약"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "대화창에 모든 판매"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "대화창 보고 없음"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"자동 판매가 대화창에 표시할 내용입니다. 대화창에 요약은 방문할 때마다 합계를 한 번 표시합니다. 대화창에 모든 판매는 판매 내역을 하나씩 표시한 뒤 합계를 표시합니다. 대화창 보고 없음은 아무것도 표시하지 않습니다."
+	"자동 판매가 대화창에 표시할 내용입니다. 대화창에 요약은 방문할 때마다 합계를 한 번 표시합니다. 대화창에 모든 판매는 합계를 표시한 뒤 판매 내역을 하나씩 표시합니다. 대화창 보고 없음은 아무것도 표시하지 않습니다."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "은행에서 가져오기"
