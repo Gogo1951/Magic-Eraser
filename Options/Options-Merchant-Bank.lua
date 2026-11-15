@@ -1,6 +1,8 @@
 local _, ns = ...
 local L = ns.L
 
+local Kit = ns.OptionsKit
+
 --------------------------------------------------------------------------------
 -- Merchant & Bank Panel
 --------------------------------------------------------------------------------
@@ -12,8 +14,8 @@ local L = ns.L
     over-cap stack pays the player instead of costing them. Auto-Vend at 10,
     Bank Retrieval at 20.
 
-    Registered as a built table rather than a builder function (see
-    Options/Options.lua): nothing here is drawn from a live list.
+    Registered as its builder function (Kit.RegisterPanel), so every repaint
+    rebuilds it.
 ]]
 local MERCHANT_BANK_SECTIONS = {
 	"BuildAutoVendOptions",
@@ -22,7 +24,7 @@ local MERCHANT_BANK_SECTIONS = {
 
 function ns.BuildMerchantBankOptions()
 	local args = {
-		descIntro = ns.OptionsDesc(L["TAB_MERCHANT_BANK_DESCRIPTION"], 1),
+		descIntro = Kit.Desc(L["TAB_MERCHANT_BANK_DESCRIPTION"], 1),
 	}
 
 	for _, builder in ipairs(MERCHANT_BANK_SECTIONS) do

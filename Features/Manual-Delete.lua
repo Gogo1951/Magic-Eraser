@@ -10,7 +10,7 @@ local GetItemInfo = C_Item.GetItemInfo
 local SELL_PRICE_INDEX = 11
 
 --------------------------------------------------------------------------------
--- Manual Delete Assistance
+-- Delete Without Typing
 --------------------------------------------------------------------------------
 
 --[[

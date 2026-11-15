@@ -1,7 +1,5 @@
 local _, ns = ...
 
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-
 --------------------------------------------------------------------------------
 -- Erase List
 --------------------------------------------------------------------------------
@@ -64,8 +62,8 @@ end
 
     Returns "protected", "already" or "added" for the caller's chat line, or nil
     before the database exists. A key press is an edit made outside the panel,
-    so this fires the panel's NotifyChange itself, as ns:AddToIgnoreList does
-    when it takes a row off this list.
+    so this ends in ns.RefreshSettings, as ns:AddToIgnoreList does, and the
+    open panels and menu redraw with the new row.
 ]]
 function ns:AddToEraseList(itemId)
 	local eraseList = ns:GetEraseList()
@@ -84,7 +82,7 @@ function ns:AddToEraseList(itemId)
 
 	ns:InvalidateCache()
 	ns:RefreshDisplay()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.EraseList)
+	ns.RefreshSettings()
 
 	return "added"
 end

@@ -1,6 +1,8 @@
 local _, ns = ...
 local L = ns.L
 
+local Kit = ns.OptionsKit
+
 --------------------------------------------------------------------------------
 -- Alerts & Tints Panel
 --------------------------------------------------------------------------------
@@ -11,8 +13,8 @@ local L = ns.L
     the bag-space countdown at 30. Every one of them has its switch here and
     again in the root panel's Features section.
 
-    Registered as a built table rather than a builder function (see
-    Options/Options.lua): nothing here is drawn from a live list.
+    Registered as its builder function (Kit.RegisterPanel), so every repaint
+    rebuilds it.
 ]]
 local ALERTS_SECTIONS = {
 	"BuildTintJunkOptions",
@@ -22,7 +24,7 @@ local ALERTS_SECTIONS = {
 
 function ns.BuildAlertsTintsOptions()
 	local args = {
-		descIntro = ns.OptionsDesc(L["TAB_ALERTS_DESCRIPTION"], 1),
+		descIntro = Kit.Desc(L["TAB_ALERTS_DESCRIPTION"], 1),
 	}
 
 	for _, builder in ipairs(ALERTS_SECTIONS) do

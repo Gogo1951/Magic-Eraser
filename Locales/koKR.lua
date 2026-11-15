@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -34,7 +37,7 @@ L["ERASED_ITEM"] = "%s%s 삭제됨."
 L["QUEST_ITEM_READY"] =
 	"%s%s: 이제 안전하게 삭제할 수 있습니다. 완료한 퀘스트에서 남은 아이템입니다."
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s%s: 이제 안전하게 삭제할 수 있습니다. 캐릭터가 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
+	"%s%s: 이제 안전하게 삭제할 수 있습니다. 내 종족이나 직업으로는 절대 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s 판매됨, 가치 %s."
@@ -49,10 +52,11 @@ L["BANK_RETRIEVED"] = "은행에서 %s개 아이템 (가방 %s칸) 꺼냄, 가�
 L["BANK_RETRIEVED_ONE_SLOT"] = "은행에서 %s개 아이템 (가방 1칸) 꺼냄, 가치 %s."
 L["BANK_RETRIEVED_ONE_ITEM"] = "은행에서 1개 아이템 (가방 1칸) 꺼냄, 가치 %s."
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "보호 목록에 추가했습니다: %s"
-L["IGNORE_LIST_MOVED"] = "삭제 목록에서 보호 목록으로 옮겼습니다: %s"
-L["IGNORE_LIST_ALREADY"] = "이미 보호 목록에 있습니다: %s"
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "보호 목록에 추가했습니다: %s"
+L["PROTECT_LIST_MOVED"] = "삭제 목록에서 보호 목록으로 옮겼습니다: %s"
+L["PROTECT_LIST_ALREADY"] = "이미 보호 목록에 있습니다: %s"
+L["PROTECT_LIST_REMOVED"] = "보호 목록에서 제거했습니다: %s"
 L["ERASE_LIST_ADDED"] = "삭제 목록에 추가했습니다: %s"
 L["ERASE_LIST_ALREADY"] = "이미 삭제 목록에 있습니다: %s"
 L["ERASE_LIST_PROTECTED"] =
@@ -60,7 +64,7 @@ L["ERASE_LIST_PROTECTED"] =
 L["NO_HOVERED_ITEM"] = "아이템 위에 마우스를 올린 다음 키를 다시 누르세요."
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "최저가 아이템"
@@ -70,24 +74,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1개)"
 L["CLUTTER_SLOTS"] = "가방 %s칸"
 L["CLUTTER_SLOTS_ONE"] = "가방 1칸"
 L["NO_VALUE"] = "가치 없음"
-L["LEFT_CLICK"] = "좌클릭"
-L["RIGHT_CLICK"] = "우클릭"
-L["MIDDLE_CLICK"] = "휠클릭"
-L["SHIFT_RIGHT_CLICK"] = "Shift + 우클릭"
-L["SHIFT_MIDDLE_CLICK"] = "Shift + 휠클릭"
-L["ACTION_TOGGLE"] = "전환"
-L["ACTION_CLEAR_IGNORE"] = "보호 목록 초기화"
-L["BAGS_CLEAN_CONGRATS"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
-L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
-L["LOADING_ITEM"] = "불러오는 중 ID: %d"
-L["MINIMAP_OPTIONS"] = "Magic Eraser 옵션"
+L["MENU_CLICK_LEFT"] = "좌클릭"
+L["MENU_CLICK_RIGHT"] = "우클릭"
+L["MENU_CLICK_MIDDLE"] = "휠클릭"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 우클릭"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 휠클릭"
+L["MENU_TOGGLE"] = "전환"
+L["ACTION_CLEAR_PROTECT_LIST"] = "보호 목록 초기화"
+L["MENU_OPTIONS"] = "Magic Eraser 옵션"
+L["MENU_ON"] = "켜짐"
+L["MENU_OFF"] = "꺼짐"
+L["MENU_MORE"] = "외 %d개"
+L["MENU_MORE_FEATURES"] = "추가 기능"
+L["MENU_FEATURE_COUNT_ON"] = "%d개 켜짐"
+L["MENU_FEATURE_COUNT_OFF"] = "%d개 꺼짐"
+L["MENU_UNPROTECT_HINT"] = "클릭하면 보호 목록에서 제거합니다."
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "최저가 아이템 삭제"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "마우스를 올린 아이템을 보호 목록에 추가"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "마우스를 올린 아이템을 보호 목록에 추가"
 L["BINDING_ADD_TO_ERASE_LIST"] = "마우스를 올린 아이템을 삭제 목록에 추가"
 
 --------------------------------------------------------------------------------
@@ -99,16 +107,16 @@ L["AUTO_VEND_DESCRIPTION"] = "상인 창을 여는 즉시 잡동사니를 가장
 L["TAB_ERASING"] = "삭제"
 L["TAB_MERCHANT_BANK"] = "상인 및 은행"
 L["TAB_ALERTS"] = "알림 및 색칠"
-L["TAB_IGNORE_LIST"] = "보호 목록"
+L["TAB_PROTECT_LIST"] = "보호 목록"
 L["TAB_ERASE_LIST"] = "삭제 목록"
-L["ENABLED"] = "활성화"
-L["DISABLED"] = "비활성화"
 L["ACTION_ERASE"] = "삭제"
-L["ACTION_IGNORE"] = "보호"
+L["ACTION_PROTECT"] = "보호"
+L["BAGS_CLEAN_CONGRATS"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
+L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
+L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "예시: %s"
-L["OPTIONS_EXAMPLE_ITEM"] = "예시 아이템"
+L["SAMPLE_EXAMPLE"] = "예시"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -121,7 +129,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
 L["OPTIONS_ENABLE_MINIMAP"] = "미니맵 버튼 활성화"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 최저가 아이템이며, 마우스를 올리면 잡동사니 보고서가 표시됩니다."
+	"미니맵에 Magic Eraser 버튼을 표시합니다. 버튼 아이콘은 최저가 아이템이며, 마우스를 올리면 버튼의 모든 기능이 담긴 메뉴가 열립니다."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "기능"
@@ -133,7 +141,7 @@ L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"게임의 단축키 목록을 엽니다. Magic Eraser 전용 항목이 있습니다."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"미니맵 버튼을 좌클릭하는 것과 똑같이 최저가 아이템을 삭제합니다. 키를 누르기 전에는 미리 보기가 없으니, 실수로 누르지 않을 키에 지정하세요."
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"마우스를 올린 아이템을 이 캐릭터에서 보호합니다. 가방, 은행, 상인, 전리품 창 어디서든 사용할 수 있습니다. 이 캐릭터의 삭제 목록에 있었다면 거기서 빠집니다."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"마우스를 올린 아이템을 가치와 상관없이 이 캐릭터의 삭제 목록에 추가합니다. 보호 목록이 여전히 우선합니다."
@@ -180,7 +188,7 @@ L["OPTIONS_VERSION"] = "버전 %s"
 L["TAB_ERASING_DESCRIPTION"] =
 	"클릭할 때마다 가방에서 가장 싼 잡동사니를 한 묶음씩 삭제합니다."
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"참고: 실수로 삭제한 아이템은 대부분 블리자드의 아이템 복구 서비스로 되찾을 수 있습니다."
+	"참고: 실수로 삭제한 아이템은 대부분 블리자드의 아이템 복구 서비스로 되찾을 수 있습니다!"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "잡동사니 기준"
@@ -190,11 +198,11 @@ L["OPTIONS_KIND_QUEST"] = "완료된 퀘스트 아이템"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"해당 아이템이 필요한 마지막 퀘스트를 완료한 뒤 남은 아이템입니다."
 L["OPTIONS_KIND_STARTER"] = "수락 불가 퀘스트 시작 아이템"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] =
 	"내 종족이나 직업으로는 절대 수락할 수 없는 퀘스트를 시작하는 아이템입니다."
 L["OPTIONS_KIND_FOOD"] = "저레벨 음식 및 음료"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"처음 사용할 수 있던 레벨보다 10레벨 이상 높아진 음식과 음료입니다. 초보자용 빵과 물은 5레벨에 삭제됩니다."
+	"요구 레벨보다 10레벨 이상 높아진 음식과 음료입니다. 초보자용 빵과 물은 5레벨에 삭제됩니다."
 L["OPTIONS_KIND_AMMO"] = "저레벨 화살 및 탄환"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"상인이 파는 더 좋은 종류를 사용할 수 있게 된 화살과 탄환입니다. 현재 레벨에 맞는 최고의 상인 판매 탄약은 절대 삭제하지 않습니다."
@@ -206,6 +214,9 @@ L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"플레이어가 제작한 흰색 무기와 방어구입니다. 부캐릭터를 위해 만든 장비 등이 해당됩니다. 흰색 무기 및 방어구 항목에서는 제외되므로, 이 항목으로만 처리 여부가 정해집니다."
 L["OPTIONS_KIND_GRAY"] = "회색 잡동사니"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "상인이 구매하는 모든 회색 아이템입니다."
+L["OPTIONS_KIND_MEAT_FISH"] = "저레벨 고기 및 생선"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"요리법에 쓰이는 고기와 생선입니다. 날로 먹을 수 있는 생선도 포함되며, 10레벨 이상 높아지면 삭제됩니다. 요리법에 쓰이지 않는 먹을 수 있는 생선은 저레벨 음식 및 음료로 취급됩니다."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
 	"체크하지 않으면 잡동사니가 아니므로, 삭제하거나 판매하거나 은행에서 꺼내지 않습니다."
 L["OPTIONS_KINDS_NONE_CHECKED"] =
@@ -222,13 +233,13 @@ L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"묶음 전체의 판매 가치로 따져 이 금액보다 비싼 묶음은 삭제하지 않습니다."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d 골드"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "수동 삭제 도우미"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "입력 없이 삭제"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'기본적으로 게임에서는 "%s"를 입력해야 %s 등급 이상의 아이템을 삭제할 수 있습니다. 이 기능은 그 입력 창을 간단한 예/아니오 확인으로 바꿉니다.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "수동 삭제 도우미 활성화"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "입력 없이 삭제 활성화"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"수동 삭제 도우미를 켜거나 끕니다. 게임은 여전히 예/아니오를 묻고, 입력하는 과정만 사라집니다."
+	"입력 없이 삭제를 켜거나 끕니다. 게임은 여전히 예/아니오를 묻고, 입력하는 과정만 사라집니다."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"판매 가치 없는 아이템은 상인이 구매하지 않는 아이템만 간단하게 바꿉니다. 모든 아이템은 입력이 필요한 모든 확인 창을 간단하게 바꿉니다."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "모든 아이템"
@@ -256,7 +267,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "대화창에 요약"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "대화창에 모든 판매"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "대화창 보고 없음"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"자동 판매가 대화창에 표시할 내용입니다. 대화창에 요약은 방문할 때마다 합계를 한 번 표시합니다. 대화창에 모든 판매는 판매 내역을 하나씩 표시한 뒤 합계를 표시합니다. 대화창 보고 없음은 아무것도 표시하지 않습니다."
+	"자동 판매가 대화창에 표시할 내용입니다. 대화창에 요약은 방문할 때마다 합계를 한 번 표시합니다. 대화창에 모든 판매는 합계를 표시한 뒤 판매 내역을 하나씩 표시합니다. 대화창 보고 없음은 아무것도 표시하지 않습니다."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "은행에서 가져오기"
@@ -329,9 +340,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] = "이 목록에서 모든 아이템을 제거�
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"보호 목록에 있는 아이템은 절대 삭제되거나 판매되지 않습니다. 모든 캐릭터 목록은 모든 캐릭터에서 아이템을 보호하고, 캐릭터별 목록은 해당 캐릭터에서만 보호합니다."
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] =
 	"이 아이템을 모든 캐릭터 목록으로 옮겨 모든 캐릭터에서 보호합니다."
 
 --------------------------------------------------------------------------------

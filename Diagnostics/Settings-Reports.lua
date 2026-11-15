@@ -7,9 +7,21 @@ local GetClientHeader = ns.GetDiagnosticClientHeader
 --------------------------------------------------------------------------------
 
 --[[
-    Answers "the mini-map button is gone / off-screen" reports: screen size, UI
-    scale, and the button's saved placement. Read-only.
+    Answers "the mini-map button is gone / off-screen" and "hovering the button
+    shows nothing" reports: screen size, UI scale, the button's saved placement,
+    and whether its menu loaded and is wired to the button. Read-only.
 ]]
+
+-- True when Escape's list of frames to close holds the menu (Features/Minimap-Menu.lua).
+local function MenuClosesOnEscape()
+	local menuName = ADDON_NAME .. "Menu"
+	for _, name in ipairs(type(UISpecialFrames) == "table" and UISpecialFrames or {}) do
+		if name == menuName then
+			return true
+		end
+	end
+	return false
+end
 function ns:BuildDisplayContextReport()
 	local lines = { GetClientHeader(), "" }
 
@@ -24,14 +36,47 @@ function ns:BuildDisplayContextReport()
 	-- Without the data object, login never registers a button and every repaint returns early.
 	lines[#lines + 1] = string.format("Data broker object: %s", ns.dataBrokerObject and "present" or "MISSING")
 	lines[#lines + 1] = string.format("Minimap button created: %s", button and "yes" or "no")
+	if button then
+		lines[#lines + 1] = string.format(
+			"Minimap button shown: %s, visible: %s",
+			tostring(button:IsShown() and true or false),
+			tostring(button:IsVisible() and true or false)
+		)
+	end
 
-	local minimap = ns.db and ns.db.global.minimap
+	local minimap = ns.db and ns.db.profile.minimap
 	if type(minimap) == "table" then
 		lines[#lines + 1] = string.format("Minimap button hidden: %s", tostring(minimap.hide or false))
 		lines[#lines + 1] = string.format("Minimap saved angle: %s", tostring(minimap.minimapPos))
 	else
 		lines[#lines + 1] = "Minimap saved position: (none yet)"
 	end
+
+	--[[
+	    The menu opens from the data object's OnEnter through ns.ShowMenu, which
+	    returns early until the database is open; a TOC missing the menu's files
+	    leaves ns.ShowMenu nil and the hover does nothing.
+	]]
+	local broker = ns.dataBrokerObject
+	lines[#lines + 1] = ""
+	lines[#lines + 1] = string.format(
+		"Menu loaded: %s, database open: %s",
+		type(ns.ShowMenu) == "function" and "yes" or "MISSING",
+		ns.db and "yes" or "no"
+	)
+	lines[#lines + 1] = string.format(
+		"Button hover opens menu: %s, click runs menu clicks: %s",
+		tostring(type(broker) == "table" and type(broker.OnEnter) == "function"),
+		tostring(
+			type(broker) == "table" and type(broker.OnClick) == "function" and type(ns.RunButtonClick) == "function"
+		)
+	)
+	lines[#lines + 1] = string.format(
+		"Menu open now: %s, closes on Escape: %s",
+		tostring(type(ns.IsMenuShown) == "function" and ns.IsMenuShown() or false),
+		tostring(MenuClosesOnEscape())
+	)
+	lines[#lines + 1] = string.format("More Features rows: %d", #(ns.FEATURES or {}))
 
 	--[[
 	    Where a dragged position lives, link by link: LibDBIcon's drag handler
@@ -45,18 +90,28 @@ function ns:BuildDisplayContextReport()
 	if button then
 		lines[#lines + 1] = string.format("Button db present: %s", tostring(button.db ~= nil))
 		lines[#lines + 1] = string.format(
-			"Button db is ns.db.global.minimap: %s",
+			"Button db is ns.db.profile.minimap: %s",
 			tostring(button.db ~= nil and minimap ~= nil and button.db == minimap)
 		)
 		lines[#lines + 1] = string.format("Button db.minimapPos: %s", tostring(button.db and button.db.minimapPos))
 	end
 	local saved = _G[ns.SAVED_VARIABLES_NAME]
-	local savedGlobal = type(saved) == "table" and saved.global
-	local savedMinimap = type(savedGlobal) == "table" and savedGlobal.minimap
+	local profileName = ns.db and ns.db:GetCurrentProfile() or "Default"
+	local savedProfiles = type(saved) == "table" and saved.profiles
+	local savedProfile = type(savedProfiles) == "table" and savedProfiles[profileName]
+	local savedMinimap = type(savedProfile) == "table" and savedProfile.minimap
 	lines[#lines + 1] = string.format(
-		"%s.global.minimap.minimapPos: %s",
+		"%s.profiles[%q].minimap.minimapPos: %s",
 		ns.SAVED_VARIABLES_NAME,
+		profileName,
 		tostring(type(savedMinimap) == "table" and savedMinimap.minimapPos or nil)
+	)
+	-- Login moves a pre-profile global.minimap into the profiles (Features/Core.lua), so "yes" means it never ran.
+	local savedGlobal = type(saved) == "table" and saved.global
+	lines[#lines + 1] = string.format(
+		"%s.global.minimap still present: %s",
+		ns.SAVED_VARIABLES_NAME,
+		tostring(type(savedGlobal) == "table" and savedGlobal.minimap ~= nil)
 	)
 
 	return table.concat(lines, "\n")

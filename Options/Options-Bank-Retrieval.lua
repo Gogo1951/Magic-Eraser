@@ -3,6 +3,8 @@ local L = ns.L
 
 local format = string.format
 
+local Kit = ns.OptionsKit
+
 -- Sample figures for the example line: six items across three stacks.
 local EXAMPLE_VALUE = 1240
 
@@ -26,21 +28,10 @@ end
     the page of the feature it changes, and shows only while it applies.
 ]]
 function ns.BuildBankRetrievalOptions(args)
-	args.spacerBank0 = ns.OptionsSpacer(20)
-	args.headerBank = ns.OptionsHeader(L["OPTIONS_BANK_HEADER"], 21)
-	args.spacerBank1 = ns.OptionsSpacer(22)
-	args.descBank = ns.OptionsDesc(L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"], 23)
-	args.spacerBank2 = ns.OptionsSpacer(24)
+	Kit.Section(args, "Bank", 20, L["OPTIONS_BANK_HEADER"], L["OPTIONS_BANK_RETRIEVAL_DESCRIPTION"])
+	args.toggleBankRetrieval = Kit.FeatureSwitch("bankRetrievalEnabled", 25)
 
-	args.toggleBankRetrieval = ns.OptionsFeatureToggle(
-		"bankRetrievalEnabled",
-		"OPTIONS_ENABLE_BANK_RETRIEVAL",
-		"OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION",
-		25
-	)
-
-	args.spacerBankExample = ns.OptionsSpacer(25.5, BankRetrievalOff)
-	args.statusBankCushion = ns.OptionsStatusLine(function()
+	args.statusBankCushion = Kit.StatusLine(function()
 		local settings = ns.db and ns.db.profile
 		if not (settings and settings.bankRetrievalEnabled and settings.bagsFullNudgeEnabled) then
 			return nil
@@ -52,7 +43,8 @@ function ns.BuildBankRetrievalOptions(args)
 		return format(L["OPTIONS_BANK_CUSHION_NOTE"], cushion)
 	end, 26)
 
-	args.exampleBank = ns.OptionsExample(function()
-		return format(L["BANK_RETRIEVED"], "6", "3", ns:FormatCurrency(EXAMPLE_VALUE))
-	end, 27, BankRetrievalOff)
+	-- What a bank visit prints, closing the switch's field set.
+	args.exampleBank = Kit.Example(27, BankRetrievalOff, function()
+		return ns.ExampleLine(format(L["BANK_RETRIEVED"], "6", "3", ns:FormatCurrency(EXAMPLE_VALUE)))
+	end)
 end

@@ -1,43 +1,8 @@
-local ADDON_NAME, ns = ...
+local _, ns = ...
 local L = ns.L
 
 local GetColor = ns.GetColor
-
---------------------------------------------------------------------------------
--- Features
---------------------------------------------------------------------------------
-
---[[
-    Every feature's on/off switch, two to a line, so the front page shows at a
-    glance what Magic Eraser is doing. Each is built by ns.OptionsFeatureToggle,
-    as on its own page, so the two copies share one setting, caption and
-    tooltip; the Bag-Space Warnings section also passes an onSet this copy
-    doesn't. Listed Merchant & Bank first, then Erasing's Maximum Value to Erase,
-    Manual Delete Assistance and Erase Confirmation, then Alerts & Tints.
-]]
-local FEATURE_TOGGLES = {
-	-- { settingKey, nameKey, descKey, onSet }
-	{ "autoVendEnabled", "OPTIONS_ENABLE_AUTO_VEND", "OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION" },
-	{ "bankRetrievalEnabled", "OPTIONS_ENABLE_BANK_RETRIEVAL", "OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION" },
-	{ "valueCapEnabled", "OPTIONS_ENABLE_VALUE_CAP", "OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION", ns.OnValueCapToggled },
-	{
-		"manualDeleteAutoFillEnabled",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
-	},
-	{ "eraseConfirmEnabled", "OPTIONS_ENABLE_ERASE_CONFIRM", "OPTIONS_ENABLE_ERASE_CONFIRM_DESCRIPTION" },
-	{ "tintJunkEnabled", "OPTIONS_ENABLE_TINT", "OPTIONS_ENABLE_TINT_DESCRIPTION", ns.OnTintJunkChanged },
-	{ "questAlertsEnabled", "OPTIONS_ENABLE_QUEST_ALERTS", "OPTIONS_ENABLE_QUEST_ALERTS_DESCRIPTION" },
-	{ "bagsFullNudgeEnabled", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS", "OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION" },
-}
-
-local function AddFeatureToggles(args, startOrder)
-	local toggles = {}
-	for index, entry in ipairs(FEATURE_TOGGLES) do
-		toggles[index] = ns.OptionsFeatureToggle(entry[1], entry[2], entry[3], nil, nil, entry[4])
-	end
-	ns.OptionsTogglePairs(args, "rowFeatures", startOrder, toggles)
-end
+local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -55,13 +20,14 @@ end
 local KEY_BINDINGS = {
 	-- { bindingName, captionKey, descKey }
 	{ "MAGICERASER_ERASE", "BINDING_ERASE", "OPTIONS_KEY_BINDING_ERASE_DESCRIPTION" },
-	{ "MAGICERASER_ADD_TO_IGNORE_LIST", "BINDING_ADD_TO_IGNORE_LIST", "OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION" },
+	{ "MAGICERASER_ADD_TO_IGNORE_LIST", "BINDING_ADD_TO_PROTECT_LIST", "OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION" },
 	{ "MAGICERASER_ADD_TO_ERASE_LIST", "BINDING_ADD_TO_ERASE_LIST", "OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION" },
 }
 
-local KEY_LABEL_WIDTH = 1.9
-local KEY_STATUS_WIDTH = 0.85
-local KEY_BUTTON_WIDTH = 0.55
+-- On the grid (Decision 13): the caption in the label column, then the key and Set Key, totalling one row.
+local KEY_LABEL_WIDTH = Kit.LABEL_WIDTH
+local KEY_STATUS_WIDTH = 0.75
+local KEY_BUTTON_WIDTH = Kit.ROW_WIDTH - KEY_LABEL_WIDTH - KEY_STATUS_WIDTH
 
 local function GetBindingStatus(bindingName)
 	local key = GetBindingKey(bindingName)
@@ -83,7 +49,7 @@ local function AddKeyBindingRows(args, startOrder)
 		local bindingName, captionKey, descKey = entry[1], entry[2], entry[3]
 
 		if index > 1 then
-			args["spacerKeyBinding" .. index] = ns.OptionsSpacer(order)
+			args["spacerKeyBinding" .. index] = Kit.Spacer(order)
 			order = order + 1
 		end
 
@@ -93,7 +59,7 @@ local function AddKeyBindingRows(args, startOrder)
 			inline = true,
 			order = order,
 			args = {
-				caption = ns.OptionsRowLabel(GetColor("INFO") .. L[captionKey] .. "|r", 1, KEY_LABEL_WIDTH),
+				caption = Kit.Label(Kit.Color("INFO", L[captionKey]), 1, KEY_LABEL_WIDTH),
 				status = {
 					type = "description",
 					name = function()
@@ -117,7 +83,7 @@ local function AddKeyBindingRows(args, startOrder)
 		}
 		order = order + 1
 
-		args["descKeyBinding" .. index] = ns.OptionsDesc(GetColor("HELP") .. L[descKey] .. "|r", order)
+		args["descKeyBinding" .. index] = Kit.Desc(Kit.Color("HELP", L[descKey]), order)
 		order = order + 1
 	end
 end
@@ -132,14 +98,13 @@ end
     with every feature's switch, Key Bindings, then /Commands. The links and
     the version line have their own Feedback & Support page. Each
     feature's full settings live on its own page under this one. The mini-map
-    clicks are spelled out in the button's own tooltip, so they aren't repeated
-    here.
+    clicks are named on the menu's rows, so they aren't repeated here.
 ]]
 function ns.BuildGeneralOptions()
 	local args = {
-		descIntro = ns.OptionsDesc(L["OPTIONS_DESCRIPTION"], 1),
+		descIntro = Kit.Desc(L["OPTIONS_DESCRIPTION"], 1),
 
-		spacerWelcome0 = ns.OptionsSpacer(5),
+		spacerWelcome0 = Kit.Spacer(5),
 		toggleWelcome = {
 			type = "toggle",
 			name = L["OPTIONS_ENABLE_WELCOME"],
@@ -151,6 +116,7 @@ function ns.BuildGeneralOptions()
 			end,
 			set = function(_, value)
 				ns.db.profile.showWelcome = value
+				ns.RefreshSettings()
 			end,
 		},
 		toggleMinimap = {
@@ -160,37 +126,38 @@ function ns.BuildGeneralOptions()
 			width = "full",
 			order = 7,
 			get = function()
-				return ns.db and not ns.db.global.minimap.hide
+				return ns.db and not ns.db.profile.minimap.hide
 			end,
 			set = function(_, value)
-				ns.db.global.minimap.hide = not value
-				LibStub("LibDBIcon-1.0"):Refresh(ADDON_NAME, ns.db.global.minimap)
+				ns.db.profile.minimap.hide = not value
+				ns:ApplyMinimapButton()
+				ns.RefreshSettings()
 			end,
 		},
 
-		spacerFeatures0 = ns.OptionsSpacer(10),
-		headerFeatures = ns.OptionsHeader(L["OPTIONS_FEATURES_HEADER"], 11),
-		spacerFeatures1 = ns.OptionsSpacer(12),
+		spacerFeatures0 = Kit.Spacer(10),
+		headerFeatures = Kit.Header(L["OPTIONS_FEATURES_HEADER"], 11),
+		spacerFeatures1 = Kit.Spacer(12),
 
-		spacerKeyBindings0 = ns.OptionsSpacer(30),
-		headerKeyBindings = ns.OptionsHeader(L["OPTIONS_KEY_BINDINGS_HEADER"], 31),
-		spacerKeyBindings1 = ns.OptionsSpacer(32),
+		spacerKeyBindings0 = Kit.Spacer(30),
+		headerKeyBindings = Kit.Header(L["OPTIONS_KEY_BINDINGS_HEADER"], 31),
+		spacerKeyBindings1 = Kit.Spacer(32),
 
-		spacerCommands0 = ns.OptionsSpacer(90),
-		headerCommands = ns.OptionsHeader(L["OPTIONS_COMMANDS_HEADER"], 91),
-		spacerCommands1 = ns.OptionsSpacer(92),
-		descCommands = ns.OptionsDesc(
+		spacerCommands0 = Kit.Spacer(90),
+		headerCommands = Kit.Header(L["OPTIONS_COMMANDS_HEADER"], 91),
+		spacerCommands1 = Kit.Spacer(92),
+		descCommands = Kit.Desc(
 			GetColor("INFO") .. L["OPTIONS_COMMAND"] .. "|r" .. "  " .. L["OPTIONS_COMMAND_DESCRIPTION"],
 			93
 		),
 	}
 
-	AddFeatureToggles(args, 12)
+	args.features = Kit.FeatureSwitches(13)
 	AddKeyBindingRows(args, 33)
 
 	return {
 		type = "group",
-		name = ns.ADDON_TITLE,
+		name = L["ADDON_TITLE"],
 		args = args,
 	}
 end

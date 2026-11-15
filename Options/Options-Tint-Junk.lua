@@ -1,6 +1,8 @@
 local _, ns = ...
 local L = ns.L
 
+local Kit = ns.OptionsKit
+
 local function TintOff()
 	return not (ns.db and ns.db.profile.tintJunkEnabled)
 end
@@ -16,7 +18,7 @@ end
     Features/Tint-Junk.lua for the behavior these settings drive. Its switch is
     also in the root panel's Features section.
 
-    The switch and the color share one line, laid out by ns.OptionsTogglePairs
+    The switch and the color share one line, laid out by Kit.Pairs
     like the root panel's switches, and the color hides with the switch off.
     Both repaint the bags at once, so the player sees each change land on an
     open bag window.
@@ -26,21 +28,10 @@ function ns.OnTintJunkChanged()
 end
 
 function ns.BuildTintJunkOptions(args)
-	args.spacerTint0 = ns.OptionsSpacer(10)
-	args.headerTint = ns.OptionsHeader(L["OPTIONS_TINT_HEADER"], 11)
-	args.spacerTint1 = ns.OptionsSpacer(12)
-	args.descTint = ns.OptionsDesc(L["OPTIONS_TINT_DESCRIPTION"], 13)
-	args.spacerTint2 = ns.OptionsSpacer(14)
+	Kit.Section(args, "Tint", 10, L["OPTIONS_TINT_HEADER"], L["OPTIONS_TINT_DESCRIPTION"])
 
-	ns.OptionsTogglePairs(args, "rowTint", 14, {
-		ns.OptionsFeatureToggle(
-			"tintJunkEnabled",
-			"OPTIONS_ENABLE_TINT",
-			"OPTIONS_ENABLE_TINT_DESCRIPTION",
-			nil,
-			nil,
-			ns.OnTintJunkChanged
-		),
+	args.rowTint = Kit.Pairs(15, nil, {
+		Kit.FeatureSwitch("tintJunkEnabled"),
 		{
 			type = "color",
 			name = L["OPTIONS_TINT_COLOR"],
@@ -58,6 +49,7 @@ function ns.BuildTintJunkOptions(args)
 				local color = ns.db.profile.tintColor
 				color.r, color.g, color.b, color.a = r, g, b, a
 				ns.OnTintJunkChanged()
+				ns.RefreshSettings()
 			end,
 		},
 	})

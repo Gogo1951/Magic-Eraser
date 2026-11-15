@@ -3,12 +3,10 @@ local L = ns.L
 
 local format = string.format
 
-local function ManualDeleteOff()
-	return not (ns.db and ns.db.profile.manualDeleteAutoFillEnabled)
-end
+local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
--- Manual Delete Assistance Section
+-- Delete Without Typing Section
 --------------------------------------------------------------------------------
 
 --[[
@@ -21,47 +19,35 @@ end
     are separate sections.
 ]]
 function ns.BuildManualDeleteOptions(args)
-	args.spacerManualDelete0 = ns.OptionsSpacer(40)
-	args.headerManualDelete = ns.OptionsHeader(L["OPTIONS_MANUAL_DELETE_HEADER"], 41)
-	args.spacerManualDelete1 = ns.OptionsSpacer(42)
-	args.descManualDelete = ns.OptionsDesc(
-		format(L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or "", ITEM_QUALITY3_DESC),
-		43
+	Kit.Section(
+		args,
+		"ManualDelete",
+		40,
+		L["OPTIONS_MANUAL_DELETE_HEADER"],
+		format(L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or "", ITEM_QUALITY3_DESC)
 	)
-	args.spacerManualDelete2 = ns.OptionsSpacer(44)
 
 	--[[
-	    The switch and its scope share one line, the switch at
-	    ns.OPTIONS_LABEL_WIDTH where a caption would sit and the dropdown at
-	    ns.OPTIONS_CONTROL_WIDTH, the same shape as Maximum Value to Erase. The
-	    dropdown hides while the switch is off: a setting for a feature that is
-	    not running is not shown at all.
+	    The switch and its scope share one line (Kit.ToggleRow), the same shape
+	    as Maximum Value to Erase. The dropdown hides while the switch is off: a
+	    setting for a feature that is not running is not shown at all.
 	]]
-	args.toggleManualDelete = ns.OptionsFeatureToggle(
-		"manualDeleteAutoFillEnabled",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
-		"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
-		45,
-		ns.OPTIONS_LABEL_WIDTH
-	)
-
-	args.selectManualDeleteScope = {
-		type = "select",
-		name = "",
-		desc = L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"],
-		width = ns.OPTIONS_CONTROL_WIDTH,
-		order = 46,
-		hidden = ManualDeleteOff,
-		values = {
-			all = L["OPTIONS_MANUAL_DELETE_ALL"],
-			noValue = L["OPTIONS_MANUAL_DELETE_NO_VALUE"],
+	args.rowManualDelete = Kit.ToggleRow(45, Kit.FeatureSwitch("manualDeleteAutoFillEnabled"), {
+		control = {
+			type = "select",
+			desc = L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"],
+			values = {
+				all = L["OPTIONS_MANUAL_DELETE_ALL"],
+				noValue = L["OPTIONS_MANUAL_DELETE_NO_VALUE"],
+			},
+			sorting = { "all", "noValue" },
+			get = function()
+				return (ns.db and ns.db.profile.manualDeleteNoValueOnly) and "noValue" or "all"
+			end,
+			set = function(_, value)
+				ns.db.profile.manualDeleteNoValueOnly = (value == "noValue")
+				ns.RefreshSettings()
+			end,
 		},
-		sorting = { "all", "noValue" },
-		get = function()
-			return (ns.db and ns.db.profile.manualDeleteNoValueOnly) and "noValue" or "all"
-		end,
-		set = function(_, value)
-			ns.db.profile.manualDeleteNoValueOnly = (value == "noValue")
-		end,
-	}
+	})
 end

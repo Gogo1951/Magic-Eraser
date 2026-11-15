@@ -19,7 +19,7 @@ local cachedItem = nil
 local isCacheValid = false
 
 --[[
-    Running totals for the tooltip's Clutter Report, populated as a side effect
+    Running totals for the mini-map menu's Clutter Report, populated as a side effect
     of FindItemToDelete's single bag scan so the summary shares the candidate
     cache's lifecycle -- one scan feeds both the lowest-value pick and the
     report, and both go stale together on InvalidateCache. Slots counts bag slots
@@ -84,7 +84,19 @@ end
 -- Scanning
 --------------------------------------------------------------------------------
 
+--[[
+    Arrows and bullets always go last, whatever they are worth and whatever rule
+    flagged them. A stack of outgrown ammo is nearly worthless, so a pure
+    cheapest-first pick erases it ahead of everything else -- and a hunter
+    clearing space mid-quest would rather lose the gray cloth than the ammo
+    still in the quiver. They are still erased, just after everything else.
+]]
+local PROJECTILE_CLASS = (Enum and Enum.ItemClass and Enum.ItemClass.Projectile) or 6
+
 local function IsBetterDeletionCandidate(candidate, current)
+	if candidate.isProjectile ~= current.isProjectile then
+		return current.isProjectile
+	end
 	if candidate.value < current.value then
 		return true
 	end
@@ -112,7 +124,7 @@ local function ForEachCandidate(visit)
 
 				-- Ignore List first, so it wins over any Erase List entry.
 				if not ns:IsIgnored(itemId) then
-					local name, _, rarity, _, _, _, _, _, _, icon, sellPrice = GetItemInfo(itemInfo.hyperlink)
+					local name, _, rarity, _, _, _, _, _, _, icon, sellPrice, classId = GetItemInfo(itemInfo.hyperlink)
 
 					if not name then
 						isDataMissing = true
@@ -132,6 +144,7 @@ local function ForEachCandidate(visit)
 								bag = bag,
 								slot = slot,
 								deleteReason = deleteReason,
+								isProjectile = classId == PROJECTILE_CLASS,
 							})
 						end
 					end
@@ -188,10 +201,10 @@ function ns:IsJunkSlot(bag, slot, itemId)
 end
 
 --[[
-    Totals for the tooltip's Clutter Report: slots freed, item quantity, and total
-    value. FindItemToDelete populates these as a side effect of its scan, so
-    callers must have called it first this cache cycle (the tooltip does, just
-    above where it reads this).
+    Totals for the mini-map menu's Clutter Report: slots freed, item quantity,
+    and total value. FindItemToDelete populates these as a side effect of its
+    scan, so callers must have called it first this cache cycle (the menu's
+    BuildMainEntries does, before AddClutterReport reads this).
 ]]
 function ns:GetReclaimSummary()
 	return cachedReclaimSlots or 0, cachedReclaimItems or 0, cachedReclaimValue or 0

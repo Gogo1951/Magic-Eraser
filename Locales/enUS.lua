@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -31,7 +34,7 @@ L["ERASE_CANDIDATE_CHANGED"] =
 	"That item changed before it could be erased, so nothing was erased. Check the mini-map button and try again."
 L["ERASED_ITEM"] = "Erased %s%s."
 L["QUEST_ITEM_READY"] = "%s%s can now be safely erased. It's left over from a quest you have completed."
-L["QUEST_STARTER_UNAVAILABLE"] = "%s%s can now be safely erased. It starts a quest your character can't take."
+L["QUEST_STARTER_UNAVAILABLE"] = "%s%s can now be safely erased. It starts a quest your race or class can never take."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "Sold %s%s, worth %s."
@@ -46,17 +49,18 @@ L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s
 L["BANK_RETRIEVED_ONE_SLOT"] = "Pulled %s items (1 bag slot) out of your bank, worth %s."
 L["BANK_RETRIEVED_ONE_ITEM"] = "Pulled 1 item (1 bag slot) out of your bank, worth %s."
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "Added %s to your Protect List."
-L["IGNORE_LIST_MOVED"] = "Moved %s from your Erase List to your Protect List."
-L["IGNORE_LIST_ALREADY"] = "%s is already on your Protect List."
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "Added %s to your Protect List."
+L["PROTECT_LIST_MOVED"] = "Moved %s from your Erase List to your Protect List."
+L["PROTECT_LIST_ALREADY"] = "%s is already on your Protect List."
+L["PROTECT_LIST_REMOVED"] = "Removed %s from your Protect List."
 L["ERASE_LIST_ADDED"] = "Added %s to your Erase List."
 L["ERASE_LIST_ALREADY"] = "%s is already on your Erase List."
 L["ERASE_LIST_PROTECTED"] = "%s is on your Protect List, which always wins. Remove it from there first."
 L["NO_HOVERED_ITEM"] = "Hover over an item, then press the key again."
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Lowest-Value Item"
@@ -66,24 +70,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1 Item)"
 L["CLUTTER_SLOTS"] = "%s Bag Slots"
 L["CLUTTER_SLOTS_ONE"] = "1 Bag Slot"
 L["NO_VALUE"] = "No Value"
-L["LEFT_CLICK"] = "Left-Click"
-L["RIGHT_CLICK"] = "Right-Click"
-L["MIDDLE_CLICK"] = "Middle-Click"
-L["SHIFT_RIGHT_CLICK"] = "Shift + Right-Click"
-L["SHIFT_MIDDLE_CLICK"] = "Shift + Middle-Click"
-L["ACTION_TOGGLE"] = "Toggle"
-L["ACTION_CLEAR_IGNORE"] = "Clear Protect List"
-L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
-L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
-L["LOADING_ITEM"] = "Loading ID: %d"
-L["MINIMAP_OPTIONS"] = "Magic Eraser Options"
+L["MENU_CLICK_LEFT"] = "Left-Click"
+L["MENU_CLICK_RIGHT"] = "Right-Click"
+L["MENU_CLICK_MIDDLE"] = "Middle-Click"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Right-Click"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Middle-Click"
+L["MENU_TOGGLE"] = "Toggle"
+L["ACTION_CLEAR_PROTECT_LIST"] = "Clear Protect List"
+L["MENU_OPTIONS"] = "Magic Eraser Options"
+L["MENU_ON"] = "On"
+L["MENU_OFF"] = "Off"
+L["MENU_MORE"] = "%d more"
+L["MENU_MORE_FEATURES"] = "More Features"
+L["MENU_FEATURE_COUNT_ON"] = "%d On"
+L["MENU_FEATURE_COUNT_OFF"] = "%d Off"
+L["MENU_UNPROTECT_HINT"] = "Click to remove it from your Protect List."
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "Erase Lowest-Value Item"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "Add Hovered Item to Protect List"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "Add Hovered Item to Protect List"
 L["BINDING_ADD_TO_ERASE_LIST"] = "Add Hovered Item to Erase List"
 
 --------------------------------------------------------------------------------
@@ -95,16 +103,16 @@ L["AUTO_VEND_DESCRIPTION"] = "Sells your junk the moment you open a merchant, ch
 L["TAB_ERASING"] = "Erasing"
 L["TAB_MERCHANT_BANK"] = "Merchant & Bank"
 L["TAB_ALERTS"] = "Alerts & Tints"
-L["TAB_IGNORE_LIST"] = "Protect List"
+L["TAB_PROTECT_LIST"] = "Protect List"
 L["TAB_ERASE_LIST"] = "Erase List"
-L["ENABLED"] = "Enabled"
-L["DISABLED"] = "Disabled"
 L["ACTION_ERASE"] = "Erase"
-L["ACTION_IGNORE"] = "Protect"
+L["ACTION_PROTECT"] = "Protect"
+L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
+L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
+L["LOADING_ITEM"] = "Loading ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Example: %s"
-L["OPTIONS_EXAMPLE_ITEM"] = "Example Item"
+L["SAMPLE_EXAMPLE"] = "Example"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -116,7 +124,7 @@ L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Shows the Magic Eraser button on your mini-map. Its icon is your Lowest-Value Item, and hovering it shows the Clutter Report."
+	"Shows the Magic Eraser button on your mini-map. Its icon is your Lowest-Value Item, and hovering it opens a menu with everything the button does."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Features"
@@ -127,7 +135,7 @@ L["OPTIONS_KEY_SET"] = "Set Key"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "Opens the game's key binding list, where Magic Eraser has its own section."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Erases your Lowest-Value Item, same as a left-click on the mini-map button. There's no preview before a keypress, so bind it somewhere you won't hit by accident."
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protects the item under your mouse on this character, wherever you see it: bags, bank, merchant or loot window. If it was on this character's Erase List, it comes off."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Adds the item under your mouse to this character's Erase List, whatever it's worth. Your Protect List still wins."
@@ -172,7 +180,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 
 L["TAB_ERASING_DESCRIPTION"] = "Each click erases the cheapest junk in your bags, one stack at a time."
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"FYI: Nearly anything erased by mistake can still be recovered through Blizzard's item restoration service!"
+	"FYI: Nearly anything erased by mistake can still be recovered through Blizzard's Item Restoration service!"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "What Counts as Junk"
@@ -181,21 +189,24 @@ L["OPTIONS_JUNK_DESCRIPTION"] =
 L["OPTIONS_KIND_QUEST"] = "Completed Quest Items"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Items left over once you've handed in the last quest that needs them."
 L["OPTIONS_KIND_STARTER"] = "Dead-End Quest Starters"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] = "Items that start a quest your race or class can never take."
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] = "Items that start a quest your race or class can never take."
 L["OPTIONS_KIND_FOOD"] = "Outgrown Food & Drink"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Food and drink ten levels past the level you could first use them. Starter bread and water go at level 5."
+	"Food and drink once you're ten levels past the level they need. Starter bread and water go at level 5."
 L["OPTIONS_KIND_AMMO"] = "Outgrown Arrows & Bullets"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
-	"Arrows and bullets the moment you can use a better kind sold by vendors. The best vendor ammo for your level is never erased."
+	"Arrows and bullets the moment you can use a better kind sold by merchants. The best merchant ammo for your level is never erased."
 L["OPTIONS_KIND_WHITE"] = "White Weapons & Armor"
 L["OPTIONS_KIND_WHITE_DESCRIPTION"] =
-	"White weapons and armor a vendor will buy. Profession tools, shirts, formal wear and whites a quest still needs are kept."
+	"White weapons and armor a merchant will buy. Profession tools, shirts, formal wear and whites a quest still needs are kept."
 L["OPTIONS_KIND_CRAFTED"] = "Crafted Weapons & Armor"
 L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"White weapons and armor a player crafted, such as gear you made for an alt. White Weapons & Armor leaves these out, so only this box decides them."
 L["OPTIONS_KIND_GRAY"] = "Gray Trash"
-L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Any gray item a vendor will buy."
+L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Any gray item a merchant will buy."
+L["OPTIONS_KIND_MEAT_FISH"] = "Outgrown Meat & Fish"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"Meat and fish used in cooking recipes, edible raw fish included, once you're ten levels past them. Edible fish that no recipe uses counts as Outgrown Food & Drink."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] = "Unchecked, it isn't junk: never erased, sold or pulled from the bank."
 L["OPTIONS_KINDS_NONE_CHECKED"] = "No kind is checked, so only your Erase List is erased or sold."
 
@@ -209,15 +220,15 @@ L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Stacks worth more than this, counting the whole stack's sale value, are never erased."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Manual Delete Assistance"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Delete Without Typing"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'By default, the game makes you type "%s" when deleting a %s or better item. This turns that prompt into a simple Yes or No.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Manual Delete Assistance"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Delete Without Typing"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Turns Manual Delete Assistance on or off. The game still asks Yes or No; only the typing goes away."
+	"Turns Delete Without Typing on or off. The game still asks Yes or No; only the typing goes away."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
-	"Items With No Sale Value simplifies only items no vendor will buy. All Items simplifies every typed prompt."
+	"Items With No Sale Value simplifies only items no merchant will buy. All Items simplifies every typed prompt."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
 L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Items With No Sale Value"
 
@@ -243,7 +254,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Summary in Chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Every Sale in Chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "No Chat Report"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"What Auto-Vend prints in chat. Summary in Chat prints one total per visit. Every Sale in Chat prints each sale, then the total. No Chat Report prints nothing."
+	"What Auto-Vend prints in chat. Summary in Chat prints one total per visit. Every Sale in Chat prints the total, then each sale. No Chat Report prints nothing."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bank Retrieval"
@@ -315,9 +326,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] = "Remove every item from this list? This can't 
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"Items on a Protect List are never erased and never sold. The All Characters list protects an item everywhere, and a character's own list protects it there only."
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] = "Moves this item to the All Characters list, so it's protected everywhere."
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] = "Moves this item to the All Characters list, so it's protected everywhere."
 
 --------------------------------------------------------------------------------
 -- Options: Erase List

@@ -176,7 +176,7 @@ local format, insert, floor = string.format, table.insert, math.floor
 --[[
     An item link without the square brackets around its name, which is how
     Magic Eraser shows an item outside chat: Options rows and pickers, the
-    mini-map tooltip and the Erase Confirmation dialog. Chat lines keep the
+    mini-map menu and the Erase Confirmation dialog. Chat lines keep the
     brackets (ns:PrintMessage). Only the brackets inside a hyperlink's
     |h...|h text go; the link itself still hovers, clicks and shift-clicks as
     before, and any other text passes through untouched.
@@ -448,7 +448,8 @@ end
 
 --[[
     Every character on the account that has per-character data, plus the one
-    being played, as "Name - Realm" keys sorted as plain strings. The list
+    being played, as AceDB char keys ("Name - Realm" on realm clients, "First
+    Last" on WoW Forever) sorted as plain strings. The list
     panels draw one tree node per key. Characters live in AceDB's char scope,
     not in profiles: every character shares the Default profile, so profile
     names say nothing about who has a list.
@@ -491,3 +492,18 @@ function ns:GetCharacterDisplayName(charKey)
 	end
 	return COLOR_PREFIX .. hex .. charKey .. "|r"
 end
+
+--------------------------------------------------------------------------------
+-- Refresh
+--------------------------------------------------------------------------------
+
+--[[
+    Every settings change ends in ns.RefreshSettings, from the options, the
+    mini-map menu, a button click, a key binding, or a profile switch. It
+    belongs to Options-Kit (Options/Options-Kit.lua): every registered panel
+    repaints, the open menu redraws (ns.RefreshMenu) and the button takes the
+    next item's icon (ns.UpdateMinimapIcon).
+
+    Bag changes don't go there: ns:RefreshDisplay redraws only the menu, so an
+    item ID being typed into a list page survives the loot that lands meanwhile.
+]]

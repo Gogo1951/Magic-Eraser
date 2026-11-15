@@ -4,8 +4,6 @@ local L = ns.L
 local format = string.format
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
-
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
@@ -23,7 +21,7 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 ]]
 
 BINDING_NAME_MAGICERASER_ERASE = L["BINDING_ERASE"]
-BINDING_NAME_MAGICERASER_ADD_TO_IGNORE_LIST = L["BINDING_ADD_TO_IGNORE_LIST"]
+BINDING_NAME_MAGICERASER_ADD_TO_IGNORE_LIST = L["BINDING_ADD_TO_PROTECT_LIST"]
 BINDING_NAME_MAGICERASER_ADD_TO_ERASE_LIST = L["BINDING_ADD_TO_ERASE_LIST"]
 
 --[[
@@ -116,7 +114,7 @@ end
     panel when they come back from it.
 ]]
 function ns:OnUpdateBindings()
-	AceConfigRegistry:NotifyChange(ns.OPTIONS_REGISTRY.General)
+	ns.RefreshSettings()
 end
 
 --------------------------------------------------------------------------------
@@ -166,12 +164,17 @@ end
 
     Neither binding checks for combat. A list edit calls nothing protected, so
     protecting an item mid-fight works exactly as it does anywhere else.
+
+    The Protect List sentences are shared with the mini-map menu's Protect row
+    and the button's Right-Click (Features/Minimap-Menu.lua), so a protect says
+    the same thing however the player asked for it.
 ]]
 local IGNORE_LIST_MESSAGE_KEYS = {
-	added = "IGNORE_LIST_ADDED",
-	moved = "IGNORE_LIST_MOVED",
-	already = "IGNORE_LIST_ALREADY",
+	added = "PROTECT_LIST_ADDED",
+	moved = "PROTECT_LIST_MOVED",
+	already = "PROTECT_LIST_ALREADY",
 }
+ns.IGNORE_LIST_MESSAGE_KEYS = IGNORE_LIST_MESSAGE_KEYS
 
 local ERASE_LIST_MESSAGE_KEYS = {
 	added = "ERASE_LIST_ADDED",

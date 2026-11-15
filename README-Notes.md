@@ -13,7 +13,7 @@
 ### Mini-map screenshot in Tips & Tricks
 
 - **Departs from:** README generation, Image Handling, images in the feature blocks and nowhere else.
-- **Instead:** The README keeps the mini-map tooltip screenshot under Tips & Tricks, Mini-Map Button, beside its click table.
+- **Instead:** The README keeps the mini-map tooltip screenshot under Tips & Tricks, Mini-map Button, beside its click table.
 - **Why:** The tooltip is where every click in that table shows its result, so the screenshot works as the table's picture rather than a feature's.
 
 ### Color picker beside its switch

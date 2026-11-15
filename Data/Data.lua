@@ -6,8 +6,21 @@ ns.L = LibStub("AceLocale-3.0"):GetLocale(ADDON_NAME)
 --------------------------------------------------------------------------------
 
 ns.ADDON_TITLE = ns.L["ADDON_TITLE"]
+ns.ADDON_SHORT_NAME = ns.L["ADDON_SHORT_NAME"]
 ns.SAVED_VARIABLES_NAME = "MagicEraserDB"
 ns.DEFAULT_ICON = "Interface/Icons/inv_misc_bag_07_green"
+
+--------------------------------------------------------------------------------
+-- Example Items
+--------------------------------------------------------------------------------
+
+--[[
+    The item the Auto-Vend example sells: Ruined Pelt, a gray drop from beasts
+    on every client Magic Eraser ships for, so the example shows the kind of
+    junk a visit really sells. The quest-item examples take theirs from the
+    flavor's own quest-item tables instead (Options/Options-Quest-Item-Alerts.lua).
+]]
+ns.EXAMPLE_JUNK_ITEM_ID = 4865
 
 --------------------------------------------------------------------------------
 -- Links
@@ -43,70 +56,16 @@ ns.OPTIONS_REGISTRY = {
 }
 
 --------------------------------------------------------------------------------
--- Options Layout Grid
+-- Options Layout
 --------------------------------------------------------------------------------
 
 --[[
-    The label-beside-control grid. AceConfig renders a widget's own name above it,
-    so a captioned control is built as two args instead -- an ns.OptionsRowLabel
-    cell, then the control with name = "" ordered immediately after. The two flow
-    onto one line because their widths add up to exactly one row.
+    The options grid (ns.OPTIONS_ROW_WIDTH and the rest) belongs to Options-Kit
+    (Options/Options-Kit.lua), which publishes it under the same names. Only
+    the column no other add-on has stays here: the item lists' promote button,
+    sized to hold "All Characters" without truncating.
 ]]
-ns.OPTIONS_ROW_WIDTH = 3.4
-ns.OPTIONS_LABEL_WIDTH = 2.1
-ns.OPTIONS_CONTROL_WIDTH = ns.OPTIONS_ROW_WIDTH - ns.OPTIONS_LABEL_WIDTH
-
--- The item lists' remove column, sized to its icon rather than a caption.
-ns.OPTIONS_REMOVE_ICON_WIDTH = 0.25
-
---[[
-    The blank cell a sub-option row leads with. AceConfig pins a checkbox at the
-    left edge of its own widget, so padding a label indents the caption and
-    leaves the box behind; leading the row with this cell instead moves the box
-    itself.
-
-    Sized so the sub-option's box starts where its parent's box visually ends.
-    That lands short of a full checkbox: AceGUI's checkbox is a 24px texture
-    anchored flush left and the flow layout adds no gap between widgets, but
-    UI-CheckBox-Up carries transparent padding, so the gold square the player
-    actually sees is inset a couple of pixels inside that footprint. Matching the
-    footprint (0.14) therefore reads as a visible step too far; this matches the
-    square. Nudge here if the two edges drift apart on a different UI scale.
-]]
-ns.OPTIONS_SUB_INDENT_WIDTH = 0.115
-
---[[
-    The caption of a captioned sub-row: the label width less the indent that
-    leads the row, so the control after it (ns.OPTIONS_CONTROL_WIDTH) ends on
-    the right edge exactly where a top-level row's control does. Every dropdown
-    and slider then lines up down the panel, right-aligned, the way every
-    Gogo1951 add-on lays them out. Less a hair of slack, because an inline
-    group summing to its budget can tip its last control onto its own line.
-]]
-ns.OPTIONS_SUB_LABEL_WIDTH = ns.OPTIONS_LABEL_WIDTH - ns.OPTIONS_SUB_INDENT_WIDTH - 0.05
-
--- The item lists' promote column, sized to hold "All Characters" without truncating.
 ns.OPTIONS_PROMOTE_WIDTH = 0.9
-
---[[
-    A tree panel's sidebar eats into the pane its rows are laid out in, so rows
-    inside one spend a shorter budget than ns.OPTIONS_ROW_WIDTH. AceGUI's tree
-    defaults to 175px; this is a hair wider, enough for a long realm name, and
-    no more, since every pixel it takes is one the item pane's promote button
-    needs. Narrowing it gives the item pane exactly what it loses, hence the
-    paired constant. The tree stays drag-resizable, and a drag wins over this
-    seed.
-]]
-ns.OPTIONS_TREE_WIDTH = 180
-ns.OPTIONS_TREE_ROW_WIDTH = 2.5
-
---[[
-    The AceGUI widget the shared item-list builder draws each row's item with --
-    icon, colored link, and the item's own tooltip on hover. Registered in
-    Options/Options-Utilities.lua and named off the add-on so two add-ons in one
-    session never collide on the widget registry.
-]]
-ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
 --------------------------------------------------------------------------------
 -- Item List Scopes
@@ -114,8 +73,9 @@ ns.ITEM_LINK_WIDGET_TYPE = ADDON_NAME .. "_ItemLink"
 
 --[[
     The Ignore List and Erase List panels each name one scope per list on the
-    account. Every scope but one is an AceDB char key ("Name - Realm", from
-    ns.db.keys.char and ns.db.sv.char, never localized), so the account-wide
+    account. Every scope but one is an AceDB char key ("Name - Realm" on realm
+    clients, "First Last" on WoW Forever, from ns.db.keys.char and
+    ns.db.sv.char, never localized), so the account-wide
     list needs a key no character can collide with -- hence the asterisks, which
     no character or realm name can contain. One constant serves both panels
     because the two never share a table:
@@ -245,6 +205,7 @@ ns.DELETE_PRIORITY = {
 	questIneligible = 1,
 	gray = 2,
 	consumable = 3,
+	meatFish = 3,
 	ammo = 3,
 	equipment = 3,
 	crafted = 3,
@@ -279,19 +240,27 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
 
     "crafted" is the white-gear rule's match with a <Made by> line on the
     stack's own tooltip, split out so gear made for an alt survives a trip to
-    the vendor. It is the one kind unchecked by default (Data/Default-Settings.lua).
+    the vendor. Unchecked by default (Data/Default-Settings.lua).
+
+    "meatFish" is meat and fish a cooking recipe uses, raw fish you can eat
+    included, split out of food and drink so a fisher or cook keeps what they
+    gather. Also unchecked by default.
 
     The rows are listed in the order the panel draws them, each with the locale
-    keys for its caption and its tooltip. They are string values rather than
-    literal L["..."] reads; search the key name, not the L[] form.
+    keys for its caption and its tooltip. The panel lays them out two to a
+    line, so each pair is a kind and its closest relative: the two quest kinds,
+    the two outgrown-food kinds, the two white-gear kinds, then ammo and grays.
+    They are string values rather than literal L["..."] reads; search the key
+    name, not the L[] form.
 ]]
 ns.ERASE_KINDS = {
 	-- { deleteReason, labelKey, descKey }
 	{ "quest", "OPTIONS_KIND_QUEST", "OPTIONS_KIND_QUEST_DESCRIPTION" },
-	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION" },
+	{ "questIneligible", "OPTIONS_KIND_STARTER", "OPTIONS_KIND_STARTER_DESCRIPTION" },
 	{ "consumable", "OPTIONS_KIND_FOOD", "OPTIONS_KIND_FOOD_DESCRIPTION" },
-	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION" },
+	{ "meatFish", "OPTIONS_KIND_MEAT_FISH", "OPTIONS_KIND_MEAT_FISH_DESCRIPTION" },
 	{ "equipment", "OPTIONS_KIND_WHITE", "OPTIONS_KIND_WHITE_DESCRIPTION" },
 	{ "crafted", "OPTIONS_KIND_CRAFTED", "OPTIONS_KIND_CRAFTED_DESCRIPTION" },
+	{ "ammo", "OPTIONS_KIND_AMMO", "OPTIONS_KIND_AMMO_DESCRIPTION" },
 	{ "gray", "OPTIONS_KIND_GRAY", "OPTIONS_KIND_GRAY_DESCRIPTION" },
 }

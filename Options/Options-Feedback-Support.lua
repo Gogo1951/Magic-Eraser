@@ -1,5 +1,6 @@
 local _, ns = ...
 local L = ns.L
+local Kit = ns.OptionsKit
 
 local GetColor = ns.GetColor
 
@@ -53,27 +54,26 @@ function ns.BuildFeedbackSupportOptions()
 
 	for index, key in ipairs(LEVEL_UP_PARAGRAPHS) do
 		if index > 1 then
-			args["spacerLevelUp" .. index] = ns.OptionsSpacer(order)
+			args["spacerLevelUp" .. index] = Kit.Spacer(order)
 			order = order + 1
 		end
-		args["descLevelUp" .. index] = ns.OptionsDesc(L[key], order)
+		args["descLevelUp" .. index] = Kit.Desc(L[key], order)
 		order = order + 1
 	end
 
-	args.spacerLinks0 = ns.OptionsSpacer(50)
-	args.headerLinks = ns.OptionsHeader(L["OPTIONS_FEEDBACK_LINKS_HEADER"], 51)
-	args.spacerLinks1 = ns.OptionsSpacer(52)
+	args.spacerLinks0 = Kit.Spacer(50)
+	args.headerLinks = Kit.Header(L["OPTIONS_FEEDBACK_LINKS_HEADER"], 51)
+	args.spacerLinks1 = Kit.Spacer(52)
 
 	order = 53
 	for index, entry in ipairs(LINKS) do
 		local captionKey, linkKey = entry[1], entry[2]
 
 		if index > 1 then
-			args["spacerLink" .. index] = ns.OptionsSpacer(order)
+			args["spacerLink" .. index] = Kit.Spacer(order)
 			order = order + 1
 		end
-		args["labelLink" .. index] =
-			ns.OptionsRowLabel(GetColor("TITLE") .. L[captionKey] .. "|r", order, LINK_LABEL_WIDTH)
+		args["labelLink" .. index] = Kit.Label(GetColor("TITLE") .. L[captionKey] .. "|r", order, LINK_LABEL_WIDTH)
 		args["link" .. index] = {
 			type = "input",
 			name = "",
@@ -87,8 +87,8 @@ function ns.BuildFeedbackSupportOptions()
 		order = order + 2
 	end
 
-	args.spacerCopyLink = ns.OptionsSpacer(order)
-	args.descCopyLink = ns.OptionsDesc(GetColor("HELP") .. L["OPTIONS_COPY_LINK"] .. "|r", order + 1)
+	args.spacerCopyLink = Kit.Spacer(order)
+	args.descCopyLink = Kit.Desc(GetColor("HELP") .. L["OPTIONS_COPY_LINK"] .. "|r", order + 1)
 
 	args.spaceVersion0 = {
 		type = "description",

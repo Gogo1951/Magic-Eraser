@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -33,7 +36,7 @@ L["ERASED_ITEM"] = "%s%s gelöscht."
 L["QUEST_ITEM_READY"] =
 	"%s%s kann jetzt sicher gelöscht werden. Der Gegenstand ist von einer Quest übrig, die du abgeschlossen hast."
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s%s kann jetzt sicher gelöscht werden. Der Gegenstand startet eine Quest, die dein Charakter nicht annehmen kann."
+	"%s%s kann jetzt sicher gelöscht werden. Der Gegenstand startet eine Quest, die dein Volk oder deine Klasse niemals annehmen kann."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s verkauft, Wert %s."
@@ -49,10 +52,11 @@ L["BANK_RETRIEVED"] = "%s Gegenstände (%s Taschenplätze) aus deiner Bank gehol
 L["BANK_RETRIEVED_ONE_SLOT"] = "%s Gegenstände (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
 L["BANK_RETRIEVED_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) aus deiner Bank geholt, Wert %s."
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "%s zu deiner Schutzliste hinzugefügt."
-L["IGNORE_LIST_MOVED"] = "%s von deiner Löschliste auf deine Schutzliste verschoben."
-L["IGNORE_LIST_ALREADY"] = "%s steht bereits auf deiner Schutzliste."
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "%s zu deiner Schutzliste hinzugefügt."
+L["PROTECT_LIST_MOVED"] = "%s von deiner Löschliste auf deine Schutzliste verschoben."
+L["PROTECT_LIST_ALREADY"] = "%s steht bereits auf deiner Schutzliste."
+L["PROTECT_LIST_REMOVED"] = "%s von deiner Schutzliste entfernt."
 L["ERASE_LIST_ADDED"] = "%s zu deiner Löschliste hinzugefügt."
 L["ERASE_LIST_ALREADY"] = "%s steht bereits auf deiner Löschliste."
 L["ERASE_LIST_PROTECTED"] =
@@ -60,7 +64,7 @@ L["ERASE_LIST_PROTECTED"] =
 L["NO_HOVERED_ITEM"] = "Fahre mit der Maus über einen Gegenstand und drücke die Taste dann erneut."
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Gegenstand mit geringstem Wert"
@@ -70,24 +74,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1 Gegenstand)"
 L["CLUTTER_SLOTS"] = "%s Taschenplätze"
 L["CLUTTER_SLOTS_ONE"] = "1 Taschenplatz"
 L["NO_VALUE"] = "Kein Wert"
-L["LEFT_CLICK"] = "Linksklick"
-L["RIGHT_CLICK"] = "Rechtsklick"
-L["MIDDLE_CLICK"] = "Mittelklick"
-L["SHIFT_RIGHT_CLICK"] = "Umschalt + Rechtsklick"
-L["SHIFT_MIDDLE_CLICK"] = "Umschalt + Mittelklick"
-L["ACTION_TOGGLE"] = "Umschalten"
-L["ACTION_CLEAR_IGNORE"] = "Schutzliste leeren"
-L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
-L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, wenn du mehr Platz schaffen willst."
-L["LOADING_ITEM"] = "Lade ID: %d"
-L["MINIMAP_OPTIONS"] = "Magic Eraser Optionen"
+L["MENU_CLICK_LEFT"] = "Linksklick"
+L["MENU_CLICK_RIGHT"] = "Rechtsklick"
+L["MENU_CLICK_MIDDLE"] = "Mittelklick"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Umschalt + Rechtsklick"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Umschalt + Mittelklick"
+L["MENU_TOGGLE"] = "Umschalten"
+L["ACTION_CLEAR_PROTECT_LIST"] = "Schutzliste leeren"
+L["MENU_OPTIONS"] = "Magic Eraser Optionen"
+L["MENU_ON"] = "An"
+L["MENU_OFF"] = "Aus"
+L["MENU_MORE"] = "%d weitere"
+L["MENU_MORE_FEATURES"] = "Weitere Funktionen"
+L["MENU_FEATURE_COUNT_ON"] = "%d an"
+L["MENU_FEATURE_COUNT_OFF"] = "%d aus"
+L["MENU_UNPROTECT_HINT"] = "Klicke, um den Gegenstand von deiner Schutzliste zu entfernen."
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "Gegenstand mit geringstem Wert löschen"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "Gegenstand unter der Maus zur Schutzliste hinzufügen"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "Gegenstand unter der Maus zur Schutzliste hinzufügen"
 L["BINDING_ADD_TO_ERASE_LIST"] = "Gegenstand unter der Maus zur Löschliste hinzufügen"
 
 --------------------------------------------------------------------------------
@@ -100,16 +108,16 @@ L["AUTO_VEND_DESCRIPTION"] =
 L["TAB_ERASING"] = "Löschen"
 L["TAB_MERCHANT_BANK"] = "Händler und Bank"
 L["TAB_ALERTS"] = "Hinweise und Einfärbung"
-L["TAB_IGNORE_LIST"] = "Schutzliste"
+L["TAB_PROTECT_LIST"] = "Schutzliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
-L["ENABLED"] = "Aktiviert"
-L["DISABLED"] = "Deaktiviert"
 L["ACTION_ERASE"] = "Löschen"
-L["ACTION_IGNORE"] = "Schützen"
+L["ACTION_PROTECT"] = "Schützen"
+L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
+L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, wenn du mehr Platz schaffen willst."
+L["LOADING_ITEM"] = "Lade ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Beispiel: %s"
-L["OPTIONS_EXAMPLE_ITEM"] = "Beispielgegenstand"
+L["SAMPLE_EXAMPLE"] = "Beispiel"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -122,7 +130,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
 L["OPTIONS_ENABLE_MINIMAP"] = "Minikarten-Schaltfläche aktivieren"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist dein Gegenstand mit geringstem Wert, und wenn du mit der Maus darüberfährst, siehst du den Ramsch-Bericht."
+	"Zeigt die Schaltfläche von Magic Eraser an deiner Minikarte. Ihr Symbol ist dein Gegenstand mit geringstem Wert, und wenn du mit der Maus darüberfährst, öffnet sich ein Menü mit allem, was die Schaltfläche kann."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Funktionen"
@@ -134,7 +142,7 @@ L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Öffnet die Tastaturbelegung des Spiels, in der Magic Eraser einen eigenen Abschnitt hat."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Löscht deinen Gegenstand mit geringstem Wert, genau wie ein Linksklick auf die Minikarten-Schaltfläche. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Schützt den Gegenstand unter deiner Maus auf diesem Charakter, wo immer du ihn siehst: Taschen, Bank, Händler oder Beutefenster. Stand er auf der Löschliste dieses Charakters, wird er dort entfernt."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Fügt den Gegenstand unter deiner Maus zur Löschliste dieses Charakters hinzu, egal was er wert ist. Deine Schutzliste hat trotzdem Vorrang."
@@ -180,7 +188,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 L["TAB_ERASING_DESCRIPTION"] =
 	"Jeder Klick löscht den günstigsten Ramsch in deinen Taschen, einen Stapel nach dem anderen."
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"Gut zu wissen: Fast alles, was versehentlich gelöscht wurde, lässt sich über Blizzards Gegenstandswiederherstellung zurückholen."
+	"Gut zu wissen: Fast alles, was versehentlich gelöscht wurde, lässt sich über Blizzards Gegenstandswiederherstellung zurückholen!"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "Was als Ramsch gilt"
@@ -190,11 +198,11 @@ L["OPTIONS_KIND_QUEST"] = "Gegenstände abgeschlossener Quests"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] =
 	"Gegenstände, die übrig bleiben, sobald du die letzte Quest abgegeben hast, für die sie gebraucht werden."
 L["OPTIONS_KIND_STARTER"] = "Unbrauchbare Queststarter"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] =
 	"Gegenstände, die eine Quest starten, die dein Volk oder deine Klasse niemals annehmen kann."
 L["OPTIONS_KIND_FOOD"] = "Ausgediente Speisen und Getränke"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Speisen und Getränke, sobald du zehn Stufen über der Stufe bist, ab der du sie zum ersten Mal benutzen konntest. Anfängerbrot und -wasser gehen ab Stufe 5."
+	"Speisen und Getränke, sobald du zehn Stufen über ihrer Mindeststufe bist. Anfängerbrot und -wasser gehen ab Stufe 5."
 L["OPTIONS_KIND_AMMO"] = "Ausgediente Pfeile und Kugeln"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Pfeile und Kugeln, sobald du eine bessere Sorte benutzen kannst, die Händler verkaufen. Die beste Händlermunition für deine Stufe wird nie gelöscht."
@@ -206,6 +214,9 @@ L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"Weiße Waffen und Rüstungen, die ein Spieler hergestellt hat, etwa Ausrüstung, die du für einen Twink gemacht hast. Die Option Weiße Waffen und Rüstungen lässt sie aus, daher entscheidet nur dieses Kästchen über sie."
 L["OPTIONS_KIND_GRAY"] = "Grauer Müll"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Jeder graue Gegenstand, den ein Händler ankauft."
+L["OPTIONS_KIND_MEAT_FISH"] = "Ausgedientes Fleisch und Fisch"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"Fleisch und Fisch, die ein Kochrezept verwendet, auch essbarer roher Fisch, sobald du zehn Stufen darüber bist. Essbarer Fisch, den kein Rezept verwendet, zählt zu Ausgediente Speisen und Getränke."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] =
 	"Nicht angehakt ist es kein Ramsch: Es wird nie gelöscht, verkauft oder aus der Bank geholt."
 L["OPTIONS_KINDS_NONE_CHECKED"] =
@@ -221,13 +232,13 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] = "Stapel, deren gesamter Verkaufswert darüber liegt, werden nie gelöscht."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Hilfe beim manuellen Löschen"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Löschen ohne Eintippen"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Standardmäßig musst du "%s" eintippen, wenn du einen Gegenstand der Qualität %s oder besser löschst. Das hier macht daraus ein einfaches Ja oder Nein.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Hilfe beim manuellen Löschen aktivieren"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Löschen ohne Eintippen aktivieren"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Schaltet die Hilfe beim manuellen Löschen ein oder aus. Das Spiel fragt trotzdem Ja oder Nein, nur das Eintippen entfällt."
+	"Schaltet Löschen ohne Eintippen ein oder aus. Das Spiel fragt trotzdem Ja oder Nein, nur das Eintippen entfällt."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Gegenstände ohne Verkaufswert vereinfacht nur Gegenstände, die kein Händler ankauft. Alle Gegenstände vereinfacht jede Eingabeaufforderung."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"
@@ -255,7 +266,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Zusammenfassung im Chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Jeder Verkauf im Chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Kein Chatbericht"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"Was der Auto-Verkauf im Chat ausgibt. Zusammenfassung im Chat gibt eine Summe pro Besuch aus. Jeder Verkauf im Chat gibt jeden Verkauf und dann die Summe aus. Kein Chatbericht gibt nichts aus."
+	"Was der Auto-Verkauf im Chat ausgibt. Zusammenfassung im Chat gibt eine Summe pro Besuch aus. Jeder Verkauf im Chat gibt die Summe und dann jeden Verkauf aus. Kein Chatbericht gibt nichts aus."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Bankentnahme"
@@ -329,9 +340,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] =
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"Gegenstände auf einer Schutzliste werden nie gelöscht und nie verkauft. Die Liste für Alle Charaktere schützt einen Gegenstand überall, die eigene Liste eines Charakters nur dort."
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] =
 	"Verschiebt diesen Gegenstand auf die Liste für Alle Charaktere, damit er überall geschützt ist."
 
 --------------------------------------------------------------------------------

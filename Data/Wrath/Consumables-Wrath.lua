@@ -3,6 +3,8 @@ local _, ns = ...
 --[[
 Source: copied from Data/TBC/ until Validate Data passes on this client;
 its rows came from the CMaNGOS WotLK world DB via the query below.
+Raw fish a cooking recipe uses are in Meat-Fish-Wrath.lua instead: they go with
+the Outgrown Meat & Fish kind.
 
 WITH regen AS (
   SELECT Id,
@@ -112,7 +114,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[42430] = { 65 }, -- Dalaran Doughnut
 	[414] = { 5 }, -- Dalaran Sharp
 	[44608] = { 65 }, -- Dalaran Swiss
-	[13888] = { 45 }, -- Darkclaw Lobster
 	[19223] = { 1 }, -- Darkmoon Dog
 	[2070] = { 1 }, -- Darnassian Bleu
 	[21030] = { 35 }, -- Darnassus Kimchi Pie
@@ -163,7 +164,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[20857] = { 1 }, -- Honey Bread
 	[33452] = { 65 }, -- Honey-Spiced Lichen
 	[29412] = { 55 }, -- Jessen's Special Slop
-	[13893] = { 45 }, -- Large Raw Mightfish
 	[7097] = { 1 }, -- Leg Meat
 	[13933] = { 45 }, -- Lobster Stew
 	[6316] = { 5 }, -- Loch Frenzy Delight
@@ -191,23 +191,8 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[21033] = { 45 }, -- Radish Kimchi
 	[5095] = { 5 }, -- Rainbow Fin Albacore
 	[4608] = { 35 }, -- Raw Black Truffle
-	[6291] = { 1 }, -- Raw Brilliant Smallfish
-	[6308] = { 15 }, -- Raw Bristle Whisker Catfish
-	[13754] = { 35 }, -- Raw Glossy Mightfish
-	[6317] = { 5 }, -- Raw Loch Frenzy
-	[6289] = { 5 }, -- Raw Longjaw Mud Snapper
-	[8365] = { 25 }, -- Raw Mithril Head Trout
-	[13759] = { 35 }, -- Raw Nightfin Snapper
-	[6361] = { 5 }, -- Raw Rainbow Fin Albacore
-	[13758] = { 35 }, -- Raw Redgill
-	[6362] = { 25 }, -- Raw Rockscale Cod
-	[6303] = { 1 }, -- Raw Slitherskin Mackerel
 	[8959] = { 45 }, -- Raw Spinefin Halibut
-	[4603] = { 35 }, -- Raw Spotted Yellowtail
-	[13756] = { 35 }, -- Raw Summer Bass
-	[13760] = { 35 }, -- Raw Sunscale Salmon
 	[40358] = { 65 }, -- Raw Tallhorn Chunk
-	[13889] = { 45 }, -- Raw Whitescale Salmon
 	[19224] = { 25 }, -- Red Hot Wings
 	[42429] = { 75 }, -- Red Velvet Cupcake
 	[4605] = { 5 }, -- Red-speckled Mushroom
@@ -278,7 +263,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[3771] = { 25 }, -- Wild Hog Shank
 	[16169] = { 25 }, -- Wild Ricecake
 	[22324] = { 45 }, -- Winter Kimchi
-	[13755] = { 35 }, -- Winter Squid
 	[44855] = { 1 }, -- Yam
 	[27859] = { 55 }, -- Zangar Caps
 	[29452] = { 65 }, -- Zangar Trout
@@ -362,8 +346,6 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 	[33053] = { 65 }, -- Hot Buttered Trout
 	[34780] = { 65 }, -- Naaru Ration
 	[13931] = { 35 }, -- Nightfin Soup
-	[21153] = { 30 }, -- Raw Greater Sagefish
-	[21071] = { 10 }, -- Raw Sagefish
 	[34761] = { 70 }, -- Sauteed Goby
 	[3448] = { 5 }, -- Senggin Root
 	[34759] = { 70 }, -- Smoked Rockfin

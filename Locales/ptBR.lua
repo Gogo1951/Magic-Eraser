@@ -8,10 +8,13 @@ end
 --------------------------------------------------------------------------------
 
 L["ADDON_TITLE"] = "Magic Eraser"
+L["ADDON_SHORT_NAME"] = "Magic Eraser"
 
 --------------------------------------------------------------------------------
 -- Chat Messages
 --------------------------------------------------------------------------------
+
+-- In "%s%s", the first %s is the item link and the second its stack count, such as " x20", or nothing for one item.
 
 -- System
 L["CHAT_LOADED"] =
@@ -32,14 +35,14 @@ L["ERASE_CANDIDATE_CHANGED"] =
 L["ERASED_ITEM"] = "%s%s excluído."
 L["QUEST_ITEM_READY"] = "%s%s agora pode ser excluído com segurança. É sobra de uma missão que você concluiu."
 L["QUEST_STARTER_UNAVAILABLE"] =
-	"%s%s agora pode ser excluído com segurança. Ele inicia uma missão que seu personagem não pode aceitar."
+	"%s%s agora pode ser excluído com segurança. Ele inicia uma missão que sua raça ou classe nunca poderá aceitar."
 
 -- Auto-Vend
 L["SOLD_ITEM"] = "%s%s vendido, no valor de %s."
 L["SOLD_SUMMARY"] = "%s itens vendidos (%s espaços de bolsa), no valor de %s."
 L["SOLD_SUMMARY_ONE_SLOT"] = "%s itens vendidos (1 espaço de bolsa), no valor de %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 item vendido (1 espaço de bolsa), no valor de %s."
-L["AUTO_VEND_SHIFT_HINT"] = "Segure Shift ao abrir um mercador para pular a Venda automática."
+L["AUTO_VEND_SHIFT_HINT"] = "Segure Shift ao abrir um comerciante para pular a Venda automática."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "A Venda automática vai vender assim que o combate terminar."
 
 -- Bank Retrieval
@@ -47,17 +50,18 @@ L["BANK_RETRIEVED"] = "%s itens (%s espaços de bolsa) retirados do seu banco, n
 L["BANK_RETRIEVED_ONE_SLOT"] = "%s itens (1 espaço de bolsa) retirados do seu banco, no valor de %s."
 L["BANK_RETRIEVED_ONE_ITEM"] = "1 item (1 espaço de bolsa) retirado do seu banco, no valor de %s."
 
--- Key Bindings
-L["IGNORE_LIST_ADDED"] = "%s adicionado à sua Lista de proteção."
-L["IGNORE_LIST_MOVED"] = "%s movido da sua Lista de exclusão para a sua Lista de proteção."
-L["IGNORE_LIST_ALREADY"] = "%s já está na sua Lista de proteção."
+-- Protect List & Erase List
+L["PROTECT_LIST_ADDED"] = "%s adicionado à sua Lista de proteção."
+L["PROTECT_LIST_MOVED"] = "%s movido da sua Lista de exclusão para a sua Lista de proteção."
+L["PROTECT_LIST_ALREADY"] = "%s já está na sua Lista de proteção."
+L["PROTECT_LIST_REMOVED"] = "%s removido da sua Lista de proteção."
 L["ERASE_LIST_ADDED"] = "%s adicionado à sua Lista de exclusão."
 L["ERASE_LIST_ALREADY"] = "%s já está na sua Lista de exclusão."
 L["ERASE_LIST_PROTECTED"] = "%s está na sua Lista de proteção, que sempre tem prioridade. Remova-o de lá primeiro."
 L["NO_HOVERED_ITEM"] = "Passe o mouse sobre um item e pressione a tecla de novo."
 
 --------------------------------------------------------------------------------
--- Minimap Button Tooltip
+-- Mini-map Menu
 --------------------------------------------------------------------------------
 
 L["LOWEST_VALUE_ITEM"] = "Item de menor valor"
@@ -67,24 +71,28 @@ L["CLUTTER_ITEMS_ONE"] = "(1 item)"
 L["CLUTTER_SLOTS"] = "%s espaços de bolsa"
 L["CLUTTER_SLOTS_ONE"] = "1 espaço de bolsa"
 L["NO_VALUE"] = "Sem valor"
-L["LEFT_CLICK"] = "Clique esquerdo"
-L["RIGHT_CLICK"] = "Clique direito"
-L["MIDDLE_CLICK"] = "Clique do meio"
-L["SHIFT_RIGHT_CLICK"] = "Shift + Clique direito"
-L["SHIFT_MIDDLE_CLICK"] = "Shift + Clique do meio"
-L["ACTION_TOGGLE"] = "Alternar"
-L["ACTION_CLEAR_IGNORE"] = "Limpar Lista de proteção"
-L["BAGS_CLEAN_CONGRATS"] = "Parabéns, suas bolsas estão cheias de coisas boas!"
-L["BAGS_CLEAN_HINT"] = "Você precisará excluir algo manualmente para liberar mais espaço."
-L["LOADING_ITEM"] = "Carregando ID: %d"
-L["MINIMAP_OPTIONS"] = "Opções do Magic Eraser"
+L["MENU_CLICK_LEFT"] = "Clique esquerdo"
+L["MENU_CLICK_RIGHT"] = "Clique direito"
+L["MENU_CLICK_MIDDLE"] = "Clique do meio"
+L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Clique direito"
+L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Clique do meio"
+L["MENU_TOGGLE"] = "Alternar"
+L["ACTION_CLEAR_PROTECT_LIST"] = "Limpar Lista de proteção"
+L["MENU_OPTIONS"] = "Opções do Magic Eraser"
+L["MENU_ON"] = "Ligado"
+L["MENU_OFF"] = "Desligado"
+L["MENU_MORE"] = "Mais %d"
+L["MENU_MORE_FEATURES"] = "Mais recursos"
+L["MENU_FEATURE_COUNT_ON"] = "%d ligados"
+L["MENU_FEATURE_COUNT_OFF"] = "%d desligados"
+L["MENU_UNPROTECT_HINT"] = "Clique para removê-lo da sua Lista de proteção."
 
 --------------------------------------------------------------------------------
 -- Key Bindings
 --------------------------------------------------------------------------------
 
 L["BINDING_ERASE"] = "Excluir item de menor valor"
-L["BINDING_ADD_TO_IGNORE_LIST"] = "Adicionar item sob o mouse à Lista de proteção"
+L["BINDING_ADD_TO_PROTECT_LIST"] = "Adicionar item sob o mouse à Lista de proteção"
 L["BINDING_ADD_TO_ERASE_LIST"] = "Adicionar item sob o mouse à Lista de exclusão"
 
 --------------------------------------------------------------------------------
@@ -97,16 +105,16 @@ L["AUTO_VEND_DESCRIPTION"] =
 L["TAB_ERASING"] = "Exclusão"
 L["TAB_MERCHANT_BANK"] = "Comerciante e banco"
 L["TAB_ALERTS"] = "Alertas e tingimento"
-L["TAB_IGNORE_LIST"] = "Lista de proteção"
+L["TAB_PROTECT_LIST"] = "Lista de proteção"
 L["TAB_ERASE_LIST"] = "Lista de exclusão"
-L["ENABLED"] = "Ativado"
-L["DISABLED"] = "Desativado"
 L["ACTION_ERASE"] = "Excluir"
-L["ACTION_IGNORE"] = "Proteger"
+L["ACTION_PROTECT"] = "Proteger"
+L["BAGS_CLEAN_CONGRATS"] = "Parabéns, suas bolsas estão cheias de coisas boas!"
+L["BAGS_CLEAN_HINT"] = "Você precisará excluir algo manualmente para liberar mais espaço."
+L["LOADING_ITEM"] = "Carregando ID: %d"
 
 -- Example lines under features that print to chat. %s is that whole line.
-L["OPTIONS_EXAMPLE"] = "Exemplo: %s"
-L["OPTIONS_EXAMPLE_ITEM"] = "Item de exemplo"
+L["SAMPLE_EXAMPLE"] = "Exemplo"
 
 --------------------------------------------------------------------------------
 -- Options: Main Panel
@@ -119,7 +127,7 @@ L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
 L["OPTIONS_ENABLE_MINIMAP"] = "Ativar botão do minimapa"
 L["OPTIONS_ENABLE_MINIMAP_DESCRIPTION"] =
-	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o seu Item de menor valor, e passar o mouse sobre ele mostra o Relatório de lixo."
+	"Mostra o botão do Magic Eraser no seu minimapa. O ícone dele é o seu Item de menor valor, e passar o mouse sobre ele abre um menu com tudo o que o botão faz."
 
 -- Features
 L["OPTIONS_FEATURES_HEADER"] = "Recursos"
@@ -131,7 +139,7 @@ L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Abre a lista de teclas de atalho do jogo, onde o Magic Eraser tem sua própria seção."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
 	"Exclui o seu Item de menor valor, igual a um clique esquerdo no botão do minimapa. Não há prévia antes de apertar a tecla, então escolha uma tecla que você não vá apertar sem querer."
-L["OPTIONS_KEY_BINDING_IGNORE_DESCRIPTION"] =
+L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protege o item sob o mouse neste personagem, onde quer que você o veja: bolsas, banco, comerciante ou janela de saque. Se ele estava na Lista de exclusão deste personagem, sai dela."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
 	"Adiciona o item sob o mouse à Lista de exclusão deste personagem, seja qual for o valor. Sua Lista de proteção continua tendo prioridade."
@@ -176,7 +184,7 @@ L["OPTIONS_VERSION"] = "Versão %s"
 
 L["TAB_ERASING_DESCRIPTION"] = "Cada clique exclui o lixo mais barato das suas bolsas, uma pilha por vez."
 L["TAB_ERASING_RESTORE_NOTE"] =
-	"Bom saber: quase tudo que for excluído por engano ainda pode ser recuperado pelo serviço de restauração de itens da Blizzard."
+	"Bom saber: quase tudo que for excluído por engano ainda pode ser recuperado pelo serviço de Restauração de Itens da Blizzard!"
 
 -- What Counts as Junk
 L["OPTIONS_JUNK_HEADER"] = "O que conta como lixo"
@@ -185,11 +193,10 @@ L["OPTIONS_JUNK_DESCRIPTION"] =
 L["OPTIONS_KIND_QUEST"] = "Itens de missões concluídas"
 L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Itens que sobram depois que você entrega a última missão que precisa deles."
 L["OPTIONS_KIND_STARTER"] = "Iniciadores de missão bloqueados"
-L["OPTIONS_KIND_STARTER_UNAVAILABLE_DESCRIPTION"] =
-	"Itens que iniciam uma missão que sua raça ou classe nunca pode aceitar."
+L["OPTIONS_KIND_STARTER_DESCRIPTION"] = "Itens que iniciam uma missão que sua raça ou classe nunca pode aceitar."
 L["OPTIONS_KIND_FOOD"] = "Comida e bebida superadas"
 L["OPTIONS_KIND_FOOD_DESCRIPTION"] =
-	"Comida e bebida quando você está dez níveis acima do nível em que pôde usá-las pela primeira vez. O pão e a água iniciais saem no nível 5."
+	"Comida e bebida quando você está dez níveis acima do nível que elas exigem. O pão e a água iniciais saem no nível 5."
 L["OPTIONS_KIND_AMMO"] = "Flechas e balas superadas"
 L["OPTIONS_KIND_AMMO_DESCRIPTION"] =
 	"Flechas e balas assim que você puder usar um tipo melhor vendido por comerciantes. A melhor munição de comerciante para o seu nível nunca é excluída."
@@ -201,6 +208,9 @@ L["OPTIONS_KIND_CRAFTED_DESCRIPTION"] =
 	"Armas e armaduras brancas fabricadas por um jogador, como o equipamento que você fez para um personagem alternativo. A opção Armas e armaduras brancas as deixa de fora, então só esta caixa decide o que acontece com elas."
 L["OPTIONS_KIND_GRAY"] = "Lixo cinza"
 L["OPTIONS_KIND_GRAY_DESCRIPTION"] = "Qualquer item cinza que um comerciante compre."
+L["OPTIONS_KIND_MEAT_FISH"] = "Carne e peixe superados"
+L["OPTIONS_KIND_MEAT_FISH_DESCRIPTION"] =
+	"Carne e peixe usados em alguma receita de culinária, incluindo peixe cru comestível, quando você está dez níveis acima deles. Peixe comestível que nenhuma receita usa conta como Comida e bebida superadas."
 L["OPTIONS_KIND_UNCHECKED_DESCRIPTION"] = "Desmarcado, não é lixo: nunca é excluído, vendido nem retirado do banco."
 L["OPTIONS_KINDS_NONE_CHECKED"] =
 	"Nenhum tipo está marcado, então só os itens da sua Lista de exclusão são excluídos ou vendidos."
@@ -215,13 +225,13 @@ L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Pilhas que valem mais que isto, contando o valor de venda da pilha inteira, nunca são excluídas."
 L["OPTIONS_VALUE_CAP_GOLD"] = "%d de ouro"
 
--- Manual Delete Assistance
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Ajuda na exclusão manual"
+-- Delete Without Typing
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Exclusão sem digitar"
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Por padrão, o jogo faz você digitar "%s" ao excluir um item %s ou melhor. Isto transforma esse aviso em um simples Sim ou Não.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Ativar ajuda na exclusão manual"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Ativar exclusão sem digitar"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Liga ou desliga a Ajuda na exclusão manual. O jogo ainda pergunta Sim ou Não; só a digitação some."
+	"Liga ou desliga a Exclusão sem digitar. O jogo ainda pergunta Sim ou Não; só a digitação some."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Itens sem valor de venda simplifica só os itens que nenhum comerciante compra. Todos os itens simplifica todo aviso que pede digitação."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Todos os itens"
@@ -249,7 +259,7 @@ L["OPTIONS_AUTO_VEND_SUMMARY"] = "Resumo no chat"
 L["OPTIONS_AUTO_VEND_LINE_ITEM"] = "Cada venda no chat"
 L["OPTIONS_AUTO_VEND_REPORT_OFF"] = "Sem relatório no chat"
 L["OPTIONS_AUTO_VEND_MESSAGE_MODE_DESCRIPTION"] =
-	"O que a Venda automática mostra no chat. Resumo no chat mostra um total por visita. Cada venda no chat mostra cada venda e depois o total. Sem relatório no chat não mostra nada."
+	"O que a Venda automática mostra no chat. Resumo no chat mostra um total por visita. Cada venda no chat mostra o total e depois cada venda. Sem relatório no chat não mostra nada."
 
 -- Bank Retrieval
 L["OPTIONS_BANK_HEADER"] = "Retirada do banco"
@@ -323,9 +333,9 @@ L["OPTIONS_LIST_CLEAR_CONFIRM"] = "Remover todos os itens desta lista? Isso não
 -- Options: Protect List
 --------------------------------------------------------------------------------
 
-L["OPTIONS_IGNORE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_DESCRIPTION"] =
 	"Itens em uma Lista de proteção nunca são excluídos nem vendidos. A lista de Todos os personagens protege um item em todos os personagens, e a lista própria de um personagem o protege só nele."
-L["OPTIONS_IGNORE_PROMOTE_DESCRIPTION"] =
+L["OPTIONS_PROTECT_PROMOTE_DESCRIPTION"] =
 	"Move este item para a lista de Todos os personagens, para que ele fique protegido em todos os personagens."
 
 --------------------------------------------------------------------------------

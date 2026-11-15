@@ -27,7 +27,9 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[13140] = { 5202 }, -- Blood Red Key
 	[251270] = { 92415 }, -- Blood-Stained Parchment
 	[268535] = { 95195 }, -- Bloodied Insignia
+	[219930] = { 81766, 1101, 2 }, -- Bloody Missive
 	[273658] = { 96294 }, -- Bloody Parchment
+	[226526] = { 96524 }, -- Busted Gizmo
 	[14650] = { 5844, 32, 0 }, -- Camp Narache Gift Voucher
 	[12558] = { 4882, 690, 0 }, -- Blue-feathered Necklace
 	[5352] = { 968 }, -- Book: The Powers Below
@@ -52,6 +54,8 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[268548] = { 95213 }, -- Empty Powder Keg
 	[278049] = { 86613 }, -- Excavation Tools
 	[277190] = { 97236 }, -- Fang of Githyiss
+	[266427] = { 94885, 1101, 0 }, -- Field Marshal's Log
+	[274800] = { 96561 }, -- Fishing Trip
 	[23184] = { 9332, 690, 0 }, -- Flame of Darnassus
 	[23183] = { 9331, 690, 0 }, -- Flame of Ironforge
 	[23179] = { 9324, 1101, 0 }, -- Flame of Orgrimmar
@@ -63,14 +67,19 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[275723] = { 96877 }, -- Halikor's Hoof
 	[13920] = { 5582 }, -- Healthy Dragon Scale
 	[281143] = { 96137 }, -- Ira's Dagger
+	[267138] = { 94980, 1101, 0 }, -- Krol'dok Moulding
 	[251520] = { 92415 }, -- Last Scrawlings of Edward Heartweaver
 	[6172] = { 1423 }, -- Lost Supplies
 	[281142] = { 96138 }, -- Merrick's Bow
 	[281330] = { 98471 }, -- Message from the Supreme Magister
 	[281031] = { 98424 }, -- Mulgore Expansion Plans
+	[227796] = { 95560 }, -- Mysterious 'Darnassian' Scroll
 	[247834] = { 91741 }, -- Nibbled-On Book
 	[271343] = { 95884 }, -- Note Scrap
 	[22719] = { 9233 }, -- Omarion's Handbook
+	[215468] = { 79945, 1101, 2 }, -- Orders from the Grand Crusader
+	[213127] = { 95384 }, -- Partial Mystical Notes
+	[259461] = { 93568 }, -- Partially Digested Collar
 	[18972] = { 7738 }, -- Perfect Yeti Hide
 	[10590] = { 3482 }, -- Pocked Black Box
 	[255155] = { 92910 }, -- Precessive Autocognition Assembly
@@ -107,9 +116,11 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[280180] = { 98248 }, -- Shipping Label
 	[281145] = { 79363 }, -- Silvia's Sword
 	[213421] = { 95534 }, -- Singed Note
+	[260347] = { 93644 }, -- Tattered Journal
 	[251900] = { 92454 }, -- Thendal Grove Gift Voucher
 	[270865] = { 95810 }, -- Titan Relic
 	[270866] = { 95664 }, -- Titan Relic
+	[217161] = { 95385 }, -- Torn Mystical Scroll
 	[281030] = { 98423 }, -- Treaty of Understanding
 	[275722] = { 96876 }, -- Ukor's Lost Pack
 	[14649] = { 5843, 130, 0 }, -- Valley of Trials Gift Voucher
@@ -136,7 +147,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, WoW Forever 1.60.1.70291
+	2026-11-14, WoW Forever 1.60.1.70938
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -149,7 +160,9 @@ Notes
 	- Only starters bound to the looter (bind on pickup, or quest item) are kept. One that doesn't bind can be handed to an alt or another player who does qualify, so deleting it destroys something still useful: Carefully Folded Note and Captain Sanders' Treasure Map, and the five unflagged Writs are unbound too.
 	- Poor and common quality only. Plenty of quest starters are epics and legendaries (Dormant Wind Kissed Blade, Frame of Atiesh, Shattered Fragments of Val'anyr, Battered Hilt), and none may ever be erased. Relax the cap only after reading every row.
 	- Disabled quests, quest 1 (a dev test entry), and dev-marked or placeholder quests and items are left out.
-	- Rows outside the query were added from wago.tools build 1.60.1.70205.
+	- Rows outside the query were added from wago.tools builds 1.60.1.70205 and 1.60.1.70938.
+	- Eleven Forever starters came from build 1.60.1.70938: Bloody Missive, Busted Gizmo, Field Marshal's Log, Fishing Trip, Krol'dok Moulding, Mysterious 'Darnassian' Scroll, Orders from the Grand Crusader, Partial Mystical Notes, Partially Digested Collar, Tattered Journal and Torn Mystical Scroll. Each has an ItemSparse.StartQuestID, poor or common quality and a Bonding of 1 or 4, and QuestieDB lists a drop or the client has a spell that creates it. Their race and class limits come from QuestieDB's Forever quest data, since the client's tables don't carry them. QuestieDB doesn't know the quests behind Busted Gizmo and the Mysterious 'Darnassian' Scroll, so those rows have none. It doesn't record whether any of these quests repeat either, and a repeatable quest's row can only fire on race or class.
+	- Left out as likely unobtainable, because QuestieDB lists no source and no spell in the client's tables creates them: Humongous Crystal (243203, 246888), Forgotten Ashes (247684), Feathered Charm Necklace (249698), Fel-Tainted Remains (254695), Heart of the Obliterator (257126), Corpsefeeder's Carapace (259893), Forlorn Necklace (260247), Farholde Scouting Report (263930), Komuk's Warmaul (266889), Krol'dok Moulding (267137), Bottle of Whispers (268825), Ashen Infused Crystal (269233), Quicklatch Sparker (269777), Head of Scaldaron (271612, 271613), Lump of Coal (271870), Neutralizing Concoction (272314), Uninfected Root Sample (274776), Corrupted Gemstone (277154), Carved Stone Trinket (280390), Crystal Infused Scale (280459), Windshaper Ritual Dagger (281331), Patrol Orders (281629) and Mote of Corruption (285963). Also left out: Simple Parchment (6497), which starts dev quest 1, and Book of Deathstones: Mask of Death (191550), Mud-covered notebook (202641) and Head of Rend Blackhand (227911), which QuestieDB has no source or quest for.
 	- Read by Features/Junk-Rules.lua and Features/Quest-Item-Alerts.lua.
 
 SQL (CMaNGOS)
@@ -239,6 +252,15 @@ Wowhead
 	None.
 
 wago.tools
-	Build 1.60.1.70205; the file never recorded which tables.
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70291
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
+	https://wago.tools/db2/QuestV2?build=1.60.1.70938
+	https://wago.tools/db2/SpellEffect?build=1.60.1.70938
+
+QuestieDB
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Forever/foreverQuestDB.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/Forever/foreverItemDB.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/generated/foreverBaseQuest.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/generated/foreverBaseItem.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/foreverQuestFixes.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/foreverItemFixes.lua
 ]]
