@@ -406,6 +406,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[5475] = { 1026 }, -- Wooden Key
 	[13158] = { 5083 }, -- Words of the High Chief
 	[9280] = { 2930 }, -- Yellow Punch Card
+	[268580] = { 92421 }, -- Intact Limbs
 }
 
 --[[
