@@ -21,6 +21,7 @@ L["CHAT_LOADED"] =
 	"버전 %s. 설정(이 메시지를 비활성화하는 옵션 포함)은 옵션 > 애드온 > Magic Eraser에 있습니다. 이 애드온이 마음에 드시나요? 친구에게 알려 주시거나, CurseForge에서 즐겨찾기에 추가하거나, GitHub에서 별을 눌러 주세요. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "안전을 위해 전투 중에는 설정 창을 열 수 없습니다."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "안전을 위해 전투 중에는 단축키 목록을 열 수 없습니다."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "게임 메뉴를 열고 %s, %s 순서로 들어가 Magic Eraser 항목을 찾으세요."
 
 -- Eraser
@@ -80,6 +81,8 @@ L["MENU_CLICK_MIDDLE"] = "휠클릭"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 우클릭"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 휠클릭"
 L["MENU_TOGGLE"] = "전환"
+L["ACTION_ERASE"] = "삭제"
+L["ACTION_PROTECT"] = "보호"
 L["ACTION_CLEAR_PROTECT_LIST"] = "보호 목록 초기화"
 L["MENU_OPTIONS"] = "Magic Eraser 옵션"
 L["MENU_ON"] = "켜짐"
@@ -109,13 +112,11 @@ L["TAB_MERCHANT_BANK"] = "상인 및 은행"
 L["TAB_ALERTS"] = "알림 및 색칠"
 L["TAB_PROTECT_LIST"] = "보호 목록"
 L["TAB_ERASE_LIST"] = "삭제 목록"
-L["ACTION_ERASE"] = "삭제"
-L["ACTION_PROTECT"] = "보호"
 L["BAGS_CLEAN_CONGRATS"] = "축하합니다, 가방이 좋은 것들로 가득 차 있습니다!"
 L["BAGS_CLEAN_HINT"] = "더 많은 공간을 확보하려면 직접 무언가를 삭제해야 합니다."
 L["LOADING_ITEM"] = "불러오는 중 ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "예시"
 
 --------------------------------------------------------------------------------
@@ -123,7 +124,7 @@ L["SAMPLE_EXAMPLE"] = "예시"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"잡동사니를 삭제하고 가방 공간을 즉시 확보하세요. 완료된 퀘스트 아이템, 이제는 필요 없는 소모품, 상인에게 팔 물건, 회색 아이템을 미니맵 버튼 클릭 한 번으로 정리하세요. 엄선된 잡동사니 목록이 필요한 아이템을 안전하게 지켜 주고, 자동 판매가 나머지를 다음 상인에게 판매합니다."
+	"잡동사니를 삭제하고 자동으로 판매해 가방 공간을 확보하세요. 미니맵 버튼 클릭 한 번으로 완료된 퀘스트 아이템, 저레벨 음식과 음료 및 탄약, 상인에게 팔 물건, 흰색 장비, 회색 아이템을 정리하고, 나머지는 다음 상인에게서 알아서 팔립니다."
 L["OPTIONS_ENABLE_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
@@ -231,15 +232,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"가치 한도를 켜거나 끕니다. 한도 때문에 삭제하지 않은 아이템도 자동 판매는 판매하며, 삭제 목록에는 이 한도가 적용되지 않습니다."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"묶음 전체의 판매 가치로 따져 이 금액보다 비싼 묶음은 삭제하지 않습니다."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d 골드"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "입력 없이 삭제"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "%s 입력 생략"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'기본적으로 게임에서는 "%s"를 입력해야 %s 등급 이상의 아이템을 삭제할 수 있습니다. 이 기능은 그 입력 창을 간단한 예/아니오 확인으로 바꿉니다.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "입력 없이 삭제 활성화"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "%s 입력 생략 활성화"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"입력 없이 삭제를 켜거나 끕니다. 게임은 여전히 예/아니오를 묻고, 입력하는 과정만 사라집니다."
+	"%s 입력 생략을 켜거나 끕니다. 게임은 여전히 예/아니오를 묻고, 입력하는 과정만 사라집니다."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"판매 가치 없는 아이템은 상인이 구매하지 않는 아이템만 간단하게 바꿉니다. 모든 아이템은 입력이 필요한 모든 확인 창을 간단하게 바꿉니다."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "모든 아이템"

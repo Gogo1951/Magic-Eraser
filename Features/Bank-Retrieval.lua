@@ -51,8 +51,16 @@ local movedCount = 0
 local movedSlots = 0
 local movedValue = 0
 
-local function IsBankOpen()
-	return (BankFrame and BankFrame:IsShown()) or false
+--[[
+    Set from BANKFRAME_OPENED and BANKFRAME_CLOSED rather than read off
+    BankFrame, which a bag add-on such as Baganator keeps hidden while its own
+    bank window is open. Bank Retrieval, the bag-space hold and the bank tints
+    all read it through ns:IsBankOpen.
+]]
+local isBankOpen = false
+
+function ns:IsBankOpen()
+	return isBankOpen
 end
 
 --------------------------------------------------------------------------------
@@ -180,7 +188,7 @@ local function ProcessMoveQueue(generation)
 	    to: end the pass outright rather than deferring and resuming the way
 	    Auto-Vend does at a merchant.
 	]]
-	if InCombatLockdown() or not IsBankOpen() then
+	if InCombatLockdown() or not isBankOpen then
 		FinishPass()
 		return
 	end
@@ -231,16 +239,6 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Exactly the eraser's predicate, run over the bank containers instead of the
-    bags: skip anything on either ignore list, resolve the item, and keep
-    whatever ns:GetItemDeleteReason flags, Erase List entries included. Cold item
-    data reschedules the whole scan behind the same cap Eraser.lua and
-    Auto-Vend.lua use, so an item whose data never resolves cannot loop forever.
-
-    Maximum Value to Erase is not consulted here at all, so it needs no Erase
-    List carve-out: retrieval moves an item rather than destroying it.
-]]
---[[
     The one verdict on a bank item, shared by this pass and the junk tint so the
     two never disagree: the delete reason and sale price when it is junk. The
     Protect List goes first, so it wins over any Erase List entry. An item whose
@@ -259,6 +257,16 @@ function ns:IsBankJunk(itemId, hyperlink, bag, slot)
 	return ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot), sellPrice
 end
 
+--[[
+    Exactly the eraser's predicate, run over the bank containers instead of the
+    bags: skip anything on either ignore list, resolve the item, and keep
+    whatever ns:GetItemDeleteReason flags, Erase List entries included. Cold item
+    data reschedules the whole scan behind the same cap Eraser.lua and
+    Auto-Vend.lua use, so an item whose data never resolves cannot loop forever.
+
+    Maximum Value to Erase is not consulted here at all, so it needs no Erase
+    List carve-out: retrieval moves an item rather than destroying it.
+]]
 local function ScanBank(generation)
 	if not isRetrieving or generation ~= passGeneration then
 		return
@@ -325,7 +333,7 @@ local function StartPass(generation)
 		return
 	end
 
-	if InCombatLockdown() or not IsBankOpen() then
+	if InCombatLockdown() or not isBankOpen then
 		FinishPass()
 		return
 	end
@@ -352,7 +360,8 @@ end
 
 function ns:OnBankframeOpened()
 	-- The bank tints go ahead whether or not Bank Retrieval is on, once the slots have settled.
-	ns:SetTintBankOpen(true)
+	isBankOpen = true
+	ns:RefreshTints()
 	C_Timer.After(BANK_SETTLE_SECONDS, function()
 		ns:RefreshTints()
 	end)
@@ -383,7 +392,8 @@ function ns:OnBankframeClosed()
 	    window is gone.
 	]]
 	FinishPass()
-	ns:SetTintBankOpen(false)
+	isBankOpen = false
+	ns:RefreshTints()
 
 	--[[
 	    Bag-space warnings are held while the bank window is open (see

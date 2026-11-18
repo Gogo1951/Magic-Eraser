@@ -221,7 +221,6 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[18598] = { 171 }, -- Human Orphan Whistle
 	[12220] = { 1016 }, -- Intact Elemental Bracer
 	[11269] = { 4063 }, -- Intact Elemental Core
-	[268580] = { 92421 }, -- Intact Limbs
 	[9369] = { 2973 }, -- Iridescent Sprite Darter Wing
 	[5619] = { 929 }, -- Jade Phial
 	[12891] = { 5245 }, -- Jaron's Pick
@@ -407,13 +406,27 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[5475] = { 1026 }, -- Wooden Key
 	[13158] = { 5083 }, -- Words of the High Chief
 	[9280] = { 2930 }, -- Yellow Punch Card
+
+	--------------------------------------------------------------------------------
+	-- 02. WoW Forever
+	--------------------------------------------------------------------------------
+
+	[286214] = { 99131 }, -- Duskweed Petal
+	[277936] = { 86576 }, -- Glittering Sunstone
+	[268580] = { 92421 }, -- Intact Limbs
+	[278201] = { 97538 }, -- Mirkweed Pods
+	[265140] = { 94486 }, -- Pristine Shriekling Feather
+	[268344] = { 95121 }, -- Saltwater Murloc Eye
+	[265358] = { 94535 }, -- Stolen Ore
+	[267073] = { 94963 }, -- Twilight Finger Bone
+	[258772] = { 93552 }, -- Windstone Cluster
 }
 
 --[[
 How We Got the Data
 
 Last Validated
-	2026-11-14, WoW Forever 1.60.1.70938
+	2026-11-18, WoW Forever 1.60.1.70959
 
 Notes
 	- Quest items the player can still be holding once the quest is done, each keyed to the quest whose completion makes it safe to erase. The row fires on the first listed quest flagged complete (Features/Junk-Rules.lua); Features/Quest-Item-Alerts.lua reads it too.
@@ -437,6 +450,10 @@ Notes
 	- An item that starts a quest belongs in Quest-Starting-Items-Camelot.lua, whose rows also carry the race and class limits that make a wrong-faction starter erasable with no quest state. Every starter the second query found started the same quest that hands it out, so its row would only repeat that quest without the limits. The exception is a starter a later quest still needs: Ensorcelled Parchment (3706) starts 551 but is carried on to 554. Give one of those a row here, keyed like any other; while it has one, GetQuestStarterReason in Features/Junk-Rules.lua leaves quest state to this row and answers only for race and class. The overlap already in the two tables is deliberate and stays; the second query just doesn't propose new duplicates.
 	- Matching item names against quest text finds nothing useful. Short names swamp it (Boulder hits 44 quests, Stick 21, Holy Water 6), and the names that matter never match, because quest text abbreviates: Xiggs says "toss the flare gun", never "Standard Issue Flare Gun".
 	- Check every row from the second query on Wowhead before adding it. Nothing there proves the item is spent: use_quests is the only evidence, present for a minority of rows, and the rest are keyed to their lone granting quest as a guess. A row with more than one granting quest is never keyed without reading it.
+	- 02. WoW Forever holds items new to Forever, which the CMaNGOS queries can't see. Added 2026-11-18, surplus only: a quest-bound Quest item whose turn-in takes 12 or more while EG Link's loot counts show it dropping more than one at a time (quantity above drops), with no unique cap in ItemSparse. Objective counts come from EG Link's server quest data, chains from QuestieDB's Forever nextQuestInChain, so Duskweed Petal waits for 99131 Baited for Success and Twilight Finger Bone for 94963, the second Biting the Hand.
+		- Stratholme Holy Water (13180) matched too and stays out: it's an old item with a Use: in Stratholme, not Forever clutter.
+		- Not added yet: about a hundred Forever items a quest hands out that no objective takes back. Server cores destroy a quest's start and provided items at turn-in, so each needs an in-game check that it's still in the bag after the turn-in. ForeverCore's world database (TDB 2026-10-14) covers too few Forever quests to answer that.
+	- EG Link: Data from Efficient Games (https://efficient.games), licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Facts only: objective counts and loot drop counts, unchanged. Source: https://github.com/JIVESCORP/eg-link-output-wowf/tree/main/data/wowf/1.60.1.70938 (quests.enUS.json, loot.json, plus loot.json from every earlier build).
 
 SQL (CMaNGOS)
 	CMaNGOS WotLK world DB (wotlk-db), MySQL 8. Two queries that find candidates; they never produce rows to paste.
@@ -640,5 +657,7 @@ wago.tools
 	https://wago.tools/db2/QuestV2?build=1.60.1.70938
 
 QuestieDB
-	None.
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/generated/foreverBaseItem.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/generated/foreverBaseQuest.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Forever/foreverQuestFixes.lua
 ]]

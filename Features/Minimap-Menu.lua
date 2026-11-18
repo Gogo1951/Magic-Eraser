@@ -14,9 +14,10 @@ local GetItemQualityColor = C_Item.GetItemQualityColor
 --[[
     The mini-map button's menu, drawn by Menu-Kit (Features/Menu-Kit.lua), in the
     order the old tooltip used: the Lowest-Value Item and its Erase and Protect
-    rows (or the bags-clean congratulation), the Auto-Vend block, the Clutter
-    Report, this character's Protect List, the More Features label (its
-    switches open in a flyout beside it), and the Options row.
+    rows (or, with clean bags, the congratulation and its hint as one message),
+    the Auto-Vend block, the Clutter Report (only while there is clutter), this
+    character's Protect List, the More Features label (its switches open in a
+    flyout beside it), and the Options row.
     The Protect List sits last of the reports because it is the only one whose
     length varies, so nothing above it moves as it grows.
 
@@ -205,6 +206,7 @@ end
 local function AddLowestValueItem(entries, item)
 	if not item then
 		entries[#entries + 1] = { kind = "description", left = L["BAGS_CLEAN_CONGRATS"], leftColor = "ON" }
+		entries[#entries + 1] = { kind = "note", left = L["BAGS_CLEAN_HINT"] }
 		return
 	end
 
@@ -241,13 +243,17 @@ local function AddAutoVend(entries)
 	)
 end
 
--- With clutter, the haul's slots, items and value; with clean bags, the hint about what to do instead.
+--[[
+    The haul's slots, items and value, only while there is clutter to count.
+    With clean bags there's no report: the congratulation and its hint at the
+    top of the menu already say so.
+]]
 local function AddClutterReport(entries, item)
-	entries[#entries + 1] = { kind = "status", left = L["CLUTTER_REPORT"] }
 	if not item then
-		entries[#entries + 1] = { kind = "description", left = L["BAGS_CLEAN_HINT"] }
 		return
 	end
+
+	entries[#entries + 1] = { kind = "status", left = L["CLUTTER_REPORT"] }
 
 	local slots, items, value = ns:GetReclaimSummary()
 	local slotsLabel = (slots == 1) and L["CLUTTER_SLOTS_ONE"]

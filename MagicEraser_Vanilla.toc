@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
+## Notes: Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant.
 ## Author: Gogo1951
 
 ## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
@@ -62,6 +62,7 @@ Data/Vanilla/Meat-Fish-Vanilla.lua
 Data/Vanilla/Ammo-Vanilla.lua
 Data/Vanilla/Equipment-Vanilla.lua
 Data/Vanilla/Class-Reagents-Vanilla.lua
+Data/Vanilla/Game-IDs-Vanilla.lua
 Data/Discovery/Quest-Items-Discovery.lua
 Data/Discovery/Quest-Starting-Items-Discovery.lua
 Data/Discovery/Consumables-Discovery.lua
@@ -69,6 +70,7 @@ Data/Discovery/Meat-Fish-Discovery.lua
 Data/Discovery/Ammo-Discovery.lua
 Data/Discovery/Equipment-Discovery.lua
 Data/Discovery/Class-Reagents-Discovery.lua
+Data/Discovery/Game-IDs-Discovery.lua
 Data/Default-Settings.lua
 
 # Magic Eraser

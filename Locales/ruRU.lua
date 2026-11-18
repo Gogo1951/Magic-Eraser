@@ -23,6 +23,7 @@ L["CHAT_OPTIONS_IN_COMBAT"] =
 	"В целях безопасности панель настроек нельзя открыть во время боя."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"В целях безопасности список назначения клавиш нельзя открыть во время боя."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] =
 	"Откройте игровое меню, затем %s, затем %s, и найдите раздел Magic Eraser."
 
@@ -89,6 +90,8 @@ L["MENU_CLICK_MIDDLE"] = "Средний клик"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Правый клик"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Средний клик"
 L["MENU_TOGGLE"] = "Переключить"
+L["ACTION_ERASE"] = "Удалить"
+L["ACTION_PROTECT"] = "Защитить"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Очистить список защиты"
 L["MENU_OPTIONS"] = "Настройки Magic Eraser"
 L["MENU_ON"] = "Вкл."
@@ -121,14 +124,12 @@ L["TAB_MERCHANT_BANK"] = "Торговец и банк"
 L["TAB_ALERTS"] = "Оповещения и подсветка"
 L["TAB_PROTECT_LIST"] = "Список защиты"
 L["TAB_ERASE_LIST"] = "Список удаления"
-L["ACTION_ERASE"] = "Удалить"
-L["ACTION_PROTECT"] = "Защитить"
 L["BAGS_CLEAN_CONGRATS"] = "Поздравляем, ваши сумки полны полезных вещей!"
 L["BAGS_CLEAN_HINT"] =
 	"Чтобы освободить больше места, придётся удалить что-нибудь вручную."
 L["LOADING_ITEM"] = "Загрузка ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Пример"
 
 --------------------------------------------------------------------------------
@@ -136,7 +137,7 @@ L["SAMPLE_EXAMPLE"] = "Пример"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Удаляйте хлам и мгновенно освобождайте место в сумках. Одним кликом по кнопке у миникарты убирайте предметы выполненных заданий, ставшие ненужными расходники, торговый хлам и серые предметы. Проверенный вручную список хлама бережёт всё, что вам нужно, а Автопродажа продаёт остальное у следующего торговца."
+	"Удаляйте и автоматически продавайте хлам, чтобы освободить место в сумках. Один клик по кнопке у миникарты убирает предметы выполненных заданий, устаревшие еду, напитки и боеприпасы, торговый хлам, белое снаряжение и серые предметы, а остальное само продаётся у следующего торговца."
 L["OPTIONS_ENABLE_WELCOME"] = "Включить приветственное сообщение"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Выводит в чат короткое приветствие с номером версии при каждом входе в игру."
@@ -245,15 +246,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Включает или выключает предел стоимости. Автопродажа всё равно продаёт всё, что он удерживает, а на ваш список удаления он не действует."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Стопки дороже этой суммы (считается цена продажи всей стопки) никогда не удаляются."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d золота"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Удаление без ввода слова"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Без ввода %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'По умолчанию игра требует ввести "%s" при удалении предмета качества "%s" или выше. Эта функция превращает такой запрос в простой выбор Да или Нет.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Включить удаление без ввода слова"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = 'Включить "Без ввода %s"'
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	'Включает или выключает "Удаление без ввода слова". Игра всё равно спрашивает Да или Нет, исчезает только ввод текста.'
+	'Включает или выключает "Без ввода %s". Игра всё равно спрашивает Да или Нет, исчезает только ввод текста.'
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	'"Предметы без цены продажи" упрощает запрос только для предметов, которые не купит ни один торговец. "Все предметы" упрощает каждый запрос с вводом текста.'
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Все предметы"

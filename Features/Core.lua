@@ -251,8 +251,6 @@ function ns:OnPlayerLogin()
 	    cache and leaves the repaint to us. See ns:SeedEraseList.
 	]]
 	ns:SeedEraseList()
-	-- MIGRATION (remove after 2026-11-15)
-	ns:MigrateRetiredSeedReagents()
 
 	--[[
 	    Seed the bag-space warning baseline with the free count we log in with, so

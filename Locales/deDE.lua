@@ -21,6 +21,7 @@ L["CHAT_LOADED"] =
 	"Version %s. Einstellungen (einschließlich der Option, diese Nachricht zu deaktivieren) findest du unter Optionen > AddOns > Magic Eraser. Gefällt dir dieses Add-on? Erzähl einem Freund davon, markiere es auf CurseForge als Favorit oder gib ihm auf GitHub einen Stern. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "Aus Sicherheitsgründen kann das Optionsfenster im Kampf nicht geöffnet werden."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "Aus Sicherheitsgründen kann die Tastaturbelegung im Kampf nicht geöffnet werden."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "Öffne das Spielmenü, dann %s, dann %s, und suche den Abschnitt Magic Eraser."
 
 -- Eraser
@@ -80,6 +81,8 @@ L["MENU_CLICK_MIDDLE"] = "Mittelklick"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Umschalt + Rechtsklick"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Umschalt + Mittelklick"
 L["MENU_TOGGLE"] = "Umschalten"
+L["ACTION_ERASE"] = "Löschen"
+L["ACTION_PROTECT"] = "Schützen"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Schutzliste leeren"
 L["MENU_OPTIONS"] = "Magic Eraser Optionen"
 L["MENU_ON"] = "An"
@@ -110,13 +113,11 @@ L["TAB_MERCHANT_BANK"] = "Händler und Bank"
 L["TAB_ALERTS"] = "Hinweise und Einfärbung"
 L["TAB_PROTECT_LIST"] = "Schutzliste"
 L["TAB_ERASE_LIST"] = "Löschliste"
-L["ACTION_ERASE"] = "Löschen"
-L["ACTION_PROTECT"] = "Schützen"
 L["BAGS_CLEAN_CONGRATS"] = "Glückwunsch, deine Taschen sind voller nützlicher Dinge!"
 L["BAGS_CLEAN_HINT"] = "Du musst manuell etwas löschen, wenn du mehr Platz schaffen willst."
 L["LOADING_ITEM"] = "Lade ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Beispiel"
 
 --------------------------------------------------------------------------------
@@ -124,7 +125,7 @@ L["SAMPLE_EXAMPLE"] = "Beispiel"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Lösche Ramsch und schaffe im Handumdrehen Taschenplatz. Räume Gegenstände abgeschlossener Quests, ausgediente Verbrauchsgüter, Händlermüll und graue Gegenstände mit einem Klick auf die Minikarten-Schaltfläche weg. Eine kuratierte Ramschliste schützt, was du brauchst, während der Auto-Verkauf den Rest beim nächsten Händler verkauft."
+	"Lösche und verkaufe Ramsch automatisch, um Taschenplatz zu schaffen. Ein Klick auf die Minikarten-Schaltfläche räumt Gegenstände abgeschlossener Quests, ausgediente Speisen, Getränke und Munition, Händlermüll, weiße Ausrüstung und graue Gegenstände weg, und der Rest verkauft sich beim nächsten Händler von selbst."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
@@ -230,15 +231,16 @@ L["OPTIONS_ENABLE_VALUE_CAP"] = "Maximalen Wert zum Löschen aktivieren"
 L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Schaltet das Wertlimit ein oder aus. Der Auto-Verkauf verkauft trotzdem alles, was dadurch zurückgehalten wird, und für deine Löschliste gilt das Limit nicht."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] = "Stapel, deren gesamter Verkaufswert darüber liegt, werden nie gelöscht."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Löschen ohne Eintippen"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "%s-Eingabe überspringen"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Standardmäßig musst du "%s" eintippen, wenn du einen Gegenstand der Qualität %s oder besser löschst. Das hier macht daraus ein einfaches Ja oder Nein.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Löschen ohne Eintippen aktivieren"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "%s-Eingabe überspringen aktivieren"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Schaltet Löschen ohne Eintippen ein oder aus. Das Spiel fragt trotzdem Ja oder Nein, nur das Eintippen entfällt."
+	"Schaltet %s-Eingabe überspringen ein oder aus. Das Spiel fragt trotzdem Ja oder Nein, nur das Eintippen entfällt."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Gegenstände ohne Verkaufswert vereinfacht nur Gegenstände, die kein Händler ankauft. Alle Gegenstände vereinfacht jede Eingabeaufforderung."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Alle Gegenstände"

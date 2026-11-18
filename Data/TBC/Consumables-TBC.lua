@@ -263,7 +263,7 @@ ns.ALLOWED_DELETE_CONSUMABLES = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, TBC Anniversary 2.5.6.69795
+	2026-11-18, TBC Anniversary 2.5.6.70577
 
 Notes
 	- Food, water, food-and-water, and alcohol, one section each: items whose use only restores health or mana, or makes you drunk, so outgrowing one costs nothing. Test and placeholder items are left out.
@@ -342,8 +342,11 @@ Wowhead
 
 wago.tools
 	Build 2.5.6.69795; the file never recorded which tables.
-	https://wago.tools/db2/Item?build=2.5.6.69795
-	https://wago.tools/db2/ItemSparse?build=2.5.6.69795
-	https://wago.tools/db2/ItemEffect?build=2.5.6.69795
-	https://wago.tools/db2/SpellEffect?build=2.5.6.69795
+	https://wago.tools/db2/Item?build=2.5.6.70577
+	https://wago.tools/db2/ItemSparse?build=2.5.6.70577
+	https://wago.tools/db2/ItemEffect?build=2.5.6.70577
+	https://wago.tools/db2/SpellEffect?build=2.5.6.70577
+
+QuestieDB
+	None.
 ]]

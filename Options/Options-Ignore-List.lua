@@ -105,7 +105,7 @@ end
 
 function ns.BuildIgnoreListOptions()
 	return ns.BuildCharacterListTree({
-		-- The page title names its parent (Decision 8); the Settings tree shows the plain name.
+		-- The page title names its parent, as every sub-panel's does (Kit.SubPanelTitle); the Settings tree shows the plain name.
 		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_PROTECT_LIST"]),
 		description = L["OPTIONS_PROTECT_DESCRIPTION"],
 		getListForScope = function(scopeKey)

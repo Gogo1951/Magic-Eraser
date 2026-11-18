@@ -39,8 +39,13 @@ end
     Masks come from quest_template and are omitted from the data when the quest
     is unrestricted, so a nil or 0 mask always means "no gate here" rather than
     "nobody qualifies".
+
+    A race or class with no bit in Data/Data.lua must never read as shut out
+    of every gated quest. A race without one (WoW Forever's Skyborne) is gated
+    by faction alone: only a mask naming none of its side's races, an
+    other-faction quest, keeps it out. A class without one is never gated.
 ]]
-local playerRaceBit, playerClassBit
+local playerRaceBit, playerClassBit, playerSideBits
 
 local function GetPlayerBits()
 	if not playerRaceBit then
@@ -49,16 +54,31 @@ local function GetPlayerBits()
 		playerRaceBit = (raceToken and ns.RACE_BITS[raceToken]) or 0
 		playerClassBit = (classToken and ns.CLASS_BITS[classToken]) or 0
 	end
-	return playerRaceBit, playerClassBit
+	if playerRaceBit == 0 and not playerSideBits then
+		-- Not cached until the faction answers: nil leaves the race ungated meanwhile.
+		playerSideBits = ns.SIDE_RACE_BITS[UnitFactionGroup("player") or ""]
+	end
+	return playerRaceBit, playerClassBit, playerSideBits
 end
 
--- The race and class bits the quest-starter gate compares, for the Diagnostic Tools Eraser Context.
+--[[
+    The bits the quest-starter gate compares, for the Diagnostic Tools Eraser
+    Context. The third, the player's side, is set only for a race with no bit
+    of its own.
+]]
 function ns:GetPlayerQuestBits()
 	return GetPlayerBits()
 end
 
 local function IsGatedOut(mask, playerBit)
-	return mask and mask ~= 0 and bit.band(mask, playerBit) == 0
+	return mask and mask ~= 0 and playerBit ~= 0 and bit.band(mask, playerBit) == 0
+end
+
+local function IsRaceGatedOut(mask, raceBit, sideBits)
+	if raceBit ~= 0 then
+		return IsGatedOut(mask, raceBit)
+	end
+	return IsGatedOut(mask, sideBits or 0)
 end
 
 function ns:GetQuestStarterReason(itemId)
@@ -67,8 +87,8 @@ function ns:GetQuestStarterReason(itemId)
 		return nil
 	end
 
-	local raceBit, classBit = GetPlayerBits()
-	if IsGatedOut(entry[2], raceBit) or IsGatedOut(entry[3], classBit) then
+	local raceBit, classBit, sideBits = GetPlayerBits()
+	if IsRaceGatedOut(entry[2], raceBit, sideBits) or IsGatedOut(entry[3], classBit) then
 		return "questIneligible"
 	end
 

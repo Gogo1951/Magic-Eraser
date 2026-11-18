@@ -24,7 +24,7 @@ local KEY_BINDINGS = {
 	{ "MAGICERASER_ADD_TO_ERASE_LIST", "BINDING_ADD_TO_ERASE_LIST", "OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION" },
 }
 
--- On the grid (Decision 13): the caption in the label column, then the key and Set Key, totalling one row.
+-- On the grid: the caption in the label column, then the key and Set Key, totalling one row.
 local KEY_LABEL_WIDTH = Kit.LABEL_WIDTH
 local KEY_STATUS_WIDTH = 0.75
 local KEY_BUTTON_WIDTH = Kit.ROW_WIDTH - KEY_LABEL_WIDTH - KEY_STATUS_WIDTH

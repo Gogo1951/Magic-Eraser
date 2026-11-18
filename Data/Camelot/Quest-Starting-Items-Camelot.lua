@@ -76,6 +76,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[227796] = { 95560 }, -- Mysterious 'Darnassian' Scroll
 	[247834] = { 91741 }, -- Nibbled-On Book
 	[271343] = { 95884 }, -- Note Scrap
+	[221497] = { 95599 }, -- Old Key
 	[22719] = { 9233 }, -- Omarion's Handbook
 	[215468] = { 79945, 1101, 2 }, -- Orders from the Grand Crusader
 	[213127] = { 95384 }, -- Partial Mystical Notes
@@ -147,7 +148,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-11-14, WoW Forever 1.60.1.70938
+	2026-11-18, WoW Forever 1.60.1.70959
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -155,6 +156,7 @@ Notes
 		- The player's race or class can never take that quest, so the item is dead weight the moment it drops (an Alliance-only starter in a Horde player's bags, a Paladin tome on a Rogue). That needs no quest state at all.
 	- questId is the quest the item starts. racesMask and classesMask are that quest's race and class limits (quest_template.RequiredRaces and RequiredClasses), left off when it has none.
 		- Race bits: Human 1, Orc 2, Dwarf 4, NightElf 8, Undead 16, Tauren 32, Gnome 64, Troll 128, BloodElf 512, Draenei 1024. Alliance = 1101, Horde = 690, 0 = no restriction.
+		- Skyborne's bits (2^32 Alliance, 2^33 Horde) are left off: the client's bit library holds 32 bits. A Skyborne character is gated by its faction instead, so only a mask naming none of its side's races makes a starter erasable for it (Features/Junk-Rules.lua).
 		- Class bits: Warrior 1, Paladin 2, Hunter 4, Rogue 8, Priest 16, DeathKnight 32, Shaman 64, Mage 128, Warlock 256, Druid 1024.
 	- Repeatable, daily and weekly quests are left out: their starter can come back, so a completed flag proves nothing. The repeatable flag has gaps (five Craftsman's Writs lack it while the other nineteen in the family have it); the bind rule catches all five.
 	- Only starters bound to the looter (bind on pickup, or quest item) are kept. One that doesn't bind can be handed to an alt or another player who does qualify, so deleting it destroys something still useful: Carefully Folded Note and Captain Sanders' Treasure Map, and the five unflagged Writs are unbound too.
@@ -162,6 +164,7 @@ Notes
 	- Disabled quests, quest 1 (a dev test entry), and dev-marked or placeholder quests and items are left out.
 	- Rows outside the query were added from wago.tools builds 1.60.1.70205 and 1.60.1.70938.
 	- Eleven Forever starters came from build 1.60.1.70938: Bloody Missive, Busted Gizmo, Field Marshal's Log, Fishing Trip, Krol'dok Moulding, Mysterious 'Darnassian' Scroll, Orders from the Grand Crusader, Partial Mystical Notes, Partially Digested Collar, Tattered Journal and Torn Mystical Scroll. Each has an ItemSparse.StartQuestID, poor or common quality and a Bonding of 1 or 4, and QuestieDB lists a drop or the client has a spell that creates it. Their race and class limits come from QuestieDB's Forever quest data, since the client's tables don't carry them. QuestieDB doesn't know the quests behind Busted Gizmo and the Mysterious 'Darnassian' Scroll, so those rows have none. It doesn't record whether any of these quests repeat either, and a repeatable quest's row can only fire on race or class.
+	- Old Key (221497) came from build 1.60.1.70959: it starts 95599 The Old Key, is poor or common and bound, and QuestieDB's Forever items list an object it drops from. That quest has no race or class limit.
 	- Left out as likely unobtainable, because QuestieDB lists no source and no spell in the client's tables creates them: Humongous Crystal (243203, 246888), Forgotten Ashes (247684), Feathered Charm Necklace (249698), Fel-Tainted Remains (254695), Heart of the Obliterator (257126), Corpsefeeder's Carapace (259893), Forlorn Necklace (260247), Farholde Scouting Report (263930), Komuk's Warmaul (266889), Krol'dok Moulding (267137), Bottle of Whispers (268825), Ashen Infused Crystal (269233), Quicklatch Sparker (269777), Head of Scaldaron (271612, 271613), Lump of Coal (271870), Neutralizing Concoction (272314), Uninfected Root Sample (274776), Corrupted Gemstone (277154), Carved Stone Trinket (280390), Crystal Infused Scale (280459), Windshaper Ritual Dagger (281331), Patrol Orders (281629) and Mote of Corruption (285963). Also left out: Simple Parchment (6497), which starts dev quest 1, and Book of Deathstones: Mask of Death (191550), Mud-covered notebook (202641) and Head of Rend Blackhand (227911), which QuestieDB has no source or quest for.
 	- Read by Features/Junk-Rules.lua and Features/Quest-Item-Alerts.lua.
 
@@ -252,7 +255,7 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70959
 	https://wago.tools/db2/QuestV2?build=1.60.1.70938
 	https://wago.tools/db2/SpellEffect?build=1.60.1.70938
 

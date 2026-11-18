@@ -145,7 +145,7 @@ end
 
 function ns.BuildEraseListOptions()
 	return ns.BuildCharacterListTree({
-		-- The page title names its parent (Decision 8); the Settings tree shows the plain name.
+		-- The page title names its parent, as every sub-panel's does (Kit.SubPanelTitle); the Settings tree shows the plain name.
 		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_ERASE_LIST"]),
 		description = L["OPTIONS_ERASE_DESCRIPTION"],
 		getListForScope = function(scopeKey)

@@ -97,13 +97,29 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[4433] = { 637, 1101, 0 }, -- Waterlogged Envelope
 	[1972] = { 184, 1101, 0 }, -- Westfall Deed
 	[20742] = { 8471 }, -- Winterfall Ritual Totem
+
+	--------------------------------------------------------------------------------
+	-- 02. Season of Discovery
+	--------------------------------------------------------------------------------
+
+	[219930] = { 81766, 1101, 2 }, -- Bloody Missive
+	[221350] = { 82071, 690, 64 }, -- Charred Shaman's Notes
+	[216661] = { 79986 }, -- Grime-Encrusted Ring
+	[227911] = { 84377, 1101, 0 }, -- Head of Rend Blackhand
+	[236750] = { 87361 }, -- Heart of Doom
+	[215468] = { 79945, 1101, 0 }, -- Orders from the Grand Crusader
+	[211269] = { 78823, 0, 4 }, -- Primitive Drawing
+	[221352] = { 82072, 690, 64 }, -- Smudged Shaman's Notes
+	[211454] = { 78920, 690, 0 }, -- Strange Water Globe
+	[220379] = { 81960, 690, 64 }, -- Torn Shaman's Notes
+	[221351] = { 82073, 690, 64 }, -- Waterlogged Shaman's Notes
 }
 
 --[[
 How We Got the Data
 
 Last Validated
-	2026-10-09, Season of Discovery 1.15.9.70003
+	2026-11-18, Season of Discovery 1.15.9.70576
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -117,6 +133,8 @@ Notes
 	- Poor and common quality only. Plenty of quest starters are epics and legendaries (Dormant Wind Kissed Blade, Frame of Atiesh, Shattered Fragments of Val'anyr, Battered Hilt), and none may ever be erased. Relax the cap only after reading every row.
 	- Disabled quests, quest 1 (a dev test entry), and dev-marked or placeholder quests and items are left out.
 	- Rows outside the query were added from wago.tools build 1.15.9.70003.
+	- 02. Season of Discovery holds the season's own starters, from build 1.15.9.70576 and QuestieDB's Season of Discovery items and quests: each has an ItemSparse.StartQuestID, poor or common quality and a Bonding of 1, and QuestieDB lists a creature that drops it. Their race and class limits come from QuestieDB, since the client's tables don't carry them: Primitive Drawing is Hunter-only, Bloody Missive an Alliance Paladin's, and the four Shaman's Notes a Horde Shaman's. The Horde Strange Water Globe (211454) starts Baron Aquanis; the Alliance one (211818) starts nothing, so it has no row.
+	- Simple Parchment (6497) starts dev quest 1, and Book of Deathstones: Mask of Death (191550) and Mud-covered notebook (202641) have no source or quest in QuestieDB, so they're left out.
 	- Read by Features/Junk-Rules.lua and Features/Quest-Item-Alerts.lua.
 
 SQL (CMaNGOS)
@@ -207,5 +225,11 @@ Wowhead
 
 wago.tools
 	Build 1.15.9.70003; the file never recorded which tables.
-	https://wago.tools/db2/ItemSparse?build=1.15.9.70003
+	https://wago.tools/db2/ItemSparse?build=1.15.9.70576
+
+QuestieDB
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Sod/sodBaseItems.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Sod/sodBaseQuests.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Sod/sodItemFixes.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Sod/sodQuestFixes.lua
 ]]

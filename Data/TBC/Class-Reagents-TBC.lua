@@ -50,7 +50,7 @@ ns.CLASS_REAGENTS = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, TBC Anniversary 2.5.6.69795
+	2026-11-18, TBC Anniversary 2.5.6.70577
 
 Notes
 	- Items one class needs and every other class can throw away, listed under the class token UnitClass returns.
@@ -67,8 +67,12 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/SkillLineAbility?build=2.5.6.69795
+	https://wago.tools/db2/SkillLineAbility?build=2.5.6.70577
 	https://wago.tools/db2/SkillRaceClassInfo?build=2.5.6.69795
-	https://wago.tools/db2/SpellReagents?build=2.5.6.69795
+	https://wago.tools/db2/SpellReagents?build=2.5.6.70577
 	https://wago.tools/db2/SkillLine?build=2.5.6.69795
+	https://wago.tools/db2/ItemSparse?build=2.5.6.70577
+
+QuestieDB
+	None.
 ]]

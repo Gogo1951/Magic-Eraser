@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant.
+Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant.
 
 **TL;DR:** For anyone whose bags are always full. It tosses the junk, keeps what you need, and Marie Kondo would be so proud!
 
@@ -20,13 +20,13 @@ Erase junk and free up bag space instantly. Clear completed quest items, outgrow
 * **Never Caught Full** // Turn on a countdown in chat as your last few bag slots fill up.
 * **Your Colors, Your Call** // Pick your own tint color, or switch any alert off.
 
-### Auto-Vend & Bank Retrieval
+### Merchant & Bank
 
 * **Junk Sells Itself** // Open any merchant and your junk is sold, with one line in chat saying what it made.
 * **Bank Junk Comes Home** // Junk hiding in your bank hops back into your bags to sell with the rest.
-* **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time, or switch Auto-Vend off entirely.
+* **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time, or switch either one off for good.
 
-### Delete Without Typing
+### Skip Typing DELETE
 
 * **No More Typing DELETE** // Binning a Rare or better item that no vendor will buy takes a simple Yes or No.
 * **Your Call** // Stretch it to every item, or switch it off.
@@ -85,6 +85,7 @@ The menu shows what's next and what it's worth, a Clutter Report of the bag slot
 
 ### 🟢 Pairs With
 
+* Arkayenro's [ArkInventory](https://www.curseforge.com/wow/addons/ark-inventory)
 * plusmouse's [Baganator](https://www.curseforge.com/wow/addons/baganator)
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 * Gogo1951's [GogoLoot](https://www.curseforge.com/wow/addons/gogoloot)
@@ -92,16 +93,16 @@ The menu shows what's next and what it's worth, a Clutter Report of the bag slot
 
 ### 🟡 Overlaps
 
-* MooreaTV's [Better Vendor Price](https://www.curseforge.com/wow/addons/better-vendor-price)
 * Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
 * Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
+* Krelock's [Loot Triage](https://www.curseforge.com/wow/addons/loot-triage)
 * Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
 * Sapu94's [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskill-master)
 
 ### 🔴 Alternatives
 
 * Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
+* olafskiii's [AutoVendor](https://www.curseforge.com/wow/addons/autovendor)
 * markyxl's [Crap Away!](https://www.curseforge.com/wow/addons/crapaway)
 * moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
 * jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
-* typicalzergling's [Vendor](https://www.curseforge.com/wow/addons/vendor)

@@ -45,11 +45,10 @@ end
     off the live lists -- but something has to ask for one, and an edit made
     outside the panel while it is on screen, a menu click here or a key press
     through ns:AddToIgnoreList below, has nothing else that does. An edit made
-    in the panel is refreshed by the item-list builder in
-    Options/Options-Utilities.lua, which is why ns:SetIgnoredInScope does not
-    repeat this; without it here, the panel would
-    keep showing the rows it drew when it opened until the player closed and
-    reopened it. NotifyChange costs nothing while nothing is displaying the
+    in the panel is refreshed by the item-list builder, Kit.ItemList in
+    Options/Options-Kit.lua, which is why ns:SetIgnoredInScope does not repeat
+    this; without it here, the panel would keep showing the rows it drew when
+    it opened until the player closed and reopened it. NotifyChange costs nothing while nothing is displaying the
     table.
 
     True when the item was on this character's list and is now off it.
