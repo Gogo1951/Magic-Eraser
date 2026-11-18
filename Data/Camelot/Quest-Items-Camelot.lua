@@ -221,6 +221,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 	[18598] = { 171 }, -- Human Orphan Whistle
 	[12220] = { 1016 }, -- Intact Elemental Bracer
 	[11269] = { 4063 }, -- Intact Elemental Core
+	[268580] = { 92421 }, -- Intact Limbs
 	[9369] = { 2973 }, -- Iridescent Sprite Darter Wing
 	[5619] = { 929 }, -- Jade Phial
 	[12891] = { 5245 }, -- Jaron's Pick
