@@ -21,6 +21,7 @@ L["CHAT_LOADED"] =
 	"Versão %s. As configurações (incluindo a opção de desativar esta mensagem) ficam em Opções > AddOns > Magic Eraser. Está gostando deste add-on? Conte a um amigo, favorite-o no CurseForge ou dê uma estrela no GitHub. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "Por segurança, o painel de opções não pode ser aberto durante o combate."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "Por segurança, a lista de teclas de atalho não pode ser aberta durante o combate."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "Abra o menu do jogo, depois %s, depois %s, e procure a seção Magic Eraser."
 
 -- Eraser
@@ -77,6 +78,8 @@ L["MENU_CLICK_MIDDLE"] = "Clique do meio"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Clique direito"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Clique do meio"
 L["MENU_TOGGLE"] = "Alternar"
+L["ACTION_ERASE"] = "Excluir"
+L["ACTION_PROTECT"] = "Proteger"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Limpar Lista de proteção"
 L["MENU_OPTIONS"] = "Opções do Magic Eraser"
 L["MENU_ON"] = "Ligado"
@@ -107,13 +110,11 @@ L["TAB_MERCHANT_BANK"] = "Comerciante e banco"
 L["TAB_ALERTS"] = "Alertas e tingimento"
 L["TAB_PROTECT_LIST"] = "Lista de proteção"
 L["TAB_ERASE_LIST"] = "Lista de exclusão"
-L["ACTION_ERASE"] = "Excluir"
-L["ACTION_PROTECT"] = "Proteger"
 L["BAGS_CLEAN_CONGRATS"] = "Parabéns, suas bolsas estão cheias de coisas boas!"
 L["BAGS_CLEAN_HINT"] = "Você precisará excluir algo manualmente para liberar mais espaço."
 L["LOADING_ITEM"] = "Carregando ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Exemplo"
 
 --------------------------------------------------------------------------------
@@ -121,7 +122,7 @@ L["SAMPLE_EXAMPLE"] = "Exemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Exclua o lixo e libere espaço nas bolsas instantaneamente. Limpe itens de missões concluídas, consumíveis que você já superou, lixo de comerciante e itens cinza com um clique no botão do minimapa. Uma lista de lixo revisada à mão protege o que você precisa, enquanto a Venda automática vende o resto no próximo comerciante que você visitar."
+	"Exclua e venda o lixo automaticamente para liberar espaço nas bolsas. Um clique no botão do minimapa limpa itens de missões concluídas, comida, bebida e munição que você já superou, lixo de comerciante, equipamento branco e itens cinza, e o resto se vende sozinho no próximo comerciante."
 L["OPTIONS_ENABLE_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
@@ -223,15 +224,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Liga ou desliga o limite de valor. A Venda automática ainda vende tudo o que ele poupa, e sua Lista de exclusão não é limitada por ele."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Pilhas que valem mais que isto, contando o valor de venda da pilha inteira, nunca são excluídas."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d de ouro"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Exclusão sem digitar"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Sem digitar %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Por padrão, o jogo faz você digitar "%s" ao excluir um item %s ou melhor. Isto transforma esse aviso em um simples Sim ou Não.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Ativar exclusão sem digitar"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Ativar Sem digitar %s"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Liga ou desliga a Exclusão sem digitar. O jogo ainda pergunta Sim ou Não; só a digitação some."
+	"Liga ou desliga Sem digitar %s. O jogo ainda pergunta Sim ou Não; só a digitação some."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Itens sem valor de venda simplifica só os itens que nenhum comerciante compra. Todos os itens simplifica todo aviso que pede digitação."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Todos os itens"

@@ -35,7 +35,7 @@ ns.ALLOWED_DELETE_AMMO = {
 How We Got the Data
 
 Last Validated
-	2026-11-14, WoW Forever 1.60.1.70938
+	2026-11-18, WoW Forever 1.60.1.70959
 
 Notes
 	- Every arrow and bullet on this client, leaving out test, monster, deprecated and placeholder items.
@@ -51,8 +51,8 @@ Wowhead
 	None.
 
 wago.tools
-	https://wago.tools/db2/Item?build=1.60.1.70938
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
+	https://wago.tools/db2/Item?build=1.60.1.70959
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70959
 
 QuestieDB
 	None.

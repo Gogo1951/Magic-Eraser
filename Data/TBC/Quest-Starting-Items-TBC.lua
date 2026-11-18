@@ -147,6 +147,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 	[32726] = { 11081 }, -- Murkblood Escape Plans
 	[24559] = { 9871, 1101, 0 }, -- Murkblood Invasion Plans
 	[24558] = { 9872, 690, 0 }, -- Murkblood Invasion Plans
+	[23228] = { 8474, 690, 0 }, -- Old Whitebark's Pendant
 	[22719] = { 9233 }, -- Omarion's Handbook
 	[23890] = { 9587, 1101, 0 }, -- Ominous Letter
 	[23892] = { 9588, 690, 0 }, -- Ominous Letter
@@ -180,7 +181,7 @@ ns.ALLOWED_DELETE_QUEST_STARTING_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, TBC Anniversary 2.5.6.69795
+	2026-11-18, TBC Anniversary 2.5.6.70577
 
 Notes
 	- Items that hand you a quest when you right-click them. Unlike Quest-Items, which a turn-in consumes, these create the quest, so they're safe to erase for two separate reasons:
@@ -194,6 +195,8 @@ Notes
 	- Poor and common quality only. Plenty of quest starters are epics and legendaries (Dormant Wind Kissed Blade, Frame of Atiesh, Shattered Fragments of Val'anyr, Battered Hilt), and none may ever be erased. Relax the cap only after reading every row.
 	- Disabled quests, quest 1 (a dev test entry), and dev-marked or placeholder quests and items are left out.
 	- Rows outside the query were added from wago.tools build 2.5.6.69795.
+	- Old Whitebark's Pendant (23228) came from build 2.5.6.70577: it starts the Horde-only 8474, and QuestieDB lists a creature that drops it. Its Quest-Items-TBC.lua row decides quest state; this row adds the race limit. Whitebark's Memory (10166), which follows, hands out its own copy of the pendant (28209), so this one is spent once 8474 is done.
+	- Simple Parchment (6497) starts dev quest 1, so it's left out.
 	- Read by Features/Junk-Rules.lua and Features/Quest-Item-Alerts.lua.
 
 SQL (CMaNGOS)
@@ -284,5 +287,10 @@ Wowhead
 
 wago.tools
 	Build 2.5.6.69795; the file never recorded which tables.
-	https://wago.tools/db2/ItemSparse?build=2.5.6.69795
+	https://wago.tools/db2/ItemSparse?build=2.5.6.70577
+
+QuestieDB
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/TBC/tbcItemDB.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/data/TBC/tbcQuestDB.lua
+	https://raw.githubusercontent.com/Questie/QuestieDB/master/src/corrections/Tbc/tbcQuestFixes.lua
 ]]

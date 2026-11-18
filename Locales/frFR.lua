@@ -22,6 +22,7 @@ L["CHAT_LOADED"] =
 L["CHAT_OPTIONS_IN_COMBAT"] = "Par mesure de sécurité, le panneau d'options ne peut pas être ouvert en combat."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"Par mesure de sécurité, la liste des raccourcis clavier ne peut pas être ouverte en combat."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "Ouvrez le menu du jeu, puis %s, puis %s, et trouvez la section Magic Eraser."
 
 -- Eraser
@@ -80,6 +81,8 @@ L["MENU_CLICK_MIDDLE"] = "Clic central"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Maj + Clic droit"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Maj + Clic central"
 L["MENU_TOGGLE"] = "Basculer"
+L["ACTION_ERASE"] = "Supprimer"
+L["ACTION_PROTECT"] = "Protéger"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Vider la Liste de protection"
 L["MENU_OPTIONS"] = "Options de Magic Eraser"
 L["MENU_ON"] = "Activé"
@@ -110,13 +113,11 @@ L["TAB_MERCHANT_BANK"] = "Marchand et banque"
 L["TAB_ALERTS"] = "Alertes et teintes"
 L["TAB_PROTECT_LIST"] = "Liste de protection"
 L["TAB_ERASE_LIST"] = "Liste de suppression"
-L["ACTION_ERASE"] = "Supprimer"
-L["ACTION_PROTECT"] = "Protéger"
 L["BAGS_CLEAN_CONGRATS"] = "Félicitations, vos sacs sont remplis de bonnes choses !"
 L["BAGS_CLEAN_HINT"] = "Vous devrez supprimer quelque chose manuellement pour libérer plus d'espace."
 L["LOADING_ITEM"] = "Chargement ID : %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Exemple"
 
 --------------------------------------------------------------------------------
@@ -124,7 +125,7 @@ L["SAMPLE_EXAMPLE"] = "Exemple"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Supprimez le rebut et libérez de la place dans vos sacs en un instant. Éliminez les objets de quêtes terminées, les consommables devenus inutiles, la camelote de vendeur et les objets gris d'un clic sur le bouton de la minicarte. Une liste de rebut sélectionnée à la main protège ce dont vous avez besoin, tandis que la Vente auto écoule le reste chez votre prochain marchand."
+	"Supprimez et vendez automatiquement le rebut pour libérer de la place dans vos sacs. Un clic sur le bouton de la minicarte élimine les objets de quêtes terminées, la nourriture, les boissons et les munitions dépassées, la camelote de vendeur, l'équipement blanc et les objets gris, et le reste se vend tout seul chez votre prochain marchand."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Affiche dans la discussion un message de bienvenue d'une ligne, avec la version, à chaque connexion."
@@ -229,15 +230,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Active ou désactive la limite de valeur. La Vente auto vend quand même tout ce que la limite épargne, et votre Liste de suppression n'y est pas soumise."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Les piles valant plus que ce montant, en comptant la valeur de vente de toute la pile, ne sont jamais supprimées."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d po"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Suppression sans saisie"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Ne plus taper %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Par défaut, le jeu vous oblige à taper "%s" pour supprimer un objet de qualité %s ou supérieure. Cette option transforme cette demande en un simple Oui ou Non.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer la suppression sans saisie"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Activer Ne plus taper %s"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Active ou désactive la Suppression sans saisie. Le jeu demande toujours Oui ou Non, seule la saisie disparaît."
+	"Active ou désactive Ne plus taper %s. Le jeu demande toujours Oui ou Non, seule la saisie disparaît."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Objets sans valeur de vente ne simplifie que les objets qu'aucun marchand n'achète. Tous les objets simplifie chaque demande de saisie."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Tous les objets"

@@ -6,7 +6,7 @@ local format = string.format
 local Kit = ns.OptionsKit
 
 --------------------------------------------------------------------------------
--- Delete Without Typing Section
+-- Skip Typing DELETE Section
 --------------------------------------------------------------------------------
 
 --[[

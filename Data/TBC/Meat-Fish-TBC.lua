@@ -108,7 +108,7 @@ ns.ALLOWED_DELETE_MEAT_FISH = {
 How We Got the Data
 
 Last Validated
-	2026-11-13, TBC Anniversary 2.5.6.70577
+	2026-11-18, TBC Anniversary 2.5.6.70577
 
 Notes
 	- Every item a Cooking recipe uses, from the wago.tools tables below, that is meat, fish, an egg or another animal part. These are kept by default: the Outgrown Meat & Fish kind is unchecked until the player turns it on.
@@ -117,10 +117,23 @@ Notes
 	- Edible food no cooking recipe uses (Bloodbelly Fish, Oil Covered Fish, Darkshore Grouper) stays in Consumables-TBC.lua.
 	- Cooking Only rows can't be eaten, so their level is the item level.
 	- Either way an item becomes junk ten levels past its level, or at level 5 for anything under level 5 (GetConsumableEraseLevel in Features/Junk-Rules.lua).
+	- Found in the wago.tools tables below: SkillLine 185 (Cooking) and every line whose ParentSkillLineID is 185, those lines' SkillLineAbility spells, each spell's SpellReagents (Reagent_0 to Reagent_7), and each reagent's Item and ItemSparse row for its class, item level and name. A reagent is Edible when its first use spell (ItemEffect, SpellEffect) applies the eating aura.
 
-Tables (wago.tools build 2.5.6.70577)
-	SkillLine: 185 (Cooking) and any line whose ParentSkillLineID is 185.
-	SkillLineAbility: Spell where SkillLine is one of those lines.
-	SpellReagents: Reagent_0 to Reagent_7 for those spells.
-	Item and ItemSparse: ClassID, ItemLevel and name for each reagent.
+SQL (CMaNGOS)
+	TODO: Add SQL Query
+
+Wowhead
+	None.
+
+wago.tools
+	https://wago.tools/db2/SkillLine?build=2.5.6.70577
+	https://wago.tools/db2/SkillLineAbility?build=2.5.6.70577
+	https://wago.tools/db2/SpellReagents?build=2.5.6.70577
+	https://wago.tools/db2/Item?build=2.5.6.70577
+	https://wago.tools/db2/ItemSparse?build=2.5.6.70577
+	https://wago.tools/db2/ItemEffect?build=2.5.6.70577
+	https://wago.tools/db2/SpellEffect?build=2.5.6.70577
+
+QuestieDB
+	None.
 ]]

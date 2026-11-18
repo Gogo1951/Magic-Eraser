@@ -84,7 +84,7 @@ ns.ALLOWED_DELETE_MEAT_FISH = {
 How We Got the Data
 
 Last Validated
-	2026-11-14, WoW Forever 1.60.1.70938
+	2026-11-18, WoW Forever 1.60.1.70959
 
 Notes
 	- Every item a Cooking recipe uses, from the wago.tools tables below, that is meat, fish, an egg or another animal part. These are kept by default: the Outgrown Meat & Fish kind is unchecked until the player turns it on.
@@ -103,13 +103,13 @@ Wowhead
 
 wago.tools
 	https://wago.tools/db2/SkillLine?build=1.60.1.70938
-	https://wago.tools/db2/SkillLineAbility?build=1.60.1.70938
-	https://wago.tools/db2/SpellReagents?build=1.60.1.70938
-	https://wago.tools/db2/Item?build=1.60.1.70938
-	https://wago.tools/db2/ItemSparse?build=1.60.1.70938
-	https://wago.tools/db2/ItemEffect?build=1.60.1.70938
-	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70938
-	https://wago.tools/db2/SpellEffect?build=1.60.1.70938
+	https://wago.tools/db2/SkillLineAbility?build=1.60.1.70959
+	https://wago.tools/db2/SpellReagents?build=1.60.1.70959
+	https://wago.tools/db2/Item?build=1.60.1.70959
+	https://wago.tools/db2/ItemSparse?build=1.60.1.70959
+	https://wago.tools/db2/ItemEffect?build=1.60.1.70959
+	https://wago.tools/db2/ItemXItemEffect?build=1.60.1.70959
+	https://wago.tools/db2/SpellEffect?build=1.60.1.70959
 
 QuestieDB
 	None.

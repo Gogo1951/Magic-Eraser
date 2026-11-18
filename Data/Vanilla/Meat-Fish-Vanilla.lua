@@ -86,7 +86,7 @@ ns.ALLOWED_DELETE_MEAT_FISH = {
 How We Got the Data
 
 Last Validated
-	2026-11-14, Classic Era 1.15.9.70576
+	2026-11-18, Classic Era 1.15.9.70576
 
 Notes
 	- Every item a Cooking recipe uses, from the wago.tools tables below, that is meat, fish, an egg or another animal part. These are kept by default: the Outgrown Meat & Fish kind is unchecked until the player turns it on.

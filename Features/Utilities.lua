@@ -369,8 +369,9 @@ end
 
 --[[
     One list looked up by the scope key the list panels use: the global
-    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played ("Name -
-    Realm", ns.db.keys.char), or any other character on the account.
+    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played
+    (ns.db.keys.char: "Name - Realm" on realm clients, "First Last" on WoW
+    Forever), or any other character on the account.
 
     The character being played resolves through ns.db.char rather than the raw
     saved table, so an edit lands on the very list the eraser reads and applies
@@ -492,18 +493,3 @@ function ns:GetCharacterDisplayName(charKey)
 	end
 	return COLOR_PREFIX .. hex .. charKey .. "|r"
 end
-
---------------------------------------------------------------------------------
--- Refresh
---------------------------------------------------------------------------------
-
---[[
-    Every settings change ends in ns.RefreshSettings, from the options, the
-    mini-map menu, a button click, a key binding, or a profile switch. It
-    belongs to Options-Kit (Options/Options-Kit.lua): every registered panel
-    repaints, the open menu redraws (ns.RefreshMenu) and the button takes the
-    next item's icon (ns.UpdateMinimapIcon).
-
-    Bag changes don't go there: ns:RefreshDisplay redraws only the menu, so an
-    item ID being typed into a list page survives the loot that lands meanwhile.
-]]

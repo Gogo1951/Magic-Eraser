@@ -21,6 +21,7 @@ L["CHAT_LOADED"] =
 	"版本 %s。設定（包含關閉此訊息的選項）位於 選項 > 插件 > Magic Eraser。喜歡這個插件嗎？告訴朋友，在 CurseForge 上收藏它，或在 GitHub 上為它加星。(="
 L["CHAT_OPTIONS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟選項介面。"
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "基於安全考量，戰鬥中無法開啟按鍵設定清單。"
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "開啟遊戲選單，依序點選 %s、%s，然後找到 Magic Eraser 分類。"
 
 -- Eraser
@@ -77,6 +78,8 @@ L["MENU_CLICK_MIDDLE"] = "中鍵點擊"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 右鍵點擊"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 中鍵點擊"
 L["MENU_TOGGLE"] = "切換"
+L["ACTION_ERASE"] = "刪除"
+L["ACTION_PROTECT"] = "保護"
 L["ACTION_CLEAR_PROTECT_LIST"] = "清空保護清單"
 L["MENU_OPTIONS"] = "Magic Eraser 選項"
 L["MENU_ON"] = "開啟"
@@ -106,13 +109,11 @@ L["TAB_MERCHANT_BANK"] = "商人與銀行"
 L["TAB_ALERTS"] = "提醒與著色"
 L["TAB_PROTECT_LIST"] = "保護清單"
 L["TAB_ERASE_LIST"] = "刪除清單"
-L["ACTION_ERASE"] = "刪除"
-L["ACTION_PROTECT"] = "保護"
 L["BAGS_CLEAN_CONGRATS"] = "恭喜，你的背包裡都是好東西！"
 L["BAGS_CLEAN_HINT"] = "如果想騰出更多空間，你得手動刪除一些東西。"
 L["LOADING_ITEM"] = "正在載入 ID：%d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "範例"
 
 --------------------------------------------------------------------------------
@@ -120,7 +121,7 @@ L["SAMPLE_EXAMPLE"] = "範例"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"刪除雜物，瞬間騰出背包空間。點擊一下小地圖按鈕，即可清理已完成任務的物品、已經用不上的消耗品、只能賣給商人的廢品和灰色物品。精心整理的雜物清單會保護你需要的物品，自動售賣則會在你下次遇到商人時賣掉其餘物品。"
+	"刪除並自動售賣雜物，騰出背包空間。點擊一下小地圖按鈕，即可清理已完成任務的物品、已經用不上的食物、飲料和彈藥、只能賣給商人的廢品、白色裝備和灰色物品，其餘物品會在你下次遇到商人時自動賣掉。"
 L["OPTIONS_ENABLE_WELCOME"] = "啟用歡迎訊息"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登入時，在聊天框顯示一行附帶版本號的歡迎訊息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
@@ -222,15 +223,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"開啟或關閉價值上限。被它擋下的物品仍會由自動售賣出售，而你的刪除清單不受此限制。"
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"價值超過此金額的堆疊（以整個堆疊的售價計算）永遠不會被刪除。"
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d 金"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "免打字刪除"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "免輸入 %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'預設情況下，遊戲會要求你輸入"%s"才能刪除%s或更高品質的物品。此功能會把這個提示改成簡單的是或否。'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "啟用免打字刪除"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "啟用免輸入 %s"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"開啟或關閉免打字刪除。遊戲仍會詢問是或否，只是不必再打字。"
+	"開啟或關閉免輸入 %s。遊戲仍會詢問是或否，只是不必再打字。"
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"無出售價值的物品：只簡化商人不收購之物品的提示。所有物品：簡化每一個需要打字的提示。"
 L["OPTIONS_MANUAL_DELETE_ALL"] = "所有物品"

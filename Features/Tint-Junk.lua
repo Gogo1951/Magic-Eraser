@@ -33,19 +33,12 @@ local min = math.min
 ]]
 local paintedButtons = setmetatable({}, { __mode = "k" })
 
---[[
-    Set from BANKFRAME_OPENED and BANKFRAME_CLOSED rather than read off
-    BankFrame, which a bag add-on such as Baganator keeps hidden while its own
-    bank window is open.
-]]
-local isBankOpen = false
-
 local function IsTintOn()
 	return ns.db and ns.db.profile.tintJunkEnabled
 end
 
 local function IsTintableBag(bag)
-	return ns.IS_CARRIED_BAG[bag] or (isBankOpen and ns.IS_BANK_BAG[bag])
+	return ns.IS_CARRIED_BAG[bag] or (ns:IsBankOpen() and ns.IS_BANK_BAG[bag])
 end
 
 local function IsJunk(bag, slot, itemId, link)
@@ -505,12 +498,6 @@ function ns:RefreshTints()
 			PaintButton(button, record.bag, record.slot, record.itemId)
 		end
 	end
-end
-
--- From the bank handlers in Features/Bank-Retrieval.lua; opening or closing repaints the bank's buttons.
-function ns:SetTintBankOpen(isOpen)
-	isBankOpen = isOpen
-	ns:RefreshTints()
 end
 
 --[[

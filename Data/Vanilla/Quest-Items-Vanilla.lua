@@ -417,7 +417,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-11-14, Classic Era 1.15.9.70576
+	2026-11-18, Classic Era 1.15.9.70576
 
 Notes
 	- Quest items the player can still be holding once the quest is done, each keyed to the quest whose completion makes it safe to erase. The row fires on the first listed quest flagged complete (Features/Junk-Rules.lua); Features/Quest-Item-Alerts.lua reads it too.

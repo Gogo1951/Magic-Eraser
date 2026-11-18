@@ -15,7 +15,7 @@ local Kit = ns.OptionsKit
 local VALUE_CAP_VALUES, VALUE_CAP_SORTING = {}, {}
 
 for index, gold in ipairs(ns.VALUE_CAP_CHOICES) do
-	VALUE_CAP_VALUES[gold] = format(L["OPTIONS_VALUE_CAP_GOLD"], gold)
+	VALUE_CAP_VALUES[gold] = format(GOLD_AMOUNT, gold)
 	VALUE_CAP_SORTING[index] = gold
 end
 
@@ -60,7 +60,7 @@ end
 --[[
     The two Erasing-panel sections owned by Features/Junk-Rules.lua: What Counts as
     Junk, one checkbox per kind, two to a line, then Maximum Value to Erase.
-    Delete Without Typing follows them from its own fragment, and Erase
+    Skip Typing DELETE follows them from its own fragment, and Erase
     Confirmation closes the panel from ns.BuildEraseConfirmOptions below.
 ]]
 function ns.BuildEraserOptions(args)

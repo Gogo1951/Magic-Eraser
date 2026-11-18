@@ -75,14 +75,14 @@ ns.OPTIONS_TREE_ROW_WIDTH = Kit.TREE_ROW_WIDTH
     Every string the kit draws, handed over once at load from the add-on's
     locale, under these keys in every add-on (Options-Kit.md → Strings):
 
-      example       L["SAMPLE_EXAMPLE"]                      "Example: %s"
+      example       L["SAMPLE_EXAMPLE"]                      "Example"
       loading       L["LOADING_ITEM"]                        "Loading ID: %d"
       soundPreview  L["OPTIONS_SOUND_PREVIEW_DESCRIPTION"]   the speaker's tooltip
       inCombat      L["CHAT_OPTIONS_IN_COMBAT"]              the Combat Guard's print
       reset         L["OPTIONS_RESET"]                       a Reset row's button
 ]]
 local TEXT = {
-	example = "Example: %s",
+	example = "Example",
 	loading = "Loading ID: %d",
 	soundPreview = "",
 	inCombat = "",
@@ -105,13 +105,30 @@ function Kit.Color(key, text)
 end
 
 --[[
-    A panel falls back to white when a link closes, where a chat frame falls
-    back to the line's color, so a line holding links is tinted again after
-    every |r.
+    The text in one color, as a chat frame draws a line in its channel's color.
+    A panel's text falls back to white, not the line's color, when a |r closes
+    more than the text itself opened, so the color is opened again there and
+    only there. Colors the text opens and closes itself (a link, coins, the
+    add-on's prefix) are left alone: the game keeps open colors on a short
+    stack, and reopening after every |r piles onto it until a later color
+    (the second line of an Example, its coins) drops to white. "||" is a
+    literal pipe, not an escape.
 ]]
 function Kit.Tint(key, text)
 	local color = Open(key)
-	return color .. (string.gsub(text, "|r", "|r" .. color)) .. "|r"
+	local depth = 1
+	local tinted = string.gsub(text, "|(.)", function(code)
+		if code == "c" then
+			depth = depth + 1
+		elseif code == "r" then
+			depth = depth - 1
+			if depth == 0 then
+				depth = 1
+				return "|r" .. color
+			end
+		end
+	end)
+	return color .. tinted .. "|r"
 end
 
 --------------------------------------------------------------------------------
@@ -598,18 +615,27 @@ end
     arrives, closing the field set of the control that decides it:
 
       -- spacer
-      Example:
+      Example
           [Party] [Aero]: Come & get it! [Peacebloom] in Teldrassil
-          a second line, when the feature prints several
+          a second line, only when how the lines look together matters
 
-    A spacer keeps it clear of the controls above, the silver "Example:" label
-    sits on its own line, and the message lines sit under it, indented like a
-    sub-option and aligned with each other. getLines returns the finished line,
+    A spacer keeps it clear of the controls above, the silver "Example" label
+    sits on its own line with no colon (a locale still on "Example: %s" loses
+    its colon here, full-width colon included), and the message lines sit
+    under it, indented like a sub-option and aligned with each other. getLines returns the finished line,
     or a list of lines, built through the feature's own builder on every draw,
     so the Example follows the settings and a reworded message rewords it.
 ]]
+local FULL_WIDTH_COLON = "\239\188\154" -- U+FF1A, as Chinese locales write it
+
 local function ExampleLabel()
-	local label = string.gsub(format(TEXT.example, ""), "%s+$", "")
+	local label = format(TEXT.example, "")
+	repeat
+		local before = label
+		label = string.gsub(label, "%s+$", "")
+		label = string.gsub(label, ":$", "")
+		label = string.gsub(label, FULL_WIDTH_COLON .. "$", "")
+	until label == before
 	return Kit.Color("HELP", label)
 end
 

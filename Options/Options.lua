@@ -57,8 +57,8 @@ function ns:RegisterOptionsPanels()
 	Kit.RegisterPanel("MerchantBank", ns.BuildMerchantBankOptions, L["TAB_MERCHANT_BANK"])
 	Kit.RegisterPanel("AlertsTints", ns.BuildAlertsTintsOptions, L["TAB_ALERTS"])
 
-	local profilesOptions = ns.BuildProfilesOptions()
-	Kit.RegisterPanel("Profiles", profilesOptions, profilesOptions.name)
+	-- The builder is registered like every other panel's; it is called here only for the AceDBOptions-localized name.
+	Kit.RegisterPanel("Profiles", ns.BuildProfilesOptions, ns.BuildProfilesOptions().name)
 	Kit.RegisterPanel("FeedbackSupport", ns.BuildFeedbackSupportOptions, L["OPTIONS_FEEDBACK"])
 
 	-- A builder function, so the tabs come and go with the enable toggle (see Diagnostics/Options-Diagnostics.lua).

@@ -27,7 +27,10 @@ end
 --[[
     Every bag change lands here. The scan cache is dropped, the button takes the
     next item's icon (ns.UpdateMinimapIcon), the open menu redraws on the new
-    item, and the bag tints catch up (Features/Tint-Junk.lua).
+    item, and the bag tints catch up (Features/Tint-Junk.lua). The options
+    panels are left alone, so an item ID being typed into a list page survives
+    the loot that lands meanwhile; settings changes repaint them through
+    ns.RefreshSettings (Options/Options-Kit.lua) instead.
 ]]
 function ns:RefreshDisplay()
 	if not ns.dataBrokerObject then

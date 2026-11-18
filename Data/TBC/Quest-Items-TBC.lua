@@ -671,7 +671,7 @@ ns.ALLOWED_DELETE_QUEST_ITEMS = {
 How We Got the Data
 
 Last Validated
-	2026-10-09, TBC Anniversary 2.5.6.69795
+	2026-11-18, TBC Anniversary 2.5.6.70577
 
 Notes
 	- Quest items the player can still be holding once the quest is done, each keyed to the quest whose completion makes it safe to erase. The row fires on the first listed quest flagged complete (Features/Junk-Rules.lua); Features/Quest-Item-Alerts.lua reads it too.
@@ -894,5 +894,8 @@ Wowhead
 	None.
 
 wago.tools
+	None.
+
+QuestieDB
 	None.
 ]]

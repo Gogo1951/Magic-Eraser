@@ -1,6 +1,8 @@
 local _, ns = ...
 local L = ns.L
 
+local format = string.format
+
 local Kit = ns.OptionsKit
 local GetItemInfo = C_Item.GetItemInfo
 
@@ -26,11 +28,25 @@ Kit.SetText({
 --------------------------------------------------------------------------------
 
 --[[
+    Skip Typing DELETE's name, caption and description carry the game's own
+    delete word as %s, since a Blizzard UI label never enters Locales/. The kit
+    and the mini-map menu read feature strings by key, so the word is filled in
+    once here, before anything draws them.
+]]
+for _, key in ipairs({
+	"OPTIONS_MANUAL_DELETE_HEADER",
+	"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL",
+	"OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION",
+}) do
+	L[key] = format(L[key], DELETE_ITEM_CONFIRM_STRING or "")
+end
+
+--[[
     Every feature's on/off switch, the one list the root panel's Features
     section, each feature's own Enable switch (Kit.FeatureSwitch) and the
     mini-map menu all draw from: same features, same order, same names. Listed
-    Merchant & Bank first, then Erasing's Maximum Value to Erase, Delete
-    Without Typing and Erase Confirmation, then Alerts & Tints.
+    Merchant & Bank first, then Erasing's Maximum Value to Erase, Skip Typing
+    DELETE and Erase Confirmation, then Alerts & Tints.
 
     Auto-Vend is a block, with its own title, description and Toggle row in the
     menu; the rest are one On/Off row each under More Features, named by their
@@ -135,11 +151,9 @@ end
 
 --[[
     An Example's line exactly as chat shows it: the message through the
-    add-on's own print helper, which already closes every color it opens.
-    Kit.PrintedLine is left out on purpose: it reopens the line's color after
-    every |r, and the game's text keeps a short stack of open colors, so on a
-    two-line Example (Every Sale in Chat) the reopenings piled up past it and
-    the second line's money lost its gold, silver and copper.
+    add-on's own print helper. Kit.PrintedLine isn't needed: the helper wraps
+    the whole message in its text color and closes it, and the links and coins
+    inside close only the colors they open, so no |r drops the panel to white.
 ]]
 function ns.ExampleLine(message)
 	return ns:FormatMessage(message)

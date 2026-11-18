@@ -45,15 +45,17 @@ end
     selling junk and pulling items out of the bank move whole stacks, buying and
     looting mail fill slots back up -- so the countdown would fire a burst of
     noise that is stale the moment the window closes. We suppress it while any of
-    those windows is open (checked live rather than via a tracked flag so it
-    stays correct even if a SHOW event is missed) and re-check once on close, so
-    the warning reflects where the bags actually landed. ProcessBagUpdate in
+    those windows is open and re-check once on close, so the warning reflects
+    where the bags actually landed. The merchant and mailbox are checked live,
+    so a missed SHOW event cannot wedge the hold; the bank uses the event flag
+    from ns:IsBankOpen, because a bag add-on such as Baganator keeps BankFrame
+    hidden while its own bank window is open. ProcessBagUpdate in
     Core gates the nudge on this, so it is exposed on ns.
 ]]
 function ns:IsBagWindowOpen()
 	return (MerchantFrame and MerchantFrame:IsShown())
 		or (MailFrame and MailFrame:IsShown())
-		or (BankFrame and BankFrame:IsShown())
+		or ns:IsBankOpen()
 		or false
 end
 

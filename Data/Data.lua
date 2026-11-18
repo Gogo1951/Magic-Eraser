@@ -11,18 +11,6 @@ ns.SAVED_VARIABLES_NAME = "MagicEraserDB"
 ns.DEFAULT_ICON = "Interface/Icons/inv_misc_bag_07_green"
 
 --------------------------------------------------------------------------------
--- Example Items
---------------------------------------------------------------------------------
-
---[[
-    The item the Auto-Vend example sells: Ruined Pelt, a gray drop from beasts
-    on every client Magic Eraser ships for, so the example shows the kind of
-    junk a visit really sells. The quest-item examples take theirs from the
-    flavor's own quest-item tables instead (Options/Options-Quest-Item-Alerts.lua).
-]]
-ns.EXAMPLE_JUNK_ITEM_ID = 4865
-
---------------------------------------------------------------------------------
 -- Links
 --------------------------------------------------------------------------------
 
@@ -161,6 +149,13 @@ ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
 
     Keyed by the tokens UnitRace and UnitClass return, not by localized names.
     Undead's race token is "Scourge", which is why it reads oddly here.
+
+    A race with no bit here has nothing in a mask to match. WoW Forever's
+    Skyborne is one: its bits are 2^32 (Alliance) and 2^33 (Horde), past what
+    the client's 32-bit bit library holds, and the data keeps only the low
+    bits. Features/Junk-Rules.lua gates such a race by faction instead, with
+    SIDE_RACE_BITS: a mask naming none of its side's races is an other-faction
+    quest it can never take. A missing class bit never gates.
 ]]
 ns.RACE_BITS = {
 	Human = 1,
@@ -174,6 +169,12 @@ ns.RACE_BITS = {
 	Goblin = 256,
 	BloodElf = 512,
 	Draenei = 1024,
+}
+
+-- Every race bit on each side, keyed by the faction token UnitFactionGroup returns.
+ns.SIDE_RACE_BITS = {
+	Alliance = 1101, -- Human, Dwarf, NightElf, Gnome, Draenei
+	Horde = 946, -- Orc, Scourge, Tauren, Troll, Goblin, BloodElf
 }
 
 ns.CLASS_BITS = {

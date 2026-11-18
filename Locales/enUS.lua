@@ -21,6 +21,7 @@ L["CHAT_LOADED"] =
 	"Version %s. Settings (including the option to disable this message) are under Options > AddOns > Magic Eraser. Enjoying this add-on? Tell a friend, Favorite it on CurseForge, or Star it on GitHub. (="
 L["CHAT_OPTIONS_IN_COMBAT"] = "As a safety precaution, the Options Interface cannot be opened during combat."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] = "As a safety precaution, the key binding list cannot be opened during combat."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "Open the game menu, then %s, then %s, and find the Magic Eraser section."
 
 -- Eraser
@@ -76,6 +77,8 @@ L["MENU_CLICK_MIDDLE"] = "Middle-Click"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Right-Click"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Middle-Click"
 L["MENU_TOGGLE"] = "Toggle"
+L["ACTION_ERASE"] = "Erase"
+L["ACTION_PROTECT"] = "Protect"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Clear Protect List"
 L["MENU_OPTIONS"] = "Magic Eraser Options"
 L["MENU_ON"] = "On"
@@ -105,13 +108,11 @@ L["TAB_MERCHANT_BANK"] = "Merchant & Bank"
 L["TAB_ALERTS"] = "Alerts & Tints"
 L["TAB_PROTECT_LIST"] = "Protect List"
 L["TAB_ERASE_LIST"] = "Erase List"
-L["ACTION_ERASE"] = "Erase"
-L["ACTION_PROTECT"] = "Protect"
 L["BAGS_CLEAN_CONGRATS"] = "Congratulations, your bags are full of good stuff!"
 L["BAGS_CLEAN_HINT"] = "You'll have to manually erase something if you want to free up more space."
 L["LOADING_ITEM"] = "Loading ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Example"
 
 --------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ L["SAMPLE_EXAMPLE"] = "Example"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Erase junk and free up bag space instantly. Clear completed quest items, outgrown consumables, vendor trash, and grays with a click of the mini-map button. A curated junk list keeps what you need safe, while Auto-Vend sells the rest at your next merchant."
+	"Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
@@ -187,7 +188,7 @@ L["OPTIONS_JUNK_HEADER"] = "What Counts as Junk"
 L["OPTIONS_JUNK_DESCRIPTION"] =
 	"Choose which kinds of items get erased. These are broad rules. To fine-tune them, add an item to your Protect List to always keep it, or to your Erase List to always erase it."
 L["OPTIONS_KIND_QUEST"] = "Completed Quest Items"
-L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Items left over once you've handed in the last quest that needs them."
+L["OPTIONS_KIND_QUEST_DESCRIPTION"] = "Items left over once you've turned in the last quest that needs them."
 L["OPTIONS_KIND_STARTER"] = "Dead-End Quest Starters"
 L["OPTIONS_KIND_STARTER_DESCRIPTION"] = "Items that start a quest your race or class can never take."
 L["OPTIONS_KIND_FOOD"] = "Outgrown Food & Drink"
@@ -218,19 +219,20 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Turns the value limit on or off. Auto-Vend still sells anything it holds back, and your Erase List isn't limited by it."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Stacks worth more than this, counting the whole stack's sale value, are never erased."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d Gold"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Delete Without Typing"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Skip Typing %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'By default, the game makes you type "%s" when deleting a %s or better item. This turns that prompt into a simple Yes or No.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Delete Without Typing"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Enable Skip Typing %s"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Turns Delete Without Typing on or off. The game still asks Yes or No; only the typing goes away."
+	"Turns Skip Typing %s on or off. The game still asks Yes or No; only the typing goes away."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
-	"Items With No Sale Value simplifies only items no merchant will buy. All Items simplifies every typed prompt."
+	"Items with No Sale Value simplifies only items no merchant will buy. All Items simplifies every typed prompt."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "All Items"
-L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Items With No Sale Value"
+L["OPTIONS_MANUAL_DELETE_NO_VALUE"] = "Items with No Sale Value"
 
 -- Erase Confirmation
 L["OPTIONS_ERASE_CONFIRM_HEADER"] = "Erase Confirmation"
@@ -308,7 +310,7 @@ L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 
 -- Shared by every player-managed item list panel; never names the list itself.
 L["OPTIONS_LIST_GLOBAL"] = "All Characters"
-L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Add From Bags"
+L["OPTIONS_LIST_ADD_FROM_BAGS"] = "Add from Bags"
 L["OPTIONS_LIST_ADD_FROM_BAGS_DESCRIPTION"] =
 	"Pick anything you're carrying. The bags close when the Options Interface opens, so this stands in for dragging an item here."
 L["OPTIONS_LIST_ADD_ID"] = "Add by Item ID"

@@ -457,6 +457,13 @@ ns.DIAGNOSTIC_API_CHECKS = {
 			return type(GameTooltip) == "table" and type(GameTooltip.GetItem) == "function"
 		end,
 	},
+	-- The eraser sorts arrows and bullets last by this item class, falling back to 6 where the client lacks it.
+	{
+		"Enum.ItemClass.Projectile (else 6)",
+		function()
+			return type(Enum) == "table" and type(Enum.ItemClass) == "table" and Enum.ItemClass.Projectile ~= nil
+		end,
+	},
 	{
 		"Enum.BagIndex.ReagentBag",
 		function()
@@ -513,9 +520,11 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	--[[
-	    Auto-Vend, Bank Retrieval and the bag-space warning read whether these
-	    windows are open, and a window a client names differently reads as
-	    closed, so the feature waiting on it never runs.
+	    Auto-Vend and the bag-space warning read whether these windows are open,
+	    and a window a client names differently reads as closed, so the feature
+	    waiting on it never runs. The bank needs no row: Bank Retrieval, the
+	    bank tints and the warning's hold read BANKFRAME_OPENED and
+	    BANKFRAME_CLOSED through ns:IsBankOpen instead of BankFrame.
 	]]
 	{
 		"MerchantFrame",
@@ -527,12 +536,6 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		"MailFrame",
 		function()
 			return type(MailFrame) == "table" and type(MailFrame.IsShown) == "function"
-		end,
-	},
-	{
-		"BankFrame",
-		function()
-			return type(BankFrame) == "table" and type(BankFrame.IsShown) == "function"
 		end,
 	},
 	{
@@ -740,7 +743,8 @@ end
     what the bags hold by verdict, the crafted check's reading of every white
     weapon and armor piece, the sizes of the curated databases, and the
     item the eraser would act on right now. A race or class bit of 0 is one the
-    add-on doesn't know, which makes every starter gated on it read as junk.
+    add-on doesn't know: such a race is gated by its faction's side bits, or
+    not at all when the faction reads nothing, and such a class is never gated.
     Existence/value reads only. The candidate's link has its pipes escaped so
     it pastes as plain text rather than a clickable swatch.
 ]]
@@ -750,18 +754,23 @@ function ns:BuildEraserContextReport()
 	local _, class = UnitClass("player")
 	local _, race = UnitRace("player")
 	lines[#lines + 1] = string.format(
-		"Player: %s %s level %d, rules level %d, in combat: %s",
+		"Player: %s %s (%s) level %d, rules level %d, in combat: %s",
 		tostring(race),
 		tostring(class),
+		tostring(UnitFactionGroup("player")),
 		UnitLevel("player") or 0,
 		ns:GetJunkRulesLevel(),
 		tostring(InCombatLockdown() and true or false)
 	)
-	local raceBit, classBit = ns:GetPlayerQuestBits()
+	local raceBit, classBit, sideBits = ns:GetPlayerQuestBits()
+	local raceText = tostring(raceBit)
+	if raceBit == 0 then
+		raceText = sideBits and ("0 (UNKNOWN, gated by side " .. sideBits .. ")") or "0 (UNKNOWN, ungated)"
+	end
 	lines[#lines + 1] = string.format(
 		"Quest gates: race bit %s, class bit %s",
-		raceBit == 0 and "0 (UNKNOWN)" or tostring(raceBit),
-		classBit == 0 and "0 (UNKNOWN)" or tostring(classBit)
+		raceText,
+		classBit == 0 and "0 (UNKNOWN, ungated)" or tostring(classBit)
 	)
 
 	local profile = ns.db and ns.db.profile
@@ -962,7 +971,9 @@ function ns:BuildMerchantBankContextReport()
 	lines[#lines + 1] = ""
 	lines[#lines + 1] = "Bank Retrieval:"
 	lines[#lines + 1] = "  Enabled: " .. YesNo(profile.bankRetrievalEnabled)
-	lines[#lines + 1] = "  Bank window open: " .. WindowOpen(BankFrame)
+	-- The event flag every bank feature reads (ns:IsBankOpen), not BankFrame, which a bag add-on may keep hidden.
+	local bankOpen = ns:IsBankOpen()
+	lines[#lines + 1] = "  Bank window open: " .. YesNo(bankOpen)
 	lines[#lines + 1] = "  Retrieving: " .. YesNo(ns:IsBankRetrieving())
 	-- The threshold is held back only while Bag-Space Warnings are on; see GetMoveBudget.
 	lines[#lines + 1] = string.format(
@@ -983,7 +994,7 @@ function ns:BuildMerchantBankContextReport()
 			bank.flagged,
 			bank.protected,
 			bank.loading,
-			WindowOpen(BankFrame) == "yes" and "" or " (bank window closed)"
+			bankOpen and "" or " (bank window closed)"
 		)
 	else
 		lines[#lines + 1] = "  Would move now: (read failed: " .. (tostring(bank):gsub("|", "||")) .. ")"
@@ -1106,6 +1117,7 @@ ns.DIAGNOSTIC_NAME_LOOKUPS = {
 	UiLabel("NOT_BOUND"),
 	UiLabel("YES"),
 	UiLabel("NO"),
+	UiLabel("GOLD_AMOUNT"),
 	{
 		constant = "TYPE_IT_OUT_LINE",
 		kind = "derived",
@@ -1143,8 +1155,8 @@ ns.DIAGNOSTIC_NAME_LOOKUPS = {
     One entry per data file, and one report row per entry on the Data tab
     (Diagnostics/Options-Diagnostics.lua). Each entry's label is the table-name part of
     its file name, so ns.DataSourceFileName can name the file this client's
-    folder built. Each source names the static table on ns and its kind, "item"
-    or "quest". Ids are reached through rowId(key, row) over the table's pairs, or through collect(tbl) for a table not keyed by the id it
+    folder built. Each source names the static table on ns, or a single-ID
+    constant, and its kind, "item" or "quest". Ids are reached through rowId(key, row) over the table's pairs, or through collect(tbl) for a table not keyed by the id it
     holds, which returns { id, key, row } entries. dataColumns carries the
     shipped row's own values as { header, getter(key, row) }, so the export sets
     what the file says beside what the client says. Adding a data file adds an
@@ -1166,6 +1178,10 @@ end
 
 local function KeyValue(key)
 	return key
+end
+
+local function RowValue(_, row)
+	return row
 end
 
 local function CollectClassReagents(reagentsByClass)
@@ -1302,6 +1318,18 @@ ns.DIAGNOSTIC_DATA_SOURCES = {
 				kind = "item",
 				collect = CollectClassReagents,
 				dataColumns = { { "DATA_CLASS", KeyValue } },
+			},
+		},
+	},
+	-- One constant, not a table: the validator reads it as one row keyed by its own name.
+	{
+		label = "Game-IDs",
+		sources = {
+			{
+				table = "EXAMPLE_JUNK_ITEM_ID",
+				kind = "item",
+				rowId = RowValue,
+				dataColumns = { { "DATA_CONSTANT", KeyValue } },
 			},
 		},
 	},

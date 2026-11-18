@@ -22,6 +22,7 @@ L["CHAT_LOADED"] =
 L["CHAT_OPTIONS_IN_COMBAT"] = "Por seguridad, el panel de opciones no se puede abrir durante el combate."
 L["CHAT_KEY_BINDINGS_IN_COMBAT"] =
 	"Por seguridad, la lista de asignación de teclas no se puede abrir durante el combate."
+-- The two %s are the game's own Options and Key Bindings menu labels, in that order.
 L["KEY_BINDINGS_LOCATION"] = "Abre el menú del juego, luego %s, luego %s, y busca la sección Magic Eraser."
 
 -- Eraser
@@ -78,6 +79,8 @@ L["MENU_CLICK_MIDDLE"] = "Clic central"
 L["MENU_CLICK_SHIFT_RIGHT"] = "Mayús + Clic derecho"
 L["MENU_CLICK_SHIFT_MIDDLE"] = "Mayús + Clic central"
 L["MENU_TOGGLE"] = "Alternar"
+L["ACTION_ERASE"] = "Eliminar"
+L["ACTION_PROTECT"] = "Proteger"
 L["ACTION_CLEAR_PROTECT_LIST"] = "Vaciar Lista de protegidos"
 L["MENU_OPTIONS"] = "Opciones de Magic Eraser"
 L["MENU_ON"] = "Activado"
@@ -107,13 +110,11 @@ L["TAB_MERCHANT_BANK"] = "Vendedor y banco"
 L["TAB_ALERTS"] = "Avisos y tintes"
 L["TAB_PROTECT_LIST"] = "Lista de protegidos"
 L["TAB_ERASE_LIST"] = "Lista de eliminación"
-L["ACTION_ERASE"] = "Eliminar"
-L["ACTION_PROTECT"] = "Proteger"
 L["BAGS_CLEAN_CONGRATS"] = "¡Felicidades, tus bolsas están llenas de cosas buenas!"
 L["BAGS_CLEAN_HINT"] = "Tendrás que eliminar algo manualmente si quieres liberar más espacio."
 L["LOADING_ITEM"] = "Cargando ID: %d"
 
--- Example lines under features that print to chat. %s is that whole line.
+-- The label above the Example lines under features that print to chat.
 L["SAMPLE_EXAMPLE"] = "Ejemplo"
 
 --------------------------------------------------------------------------------
@@ -121,7 +122,7 @@ L["SAMPLE_EXAMPLE"] = "Ejemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina la basura y libera espacio en las bolsas al instante. Quita objetos de misiones completadas, consumibles que ya has superado, basura de vendedor y objetos grises con un clic en el botón del minimapa. Una lista de basura revisada a mano protege lo que necesitas, mientras que la Auto-venta vende el resto al próximo vendedor que visites."
+	"Elimina y vende automáticamente la basura para liberar espacio en las bolsas. Un clic en el botón del minimapa quita objetos de misiones completadas, comida, bebida y munición que ya has superado, basura de vendedor, equipo blanco y objetos grises, y el resto se vende solo en tu próximo vendedor."
 L["OPTIONS_ENABLE_WELCOME"] = "Habilitar mensaje de bienvenida"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Muestra en el chat una línea de bienvenida con la versión cada vez que inicias sesión."
@@ -224,15 +225,16 @@ L["OPTIONS_ENABLE_VALUE_CAP_DESCRIPTION"] =
 	"Activa o desactiva el límite de valor. La Auto-venta sigue vendiendo lo que este límite retiene, y tu Lista de eliminación no está sujeta a él."
 L["OPTIONS_VALUE_CAP_LIMIT_DESCRIPTION"] =
 	"Los montones que valgan más que esto, contando el valor de venta del montón entero, nunca se eliminan."
-L["OPTIONS_VALUE_CAP_GOLD"] = "%d de oro"
 
--- Delete Without Typing
-L["OPTIONS_MANUAL_DELETE_HEADER"] = "Eliminación sin escribir"
+-- Skip Typing DELETE
+-- %s in the next three is the word the game's own delete prompt asks for, filled from DELETE_ITEM_CONFIRM_STRING.
+L["OPTIONS_MANUAL_DELETE_HEADER"] = "Omitir escribir %s"
+-- The first %s is that word, the second the game's name for Rare quality.
 L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"] =
 	'Por defecto, el juego te obliga a escribir "%s" al eliminar un objeto %s o superior. Esto convierte esa confirmación en un simple Sí o No.'
-L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Habilitar eliminación sin escribir"
+L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL"] = "Habilitar omitir escribir %s"
 L["OPTIONS_ENABLE_MANUAL_DELETE_AUTOFILL_DESCRIPTION"] =
-	"Activa o desactiva la Eliminación sin escribir. El juego sigue preguntando Sí o No; solo desaparece la escritura."
+	"Activa o desactiva Omitir escribir %s. El juego sigue preguntando Sí o No; solo desaparece la escritura."
 L["OPTIONS_MANUAL_DELETE_SCOPE_DESCRIPTION"] =
 	"Objetos sin valor de venta simplifica solo los objetos que ningún vendedor compra. Todos los objetos simplifica todas las confirmaciones con escritura."
 L["OPTIONS_MANUAL_DELETE_ALL"] = "Todos los objetos"
