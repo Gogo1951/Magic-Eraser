@@ -15,6 +15,8 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 ### Alerts & Tints
 
+<img width="800" alt="README-Infographic-Alerts-Tints" src="https://github.com/user-attachments/assets/c94eb0ee-48bd-4f47-98ea-94601f4ec13d" />
+
 * **Spot Junk at a Glance** // A tint marks the junk in your bags and bank, in Baganator, Bagnon, AdiBags, ArkInventory, BetterBags and ElvUI too.
 * **Quest Leftovers Called Out** // Chat tells you the moment a quest item is safe to toss.
 * **Never Caught Full** // Turn on a countdown in chat as your last few bag slots fill up.
@@ -22,11 +24,15 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 ### Merchant & Bank
 
+<img width="800" alt="README-Infographic-Merchant-Bank" src="https://github.com/user-attachments/assets/245d5324-de46-463a-af76-39796b0e3067" />
+
 * **Junk Sells Itself** // Open any merchant and your junk is sold, with one line in chat saying what it made.
 * **Bank Junk Comes Home** // Junk hiding in your bank hops back into your bags to sell with the rest.
 * **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time, or switch either one off for good.
 
 ### Skip Typing DELETE
+
+<img width="800" alt="README-Infographic-Skip-Typing-DELETE" src="https://github.com/user-attachments/assets/8c4ebe28-c5e2-44d9-aef1-4cc587aedb25" />
 
 * **No More Typing DELETE** // Binning a Rare or better item that no vendor will buy takes a simple Yes or No.
 * **Your Call** // Stretch it to every item, or switch it off.
