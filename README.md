@@ -96,19 +96,3 @@ The menu shows what's next and what it's worth, a Clutter Report of the bag slot
 * jaliborc's [Bagnon](https://www.curseforge.com/wow/addons/bagnon)
 * Gogo1951's [GogoLoot](https://www.curseforge.com/wow/addons/gogoloot)
 * Gogo1951's [Good to Go](https://www.curseforge.com/wow/addons/good-to-go)
-
-### 🟡 Overlaps
-
-* Xibate's [Easy Delete](https://www.curseforge.com/wow/addons/easy-delete)
-* Leatrix's [Leatrix Plus](https://www.curseforge.com/wow/addons/leatrix-plus)
-* Krelock's [Loot Triage](https://www.curseforge.com/wow/addons/loot-triage)
-* Gogo1951's [Play It Forward](https://www.curseforge.com/wow/addons/play-it-forward)
-* Sapu94's [TradeSkillMaster](https://www.curseforge.com/wow/addons/tradeskill-master)
-
-### 🔴 Alternatives
-
-* Terciob's [Auto Seller](https://www.curseforge.com/wow/addons/auto-seller)
-* olafskiii's [AutoVendor](https://www.curseforge.com/wow/addons/autovendor)
-* markyxl's [Crap Away!](https://www.curseforge.com/wow/addons/crapaway)
-* moody's [Dejunk (Sell & Destroy Junk)](https://www.curseforge.com/wow/addons/dejunk)
-* jaliborc's [Scrap (Junk Seller)](https://www.curseforge.com/wow/addons/scrap)
