@@ -4,14 +4,7 @@ local _, ns = ...
 -- Colors
 --------------------------------------------------------------------------------
 
---[[
-    The raw hex palette lives in Data/Data.lua (ns.PALETTE); the derived escape
-    strings and the accessor live here, because Data files hold no logic. COLORS
-    is file-local -- consumers never read it directly; they call ns.GetColor(key)
-    (aliased once per file as `local GetColor = ns.GetColor`). Color constants
-    carry no |cff prefix -- it is prepended once here, and |r is appended at each
-    call site.
-]]
+-- |cff is prepended here once; each call site appends its own |r.
 local COLOR_PREFIX = "|cff"
 
 local COLORS = {}
@@ -27,14 +20,7 @@ end
 -- Displayed Item
 --------------------------------------------------------------------------------
 
---[[
-    The item a tooltip is showing, as its name and link. WoW Forever ships
-    TooltipUtil.GetDisplayedItem, and there GameTooltip:GetItem survives only as
-    a wrapper around it that Blizzard has marked for removal. Classic Era and TBC
-    Anniversary load no TooltipUtil and answer through GetItem itself. Resolved
-    once at load, modern first; both halves are rows in the Diagnostic Tools API
-    report.
-]]
+-- On WoW Forever GameTooltip:GetItem is a deprecated wrapper, so TooltipUtil comes first.
 ns.GetDisplayedItem = (TooltipUtil and TooltipUtil.GetDisplayedItem) or function(tooltip)
 	return tooltip:GetItem()
 end
@@ -43,27 +29,13 @@ end
 -- Item Stats
 --------------------------------------------------------------------------------
 
---[[
-    An item's stat table from its link. WoW Forever ships C_Item.GetItemStats;
-    Classic Era and TBC Anniversary have only the legacy global GetItemStats,
-    which returns the same table. Resolved once at load, modern first; both are
-    rows in the Diagnostic Tools API report.
-]]
 ns.GetItemStats = C_Item.GetItemStats or GetItemStats
 
 --------------------------------------------------------------------------------
 -- Tooltip Text
 --------------------------------------------------------------------------------
 
---[[
-    An item's or spell's tooltip as plain lines, a right-hand column kept after
-    " >> ". kind is "item" or "spell". C_TooltipInfo hands the lines over as
-    data where the client ships its GetItemByID and GetSpellByID getters (WoW
-    Forever); elsewhere they are read off a hidden tooltip that is never shown
-    (Classic Era and TBC Anniversary). Color escapes are stripped so each line
-    reads as its words. Resolved once at load. A read can throw on an odd id, so
-    callers protect it.
-]]
+-- kind is "item" or "spell"; a right-hand column follows " >> ". Can throw on an odd id, so callers pcall it.
 local SCAN_TOOLTIP_NAME = "MagicEraserScanTooltip"
 local TOOLTIP_DATA_GETTERS = C_TooltipInfo
 	and C_TooltipInfo.GetItemByID
@@ -128,16 +100,8 @@ end
 ns.GetTooltipLines = TOOLTIP_DATA_GETTERS and ReadTooltipData or ReadScanTooltip
 
 --[[
-    The same plain lines, read off one container slot rather than an item id,
-    for what belongs to that one copy alone: the <Made by> line a crafted
-    item carries is never on the item id's tooltip. Same split as above:
-    C_TooltipInfo.GetBagItem where the client ships it, the hidden scan tooltip
-    elsewhere.
-
-    The one slot neither GetBagItem nor SetBagItem reaches is the main bank
-    window on Classic Era and TBC Anniversary (ns.LEGACY_BANK_CONTAINER below),
-    which the client reads as an inventory slot, the way its own BankFrame does.
-    Returns nil when the slot cannot be read at all. Callers protect it.
+    Per slot, for what belongs to one copy (the <Made by> line). The Classic and
+    TBC main bank reads as an inventory slot. Callers pcall it.
 ]]
 local GetBankInventorySlot = BankButtonIDToInvSlotID
 local SLOT_DATA_GETTERS = C_TooltipInfo
@@ -173,14 +137,7 @@ end
 
 local format, insert, floor = string.format, table.insert, math.floor
 
---[[
-    An item link without the square brackets around its name, which is how
-    Magic Eraser shows an item outside chat: Options rows and pickers, the
-    mini-map menu and the Erase Confirmation dialog. Chat lines keep the
-    brackets (ns:PrintMessage). Only the brackets inside a hyperlink's
-    |h...|h text go; the link itself still hovers, clicks and shift-clicks as
-    before, and any other text passes through untouched.
-]]
+-- Outside chat only; chat lines keep the brackets. The link still hovers and clicks.
 function ns:StripLinkBrackets(text)
 	return (text:gsub("(|H[^|]*|h)%[(.-)%]|h", "%1%2|h"))
 end
@@ -189,7 +146,12 @@ function ns:FormatCommaNumber(number)
 	return (tostring(number):reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", ""))
 end
 
-function ns:FormatCurrency(rawValue)
+--[[
+    Copper split into the coins shown, each with its digits: the first coin
+    shown takes no leading zero, and every coin after it takes two
+    (123g 00s 00c, 1s 12c, 3c). Both money formats below draw from this.
+]]
+local function MoneyParts(rawValue)
 	local value = math.max(rawValue or 0, 0)
 
 	local gold = floor(value / 10000)
@@ -197,27 +159,50 @@ function ns:FormatCurrency(rawValue)
 	local copper = value % 100
 	local parts = {}
 
-	local goldColor = ns.CURRENCY_COLORS.GOLD
-	local silverColor = ns.CURRENCY_COLORS.SILVER
-	local copperColor = ns.CURRENCY_COLORS.COPPER
-
 	if gold > 0 then
-		insert(parts, format(COLORS.TEXT .. "%s|r|cff%sg|r", ns:FormatCommaNumber(gold), goldColor))
+		insert(parts, { "GOLD", ns:FormatCommaNumber(gold) })
 	end
 
 	if gold > 0 then
-		insert(parts, format(COLORS.TEXT .. "%02d|r|cff%ss|r", silver, silverColor))
+		insert(parts, { "SILVER", format("%02d", silver) })
 	elseif silver > 0 then
-		insert(parts, format(COLORS.TEXT .. "%d|r|cff%ss|r", silver, silverColor))
+		insert(parts, { "SILVER", format("%d", silver) })
 	end
 
 	if gold > 0 or silver > 0 then
-		insert(parts, format(COLORS.TEXT .. "%02d|r|cff%sc|r", copper, copperColor))
+		insert(parts, { "COPPER", format("%02d", copper) })
 	else
-		insert(parts, format(COLORS.TEXT .. "%d|r|cff%sc|r", copper, copperColor))
+		insert(parts, { "COPPER", format("%d", copper) })
 	end
 
-	return table.concat(parts, " ")
+	return parts
+end
+
+local COIN_LETTERS = { GOLD = "g", SILVER = "s", COPPER = "c" }
+
+-- Money for chat: white digits, then the coin's letter in its color.
+function ns:FormatCurrency(rawValue)
+	local out = {}
+	for _, part in ipairs(MoneyParts(rawValue)) do
+		local coin, digits = part[1], part[2]
+		insert(out, format(COLORS.TEXT .. "%s|r|cff%s%s|r", digits, ns.CURRENCY_COLORS[coin], COIN_LETTERS[coin]))
+	end
+	return table.concat(out, " ")
+end
+
+local COIN_ICONS = {
+	GOLD = "|TInterface\\MoneyFrame\\UI-GoldIcon:0|t",
+	SILVER = "|TInterface\\MoneyFrame\\UI-SilverIcon:0|t",
+	COPPER = "|TInterface\\MoneyFrame\\UI-CopperIcon:0|t",
+}
+
+-- Money for a window or menu: white digits, then the coin's icon at line height.
+function ns:FormatCoins(rawValue)
+	local out = {}
+	for _, part in ipairs(MoneyParts(rawValue)) do
+		insert(out, COLORS.TEXT .. part[2] .. "|r" .. COIN_ICONS[part[1]])
+	end
+	return table.concat(out, " ")
 end
 
 --------------------------------------------------------------------------------
@@ -230,25 +215,8 @@ local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local BAG_SLOTS = ns.LAST_BAG_INDEX
 
 --[[
-    Free general-purpose bag slots, or nil when the container API has no data yet.
-
-    Specialty bags -- soul bags, quivers, ammo pouches, profession bags -- are
-    excluded: ordinary loot can't go there, so their free slots are useless to
-    the callers. GogoLoot's Speedy-Loot budget is deliberately conservative in
-    exactly the same way.
-
-    Return nil, not 0, when no container has answered yet. Summing "(bagFree or
-    0)" across bags can't tell "the API has no data yet" apart from "zero free
-    slots": mid-loading-screen every container reads nil, so the total collapses
-    to 0 and reads as bags-full. Reporting "unknown" instead lets the caller skip
-    rather than act on space the player actually has.
-
-    Readiness is judged from the data itself: the backpack always has slots and
-    always answers once the inventory is loaded, so a zero slot total, or no bag
-    answering at all, means nothing is loaded yet.
-
-    Shared by the bag-space warning (Bag-Warnings.lua) and the bank-retrieval
-    budget (Bank-Retrieval.lua), which is what puts it here rather than in either.
+    General bags only: ordinary loot can't go in a specialty bag. nil, not 0,
+    while no container has answered, or a loading screen reads as bags-full.
 ]]
 function ns:CountFreeBagSlots()
 	local free, totalSlots, answered = 0, 0, 0
@@ -276,15 +244,8 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Every container the player carries, built once at load: the backpack and
-    the equippable bags, then the reagent bag on clients that number their bank
-    as character bank tabs (WoW Forever, where container 5 is a reagent bag).
-    Classic Era and TBC Anniversary define Enum.BagIndex.ReagentBag as 5 too,
-    but their own BankFrame.lua numbers bank bag N as container N +
-    NUM_BAG_SLOTS, so 5 there is the first bank bag and never carried. Every
-    carried-bag scan walks this list, and ns.IS_CARRIED_BAG answers the range
-    tests. ns:CountFreeBagSlots above stays on the general bags, since ordinary
-    loot can't go in a reagent bag.
+    The reagent bag only where the bank is character bank tabs: Classic Era and
+    TBC define ReagentBag as 5 too, but there 5 is the first bank bag.
 ]]
 ns.CARRIED_BAGS = {}
 ns.IS_CARRIED_BAG = {}
@@ -306,15 +267,7 @@ end
 -- Bank Containers
 --------------------------------------------------------------------------------
 
---[[
-    The containers Bank Retrieval scans, built once at load. WoW Forever numbers
-    its bank the modern way, as character bank tabs, and there -1 is the keyring
-    and 5 the reagent bag; Classic Era and TBC Anniversary keep BANK_CONTAINER
-    plus the bank bags right after the carried bags, with fallbacks for a client
-    that never defined those globals. The account-wide Warband tabs are never
-    included: Bank Retrieval pulls from the character's own bank only.
-    ns.IS_BANK_BAG answers the same set as a lookup, for the junk tint.
-]]
+-- The character's own bank only, never Warband tabs. On Forever -1 is the keyring and 5 the reagent bag.
 ns.BANK_CONTAINERS = {}
 ns.IS_BANK_BAG = {}
 do
@@ -341,15 +294,6 @@ end
 -- Character Lists
 --------------------------------------------------------------------------------
 
---[[
-    The Protect List and the Erase List are built to one shape, so both read
-    and write through these, named by their saved key ("ignoreList" or
-    "eraseList"). Each list has a per-character copy in char, AceDB's
-    per-character scope, so it stays with the character whatever profile is
-    active, and an account-wide twin in global. Both are created on first use,
-    so a brand-new character simply starts empty, and both return nil only
-    before the database exists.
-]]
 local function GetOrCreateList(scope, listKey)
 	local list = scope[listKey]
 	if type(list) ~= "table" then
@@ -368,18 +312,8 @@ function ns:GetAccountList(listKey)
 end
 
 --[[
-    One list looked up by the scope key the list panels use: the global
-    sentinel (ns.LIST_SCOPE_GLOBAL), the character being played
-    (ns.db.keys.char: "Name - Realm" on realm clients, "First Last" on WoW
-    Forever), or any other character on the account.
-
-    The character being played resolves through ns.db.char rather than the raw
-    saved table, so an edit lands on the very list the eraser reads and applies
-    live. Every other character is read straight out of ns.db.sv.char, because
-    AceDB only materializes the character you are on -- and it strips
-    default-valued tables at logout, so a character who never added an entry
-    has no stored list. A read returns nil in those cases; a write passes
-    createIfMissing and builds what it needs on the spot.
+    The played character through ns.db.char, so edits apply live; others
+    through ns.db.sv.char, since AceDB materializes only the current one.
 ]]
 function ns:GetCharacterListForScope(listKey, scopeKey, createIfMissing)
 	if not (ns.db and scopeKey) then
@@ -420,13 +354,7 @@ function ns:GetCharacterListForScope(listKey, scopeKey, createIfMissing)
 	return list
 end
 
---[[
-    Drop one item from every character's copy of a list, for an item that has
-    just joined the account-wide twin. The live table behind ns.db.char is the
-    same table as its sv.char entry, so the loop covers the current character
-    too -- but only once AceDB has materialized it, hence the direct pass
-    afterwards.
-]]
+-- The direct pass afterwards covers a current character AceDB hasn't materialized yet.
 function ns:ClearFromEveryCharacter(listKey, itemId)
 	local characters = ns.db.sv and ns.db.sv.char
 	if characters then
@@ -447,14 +375,7 @@ end
 -- Characters
 --------------------------------------------------------------------------------
 
---[[
-    Every character on the account that has per-character data, plus the one
-    being played, as AceDB char keys ("Name - Realm" on realm clients, "First
-    Last" on WoW Forever) sorted as plain strings. The list
-    panels draw one tree node per key. Characters live in AceDB's char scope,
-    not in profiles: every character shares the Default profile, so profile
-    names say nothing about who has a list.
-]]
+-- From char, not profiles: everyone shares Default, so profile names say nothing.
 function ns:GetCharacterKeys()
 	local keys, seen = {}, {}
 	local current = ns.db and ns.db.keys and ns.db.keys.char
@@ -472,12 +393,6 @@ function ns:GetCharacterKeys()
 	return keys
 end
 
---[[
-    A character key in its class color, for the list panels' trees. The
-    character being played answers from UnitClass; any other one from the
-    classToken it saved at its last login. A character that hasn't logged in
-    since that was recorded keeps the tree's default color.
-]]
 function ns:GetCharacterDisplayName(charKey)
 	local classToken
 	if ns.db and charKey == ns.db.keys.char then

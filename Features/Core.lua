@@ -26,12 +26,8 @@ ns.Version = GetVersion()
 --------------------------------------------------------------------------------
 
 --[[
-    The add-on's complete event surface: the dispatcher registers every name
-    here, and the Diagnostic Tools panel reads the same list. Each event also
-    needs a row in EVENT_HANDLERS below naming its ns:OnXxx handler, which Core
-    or a feature file loaded after Core defines (Auto-Vend.lua defines
-    ns:OnMerchantShow / ns:OnMerchantClosed); an event listed here without one
-    is registered and logged but never handled.
+    The dispatcher and the Diagnostic Tools panel both read this list. An event
+    here without an EVENT_HANDLERS row is registered and logged but never handled.
 ]]
 ns.EVENT_NAMES = {
 	"ADDON_LOADED",
@@ -71,6 +67,12 @@ local EVENT_HANDLERS = {
 
 local updatePending = false
 local refreshAfterCombat = false
+
+-- Repair first, then Auto-Vend sells.
+function ns:OnMerchantShow()
+	ns:RepairAtMerchant()
+	ns:VendAtMerchant()
+end
 
 function ns:PrintWelcome()
 	if not ns.db.profile.showWelcome then
@@ -156,17 +158,9 @@ end
 
 -- MIGRATION (remove after 2026-12-14)
 --[[
-    Moves the mini-map button's position and its Enable Mini-map Button switch
-    from global into the profile, so a profile switch or reset moves the button
-    like every other setting. The saved placement is copied into every profile
-    a character uses or the table holds, Default included, so whichever profile
-    a character opens on finds the button where it was, and then cleared from
-    global. A profile that somehow already has its own is left alone.
-
-    It lives here rather than in Features/Migrations.lua, and keys on
-    global.minimap still being there rather than on storageVersion, so it keeps
-    running after that file's earlier-dated steps are deleted. A second run
-    finds global.minimap gone and does nothing.
+    Copies global.minimap into every profile, then clears it from global. Lives
+    here and keys on global.minimap rather than storageVersion, so it outlives
+    Migrations.lua's earlier date.
 ]]
 local function MoveMinimapToProfiles(sv)
 	local saved = sv.global.minimap
@@ -211,16 +205,8 @@ function ns:OnPlayerLogin()
 		sv.profiles = sv.profiles or {}
 		MoveMinimapToProfiles(sv)
 	end
-	-- MIGRATION (remove after 2026-11-21)
-	ns:MigrateRetiredTooltipSwitch()
 
-	--[[
-	    The third argument puts every character on one shared Default profile,
-	    so a setting changed once applies everywhere; a player who needs a
-	    one-off makes a profile by hand. Each character's own lists live in
-	    char, not the profile, so they stay per-character whatever profile is
-	    active (see Data/Default-Settings.lua).
-	]]
+	-- One shared Default profile; each character's lists live in char, outside it (README-Notes.md).
 	ns.db = LibStub("AceDB-3.0"):New(ns.SAVED_VARIABLES_NAME, ns.DATABASE_DEFAULTS, true)
 	PruneOtherClientCharacters()
 
@@ -229,13 +215,7 @@ function ns:OnPlayerLogin()
 
 	ns:RegisterOptionsPanels()
 
-	--[[
-	    A profile holds the settings, so a reset, a switch and a Copy From all
-	    mean the same thing here: the rules the erase candidate is computed from
-	    may have just changed, so re-scan and repaint. None of the three touches
-	    the item lists, which live in char and global, outside the profile scope
-	    AceDB resets.
-	]]
+	-- Reset, switch and Copy From all may change the rules, so all three re-scan and repaint.
 	for _, message in ipairs({ "OnProfileChanged", "OnProfileReset", "OnProfileCopied" }) do
 		ns.db.RegisterCallback(ns, message, "ApplyProfile")
 	end
@@ -244,36 +224,17 @@ function ns:OnPlayerLogin()
 
 	ns:PrintWelcome()
 
-	--[[
-	    Put another class's reagents on this character's Erase List, once, the
-	    first time it plays. Ahead of the RefreshDisplay below so the first scan
-	    of the session already accounts for them; the seed itself only drops the
-	    cache and leaves the repaint to us. See ns:SeedEraseList.
-	]]
+	-- Ahead of RefreshDisplay, so the session's first scan sees the seeded rows.
 	ns:SeedEraseList()
 
-	--[[
-	    Seed the bag-space warning baseline with the free count we log in with, so
-	    the login-time BAG_UPDATE_DELAYED burst is treated as "already known" and
-	    does not fire a warning on load -- only a slot lost while playing does.
-	]]
+	-- Baselines, so the login BAG_UPDATE_DELAYED burst fires no warning or alert.
 	ns:SeedBagSpaceBaseline()
 
-	--[[
-	    Same reasoning for quest starters: everything already in the bags at
-	    login counts as known, so the login BAG_UPDATE_DELAYED burst cannot
-	    dump an alert for every one of them into chat on every load.
-	]]
 	ns:SeedQuestStarterAlerts()
 
 	ns:RefreshDisplay()
 
-	--[[
-	    Hook the bag windows once every add-on has loaded, rather than at file
-	    load, so a bag add-on that sorts after Magic Eraser is there to hook.
-	    The extra C_Timer.After(0) lets each one's own PLAYER_LOGIN setup finish
-	    first. A bag add-on loaded later on demand is caught by ADDON_LOADED.
-	]]
+	-- One frame after login, so a bag add-on's own PLAYER_LOGIN setup has finished.
 	C_Timer.After(0, ns.SetupTintHooks)
 end
 
@@ -283,11 +244,6 @@ function ns:OnAddonLoaded()
 	end
 end
 
---[[
-    Every registered panel is repainted, so whatever is open redraws against the
-    new profile's settings. The Erase List seed isn't involved: its marker lives
-    in char with the list, so a profile change never re-seeds.
-]]
 function ns:ApplyProfile()
 	ns:InvalidateCache()
 	ns:ApplyMinimapButton()
@@ -296,13 +252,8 @@ function ns:ApplyProfile()
 end
 
 --[[
-    The debounced half of BAG_UPDATE_DELAYED. Nothing can be erased in combat,
-    so there the two full bag walks, the mini-map repaint and the quest-starter
-    check, wait for PLAYER_REGEN_ENABLED; dropping the cache is enough meanwhile,
-    because hovering the mini-map button rescans on demand. The bag tints are
-    the one repaint that goes ahead, at the cost of a single bag walk, so loot
-    taken mid-fight is marked as it lands. Asking the bag windows to redraw
-    (ns:RedrawTintWindows) waits for combat to end with the rest.
+    In combat only the tints repaint (one bag walk), so loot is marked as it
+    lands; everything else waits for PLAYER_REGEN_ENABLED.
 ]]
 local function ProcessBagUpdate()
 	updatePending = false
@@ -317,12 +268,7 @@ local function ProcessBagUpdate()
 		ns:RedrawTintWindows()
 	end
 
-	--[[
-	    Bag-space warning counts down (4, 3, 2, 1...) as the bags fill, but only
-	    when no merchant, mailbox or bank window is open -- see
-	    CheckBagsFullNudge and OnMerchantClosed/OnMailClosed/OnBankframeClosed,
-	    which defer the check to when the window closes.
-	]]
+	-- Held while a merchant, mailbox or bank is open; each close re-checks.
 	if not ns:IsBagWindowOpen() then
 		ns:CheckBagsFullNudge()
 	end
@@ -340,11 +286,6 @@ function ns:OnPlayerbankslotsChanged()
 	ns:OnBagUpdateDelayed()
 end
 
---[[
-    A repaint that holds its bag walk for PLAYER_REGEN_ENABLED when asked in
-    combat, the same way a bag update does, for the level-up and the item-data
-    retry.
-]]
 function ns:RefreshWhenOutOfCombat()
 	ns:InvalidateCache()
 	if InCombatLockdown() then
@@ -354,12 +295,6 @@ function ns:RefreshWhenOutOfCombat()
 	end
 end
 
---[[
-    PLAYER_REGEN_ENABLED. Replays the bag walks and the bag windows' redraw a
-    fight held back, whether a bag update, a level-up or an item-data retry
-    asked for them, then lets Auto-Vend
-    resume a merchant pass that combat deferred.
-]]
 function ns:OnPlayerRegenEnabled()
 	if refreshAfterCombat then
 		refreshAfterCombat = false
@@ -370,12 +305,7 @@ function ns:OnPlayerRegenEnabled()
 	ns:ResumeDeferredVend()
 end
 
---[[
-    Central dispatcher. Every registered event routes through here: it taps the
-    diagnostics event log first (a single boolean check when logging is off, so
-    it costs nothing) and then calls the event's handler, resolved by name at
-    fire time so feature files loaded after Core can supply their own.
-]]
+-- Handlers resolve by name at fire time, so feature files loaded after Core supply their own.
 local eventFrame = CreateFrame("Frame")
 
 eventFrame:SetScript("OnEvent", function(self, event, ...)

@@ -7,45 +7,13 @@ local Kit = ns.OptionsKit
 --------------------------------------------------------------------------------
 
 --[[
-    Every erase list on the account, one scope per list, laid out exactly like
-    the Ignore List panel: childGroups = "tree" splits the panel in two, with the
-    scope list on the left (the account-wide Global list, then the characters)
-    and the selected scope's items on the right. Each scope group closes over its
-    own scope key, so the add box and the row buttons in a pane always act on the
-    list the player is looking at, including another character's.
-
-    Registered as a builder function rather than a built table (see
-    Options/Options.lua): the rows here are the erase lists themselves, so
-    AceConfig re-invokes this on every open and every NotifyChange and the panel
-    is always current.
-
-    The tree comes from ns.BuildCharacterListTree, shared with the Protect List
-    panel, and the rows from Kit.ItemList, the shared builder every
-    player-managed item list renders through, so a list adds and removes the same
-    way here as in any other panel. A pane spends Kit.TREE_ROW_WIDTH
-    rather than the full row width, because the tree sidebar takes its share of
-    the panel first.
-
-    There is no drop target, for the same reason the Protect List has none: the
-    game closes the bags and the bank when the options interface opens, so there
-    is no way to have an item on the cursor and this panel in front of you at the
-    same time. The Add from Bags picker stands in for it.
-
-    A row a Protect List overrules says Protected, so the list never looks like
-    it is doing something it isn't.
+    Each scope group closes over its own scope key, so a pane always acts on
+    the list shown. No drop target: the game closes the bags when options open.
 ]]
 
 --[[
-    Promote, not copy. Only the account-wide add is issued here:
-    ns:SetOnEraseListInScope clears a newly globalized item off every character's
-    list itself, so the row leaves this pane, leaves any other character who
-    happened to hold the same item, and turns up under Global instead.
-
-    Note which way this widens. On the Ignore List, promoting only ever protects
-    more. Here it erases more, on every character including one the item was
-    deliberately never seeded for -- a Shaman and their fishing reagents being
-    the case that exists today. The button's description says "every character"
-    outright so that is a decision rather than a discovery.
+    Promote, not copy. Unlike the Protect List, this widens erasing to every
+    character, even one never seeded the item, so the button says so outright.
 ]]
 local function PromoteColumn()
 	return {
@@ -59,13 +27,7 @@ local function PromoteColumn()
 	}
 end
 
---[[
-    Whether a Protect List overrules this row, so the row can say so instead of
-    looking like it does something. The account-wide Protect List covers every
-    scope; a character's own covers that character's pane. The All Characters
-    Erase List pane checks the account-wide Protect List only, since no single
-    character's list decides it.
-]]
+-- The All Characters pane checks only the account-wide Protect List; no one character's list decides it.
 local function IsProtectedInScope(scopeKey, itemId)
 	local globalList = ns:GetGlobalIgnoreList()
 	if globalList and globalList[itemId] then
@@ -81,12 +43,6 @@ end
 local function BuildScopeArgs(scopeKey)
 	local isGlobalScope = scopeKey == ns.LIST_SCOPE_GLOBAL
 
-	--[[
-	    Every pane gets Restore Defaults, so a list is never left without a way
-	    back. On the All Characters pane it empties the list, which ships empty;
-	    on a character's pane it re-seeds that character's list (see
-	    ns:RestoreEraseListDefaults).
-	]]
 	local restoreDesc = isGlobalScope and L["OPTIONS_ERASE_RESTORE_GLOBAL_DESCRIPTION"]
 		or L["OPTIONS_ERASE_RESTORE_DESCRIPTION"]
 	local restoreConfirm = isGlobalScope and L["OPTIONS_ERASE_RESTORE_GLOBAL_CONFIRM"]
@@ -145,7 +101,6 @@ end
 
 function ns.BuildEraseListOptions()
 	return ns.BuildCharacterListTree({
-		-- The page title names its parent, as every sub-panel's does (Kit.SubPanelTitle); the Settings tree shows the plain name.
 		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_ERASE_LIST"]),
 		description = L["OPTIONS_ERASE_DESCRIPTION"],
 		getListForScope = function(scopeKey)

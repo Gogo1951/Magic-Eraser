@@ -7,12 +7,7 @@ local GetColor = ns.GetColor
 
 ns.BRAND_PREFIX = string.format("%s%s|r %s//|r ", GetColor("INFO"), ns.ADDON_TITLE, GetColor("SEPARATOR"))
 
---[[
-    Player-only branded print. ns.BRAND_PREFIX carries the name and separator, so
-    locale strings stay clean. Magic Eraser sends no cross-player chat, so there
-    is no Announce/whisper path. Item links keep their brackets here, the way
-    the game prints loot.
-]]
+-- Player-only: Magic Eraser sends no cross-player chat. Links keep their brackets, as loot prints.
 function ns:FormatMessage(message)
 	return ns.BRAND_PREFIX .. GetColor("TEXT") .. message .. "|r"
 end

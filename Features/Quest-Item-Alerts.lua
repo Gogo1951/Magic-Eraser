@@ -9,12 +9,7 @@ local GetContainerNumSlots = C_Container.GetContainerNumSlots
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local format, ipairs = string.format, ipairs
 
---[[
-    The " x2" after an alert's item link, in the same form the eraser's own
-    chat lines use: the whole count across every carried stack, since the alert
-    is about the item, not the one slot the scan happened to reach first.
-    Empty for a single item.
-]]
+-- The whole carried count: the alert is about the item, not the first slot found.
 local function StackSuffix(itemId)
 	local count = 0
 	for _, bag in ipairs(ns.CARRIED_BAGS) do
@@ -33,31 +28,11 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    Quest starters announce themselves on the way in rather than waiting for the
-    player to notice: the whole point of the race and class gate is that the item
-    is dead the moment it drops, which is not something a tooltip alone tells you
-    while you are still looting.
-
-    BAG_UPDATE_DELAYED fires a burst at login, so ns:SeedQuestStarterAlerts marks
-    the starters already erasable at login and only one that becomes erasable
-    while playing speaks up. A starter held but not yet erasable is left unmarked
-    on purpose, so finishing its quest later still alerts. Same reasoning as
-    ns:SeedBagSpaceBaseline in Bag-Warnings.lua.
-
-    Keyed by item id and living for the session, so moving a stack between bags or
-    opening a merchant cannot make the same item announce twice.
-    ns:OnQuestTurnedIn reads the same set before its own walk, so a starter
-    already announced by the race and class gate never announces twice. A
-    starter that also has a row in ALLOWED_DELETE_QUEST_ITEMS is announced by
-    that walk instead, once the row's quest is done.
-
-    An item on either Ignore List never announces, since the eraser will never
-    act on it; it is left unmarked, so lifting the protection lets it speak on a
-    later bag update.
+    By item id for the session, so moving a stack never re-announces. A starter
+    not yet erasable, or protected, stays unmarked so it can speak later.
 ]]
 local announcedStarters = {}
 
--- How many starters have been marked this session, for the Diagnostic Tools Eraser Context.
 function ns:CountAnnouncedQuestStarters()
 	local count = 0
 	for _ in pairs(announcedStarters) do
@@ -71,13 +46,7 @@ local ALERT_KEYS = {
 	questIneligible = "QUEST_STARTER_UNAVAILABLE",
 }
 
---[[
-    Whether an alert for this kind may print: the Enable Quest Item Alerts switch
-    is on, and the player hasn't unchecked the kind on the Erasing panel, where
-    "safe to erase" would be telling them about an item Magic Eraser will never
-    touch. Items are still marked as announced while alerts are off, so turning
-    them back on doesn't replay every quest item already in the bags.
-]]
+-- Items are still marked while alerts are off, so turning them on doesn't replay the bags.
 local function ShouldAlert(reason)
 	return ns.db and ns.db.profile.questAlertsEnabled and ns:IsJunkKind(reason)
 end
@@ -94,11 +63,6 @@ local function ScanQuestStarters(announce)
 			local itemInfo = GetContainerItemInfo(bag, slot)
 			local itemId = itemInfo and itemInfo.itemID
 
-			--[[
-			    The cheap table lookup gates everything: an item that starts no
-			    quest never reaches the race, class or quest-state checks, and an
-			    ignored one never announces.
-			]]
 			if itemId and starterDatabase[itemId] and not announcedStarters[itemId] and not ns:IsIgnored(itemId) then
 				local reason = ns:GetQuestStarterReason(itemId)
 				if reason then
@@ -112,10 +76,6 @@ local function ScanQuestStarters(announce)
 	end
 end
 
---[[
-    Called once from OnPlayerLogin, before the login BAG_UPDATE_DELAYED burst can
-    reach CheckQuestStarters.
-]]
 function ns:SeedQuestStarterAlerts()
 	ScanQuestStarters(false)
 end
@@ -138,11 +98,7 @@ function ns:OnQuestTurnedIn(questId)
 				if itemInfo then
 					local itemId = itemInfo.itemID
 
-					--[[
-					    Skip anything the starter scan above already spoke for, so
-					    the one line never arrives twice. Ignored items never
-					    announce.
-					]]
+					-- Skip what the starter scan already announced.
 					if
 						questItemDatabase[itemId]
 						and not alertedItems[itemId]

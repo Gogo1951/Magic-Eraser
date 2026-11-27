@@ -30,6 +30,8 @@ L["CONFIRM_ERASE"] = "%s%s 삭제하시겠습니까?"
 L["BAGS_FULL"] = "가방이 가득 찼습니다!"
 L["BAGS_FULL_NUDGE"] = "가방이 거의 찼습니다. %d칸 남았습니다."
 L["BAGS_FULL_NUDGE_ONE"] = "가방이 거의 찼습니다. 1칸 남았습니다."
+L["BAGS_FULL_JUNK"] = "가방이 가득 찼지만, 잡동사니가 %d칸을 차지하고 있습니다."
+L["BAGS_FULL_JUNK_ONE"] = "가방이 가득 찼지만, 잡동사니가 1칸을 차지하고 있습니다."
 L["CURSOR_TOO_FAST"] =
 	"천천히 하세요! 게임이 아이템을 삭제하는 속도보다 빠르게 클릭하고 있습니다."
 L["ERASE_CANDIDATE_CHANGED"] =
@@ -47,6 +49,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "%s개 아이템 (가방 1칸) 판매됨, 가치 %s
 L["SOLD_SUMMARY_ONE_ITEM"] = "1개 아이템 (가방 1칸) 판매됨, 가치 %s."
 L["AUTO_VEND_SHIFT_HINT"] = "상인 창을 열 때 Shift를 누르고 있으면 자동 판매를 건너뜁니다."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "전투가 끝나면 자동 판매가 진행됩니다."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "%s에 장비를 수리했습니다."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "은행에서 %s개 아이템 (가방 %s칸) 꺼냄, 가치 %s."
@@ -75,11 +80,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1개)"
 L["CLUTTER_SLOTS"] = "가방 %s칸"
 L["CLUTTER_SLOTS_ONE"] = "가방 1칸"
 L["NO_VALUE"] = "가치 없음"
-L["MENU_CLICK_LEFT"] = "좌클릭"
-L["MENU_CLICK_RIGHT"] = "우클릭"
-L["MENU_CLICK_MIDDLE"] = "휠클릭"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 우클릭"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 휠클릭"
 L["MENU_TOGGLE"] = "전환"
 L["ACTION_ERASE"] = "삭제"
 L["ACTION_PROTECT"] = "보호"
@@ -92,6 +92,16 @@ L["MENU_MORE_FEATURES"] = "추가 기능"
 L["MENU_FEATURE_COUNT_ON"] = "%d개 켜짐"
 L["MENU_FEATURE_COUNT_OFF"] = "%d개 꺼짐"
 L["MENU_UNPROTECT_HINT"] = "클릭하면 보호 목록에서 제거합니다."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "잡동사니"
+L["TOOLTIP_PROTECTED"] = "보호됨"
+L["TOOLTIP_ERASED_NEXT"] = "다음 삭제 대상"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "이 캐릭터의 목록"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "모든 캐릭터 목록"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -124,7 +134,7 @@ L["SAMPLE_EXAMPLE"] = "예시"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"잡동사니를 삭제하고 자동으로 판매해 가방 공간을 확보하세요. 미니맵 버튼 클릭 한 번으로 완료된 퀘스트 아이템, 저레벨 음식과 음료 및 탄약, 상인에게 팔 물건, 흰색 장비, 회색 아이템을 정리하고, 나머지는 다음 상인에게서 알아서 팔립니다."
+	"잡동사니를 삭제하고 자동으로 판매해 가방 공간을 확보하세요. 미니맵 메뉴에서 완료된 퀘스트 아이템, 저레벨 음식과 음료 및 탄약, 상인에게 팔 물건, 흰색 장비, 회색 아이템을 삭제하고, 나머지는 다음 상인에게 판매하며, 장비도 자동으로 수리하세요."
 L["OPTIONS_ENABLE_WELCOME"] = "환영 메시지 활성화"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"접속할 때마다 버전이 담긴 한 줄짜리 환영 메시지를 대화창에 표시합니다."
@@ -141,7 +151,7 @@ L["OPTIONS_KEY_SET"] = "키 지정"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"게임의 단축키 목록을 엽니다. Magic Eraser 전용 항목이 있습니다."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"미니맵 버튼을 좌클릭하는 것과 똑같이 최저가 아이템을 삭제합니다. 키를 누르기 전에는 미리 보기가 없으니, 실수로 누르지 않을 키에 지정하세요."
+	"미니맵 메뉴의 삭제 줄과 똑같이 최저가 아이템을 삭제합니다. 키를 누르기 전에는 미리 보기가 없으니, 실수로 누르지 않을 키에 지정하세요."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"마우스를 올린 아이템을 이 캐릭터에서 보호합니다. 가방, 은행, 상인, 전리품 창 어디서든 사용할 수 있습니다. 이 캐릭터의 삭제 목록에 있었다면 거기서 빠집니다."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -186,8 +196,7 @@ L["OPTIONS_VERSION"] = "버전 %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] =
-	"클릭할 때마다 가방에서 가장 싼 잡동사니를 한 묶음씩 삭제합니다."
+L["TAB_ERASING_DESCRIPTION"] = "삭제할 때마다 가방에서 가장 싼 잡동사니를 한 묶음씩 없앱니다."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"참고: 실수로 삭제한 아이템은 대부분 블리자드의 아이템 복구 서비스로 되찾을 수 있습니다!"
 
@@ -280,6 +289,12 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"은행에서 가져오기를 켜거나 끕니다. 빈 가방 칸에 들어갈 만큼만 가져옵니다."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "가방 공간 경고가 켜져 있으므로 가방 %d칸을 비워 둡니다."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "가방 공간 경고가 켜져 있으므로 가방 1칸을 비워 둡니다."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "자동 수리"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"수리할 수 있는 상인과 대화하면 내 골드로 장비를 수리합니다. 전체 비용을 낼 수 없으면 장비를 그대로 둡니다. 상인 창을 열 때 Shift를 누르고 있으면 건너뜁니다."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "자동 수리 활성화"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"자동 수리를 켜거나 끕니다. 수리할 때마다 든 비용을 대화창에 알려 줍니다."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -316,6 +331,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "대화창 카운트다운�
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "빈 칸 기준값"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"카운트다운을 시작할 빈 칸 수입니다. 경고가 켜져 있는 동안 은행에서 가져오기도 이만큼의 칸을 비워 둡니다."
+L["OPTIONS_TOOLTIPS_HEADER"] = "잡동사니 아이템 툴팁"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"가방에 있는 각 아이템의 툴팁에 Magic Eraser가 그 아이템을 삭제할 이유, 또는 어느 보호 목록이 지켜 주는지 알려 주는 줄을 추가합니다."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "잡동사니 아이템 툴팁 활성화"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "아이템 툴팁의 Magic Eraser 줄을 켜거나 끕니다."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

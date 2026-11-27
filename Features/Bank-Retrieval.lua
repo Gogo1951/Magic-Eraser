@@ -10,16 +10,10 @@ local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local UseContainerItem = C_Container.UseContainerItem
 local GetItemInfo = C_Item.GetItemInfo
 
---[[
-    The bank containers read empty for a moment after BANKFRAME_OPENED while the
-    client populates them, so the pass waits before its first scan. The move
-    pacing matches Auto-Vend's: one protected call per 0.1s tick rather than a
-    burst the server may partly drop.
-]]
+-- The bank reads empty for a moment after opening; one move per tick, since the server drops bursts.
 local BANK_SETTLE_SECONDS = 0.5
 local MOVE_INTERVAL_SECONDS = 0.1
 
--- Bounded retry for cold item-data misses; reset on each BANKFRAME_OPENED.
 local MAX_SCAN_RETRIES = 5
 local SCAN_RETRY_SECONDS = 0.5
 local scanRetries = 0
@@ -30,33 +24,15 @@ local moveBudget = 0
 local isRetrieving = false
 local pendingMove = nil
 
---[[
-    Bumped on every BANKFRAME_OPENED. Each timer this file sets carries the
-    generation it was scheduled under and drops out when a newer pass has begun
-    since, so closing and reopening the bank inside the settle window cannot
-    leave two chains walking the same queue. isRetrieving alone would not catch
-    it: the second open sets that flag back to true, and the first pass's stale
-    timer would sail straight through the check.
-]]
+-- Every timer carries its generation; isRetrieving alone can't stop a stale chain after a reopen.
 local passGeneration = 0
 
---[[
-    Totals for the closing summary, accrued only for moves ConfirmPendingMove has
-    seen leave their bank slot, so a call the server drops is never reported.
-    movedSlots counts one per moved stack (each one empties a bank slot and fills
-    a bag slot); movedCount counts stacked quantity, so a stack of five is one
-    slot and five items.
-]]
+-- Confirmed moves only, so a dropped call is never reported.
 local movedCount = 0
 local movedSlots = 0
 local movedValue = 0
 
---[[
-    Set from BANKFRAME_OPENED and BANKFRAME_CLOSED rather than read off
-    BankFrame, which a bag add-on such as Baganator keeps hidden while its own
-    bank window is open. Bank Retrieval, the bag-space hold and the bank tints
-    all read it through ns:IsBankOpen.
-]]
+-- From the events, never BankFrame, which Baganator keeps hidden while its bank window is open.
 local isBankOpen = false
 
 function ns:IsBankOpen()
@@ -68,20 +44,8 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    How many bank slots this pass may empty into the bags: every free
-    general-purpose bag slot, less the cushion the player set as their Free-Slot
-    Threshold -- but only while Bag-Space Warnings are actually on.
-
-    The cushion exists for one reason, to stop retrieval walking the bags into
-    the bag-space warning it would otherwise cause. With that warning switched
-    off there is no warning to stop short of and nothing to reserve, and the
-    Free-Slot Threshold slider is a sub-option of the Bag-Space Warnings toggle
-    that is hidden while the toggle is off -- so reserving there would let a
-    setting the player cannot see hold back a feature they can.
-
-    A nil count means the container API has not answered yet, which is not the
-    same as zero free slots (see ns:CountFreeBagSlots), so it yields no budget
-    and the pass simply does not run.
+    The cushion applies only while Bag-Space Warnings are on: its slider is
+    hidden otherwise. A nil free count means no pass.
 ]]
 local function GetMoveBudget()
 	local free = ns:CountFreeBagSlots()
@@ -94,7 +58,6 @@ local function GetMoveBudget()
 	return free - (ns.db.profile.bagsFullThreshold or 0)
 end
 
--- The budget and whether a pass is running, for the Diagnostic Tools Merchant & Bank Context.
 function ns:GetBankMoveBudget()
 	return GetMoveBudget()
 end
@@ -107,15 +70,7 @@ end
 -- Pass Lifecycle
 --------------------------------------------------------------------------------
 
---[[
-    The single end of a pass, however it ended: budget spent, queue exhausted,
-    combat, or the bank window closing. Prints one summary line when anything was
-    confirmed moved and nothing at all when nothing was, then resets the totals
-    and drops any still-unconfirmed move so a second call (the pass finishing and
-    then BANKFRAME_CLOSED arriving) stays silent and nothing leaks into the next
-    pass. A pass cut short by combat or the window closing therefore leaves its
-    last move uncounted rather than claiming one it could not verify.
-]]
+-- The single exit. Resets everything, so a second call stays silent.
 local function FinishPass()
 	isRetrieving = false
 	wipe(moveQueue)
@@ -156,12 +111,7 @@ end
 -- Queue Processor
 --------------------------------------------------------------------------------
 
---[[
-    UseContainerItem is optimistic: the server can drop the call, so a move only
-    counts once the bank slot it came from no longer holds that item. The next
-    tick makes that check, and the exhaustion branch below schedules one extra
-    tick so the last move of a pass gets the same chance.
-]]
+-- A move counts once its bank slot no longer holds the item; one extra tick checks the last.
 local function ConfirmPendingMove()
 	if not pendingMove then
 		return
@@ -182,12 +132,7 @@ local function ProcessMoveQueue(generation)
 		return
 	end
 
-	--[[
-	    UseContainerItem is protected and forbidden in combat, and the bank
-	    window does not survive combat either, so there is nothing to come back
-	    to: end the pass outright rather than deferring and resuming the way
-	    Auto-Vend does at a merchant.
-	]]
+	-- Ends rather than defers: unlike a merchant, there is nothing to come back to.
 	if InCombatLockdown() or not isBankOpen then
 		FinishPass()
 		return
@@ -214,12 +159,7 @@ local function ProcessMoveQueue(generation)
 
 	local item = moveQueue[moveIndex]
 
-	--[[
-	    Re-check the slot before every call: items leaving the bank shift the
-	    ones behind them, so the slot this entry was queued from may now hold
-	    something else entirely. A slot that no longer matches is skipped rather
-	    than moved, and costs no budget.
-	]]
+	-- Slots shift as items leave; a mismatch is skipped and costs no budget.
 	local currentItemInfo = GetContainerItemInfo(item.bag, item.slot)
 
 	if currentItemInfo and currentItemInfo.itemID == item.itemId then
@@ -238,13 +178,7 @@ end
 -- Scanner
 --------------------------------------------------------------------------------
 
---[[
-    The one verdict on a bank item, shared by this pass and the junk tint so the
-    two never disagree: the delete reason and sale price when it is junk. The
-    Protect List goes first, so it wins over any Erase List entry. An item whose
-    data hasn't loaded yet answers only the third value, true, after asking the
-    client for it. bag and slot are where it sits, for the crafted check.
-]]
+-- Shared with the tint so the two never disagree. A cold item answers only the third value, true.
 function ns:IsBankJunk(itemId, hyperlink, bag, slot)
 	if ns:IsIgnored(itemId) then
 		return nil
@@ -257,16 +191,6 @@ function ns:IsBankJunk(itemId, hyperlink, bag, slot)
 	return ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot), sellPrice
 end
 
---[[
-    Exactly the eraser's predicate, run over the bank containers instead of the
-    bags: skip anything on either ignore list, resolve the item, and keep
-    whatever ns:GetItemDeleteReason flags, Erase List entries included. Cold item
-    data reschedules the whole scan behind the same cap Eraser.lua and
-    Auto-Vend.lua use, so an item whose data never resolves cannot loop forever.
-
-    Maximum Value to Erase is not consulted here at all, so it needs no Erase
-    List carve-out: retrieval moves an item rather than destroying it.
-]]
 local function ScanBank(generation)
 	if not isRetrieving or generation ~= passGeneration then
 		return
@@ -314,13 +238,7 @@ local function ScanBank(generation)
 		return
 	end
 
-	--[[
-	    Most valuable first, the opposite of Auto-Vend's ascending sell order.
-	    Auto-Vend has the whole merchant visit to work through its queue, so it
-	    starts with the cheapest clutter; this pass is capped by however many bag
-	    slots happen to be free, so when the budget runs out mid-queue what gets
-	    left in the bank should be the gold that mattered least.
-	]]
+	-- Most valuable first: the budget may run out, so what stays behind should matter least.
 	table.sort(moveQueue, function(a, b)
 		return a.value > b.value
 	end)
@@ -351,13 +269,6 @@ end
 -- Event Handlers
 --------------------------------------------------------------------------------
 
---[[
-    Registered and dispatched by Core's central event frame (see ns.EVENT_NAMES
-    in Core.lua). This file owns the bank handlers and has no event frame of its
-    own, so the diagnostics event log -- which taps the one dispatcher --
-    captures BANKFRAME_OPENED and BANKFRAME_CLOSED too.
-]]
-
 function ns:OnBankframeOpened()
 	-- The bank tints go ahead whether or not Bank Retrieval is on, once the slots have settled.
 	isBankOpen = true
@@ -385,21 +296,10 @@ function ns:OnBankframeOpened()
 end
 
 function ns:OnBankframeClosed()
-	--[[
-	    Ending through FinishPass rather than clearing the state here is what
-	    lets a pass cut short by the player closing the window still report what
-	    it moved: BANKFRAME_CLOSED lands before the queue's next tick notices the
-	    window is gone.
-	]]
+	-- Through FinishPass, so a pass cut short still reports what it moved.
 	FinishPass()
 	isBankOpen = false
 	ns:RefreshTints()
 
-	--[[
-	    Bag-space warnings are held while the bank window is open (see
-	    ns:IsBagWindowOpen), because retrieval churns free slots. Re-check on
-	    close so the warning reflects where the bags landed, the counterpart to
-	    ns:OnMailClosed and Auto-Vend's merchant-close nudge.
-	]]
 	ns:CheckBagsFullNudge()
 end

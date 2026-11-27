@@ -7,19 +7,11 @@ local Kit = ns.OptionsKit
 -- Merchant & Bank Panel
 --------------------------------------------------------------------------------
 
---[[
-    The two features that move junk rather than destroy it: Auto-Vend at a
-    merchant, and Bank Retrieval at the bank. They share a page because they
-    share a rule -- neither consults Maximum Value to Erase, since selling an
-    over-cap stack pays the player instead of costing them. Auto-Vend at 10,
-    Bank Retrieval at 20.
-
-    Registered as its builder function (Kit.RegisterPanel), so every repaint
-    rebuilds it.
-]]
+-- Auto-Vend and Bank Retrieval share a rule: neither consults Maximum Value to Erase, since selling pays.
 local MERCHANT_BANK_SECTIONS = {
 	"BuildAutoVendOptions",
 	"BuildBankRetrievalOptions",
+	"BuildAutoRepairOptions",
 }
 
 function ns.BuildMerchantBankOptions()

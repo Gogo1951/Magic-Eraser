@@ -30,6 +30,8 @@ L["CONFIRM_ERASE"] = "%s%s löschen?"
 L["BAGS_FULL"] = "Deine Taschen sind voll!"
 L["BAGS_FULL_NUDGE"] = "Deine Taschen sind fast voll. Du hast noch %d freie Plätze."
 L["BAGS_FULL_NUDGE_ONE"] = "Deine Taschen sind fast voll. Du hast noch 1 freien Platz."
+L["BAGS_FULL_JUNK"] = "Deine Taschen sind voll, aber %d Plätze sind mit Ramsch belegt."
+L["BAGS_FULL_JUNK_ONE"] = "Deine Taschen sind voll, aber 1 Platz ist mit Ramsch belegt."
 L["CURSOR_TOO_FAST"] = "Langsamer! Du klickst schneller, als das Spiel Gegenstände löschen kann."
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Dieser Gegenstand hat sich vor dem Löschen verändert, daher wurde nichts gelöscht. Sieh dir die Minikarten-Schaltfläche an und versuche es erneut."
@@ -47,6 +49,9 @@ L["SOLD_SUMMARY_ONE_ITEM"] = "1 Gegenstand (1 Taschenplatz) verkauft, Wert %s."
 L["AUTO_VEND_SHIFT_HINT"] =
 	"Halte beim Öffnen eines Händlers Umschalt gedrückt, um den Auto-Verkauf zu überspringen."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Verkauf wird ausgeführt, sobald der Kampf endet."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "Deine Ausrüstung wurde für %s repariert."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s Gegenstände (%s Taschenplätze) aus deiner Bank geholt, Wert %s."
@@ -75,11 +80,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 Gegenstand)"
 L["CLUTTER_SLOTS"] = "%s Taschenplätze"
 L["CLUTTER_SLOTS_ONE"] = "1 Taschenplatz"
 L["NO_VALUE"] = "Kein Wert"
-L["MENU_CLICK_LEFT"] = "Linksklick"
-L["MENU_CLICK_RIGHT"] = "Rechtsklick"
-L["MENU_CLICK_MIDDLE"] = "Mittelklick"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Umschalt + Rechtsklick"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Umschalt + Mittelklick"
 L["MENU_TOGGLE"] = "Umschalten"
 L["ACTION_ERASE"] = "Löschen"
 L["ACTION_PROTECT"] = "Schützen"
@@ -92,6 +92,16 @@ L["MENU_MORE_FEATURES"] = "Weitere Funktionen"
 L["MENU_FEATURE_COUNT_ON"] = "%d an"
 L["MENU_FEATURE_COUNT_OFF"] = "%d aus"
 L["MENU_UNPROTECT_HINT"] = "Klicke, um den Gegenstand von deiner Schutzliste zu entfernen."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "Ramsch"
+L["TOOLTIP_PROTECTED"] = "Geschützt"
+L["TOOLTIP_ERASED_NEXT"] = "Wird als Nächstes gelöscht"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "Liste dieses Charakters"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "Liste für alle Charaktere"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -125,7 +135,7 @@ L["SAMPLE_EXAMPLE"] = "Beispiel"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Lösche und verkaufe Ramsch automatisch, um Taschenplatz zu schaffen. Ein Klick auf die Minikarten-Schaltfläche räumt Gegenstände abgeschlossener Quests, ausgediente Speisen, Getränke und Munition, Händlermüll, weiße Ausrüstung und graue Gegenstände weg, und der Rest verkauft sich beim nächsten Händler von selbst."
+	"Lösche und verkaufe Ramsch automatisch, um Taschenplatz zu schaffen. Lösche Gegenstände abgeschlossener Quests, ausgediente Speisen, Getränke und Munition, Händlermüll, weiße Ausrüstung und graue Gegenstände über das Minikarten-Menü, verkaufe den Rest beim nächsten Händler und lass deine Ausrüstung automatisch reparieren."
 L["OPTIONS_ENABLE_WELCOME"] = "Willkommensnachricht aktivieren"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Zeigt bei jedem Einloggen eine einzeilige Begrüßung mit der Versionsnummer im Chat."
@@ -142,7 +152,7 @@ L["OPTIONS_KEY_SET"] = "Taste festlegen"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Öffnet die Tastaturbelegung des Spiels, in der Magic Eraser einen eigenen Abschnitt hat."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Löscht deinen Gegenstand mit geringstem Wert, genau wie ein Linksklick auf die Minikarten-Schaltfläche. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
+	"Löscht deinen Gegenstand mit geringstem Wert, genau wie die Zeile Löschen im Minikarten-Menü. Vor einem Tastendruck gibt es keine Vorschau, also leg die Taste irgendwohin, wo du sie nicht versehentlich drückst."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Schützt den Gegenstand unter deiner Maus auf diesem Charakter, wo immer du ihn siehst: Taschen, Bank, Händler oder Beutefenster. Stand er auf der Löschliste dieses Charakters, wird er dort entfernt."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -187,7 +197,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 --------------------------------------------------------------------------------
 
 L["TAB_ERASING_DESCRIPTION"] =
-	"Jeder Klick löscht den günstigsten Ramsch in deinen Taschen, einen Stapel nach dem anderen."
+	"Jedes Löschen entfernt den günstigsten Ramsch in deinen Taschen, einen Stapel nach dem anderen."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"Gut zu wissen: Fast alles, was versehentlich gelöscht wurde, lässt sich über Blizzards Gegenstandswiederherstellung zurückholen!"
 
@@ -279,6 +289,12 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Schaltet die Bankentnahme ein oder aus. Sie holt nie mehr, als deine freien Taschenplätze fassen können."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Lässt %d Taschenplätze frei, weil Taschenplatz-Warnungen aktiviert sind."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Lässt 1 Taschenplatz frei, weil Taschenplatz-Warnungen aktiviert sind."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "Auto-Reparatur"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"Repariert deine Ausrüstung mit deinem eigenen Gold, wenn du mit einem Händler sprichst, der reparieren kann. Reicht dein Gold nicht für die ganze Rechnung, bleibt deine Ausrüstung unberührt. Halte beim Öffnen des Händlers Umschalt gedrückt, um sie zu überspringen."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "Auto-Reparatur aktivieren"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"Schaltet die Auto-Reparatur ein oder aus. Jede Reparatur nennt im Chat, was sie gekostet hat."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -315,6 +331,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Schaltet den Countdown im 
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Schwellenwert für freie Plätze"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Ab wie vielen freien Plätzen der Countdown beginnt. Solange die Warnungen aktiv sind, lässt die Bankentnahme auch so viele Plätze frei."
+L["OPTIONS_TOOLTIPS_HEADER"] = "Ramsch-Tooltips"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"Fügt dem Tooltip jedes Gegenstands in deinen Taschen eine Zeile hinzu, die sagt, warum Magic Eraser ihn löschen würde oder welche Schutzliste ihn schützt."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Ramsch-Tooltips aktivieren"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Schaltet die Zeilen von Magic Eraser in Gegenstands-Tooltips ein oder aus."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

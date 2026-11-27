@@ -8,27 +8,13 @@ local GetItemInfoInstant = C_Item.GetItemInfoInstant
 -- Key Bindings
 --------------------------------------------------------------------------------
 
---[[
-    WoW's binding system reads only globals, so every binding costs two:
-    Bindings.xml can only call a global function, and the Key Bindings list labels
-    a binding with the BINDING_NAME_<name> global matching its name attribute.
-    Bindings.xml itself is found at the add-on root by the client and is never
-    listed in the TOC.
-
-    The name attribute is also what the client saves a player's key against, so
-    a shipped binding keeps its name for good: a renamed one comes back unbound
-    for everyone who had set it.
-]]
+-- A shipped binding keeps its name for good: the client saves keys against it.
 
 BINDING_NAME_MAGICERASER_ERASE = L["BINDING_ERASE"]
 BINDING_NAME_MAGICERASER_ADD_TO_IGNORE_LIST = L["BINDING_ADD_TO_PROTECT_LIST"]
 BINDING_NAME_MAGICERASER_ADD_TO_ERASE_LIST = L["BINDING_ADD_TO_ERASE_LIST"]
 
---[[
-    The erase handler is the mini-map button's Left-Click on a key, so it enters
-    through ns:RunEraser exactly as the click does, and every gate on the click
-    holds here.
-]]
+-- Synchronous, so the key press stays the hardware event.
 function MagicEraser_Erase()
 	ns:RunEraser()
 end
@@ -38,21 +24,9 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    The root panel's Set Key button. The clients disagree on how the game's Key
-    Bindings list is reached, so the routes are tried in order, at click time
-    rather than at load, since a Settings category can register after login:
-
-      1. Settings.KEYBINDINGS_CATEGORY_ID, where the client names it outright.
-      2. The Settings panel's own category list, searched for the category
-         carrying the game's Key Bindings title (KEY_BINDINGS, or
-         SETTINGS_KEYBINDINGS_LABEL where that's the one in use).
-      3. The older standalone KeyBindingFrame, loaded on demand.
-
-    The lookup is protected, because it walks Blizzard's own objects and a
-    client that reshapes them should cost the player a chat line, not an error.
-    When nothing works, the line says where to find the list by hand. The
-    Diagnostic Tools API report has a row for each route, so a bug report says
-    which one the client took.
+    Routes tried at click time, since a Settings category can register after
+    login. The search is pcall'd: a client that reshapes Blizzard's objects
+    should cost a chat line, not an error.
 ]]
 local function FindKeyBindingsCategoryID()
 	if Settings and Settings.KEYBINDINGS_CATEGORY_ID then
@@ -78,11 +52,7 @@ local function FindKeyBindingsCategoryID()
 	return ok and categoryId or nil
 end
 
---[[
-    The fallback line names the menus by the client's own labels, so it matches
-    what the player sees in every locale. All three clients label the list
-    SETTINGS_KEYBINDINGS_LABEL; KEY_BINDINGS stands in where that is missing.
-]]
+-- The client's own labels, so the line matches every locale.
 local KEY_BINDINGS_LABEL = SETTINGS_KEYBINDINGS_LABEL ~= nil and SETTINGS_KEYBINDINGS_LABEL or KEY_BINDINGS
 
 function ns:OpenKeyBindings()
@@ -108,11 +78,6 @@ function ns:OpenKeyBindings()
 	ns:PrintMessage(format(L["KEY_BINDINGS_LOCATION"], GAMEMENU_OPTIONS, KEY_BINDINGS_LABEL))
 end
 
---[[
-    UPDATE_BINDINGS. The root panel shows each binding's key or Not Bound, and
-    the player changes them in the game's own Key Bindings list, so repaint the
-    panel when they come back from it.
-]]
 function ns:OnUpdateBindings()
 	ns.RefreshSettings()
 end
@@ -121,19 +86,7 @@ end
 -- Hovered Item
 --------------------------------------------------------------------------------
 
---[[
-    The two list bindings act on whatever item the game tooltip is showing,
-    which is the item under the mouse wherever the player happens to find it:
-    bags, bank, a merchant, the loot window, the character sheet. The read goes
-    through ns.GetDisplayedItem in Features/Utilities.lua, which picks WoW
-    Forever's TooltipUtil or the Classic GameTooltip:GetItem once at load.
-]]
-
---[[
-    The item id and link under the mouse, or nil when the tooltip on screen is
-    not an item's. IsShown comes first, so a key pressed after the tooltip has
-    gone can never act on the last item it showed.
-]]
+-- IsShown first, so a press after the tooltip is gone never acts on the last item it showed.
 local function GetHoveredItem()
 	if not GameTooltip:IsShown() then
 		return nil
@@ -153,21 +106,8 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    The rules live with the lists: ns:AddToIgnoreList and ns:AddToEraseList
-    decide what a press does and hand back what happened, and this file turns
-    that into one complete sentence around the item's link. Every outcome
-    speaks, the ones that change nothing included, so a press is never met with
-    silence.
-
-    The junk tint catches up on its own: every list edit ends in
-    ns:RefreshDisplay, which repaints the bag tints (Features/Tint-Junk.lua).
-
-    Neither binding checks for combat. A list edit calls nothing protected, so
-    protecting an item mid-fight works exactly as it does anywhere else.
-
-    The Protect List sentences are shared with the mini-map menu's Protect row
-    and the button's Right-Click (Features/Minimap-Menu.lua), so a protect says
-    the same thing however the player asked for it.
+    Every outcome speaks, so a press is never met with silence. No combat
+    check: a list edit calls nothing protected. Shared with the menu's Protect row.
 ]]
 local IGNORE_LIST_MESSAGE_KEYS = {
 	added = "PROTECT_LIST_ADDED",

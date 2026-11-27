@@ -1,5 +1,5 @@
 ## Title: Magic Eraser
-## Notes: Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant.
+## Notes: Delete and auto-sell junk to free up bag space. Erase completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays from the mini-map menu, sell the rest at your next merchant, and auto-repair your gear.
 ## Author: Gogo1951
 
 ## IconTexture: Interface/AddOns/MagicEraser/Includes/Images/Magic-Eraser.tga
@@ -70,6 +70,7 @@ Features/Core.lua
 # MIGRATION (remove after 2026-11-30)
 Features/Migrations.lua
 Features/Utilities.lua
+Features/Tooltip-Kit.lua
 Features/Announcements.lua
 Features/Ignore-List.lua
 Features/Erase-List.lua
@@ -80,7 +81,9 @@ Features/Manual-Delete.lua
 Features/Bag-Warnings.lua
 Features/Bank-Retrieval.lua
 Features/Auto-Vend.lua
+Features/Auto-Repair.lua
 Features/Tint-Junk.lua
+Features/Item-Tooltips.lua
 Features/Key-Bindings.lua
 Features/Menu-Kit.lua
 Features/Minimap-Menu.lua
@@ -103,9 +106,11 @@ Options/Options-Eraser.lua
 Options/Options-Manual-Delete.lua
 Options/Options-Auto-Vend.lua
 Options/Options-Bank-Retrieval.lua
+Options/Options-Auto-Repair.lua
 Options/Options-Tint-Junk.lua
 Options/Options-Quest-Item-Alerts.lua
 Options/Options-Bag-Warnings.lua
+Options/Options-Item-Tooltips.lua
 Options/Options-General.lua
 Options/Options-Erasing.lua
 Options/Options-Merchant-Bank.lua

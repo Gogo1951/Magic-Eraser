@@ -8,44 +8,14 @@ local Kit = ns.OptionsKit
 -- Registration
 --------------------------------------------------------------------------------
 
---[[
-    Registration only -- panel content lives in the per-panel builder files.
-    Called from ns:OnPlayerLogin once ns.db exists, because the Protect List,
-    Erase List and Profiles builders need the AceDB database. The tree:
-
-      Magic Eraser (General, the root)
-        Erasing
-          Erase List
-          Protect List
-        Merchant & Bank
-        Alerts & Tints
-        Profiles
-        Feedback & Support
-        Diagnostic Tools
-
-    Kit.RegisterPanel registers each panel's builder function, so every repaint
-    (ns.RefreshSettings) rebuilds it and no panel ever draws a stale value,
-    then adds it to the Settings tree under the root, or under the panel its
-    parent key names, by the category ID that panel's registration returned.
-    Registration order is tree order within each level. The Profiles display
-    name comes already localized from AceDBOptions-3.0.
-]]
+-- At login, after ns.db. Registration order is tree order; the root registers first.
 function ns:RegisterOptionsPanels()
-	--[[
-	    The root's category ID is kept for the Eraser Context report, which
-	    prints the route ns:OpenOptionsPanel takes (Diagnostics/Manifests.lua).
-	]]
+	-- Kept only for the Eraser Context report.
 	local _, generalCategoryID = Kit.RegisterPanel("General", ns.BuildGeneralOptions, L["ADDON_TITLE"])
 	ns.generalCategoryID = generalCategoryID
 
-	-- Erasing holds everything about what gets erased, with the two lists that decide it nested beneath it.
 	Kit.RegisterPanel("Erasing", ns.BuildErasingOptions, L["TAB_ERASING"])
 
-	--[[
-	    The two list pages are trees: All Characters, then each character, with
-	    the selected list's items beside them. Each opens on the character being
-	    played, every visit.
-	]]
 	local function CurrentCharacter()
 		return ns.db.keys.char
 	end

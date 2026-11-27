@@ -18,31 +18,21 @@ local format, ipairs = string.format, ipairs
 local cachedItem = nil
 local isCacheValid = false
 
---[[
-    Running totals for the mini-map menu's Clutter Report, populated as a side effect
-    of FindItemToDelete's single bag scan so the summary shares the candidate
-    cache's lifecycle -- one scan feeds both the lowest-value pick and the
-    report, and both go stale together on InvalidateCache. Slots counts bag slots
-    freed; items counts stacked quantity (a stack of 5 is one slot, five items).
-]]
+-- Clutter Report totals, filled by FindItemToDelete's scan and dropped with it. Items count stacked quantity.
 local cachedReclaimSlots = 0
 local cachedReclaimItems = 0
 local cachedReclaimValue = 0
 
---[[
-    Every erasable stack the same scan found, keyed by bag and slot, holding
-    the item id that was there. Tint Junk asks it about each bag button it
-    paints, so the tint and the eraser can never disagree about what is junk.
-]]
+-- Junk slots from the same scan, so the tint and the eraser never disagree.
 local SLOT_KEY_STRIDE = 1000
 local cachedJunkSlots = {}
 
+-- The same scan's verdicts by item id, for the item tooltips (Features/Item-Tooltips.lua).
+local cachedJunkReasons = {}
+
 --[[
-    Cold item-data misses reschedule a rescan. Without a cap, an item whose
-    item info never resolves would reschedule forever; without a pending
-    guard, concurrent cold-cache triggers would stack timers. So: cap the
-    reschedules, allow only one pending retry, and reset the counter on every
-    fresh scan trigger -- any InvalidateCache that is not itself a retry.
+    Capped, one pending at a time, and reset by any InvalidateCache that isn't
+    itself a retry: an item that never loads must not reschedule forever.
 ]]
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
@@ -56,12 +46,12 @@ function ns:InvalidateCache()
 	cachedReclaimItems = 0
 	cachedReclaimValue = 0
 	cachedJunkSlots = {}
+	cachedJunkReasons = {}
 	if not inScanRetry then
 		scanRetries = 0
 	end
 end
 
--- The retry counter and its cap, for the Diagnostic Tools Eraser Context.
 function ns:GetScanRetryState()
 	return scanRetries, MAX_SCAN_RETRIES, retryPending
 end
@@ -84,13 +74,7 @@ end
 -- Scanning
 --------------------------------------------------------------------------------
 
---[[
-    Arrows and bullets always go last, whatever they are worth and whatever rule
-    flagged them. A stack of outgrown ammo is nearly worthless, so a pure
-    cheapest-first pick erases it ahead of everything else -- and a hunter
-    clearing space mid-quest would rather lose the gray cloth than the ammo
-    still in the quiver. They are still erased, just after everything else.
-]]
+-- Ammo goes last: nearly worthless, so cheapest-first would empty the quiver before the gray cloth.
 local PROJECTILE_CLASS = (Enum and Enum.ItemClass and Enum.ItemClass.Projectile) or 6
 
 local function IsBetterDeletionCandidate(candidate, current)
@@ -106,11 +90,6 @@ local function IsBetterDeletionCandidate(candidate, current)
 	return false
 end
 
---[[
-    One walk of the carried bags, handing each erasable stack to visit, for the
-    cached single-best scan below. Returns true when some item's data was still
-    loading.
-]]
 local function ForEachCandidate(visit)
 	local isDataMissing = false
 
@@ -164,9 +143,11 @@ function ns:FindItemToDelete()
 	local best = nil
 	local reclaimSlots, reclaimItems, reclaimValue = 0, 0, 0
 	local junkSlots = {}
+	local junkReasons = {}
 
 	local isDataMissing = ForEachCandidate(function(candidate)
 		junkSlots[candidate.bag * SLOT_KEY_STRIDE + candidate.slot] = candidate.itemId
+		junkReasons[candidate.itemId] = candidate.deleteReason
 		reclaimSlots = reclaimSlots + 1
 		reclaimItems = reclaimItems + candidate.count
 		reclaimValue = reclaimValue + candidate.value
@@ -184,28 +165,25 @@ function ns:FindItemToDelete()
 	cachedReclaimItems = reclaimItems
 	cachedReclaimValue = reclaimValue
 	cachedJunkSlots = junkSlots
+	cachedJunkReasons = junkReasons
 	isCacheValid = true
 	return best
 end
 
---[[
-    Whether the stack in one carried bag slot is junk the eraser would take.
-    itemId is the item the caller sees there: the scan can be a moment older
-    than the bags, so a slot whose item has changed since answers false until
-    the next scan rather than lending its old verdict to a new item.
-]]
+-- The scan can lag the bags, so a slot whose item changed answers false rather than lend its old verdict.
 function ns:IsJunkSlot(bag, slot, itemId)
 	ns:FindItemToDelete()
 	local junkItemId = cachedJunkSlots[bag * SLOT_KEY_STRIDE + slot]
 	return junkItemId ~= nil and junkItemId == itemId
 end
 
---[[
-    Totals for the mini-map menu's Clutter Report: slots freed, item quantity,
-    and total value. FindItemToDelete populates these as a side effect of its
-    scan, so callers must have called it first this cache cycle (the menu's
-    BuildMainEntries does, before AddClutterReport reads this).
-]]
+-- By item id: one junk stack of it answers for every stack.
+function ns:GetJunkReason(itemId)
+	ns:FindItemToDelete()
+	return cachedJunkReasons[itemId]
+end
+
+-- Zeros unless FindItemToDelete has run since the last invalidation.
 function ns:GetReclaimSummary()
 	return cachedReclaimSlots or 0, cachedReclaimItems or 0, cachedReclaimValue or 0
 end
@@ -214,22 +192,11 @@ end
 -- Deletion
 --------------------------------------------------------------------------------
 
---[[
-    Erase Confirmation. With the switch on, every erase pops a confirmation
-    first, Erase List entries included, from the mini-map button and the key
-    binding alike, since both enter through ns:RunEraser.
-]]
 function ns:NeedsSafetyConfirm(item)
 	return item ~= nil and (ns.db and ns.db.profile.eraseConfirmEnabled) and true or false
 end
 
---[[
-    Confirmation dialog for guarded erases. The candidate is passed as the
-    dialog's data so each showing acts on the exact item the player saw, and
-    PerformErase erases only if the slot still holds that exact stack and the
-    cursor then picks up the same item. preferredIndex = 3 avoids tainting the
-    shared dialog stack.
-]]
+-- The candidate rides as the dialog's data, so Yes acts on the exact stack shown. preferredIndex = 3 avoids taint.
 StaticPopupDialogs["MAGICERASER_CONFIRM_ERASE"] = { -- luacheck: ignore 122
 	text = L["CONFIRM_ERASE"],
 	button1 = YES,
@@ -246,12 +213,7 @@ StaticPopupDialogs["MAGICERASER_CONFIRM_ERASE"] = { -- luacheck: ignore 122
 	preferredIndex = 3,
 }
 
---[[
-    Whether the slot still holds exactly the stack the candidate describes, and
-    that stack is still erasable. A confirmation can stay open while looting
-    grows the pile or the player protects the item, and Yes must then erase
-    nothing rather than more than the player agreed to.
-]]
+-- A confirmation can stay open while the stack grows or gets protected; Yes must then erase nothing.
 local function IsCandidateCurrent(item)
 	local info = GetContainerItemInfo(item.bag, item.slot)
 	if not info or info.itemID ~= item.itemId or (info.stackCount or 1) ~= item.count then
@@ -268,14 +230,7 @@ local function IsCandidateCurrent(item)
 	return deleteReason ~= nil and not ns:IsOverValueCap((sellPrice or 0) * item.count, deleteReason)
 end
 
---[[
-    Actually erase the item: pick it up and delete it from the cursor. Two
-    checks stand in front of the delete: the slot must still hold the stack the
-    candidate describes (IsCandidateCurrent), and the cursor's item id must match
-    it once picked up, so a slot that shifted aborts instead of deleting the
-    wrong thing. Re-guards combat because a safety confirmation can span the
-    moment combat begins.
-]]
+-- Re-guards combat: a confirmation can stay open into a fight. The cursor check stops a shifted slot.
 function ns:PerformErase(item)
 	if InCombatLockdown() then
 		self:PrintMessage(L["COMBAT_LOCKOUT"])
@@ -301,11 +256,7 @@ function ns:PerformErase(item)
 
 		local stackString = (item.count > 1) and format(" x%d", item.count) or ""
 
-		--[[
-		    Just the item, never its value or why it went. Quest leftovers already
-		    got their "can now be safely erased" alert, so repeating the reason is
-		    noise, and the price of something gone for good only stings.
-		]]
+		-- Just the item, never its value or reason: quest items already had their alert.
 		self:PrintMessage(format(L["ERASED_ITEM"], item.link, stackString))
 
 		ns:InvalidateCache()

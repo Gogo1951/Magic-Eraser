@@ -30,6 +30,8 @@ L["CONFIRM_ERASE"] = "Excluir %s%s?"
 L["BAGS_FULL"] = "Suas bolsas estão cheias!"
 L["BAGS_FULL_NUDGE"] = "Suas bolsas estão quase cheias. Você tem %d espaços restantes."
 L["BAGS_FULL_NUDGE_ONE"] = "Suas bolsas estão quase cheias. Você tem 1 espaço restante."
+L["BAGS_FULL_JUNK"] = "Suas bolsas estão cheias, mas você tem %d espaços ocupados por lixo."
+L["BAGS_FULL_JUNK_ONE"] = "Suas bolsas estão cheias, mas você tem 1 espaço ocupado por lixo."
 L["CURSOR_TOO_FAST"] = "Devagar! Você está clicando mais rápido do que o jogo consegue excluir itens."
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Esse item mudou antes de poder ser excluído, então nada foi excluído. Confira o botão do minimapa e tente de novo."
@@ -45,6 +47,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "%s itens vendidos (1 espaço de bolsa), no valor d
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 item vendido (1 espaço de bolsa), no valor de %s."
 L["AUTO_VEND_SHIFT_HINT"] = "Segure Shift ao abrir um comerciante para pular a Venda automática."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "A Venda automática vai vender assim que o combate terminar."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "Seu equipamento foi reparado por %s."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s itens (%s espaços de bolsa) retirados do seu banco, no valor de %s."
@@ -72,11 +77,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 item)"
 L["CLUTTER_SLOTS"] = "%s espaços de bolsa"
 L["CLUTTER_SLOTS_ONE"] = "1 espaço de bolsa"
 L["NO_VALUE"] = "Sem valor"
-L["MENU_CLICK_LEFT"] = "Clique esquerdo"
-L["MENU_CLICK_RIGHT"] = "Clique direito"
-L["MENU_CLICK_MIDDLE"] = "Clique do meio"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Clique direito"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Clique do meio"
 L["MENU_TOGGLE"] = "Alternar"
 L["ACTION_ERASE"] = "Excluir"
 L["ACTION_PROTECT"] = "Proteger"
@@ -89,6 +89,16 @@ L["MENU_MORE_FEATURES"] = "Mais recursos"
 L["MENU_FEATURE_COUNT_ON"] = "%d ligados"
 L["MENU_FEATURE_COUNT_OFF"] = "%d desligados"
 L["MENU_UNPROTECT_HINT"] = "Clique para removê-lo da sua Lista de proteção."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "Lixo"
+L["TOOLTIP_PROTECTED"] = "Protegido"
+L["TOOLTIP_ERASED_NEXT"] = "Próximo a ser excluído"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "Lista deste personagem"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "Lista de todos os personagens"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -122,7 +132,7 @@ L["SAMPLE_EXAMPLE"] = "Exemplo"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Exclua e venda o lixo automaticamente para liberar espaço nas bolsas. Um clique no botão do minimapa limpa itens de missões concluídas, comida, bebida e munição que você já superou, lixo de comerciante, equipamento branco e itens cinza, e o resto se vende sozinho no próximo comerciante."
+	"Exclua e venda o lixo automaticamente para liberar espaço nas bolsas. Exclua itens de missões concluídas, comida, bebida e munição que você já superou, lixo de comerciante, equipamento branco e itens cinza pelo menu do minimapa, venda o resto no próximo comerciante e repare seu equipamento automaticamente."
 L["OPTIONS_ENABLE_WELCOME"] = "Ativar mensagem de boas-vindas"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra no chat uma mensagem de boas-vindas de uma linha, com a versão, sempre que você entra no jogo."
@@ -139,7 +149,7 @@ L["OPTIONS_KEY_SET"] = "Definir tecla"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Abre a lista de teclas de atalho do jogo, onde o Magic Eraser tem sua própria seção."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Exclui o seu Item de menor valor, igual a um clique esquerdo no botão do minimapa. Não há prévia antes de apertar a tecla, então escolha uma tecla que você não vá apertar sem querer."
+	"Exclui o seu Item de menor valor, igual à linha Excluir no menu do minimapa. Não há prévia antes de apertar a tecla, então escolha uma tecla que você não vá apertar sem querer."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protege o item sob o mouse neste personagem, onde quer que você o veja: bolsas, banco, comerciante ou janela de saque. Se ele estava na Lista de exclusão deste personagem, sai dela."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -183,7 +193,7 @@ L["OPTIONS_VERSION"] = "Versão %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] = "Cada clique exclui o lixo mais barato das suas bolsas, uma pilha por vez."
+L["TAB_ERASING_DESCRIPTION"] = "Cada Excluir remove o lixo mais barato das suas bolsas, uma pilha por vez."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"Bom saber: quase tudo que for excluído por engano ainda pode ser recuperado pelo serviço de Restauração de Itens da Blizzard!"
 
@@ -274,6 +284,12 @@ L["OPTIONS_BANK_CUSHION_NOTE"] =
 	"Deixa %d espaços de bolsa livres, porque os Avisos de espaço na bolsa estão ativados."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] =
 	"Deixa 1 espaço de bolsa livre, porque os Avisos de espaço na bolsa estão ativados."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "Reparo automático"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"Repara seu equipamento com o seu próprio ouro quando você fala com um comerciante que pode fazer isso. Se você não puder pagar a conta inteira, seu equipamento fica como está. Segure Shift ao abrir o comerciante para pulá-lo."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "Ativar Reparo automático"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"Liga ou desliga o Reparo automático. Cada reparo informa no chat quanto custou."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -310,6 +326,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Liga ou desliga a contagem
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Limite de espaços livres"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Quantos espaços livres iniciam a contagem regressiva. Com os avisos ativados, a Retirada do banco também deixa essa quantidade de espaços livres."
+L["OPTIONS_TOOLTIPS_HEADER"] = "Dicas de itens de lixo"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"Adiciona uma linha à dica de cada item nas suas bolsas dizendo por que o Magic Eraser o excluiria, ou qual Lista de proteção o mantém seguro."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Ativar dicas de itens de lixo"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Liga ou desliga as linhas do Magic Eraser nas dicas dos itens."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists
