@@ -25,12 +25,6 @@ ns.LINKS = {
 -- Options Registry
 --------------------------------------------------------------------------------
 
---[[
-    AceConfig registry names, derived from the TOC add-on name and never
-    localized. The root General panel uses the bare add-on name; feature panels
-    suffix it. Referenced by the registration calls in Options/Options.lua and by
-    NotifyChange in the panels.
-]]
 ns.OPTIONS_REGISTRY = {
 	General = ADDON_NAME,
 	Erasing = ADDON_NAME .. "_Erasing",
@@ -47,41 +41,21 @@ ns.OPTIONS_REGISTRY = {
 -- Options Layout
 --------------------------------------------------------------------------------
 
---[[
-    The options grid (ns.OPTIONS_ROW_WIDTH and the rest) belongs to Options-Kit
-    (Options/Options-Kit.lua), which publishes it under the same names. Only
-    the column no other add-on has stays here: the item lists' promote button,
-    sized to hold "All Characters" without truncating.
-]]
+-- The grid is Options-Kit's; only the promote button's width, sized for "All Characters", is ours.
 ns.OPTIONS_PROMOTE_WIDTH = 0.9
 
 --------------------------------------------------------------------------------
 -- Item List Scopes
 --------------------------------------------------------------------------------
 
---[[
-    The Ignore List and Erase List panels each name one scope per list on the
-    account. Every scope but one is an AceDB char key ("Name - Realm" on realm
-    clients, "First Last" on WoW Forever, from ns.db.keys.char and
-    ns.db.sv.char, never localized), so the account-wide
-    list needs a key no character can collide with -- hence the asterisks, which
-    no character or realm name can contain. One constant serves both panels
-    because the two never share a table:
-    the key is only ever looked up against one list at a time.
-    ns:GetCharacterListForScope in Features/Utilities.lua resolves it for both
-    lists.
-]]
+-- Asterisks, which no character or realm name can contain, so it never collides with a char key.
 ns.LIST_SCOPE_GLOBAL = "**global**"
 
 --------------------------------------------------------------------------------
 -- Color Palette
 --------------------------------------------------------------------------------
 
---[[
-    Raw 6-character hex only -- no |cff prefix (that is a display escape, added
-    in Features/Utilities.lua, where the derived COLORS table and ns.GetColor
-    accessor are built). Keys match the COLORS keys one-to-one.
-]]
+-- Raw hex, no |cff: Features/Utilities.lua adds it.
 ns.PALETTE = {
 	TITLE = "FFD100", -- Gold: Titles, Headers, Section Names
 	INFO = "00BBFF", -- Blue: Interactions, Toggles, Links, Keybinds
@@ -94,11 +68,7 @@ ns.PALETTE = {
 	MUTED = "808080", -- Dark Gray: Meta-data, Version Numbers
 }
 
---[[
-    Class colors, keyed by the token UnitClass returns, covering classes
-    through Wrath so the table is the same on every flavor. The list panels
-    color each character's name with them.
-]]
+-- Through Wrath, so the table is the same on every flavor.
 ns.CLASS_COLORS = {
 	DEATHKNIGHT = "C41E3A",
 	DRUID = "FF7C0A",
@@ -122,18 +92,7 @@ ns.CURRENCY_COLORS = {
 -- Carried Bag Range
 --------------------------------------------------------------------------------
 
---[[
-    The highest general-purpose bag index: the backpack is 0 and the
-    equippable bags run up from there. The fallback covers a client that never
-    defined the global, which a bare comparison against it would error on
-    rather than simply skip.
-
-    The range is stated once here. It seeds ns.CARRIED_BAGS (Features/
-    Utilities.lua), which adds the reagent bag where the client has one and is
-    what every carried-bag scan and range test walks; on its own it bounds the
-    free-slot count and the first bank bag on clients without character bank
-    tabs.
-]]
+-- Stated once here; scans walk ns.CARRIED_BAGS, which adds the reagent bag where there is one.
 ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
 
 --------------------------------------------------------------------------------
@@ -141,21 +100,8 @@ ns.LAST_BAG_INDEX = NUM_BAG_SLOTS or 4
 --------------------------------------------------------------------------------
 
 --[[
-    Bit values for quest_template.RequiredRaces and RequiredClasses, carried in
-    each flavor folder's Quest-Starting-Items file. A quest whose mask is
-    non-zero and lacks the player's bit can never be taken by this character,
-    so the item that starts it is dead weight the moment it drops, with no
-    quest state involved.
-
-    Keyed by the tokens UnitRace and UnitClass return, not by localized names.
-    Undead's race token is "Scourge", which is why it reads oddly here.
-
-    A race with no bit here has nothing in a mask to match. WoW Forever's
-    Skyborne is one: its bits are 2^32 (Alliance) and 2^33 (Horde), past what
-    the client's 32-bit bit library holds, and the data keeps only the low
-    bits. Features/Junk-Rules.lua gates such a race by faction instead, with
-    SIDE_RACE_BITS: a mask naming none of its side's races is an other-faction
-    quest it can never take. A missing class bit never gates.
+    Keyed by UnitRace/UnitClass tokens; Undead is "Scourge". Skyborne has no
+    bit: its 2^32 and 2^33 overflow the 32-bit bit library, so it gates by side.
 ]]
 ns.RACE_BITS = {
 	Human = 1,
@@ -194,12 +140,7 @@ ns.CLASS_BITS = {
 -- Deletion Priority
 --------------------------------------------------------------------------------
 
---[[
-    Tie-break when two erase candidates are worth the same, lowest first. Erase
-    List entries lead at 0: everything below is the add-on picking an item out by
-    rule, and a rule should never win a tie against an item the player listed by
-    hand.
-]]
+-- Ties, lowest first. Erase List entries lead: a rule never beats an item the player listed.
 ns.DELETE_PRIORITY = {
 	manual = 0,
 	quest = 1,
@@ -239,20 +180,8 @@ ns.VALUE_CAP_CHOICES = { 1, 2, 3, 5, 8, 13, 21 }
     delete reason ns:GetItemDeleteReason returns. "manual" is absent on
     purpose: an Erase List entry is always junk.
 
-    "crafted" is the white-gear rule's match with a <Made by> line on the
-    stack's own tooltip, split out so gear made for an alt survives a trip to
-    the vendor. Unchecked by default (Data/Default-Settings.lua).
-
-    "meatFish" is meat and fish a cooking recipe uses, raw fish you can eat
-    included, split out of food and drink so a fisher or cook keeps what they
-    gather. Also unchecked by default.
-
-    The rows are listed in the order the panel draws them, each with the locale
-    keys for its caption and its tooltip. The panel lays them out two to a
-    line, so each pair is a kind and its closest relative: the two quest kinds,
-    the two outgrown-food kinds, the two white-gear kinds, then ammo and grays.
-    They are string values rather than literal L["..."] reads; search the key
-    name, not the L[] form.
+    Panel order, two to a line, each kind beside its closest relative. Keys
+    are strings, not L[] reads: search the key name.
 ]]
 ns.ERASE_KINDS = {
 	-- { deleteReason, labelKey, descKey }

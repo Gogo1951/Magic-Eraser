@@ -43,28 +43,32 @@ Magic-Eraser/
 │   ├── Mists/                                Forward-prep, no TOC, not packaged; ammo table empty
 │   └── Mainline/                             Forward-prep, no TOC, not packaged; ammo and meat-fish tables empty
 ├── Features/
-│   ├── Core.lua                              Version, ns.EVENT_NAMES, dispatcher, AceDB init, other-client prune, mini-map move, login sequence, ns:ApplyProfile, combat-held repaint
-│   ├── Migrations.lua                        Tagged MIGRATION; storage-version stamp and the version 2 reshape, one retired-key cleanup
-│   ├── Utilities.lua                         Colors, displayed-item, stat and tooltip reads, formatting, free slots, carried and bank containers, list storage, character keys and names
+│   ├── Core.lua                              Version, ns.EVENT_NAMES, dispatcher, merchant-open order, AceDB init, other-client prune, mini-map move, login sequence, ns:ApplyProfile, combat-held repaint
+│   ├── Migrations.lua                        Tagged MIGRATION; storage-version stamp and the version 2 reshape
+│   ├── Utilities.lua                         Colors, displayed-item, stat and tooltip reads, formatting (chat and icon money), free slots, carried and bank containers, list storage, character keys and names
+│   ├── Tooltip-Kit.lua                       Shared tooltip kit, copied unchanged: hooks on the game's tooltips, blocks
 │   ├── Announcements.lua                     Branded player-only print: ns.BRAND_PREFIX, ns:PrintMessage; no cross-player chat
 │   ├── Ignore-List.lua                       Protect Lists (code name Ignore List): reads, menu and key-binding writers, Clear confirmation, scoped writes
 │   ├── Erase-List.lua                        Erase Lists: reads, key-binding add, scoped writes, class-reagent seed, Restore Defaults
 │   ├── Junk-Rules.lua                        The verdict: quest state, level gates, white-gear and crafted rules, junk kinds, value cap
-│   ├── Eraser.lua                            Scan, rank, erase; scan cache and junk-slot map; Erase Confirmation popup
+│   ├── Eraser.lua                            Scan, rank, erase; scan cache, junk-slot and junk-reason maps; Erase Confirmation popup
 │   ├── Quest-Item-Alerts.lua                 Chat alerts when a quest item or starter becomes erasable
 │   ├── Manual-Delete.lua                     Skip Typing DELETE: turns the client's type-to-confirm delete prompt into Yes/No
 │   ├── Bag-Warnings.lua                      Free-slot countdown and ns:IsBagWindowOpen
 │   ├── Bank-Retrieval.lua                    Moves bank junk into the bags within a slot budget; owns ns:IsBankOpen and ns:IsBankJunk
 │   ├── Auto-Vend.lua                         Merchant sell queue with confirmed-sale accounting
+│   ├── Auto-Repair.lua                       Repairs everything at a repairing merchant: own gold, full cost or nothing
 │   ├── Tint-Junk.lua                         Junk tint on bag and bank buttons, one adapter per bag window
+│   ├── Item-Tooltips.lua                     Junk or Protected block on carried items' tooltips, through Tooltip-Kit
 │   ├── Key-Bindings.lua                      Binding globals and handlers, hovered-item read, ns:OpenKeyBindings, Protect List chat keys
-│   ├── Menu-Kit.lua                          Shared menu renderer, copied unchanged: plates, rows, entry kinds, cursor test
-│   ├── Minimap-Menu.lua                      What the mini-map menu shows, the CLICKS table, the More Features flyout, open and close
+│   ├── Menu-Kit.lua                          Shared menu kit v2, copied unchanged: plates, rows, entry kinds, cursor test
+│   ├── Minimap-Menu.lua                      What the mini-map menu shows, the button's one click, the More Features flyout, open and close
 │   └── Minimap-Button.lua                    LDB launcher, icon, ns:RefreshDisplay, LibDBIcon registration and ns:ApplyMinimapButton
 ├── Diagnostics/                              Diagnostic Tools framework, copied whole; Manifests.lua is this add-on's part
 ├── Includes/
 │   ├── Images/
 │   │   ├── Magic-Eraser.tga                  IconTexture
+│   │   ├── Menu-Arrow.tga                    Menu-Kit's sub-menu arrow
 │   │   └── Menu-Plate.tga                    Menu-Kit's plate art
 │   └── Libraries/                            Vendored from .pkgmeta; rewritten on every release
 ├── Locales/
@@ -77,9 +81,11 @@ Magic-Eraser/
 │   ├── Options-Manual-Delete.lua             Skip Typing DELETE section
 │   ├── Options-Auto-Vend.lua                 Auto-Vend section and chat-report dropdown
 │   ├── Options-Bank-Retrieval.lua            Bank Retrieval section and cushion status line
+│   ├── Options-Auto-Repair.lua               Auto-Repair section and its Example line
 │   ├── Options-Tint-Junk.lua                 Junk Item Tint switch and color
 │   ├── Options-Quest-Item-Alerts.lua         Quest Item Alerts section; its one Example line uses the flavor's lowest quest-item id
 │   ├── Options-Bag-Warnings.lua              Bag-Space Warnings section
+│   ├── Options-Item-Tooltips.lua             Junk Item Tooltips section
 │   ├── Options-General.lua                   Root panel: welcome, mini-map, Features, Key Bindings, /Commands
 │   ├── Options-Erasing.lua                   Erasing panel from ERASING_SECTIONS
 │   ├── Options-Merchant-Bank.lua             Merchant & Bank panel from MERCHANT_BANK_SECTIONS
@@ -104,6 +110,7 @@ Magic-Eraser/
   - `Features/` after all of `Data/`: `Junk-Rules.lua` reads `ns.DATABASE_DEFAULTS`, `Utilities.lua` reads `ns.PALETTE` and `ns.LAST_BAG_INDEX`.
   - `Utilities.lua` before `Announcements.lua` (`ns.GetColor`) and `Junk-Rules.lua` (`ns.GetItemStats`). `Core.lua` loads before both and before `Migrations.lua`; safe only because it calls them at `PLAYER_LOGIN`, never at file scope.
   - `Menu-Kit.lua` before `Minimap-Menu.lua` before `Minimap-Button.lua`: each takes the previous one's table or functions at file scope.
+  - `Tooltip-Kit.lua` before `Item-Tooltips.lua`, which takes `ns.TooltipKit` and walks `ns.ERASE_KINDS` at file scope.
 - Inside `Options/`, `Options-Kit.lua` loads first (every other file takes `ns.OptionsKit` at file scope), then `Options-Utilities.lua`, then fragments before the panels that call their builders. `ns.FEATURES`' `apply` closures look up `ns.OnValueCapToggled` and `ns.OnTintJunkChanged` when called, so their files' order does not matter. `Diagnostics/Options-Diagnostics.lua` loads inside the Options block, just before `Options/Options.lua` registers it.
 - `ns.EXPANSION` is unread here; `Data/Flavor.lua` is the Style Guide's canonical copy, so it stays.
 - **Expiring code:** everything tagged `MIGRATION (remove after …)`: `Features/Migrations.lua`, its TOC line and its calls in `Features/Core.lua`, plus `MoveMinimapToProfiles` and its call in `Core.lua`. Dates are on the tags; see *Migration Chain*. Nothing else is deprecated or dead.
@@ -113,9 +120,10 @@ Magic-Eraser/
 ### Event Loop
 
 - One frame in `Features/Core.lua`. `ns.EVENT_NAMES` is the full event surface; `EVENT_HANDLERS` maps each to an `ns:OnXxx` name, resolved on `ns` **at fire time**, so feature files loaded after Core define their own handlers.
-- No feature file creates an event frame. The dispatcher taps `ns:LogEvent` first, behind `ns.diagnostics.logging`, so the Event Log sees every event.
-- Handler owners: Core (`ADDON_LOADED`, `PLAYER_LOGIN`, `BAG_UPDATE_DELAYED`, `PLAYERBANKSLOTS_CHANGED`, `PLAYER_REGEN_ENABLED`), Bag-Warnings (`PLAYER_ENTERING_WORLD`, `MAIL_CLOSED`), Junk-Rules (`PLAYER_LEVEL_UP`), Quest-Item-Alerts (`QUEST_TURNED_IN`), Manual-Delete (`DELETE_ITEM_CONFIRM`), Auto-Vend (merchant pair), Bank-Retrieval (bank pair, which also sets the bank-open flag), Key-Bindings (`UPDATE_BINDINGS`).
-- `ns:OnPlayerLogin` order matters: raw-table migrations (`ns:MigrateSavedVariables`, `MoveMinimapToProfiles` while `global.minimap` exists, `ns:MigrateRetiredTooltipSwitch`) → `AceDB:New` → `PruneOtherClientCharacters` → `char.classToken` (`false` when `UnitClass` answers nil) → `ns:RegisterOptionsPanels` → profile callbacks → `ns:RegisterMinimapButton` → welcome → `ns:SeedEraseList` → bag-space and quest-starter baselines → `ns:RefreshDisplay` → `C_Timer.After(0, ns.SetupTintHooks)`.
+- No feature file creates an event frame. The dispatcher taps `ns:LogEvent` first, behind `ns.diagnostics.logging`, so the Event Log sees every event. The shared kits keep their own, outside the Event Log: Tooltip-Kit's `PLAYER_LOGIN` frame installs its hooks, and Menu-Kit creates a `GET_ITEM_INFO_RECEIVED` watcher when it requests a cold item.
+- Handler owners: Core (`ADDON_LOADED`, `PLAYER_LOGIN`, `BAG_UPDATE_DELAYED`, `PLAYERBANKSLOTS_CHANGED`, `PLAYER_REGEN_ENABLED`, `MERCHANT_SHOW`), Bag-Warnings (`PLAYER_ENTERING_WORLD`, `MAIL_CLOSED`), Junk-Rules (`PLAYER_LEVEL_UP`), Quest-Item-Alerts (`QUEST_TURNED_IN`), Manual-Delete (`DELETE_ITEM_CONFIRM`), Auto-Vend (`MERCHANT_CLOSED`), Bank-Retrieval (bank pair, which also sets the bank-open flag), Key-Bindings (`UPDATE_BINDINGS`).
+- `MERCHANT_SHOW` → Core's `ns:OnMerchantShow`, which runs `ns:RepairAtMerchant` then `ns:VendAtMerchant`: repair first, then sell.
+- `ns:OnPlayerLogin` order matters: raw-table migrations (`ns:MigrateSavedVariables`, `MoveMinimapToProfiles` while `global.minimap` exists) → `AceDB:New` → `PruneOtherClientCharacters` → `char.classToken` (`false` when `UnitClass` answers nil) → `ns:RegisterOptionsPanels` → profile callbacks → `ns:RegisterMinimapButton` → welcome → `ns:SeedEraseList` → bag-space and quest-starter baselines → `ns:RefreshDisplay` → `C_Timer.After(0, ns.SetupTintHooks)`.
 - `ADDON_LOADED` fires for every add-on, before login too; `ns:OnAddonLoaded` only retries the tint hooks once `ns.db` exists. `UPDATE_BINDINGS` can also land before login, so everything `ns.RefreshSettings` reaches guards on `ns.db`.
 - `BAG_UPDATE_DELAYED` is debounced behind `updatePending` into one `ProcessBagUpdate`; `PLAYERBANKSLOTS_CHANGED` joins the same debounce so bank tints repaint.
 - `QUEST_TURNED_IN` work waits a moment so the server has flagged the quest before `C_QuestLog.IsQuestFlaggedCompleted` is read.
@@ -125,9 +133,10 @@ Magic-Eraser/
 - **Refuse and print, no queue:** `ns:OpenOptionsPanel` (Style Guide → Combat Guard), `ns:OpenKeyBindings` (`CHAT_KEY_BINDINGS_IN_COMBAT`), `ns:RunEraser` and `ns:PerformErase` (`COMBAT_LOCKOUT`; pickup and `DeleteCursorItem` are protected). `PerformErase` re-guards because a confirmation dialog can stay open into combat. The menu's Erase and Options rows and their button clicks reach these same functions, so they refuse the same way.
 - **Bag walk defers:** in combat `ProcessBagUpdate` drops the cache, sets `refreshAfterCombat` and repaints only the tints (`ns:RefreshTints`). The icon and menu repaint, `ns:CheckQuestStarters` and `ns:RedrawTintWindows` wait for `ns:OnPlayerRegenEnabled`. Level-up, quest turn-in and the eraser's retry ask through `ns:RefreshWhenOutOfCombat`, which holds behind the same flag (without the tint repaint); any held refresh replays the whole set, starter check and window redraw included. The bag-space check still runs.
 - The combat tint repaint is not free: `ns:IsJunkSlot` runs a full scan when the cache is invalid, so it walks the bags and can spend a scan retry.
-- **Auto-Vend defers and resumes:** `ns:OnMerchantShow` and each `ProcessSellQueue` tick stop in combat, set `vendPending`, announce once through `PrintVendMessage`. `ns:ResumeDeferredVend` (every combat end) starts a new *pass* if Auto-Vend is on and `MerchantFrame` is shown.
+- **Auto-Vend defers and resumes:** `ns:VendAtMerchant` and each `ProcessSellQueue` tick stop in combat, set `vendPending`, announce once through `PrintVendMessage`. `ns:ResumeDeferredVend` (every combat end) starts a new *pass* if Auto-Vend is on and `MerchantFrame` is shown.
 - **Bank Retrieval ends:** `StartPass` and each `ProcessMoveQueue` tick call `FinishPass` in combat or with the bank closed; nothing resumes.
-- **Allowed in combat:** the two list key bindings, the menu's Protect, Clear and toggle rows (and their clicks), and quest-turn-in alerts, starter check included; nothing they call is protected.
+- **Allowed in combat:** the two list key bindings, the menu's Protect, Clear and toggle rows, and quest-turn-in alerts, starter check included; nothing they call is protected.
+- **No combat check:** `ns:RepairAtMerchant`, the item tooltips, and the full-bags line. The last two call `ns:FindItemToDelete`, so in combat, where every bag update drops the cache, the first read after one walks the bags.
 
 ### Main Pipeline: Scan → Evaluate → Rank → Erase
 
@@ -135,7 +144,7 @@ Magic-Eraser/
 - **Evaluate:** `ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)` (see *Junk Rules*), then `ns:IsOverValueCap(totalValue, reason)`; over-cap is not a candidate.
 - **Rank** (`IsBetterDeletionCandidate`): projectiles (`PROJECTILE_CLASS`, `Enum.ItemClass.Projectile` or its fallback) after everything else, then lowest stack value, then `ns.DELETE_PRIORITY`, where Erase List entries win ties. Strict `<` throughout, so a full tie goes to the stack the walk found first.
 - **Erase:** `ns:RunEraser` → Erase Confirmation popup if `ns:NeedsSafetyConfirm` (reads `eraseConfirmEnabled`), else `ns:PerformErase`: `IsCandidateCurrent`, clear cursor, pick up, check `GetCursorInfo` id, `DeleteCursorItem`, sound, print `ERASED_ITEM` (link and count only, never value or reason), invalidate, delayed repaint. No candidate prints `BAGS_CLEAN_CONGRATS` plus `BAGS_CLEAN_HINT`.
-- `ForEachCandidate` has one caller, `ns:FindItemToDelete`. The same walk fills the Clutter Report totals (`ns:GetReclaimSummary`) and `cachedJunkSlots` (key `bag * SLOT_KEY_STRIDE + slot` → item id) for the tint (`ns:IsJunkSlot`). `ns:GetReclaimSummary` reads zeros after an invalidation until a `ns:FindItemToDelete` has run.
+- `ForEachCandidate` has one caller, `ns:FindItemToDelete`. The same walk fills the Clutter Report totals (`ns:GetReclaimSummary`), `cachedJunkSlots` (key `bag * SLOT_KEY_STRIDE + slot` → item id) for the tint (`ns:IsJunkSlot`), and `cachedJunkReasons` (item id → reason) for the item tooltips (`ns:GetJunkReason`). `ns:GetReclaimSummary` reads zeros after an invalidation until a `ns:FindItemToDelete` has run; `ns:GetJunkReason` and the full-bags line (`FullMessage`) call it first themselves.
 - `ns:GetItemDeleteReason` is shared by the eraser, Auto-Vend, Bank Retrieval (via `ns:IsBankJunk`) and the tint. `ns:IsOverValueCap` sits outside it, applied only on the erase path.
 - **Bag ranges:** `ns.LAST_BAG_INDEX` (`Data/Data.lua`) states the general range once. `ns.CARRIED_BAGS` / `ns.IS_CARRIED_BAG` (`Features/Utilities.lua`) add `Enum.BagIndex.ReagentBag` only when `CharacterBankTab_1` exists: Classic Era and TBC define `ReagentBag` too, but their container 5 is the first bank bag. `ns:CountFreeBagSlots` alone stops at `ns.LAST_BAG_INDEX`.
 - Chosen once at file load in `Utilities.lua`, never re-checked: `ns.GetDisplayedItem`, `ns.GetItemStats`, `ns.GetTooltipLines`, the slot tooltip getter, `ns.CARRIED_BAGS`, `ns.BANK_CONTAINERS`, `ns.LEGACY_BANK_CONTAINER` (nil on clients with character bank tabs).
@@ -146,7 +155,7 @@ Magic-Eraser/
   - `ns:RefreshDisplay` (`Features/Minimap-Button.lua`), for bag changes: invalidate, `ns.UpdateMinimapIcon`, `ns.RefreshMenu`, `ns:RefreshTints`. Never notifies an options panel. Returns early with no data object.
   - `ns.RefreshSettings` (Options-Kit), for settings changes: `NotifyChange` on every `ns.OPTIONS_REGISTRY` name, `ns.RefreshMenu`, `ns.UpdateMinimapIcon`. Does not invalidate.
 - **Why apart:** a `NotifyChange` redraws an open list page and clears the item ID half-typed into its add box; loot landing mid-typing must not do that.
-- Every settings writer ends in `ns.RefreshSettings`: `Kit.FeatureSwitch`'s `set`, every other options `set`, `Kit.ItemList` after each add, remove, restore or clear, every menu row and button click (`AfterChange`), the out-of-panel list writers, `ns:OnUpdateBindings`, `ns:ApplyProfile`.
+- Every settings writer ends in `ns.RefreshSettings`: `Kit.FeatureSwitch`'s `set`, every other options `set`, `Kit.ItemList` after each add, remove, restore or clear, every menu row click (`AfterChange`), the out-of-panel list writers, `ns:OnUpdateBindings`, `ns:ApplyProfile`.
 - A writer that changes the verdict calls `ns:InvalidateCache()` and `ns:RefreshDisplay()` first (junk kinds, value cap and its toggle's `ns.OnValueCapToggled`, every list write), since `ns.UpdateMinimapIcon` reads the cache as it stands.
 - Other `NotifyChange` callers repaint only their own panel: `Kit.WarmItems` as cold item rows load, and the Diagnostics framework on its panel.
 
@@ -162,7 +171,7 @@ Magic-Eraser/
   - `IsCandidateCurrent` fails on a cold read, so a Yes on the popup can print `ERASE_CANDIDATE_CHANGED` when nothing changed.
 - **Use levels never come from `GetItemInfo`** (`requiredLevel` is nil when cold); consumables, meat and fish, and ammo carry them in their data rows. A row with no level reads as 1.
 - **White-gear verdict** (`whiteGearVerdicts`, `Junk-Rules.lua`): per item id for the session, never cleared; a keep (`false`) from `KEEP_EQUIPMENT` or a missing API is stored too. A nil read is not stored, and a nil stat read is re-read every scan but never retried (the item keeps its name).
-- **Scan cache** (`cachedItem`, `isCacheValid`, Clutter totals, `cachedJunkSlots`): dropped by `ns:InvalidateCache`, which every list edit, junk-kind or value-cap change, profile change, erase, bag update, level-up, turn-in, seed that added rows and retrieval pass that moved something calls. `ns:RefreshDisplay` invalidates before recomputing, so the cache only serves reads between repaints (menu, click, tint, diagnostics).
+- **Scan cache** (`cachedItem`, `isCacheValid`, Clutter totals, `cachedJunkSlots`, `cachedJunkReasons`): dropped by `ns:InvalidateCache`, which every list edit, junk-kind or value-cap change, profile change, erase, bag update, level-up, turn-in, seed that added rows and retrieval pass that moved something calls. `ns:RefreshDisplay` invalidates before recomputing, so the cache only serves reads between repaints (menu, Erase, tint, tooltips, full-bags line, diagnostics).
 
 ### Junk Rules
 
@@ -216,14 +225,21 @@ Magic-Eraser/
 ### Auto-Vend
 
 - `Features/Auto-Vend.lua`: `ScanAndVend` builds `sellQueue` (not ignored, sells, has a verdict, Erase List included), cheapest first; `ProcessSellQueue` sells one per tick, re-checking slot id and protection, not the verdict.
-- **Shift skips the visit:** `ns:OnMerchantShow` returns on `IsShiftKeyDown()` before `BeginVisit`. Every summary ends with `AUTO_VEND_SHIFT_HINT`.
+- **Shift skips the visit:** `ns:VendAtMerchant` returns on `IsShiftKeyDown()` before `BeginVisit`. Every summary ends with `AUTO_VEND_SHIFT_HINT`.
 - **Visit vs. pass:** `BeginVisit` (each `MERCHANT_SHOW` with Auto-Vend on) bumps `visitGeneration` and clears `announcedSales`, `pendingSales`, `saleLines`, summary totals. `StartPass` resets only `isSelling`, `sellIndex`, `scanRetries`, `vendPasses`. The combat resume calls `StartPass` only.
 - **Every timer carries `visitGeneration`** and drops out when stale; `ns:OnMerchantClosed` bumps it before scheduling its own flush. So reopening a merchant within `CLOSE_CONFIRM_SECONDS` drops the last visit's summary and unconfirmed sales (a Shift-skipped reopen doesn't bump, so that flush still prints).
 - **Confirmed sales:** `UseContainerItem` is optimistic (a dead vendor accepts silently). Attempts go to `pendingSales` (`"bag:slot:itemId"`); `ConfirmSales` counts one only when the slot no longer holds it. Runs at the top of every `ScanAndVend` and once more `CLOSE_CONFIRM_SECONDS` after close. `announcedSales` stops double counts.
 - **Multi-pass:** the server drops bulk sells, so it re-scans from live bags up to `MAX_VEND_PASSES`.
-- **Switch off mid-visit** (panel, the menu's Toggle row, or Shift + Right-Click): `ScanAndVend` and `ProcessSellQueue` re-read `autoVendEnabled` each tick and stop; attempted sales still confirm, and the close flush still prints, since it never re-reads the switch. **Switching on mid-visit sells nothing**: only `MERCHANT_SHOW` starts a pass.
+- **Switch off mid-visit** (panel, or the menu's Toggle row): `ScanAndVend` and `ProcessSellQueue` re-read `autoVendEnabled` each tick and stop; attempted sales still confirm, and the close flush still prints, since it never re-reads the switch. **Switching on mid-visit sells nothing**: only `MERCHANT_SHOW` starts a pass.
 - **Merchant close also runs the bag-space re-check**, inside the flush, whether or not Auto-Vend is on (`ns:OnMerchantClosed` has no enabled guard).
 - **Chat:** all output through file-local `PrintVendMessage` (no-op unless `autoVendMessagesEnabled`). The dropdown maps No Chat / Summary / Every Sale onto `autoVendMessagesEnabled` + `autoVendSummaryEnabled`. Totals and sale lines accrue whatever the mode; at the close flush the summary prints first, then, under Every Sale, the held sale lines (`saleLines`), so the visit reads total on top.
+
+### Auto-Repair
+
+- `Features/Auto-Repair.lua`, `ns:RepairAtMerchant`, off by default (`autoRepairEnabled`). Runs from `ns:OnMerchantShow` before Auto-Vend.
+- Gates, in order: the switch; Shift held as the merchant opens (the same skip as Auto-Vend); `CanMerchantRepair`; `GetRepairAllCost` reporting something to repair at a cost `GetMoney()` covers. Short of the full cost it does nothing and prints nothing: never a partial repair.
+- `RepairAllItems(false)`: the player's own gold, never guild funds. Then one plain `ns:PrintMessage` (`REPAIRED_GEAR`, cost through `ns:FormatCurrency`), right after the call; nothing confirms the repair landed. No chat setting of its own; Auto-Vend's dropdown doesn't reach it.
+- The Merchant & Bank Context's "Would repair now" line re-runs the same gates in the same order.
 
 ### Maximum Value to Erase
 
@@ -259,10 +275,20 @@ Magic-Eraser/
 - `ns:RedrawTintWindows` checks only that the tint is on; its callers (`ProcessBagUpdate` out of combat, the combat-end replay) keep it out of combat. Asks adapters with a `redraw` (Baganator's `RequestItemButtonsRefresh`, which rebuilds every button).
 - Install: once at login + one frame, again on later `ADDON_LOADED`; only adapters whose folder is loaded; one that hooked nothing is retried; never hooked twice. `ns:GetTintAdapterNames` feeds diagnostics.
 
+### Junk Item Tooltips
+
+- `Features/Item-Tooltips.lua`: one `Tip.OnItem(fn, { bagsOnly = true })` registration on Tooltip-Kit; `tooltipsEnabled` is read at each show (a kit hook can't be removed).
+- Protected first: `ns:IsIgnored` → `TOOLTIP_PROTECTED` with the list that protects it, this character's checked first, as `ns:IsIgnored` does.
+- Otherwise `ns:GetJunkReason(itemId)` → its label through `KIND_LABELS` (each `ns.ERASE_KINDS` reason to its checkbox label, `"manual"` to `TAB_ERASE_LIST`); no reason, no block. `TOOLTIP_ERASED_NEXT` on the right when `ns:FindItemToDelete`'s candidate has the same id.
+- **Per item id, not per stack:** the reason is whichever junk stack of that id the scan saw, so every carried stack of the id shows it (a crafted white beside a plain one of the same id, say). An over-cap stack is never a candidate, so it shows nothing.
+- Route (the kit's, picked at `PLAYER_LOGIN`, after other add-ons' hooks): the tooltip-data post-call where `GameTooltip` has no `OnTooltipSetItem` script (WoW Forever), bag-checked by the owner's `GetBagID`; else a `hooksecurefunc` on `GameTooltip:SetBagItem` (Classic Era, TBC). The kit's carried range is its own (`NUM_BAG_SLOTS + NUM_REAGENTBAG_SLOTS`), not `ns.CARRIED_BAGS`.
+- The Eraser Context prints the route through `ItemTooltipRoute` (`Manifests.lua`), which mirrors the kit's `UsesTooltipData`.
+
 ### Bag-Space Warnings
 
 - `Features/Bag-Warnings.lua`, opt-in (`bagsFullNudgeEnabled`), threshold `bagsFullThreshold`.
 - `ns:CountFreeBagSlots` returns nil, not 0, when no container has answered; only bag family 0 (or nil) counts.
+- At zero free, `FullMessage` names how many slots junk holds (`BAGS_FULL_JUNK`, `BAGS_FULL_JUNK_ONE`) from `ns:GetReclaimSummary`, after its own `ns:FindItemToDelete`; with no junk, plain `BAGS_FULL`.
 - Warns only on a **drop** below `lastSeenFree` at or under the threshold. Baseline updated before the other guards; seeded at login (`ns:SeedBagSpaceBaseline`). `BAG_SETTLE_SECONDS` hold after each `PLAYER_ENTERING_WORLD`.
 - Held while merchant, mail or bank is open (`ns:IsBagWindowOpen`): `MerchantFrame` and `MailFrame` read live, the bank through `ns:IsBankOpen`. Each close re-checks once: mail and bank at once, the merchant inside Auto-Vend's close flush, skipped if a new visit began meanwhile.
 
@@ -275,18 +301,18 @@ Magic-Eraser/
 
 ### Mini-map Button and Menu
 
-- **Button** (`Features/Minimap-Button.lua`): `ns.dataBrokerObject` is an LDB `"launcher"` built at file scope. `OnEnter` → `ns.ShowMenu(self, "hover")`; `OnClick` → `ns.RunButtonClick(button)`, and a click with no job (Shift + Left) opens and holds the menu (`"click"`). `OnLeave` is empty: the menu closes itself.
+- **Button** (`Features/Minimap-Button.lua`): `ns.dataBrokerObject` is an LDB `"launcher"` built at file scope. `OnEnter` → `ns.ShowMenu(self, "hover")`; `OnClick` → `ns.RunButtonClick(button, self)`. `OnLeave` is empty: the menu closes itself.
+- **One click:** `ns.RunButtonClick` (`Minimap-Menu.lua`) answers Left-Click only, through `ns.ToggleMenu`: opens and holds the menu (`state.held`), or closes it when this launcher already holds it. A hover-opened menu isn't held, so the click after a hover holds it rather than closing it. Every other click, Shift or not, does nothing; their jobs live on the rows, and no row names a click. **Why:** players' hands know Right-Click as Protect, so it never gets another job.
 - `ns:RegisterMinimapButton` registers with LibDBIcon under `ADDON_NAME` against `ns.db.profile.minimap` at login; `ns:ApplyMinimapButton` (`LibDBIcon:Refresh`) re-places and shows or hides it, from the Enable Mini-map Button switch and `ns:ApplyProfile`.
 - On Camelot and Mainline it sizes, anchors and masks the icon directly (mask added once, at registration), never via `SetButtonIcon` (its `ResetButtonIcon` calls `icon:UpdateCoord()`, which errors if another add-on replaced the icon).
 - `ns.UpdateMinimapIcon` sets only `ns.dataBrokerObject.icon` (the candidate's, else `ns.DEFAULT_ICON`), so LibDBIcon and every LDB display follow.
-- **Renderer** (`Features/Menu-Kit.lua`, `ns.MenuKit`): the shared kit (Style Guide → MINIMAP MENU), copied unchanged; its header comment names other add-ons because it is the same file everywhere. `Kit.CreatePanel` + `Panel:Render(entries)`; the entry kinds are documented at the top of the file. The kit inserts a spacer before every heading itself; the menu file adds none.
-- **Contents** (`Features/Minimap-Menu.lua`, `BuildMainEntries`): header and version; Lowest-Value Item with Erase and Protect rows, or `BAGS_CLEAN_CONGRATS` with `BAGS_CLEAN_HINT` as a note under it; Auto-Vend block (status, description, Toggle); Clutter Report, only while there is clutter; this character's Protect List (sorted, `LIST_MAX` rows then `MENU_MORE`, Clear row), omitted while empty; More Features label with on and off counts; Options row. The Protect List sits last of the reports because it is the only one whose length varies.
+- **Renderer** (`Features/Menu-Kit.lua`, `ns.MenuKit`): the shared kit v2 (Style Guide → MINIMAP MENU), copied unchanged; its header comment names other add-ons because it is the same file everywhere. This menu still drives it through v1's `Kit.CreatePanel` + `Panel:Render(entries)`, which v2 keeps; the entry kinds are documented at the top of the file. The kit inserts a spacer before every heading itself; the menu file adds none.
+- **Contents** (`Features/Minimap-Menu.lua`, `BuildMainEntries`): header and version; Lowest-Value Item (value through `ns:FormatCoins`) with Erase and Protect rows, or `BAGS_CLEAN_CONGRATS` with `BAGS_CLEAN_HINT` as a note under it; Auto-Vend block (status, description, Toggle); Clutter Report, only while there is clutter; this character's Protect List (sorted, `LIST_MAX` rows then `MENU_MORE`, Clear row), omitted while empty; More Features label with on and off counts; Options row. The Protect List sits last of the reports because it is the only one whose length varies.
 - `AddClutterReport` relies on `ns:FindItemToDelete` having run earlier in `BuildMainEntries`: the totals are that scan's side effect.
-- **`CLICKS`** is the one table for both ways in: `ns.RunButtonClick` matches button + Shift against it, and `ClickRow` names the same entry's click on the row's right, so a row can never name a click that does something else.
-  - Left `ns:RunEraser`; Right protects the candidate via `ns:AddToIgnoreList` (add-only, one chat line from `ns.IGNORE_LIST_MESSAGE_KEYS`); Middle `ns:ConfirmClearIgnoreList`; Shift + Right toggles `autoVendEnabled`; Shift + Middle hides the menu and opens options.
-  - Before `ns.db` exists every click but Options does nothing, and `ns.ShowMenu` draws nothing. With clean bags Right-Click and the Protect row do nothing silently.
-- **Protect List rows:** a click removes the item (`ns:RemoveFromIgnoreList`, prints `PROTECT_LIST_REMOVED`). Their remove icon shows only on hover (`rightOnHover`), done after each draw in `ApplyHoverIcons` by hooking the pooled rows, because Menu-Kit stays unchanged. It hooks only `menu.rows`, so `rightOnHover` does nothing in the flyout. The kit has already measured the icon, so the width never shifts.
-- **Clear Protect List** (row or Middle-Click) asks first through `MAGICERASER_CLEAR_PROTECT_LIST` (the panel's `OPTIONS_LIST_CLEAR_CONFIRM` text, `preferredIndex = 3`), and does nothing on an empty list.
+- **Action rows** (`ActionRow(label, run, tooltip)`): blue, nothing on the right; the click runs the job, then `AfterChange` (`ns.RefreshSettings`). Erase `ns:RunEraser`; Protect adds the candidate via `ns:AddToIgnoreList` (add-only, one chat line from `ns.IGNORE_LIST_MESSAGE_KEYS`); Toggle flips `autoVendEnabled`; Clear Protect List `ns:ConfirmClearIgnoreList`; Options hides the menu and opens the panel.
+  - Before `ns.db` exists `ns.ShowMenu` draws nothing, so the button does nothing.
+- **Protect List rows:** a click removes the item (`ns:RemoveFromIgnoreList`, prints `PROTECT_LIST_REMOVED`). Their remove icon shows only on hover (`rightOnHover`): Menu-Kit v2 hides a marked row's right side off hover after each draw and on leave, in every panel, having measured it first, so the width never shifts. `ApplyHoverIcons` repeats the same on the main menu's pooled rows.
+- **Clear Protect List** (the row) asks first through `MAGICERASER_CLEAR_PROTECT_LIST` (the panel's `OPTIONS_LIST_CLEAR_CONFIRM` text, `preferredIndex = 3`), and does nothing on an empty list.
 - **More Features flyout** (`FLYOUTS.features`): every `ns.FEATURES` entry without `block`, one toggle row each, its page heading as the label, caption and description as the tooltip; its `apply` writes the value where it has one, else the row writes it. A child of the menu, so it hides with it; entering any other row closes it (`menu.onEnterRow`).
 - **Open and close:** `ns.ShowMenu(anchor, how)` positions away from the screen edges (`PositionMenu`, which also picks the flyout side and tooltip anchor); a launcher already showing it keeps its place. An `OnUpdate` closes it `HOVER_CLOSE_DELAY` (or `CLICK_CLOSE_DELAY` after a click, which sticks for later hovers on that anchor until it closes) once the cursor is off the button, menu and flyout, or as soon as the anchor hides. Escape closes it through `UISpecialFrames` (frame name `ADDON_NAME .. "Menu"`).
 - `Kit.IsCursorOver` reads `GetCursorPosition` rather than `IsMouseOver`, so a controller's virtual cursor keeps the menu open; every row is a plain left click for the same reason.
@@ -296,7 +322,7 @@ Magic-Eraser/
 
 - `Bindings.xml` names `MAGICERASER_ERASE`, `MAGICERASER_ADD_TO_IGNORE_LIST`, `MAGICERASER_ADD_TO_ERASE_LIST`; handlers and `BINDING_NAME_*` globals in `Features/Key-Bindings.lua`, all in `.luacheckrc` `globals`.
 - `MagicEraser_Erase` only calls `ns:RunEraser`; keep it synchronous so the key press stays the hardware event.
-- List bindings read the hovered item via `ns.GetDisplayedItem` (`TooltipUtil.GetDisplayedItem` or `GameTooltip:GetItem`), only while `GameTooltip:IsShown()`; no other tooltip is read, and nothing hovered prints `NO_HOVERED_ITEM`. Add-only, this character's list; `ns:AddToIgnoreList` returns `"already"`/`"moved"`/`"added"`, `ns:AddToEraseList` `"protected"`/`"already"`/`"added"`, each turned into one chat line (nil before `ns.db`, silent). The Protect List keys (`ns.IGNORE_LIST_MESSAGE_KEYS`) are shared with the menu's Protect row and Right-Click.
+- List bindings read the hovered item via `ns.GetDisplayedItem` (`TooltipUtil.GetDisplayedItem` or `GameTooltip:GetItem`), only while `GameTooltip:IsShown()`; no other tooltip is read, and nothing hovered prints `NO_HOVERED_ITEM`. Add-only, this character's list; `ns:AddToIgnoreList` returns `"already"`/`"moved"`/`"added"`, `ns:AddToEraseList` `"protected"`/`"already"`/`"added"`, each turned into one chat line (nil before `ns.db`, silent). The Protect List keys (`ns.IGNORE_LIST_MESSAGE_KEYS`) are shared with the menu's Protect row.
 - General panel's Key Bindings rows show `GetBindingKey` or **Not Bound** plus Set Key → `ns:OpenKeyBindings`, which tries at click time: `Settings.KEYBINDINGS_CATEGORY_ID`, a protected search of `SettingsPanel`'s categories, then `KeyBindingFrame`, else prints `KEY_BINDINGS_LOCATION`. `UPDATE_BINDINGS` → `ns.RefreshSettings`.
 
 ### Protect and Erase Lists
@@ -317,13 +343,13 @@ Magic-Eraser/
 - **Every panel is a builder function** (`Kit.RegisterPanel` hands `builder` to `RegisterOptionsTable`), so each rebuilds on every open and `NotifyChange`. Profiles' builder is also called once at registration, only for the AceDBOptions-localized name.
 - Nesting: the two list panels pass `"Erasing"` as parent key and attach by Erasing's **category ID** (AceConfigDialog maps only a root's display name to an ID). Any other panel after the first attaches by the display name `L["ADDON_TITLE"]`, so the root must register first, under exactly that name.
 - `ns:OpenOptionsPanel(key)` is Options-Kit's: the Combat Guard, then `Settings.OpenToCategory` by the category ID `Kit.RegisterPanel` captured (default General), never by display name; with no `Settings.OpenToCategory` or no ID it falls back to `AceConfigDialog:Open`'s floating window. `ns.generalCategoryID` is only a copy for the Eraser Context report, which prints the route taken.
-- **Fragments:** each `Options-{Feature}.lua` exposes `ns.Build…Options(args)` adding widgets in its own block of ten orders; panel files call them from `ERASING_SECTIONS`, `MERCHANT_BANK_SECTIONS`, `ALERTS_SECTIONS`. `Options-Eraser.lua` holds two builders, placed around Skip Typing DELETE.
+- **Fragments:** each `Options-{Feature}.lua` exposes `ns.Build…Options(args)` adding widgets in its own block of ten orders; panel files call them from `ERASING_SECTIONS`, `MERCHANT_BANK_SECTIONS` (Auto-Vend, Bank Retrieval, Auto-Repair), `ALERTS_SECTIONS` (Tint, Quest Item Alerts, Bag-Space Warnings, Junk Item Tooltips). `Options-Eraser.lua` holds two builders, placed around Skip Typing DELETE.
 - **Features Mirror:** `ns.FEATURES` (`Options-Utilities.lua`) is the one list the root panel's Features section (`Kit.FeatureSwitches`), each feature's own Enable switch (`Kit.FeatureSwitch`) and the menu's More Features flyout all draw: `{ store, setting, name, caption, desc, block, apply }`.
   - `name` is the page heading the menu row shows, `caption`/`desc` the switch's; `block` (Auto-Vend) keeps an entry out of the flyout because the menu gives it its own block.
   - `apply`, where present, replaces the kit's own write: it writes the value itself (the kit's `WriteThen` writes `ns.db.profile`, so `apply` suits profile settings only) and then the side effect: `ns.OnValueCapToggled` (invalidate + repaint), `ns.OnTintJunkChanged` (`ns:RefreshTints`).
   - `Kit.FeatureSwitch` errors at build time for a setting with no `ns.FEATURES` entry.
   - Pairs go two to a line with `Kit.Pairs`; a switch with a control beside it uses `Kit.ToggleRow`, which drops the control to its own line when the caption is too long.
-- **Examples:** `Kit.Example` draws a silver "Example" label under its control, then the lines indented. The label is `SAMPLE_EXAMPLE` with any trailing `%s`, space, colon or full-width colon trimmed, so a locale still on "Example: %s" reads right. Each line is `ns.ExampleLine(message)`, the very locale string printed, through `ns:FormatMessage`; `Kit.PrintedLine` isn't needed, since that helper already wraps the line in one color and closes it. `ns.ExampleItemLink(itemId, registryName)` gives it a real quality-colored link (`ns.EXAMPLE_JUNK_ITEM_ID` for Auto-Vend; for Quest Item Alerts the flavor's lowest quest-item id, looked up once per session).
+- **Examples:** `Kit.Example` draws a silver "Example" label under its control, then the lines indented. The label is `SAMPLE_EXAMPLE` with any trailing `%s`, space, colon or full-width colon trimmed, so a locale still on "Example: %s" reads right. Each line is `ns.ExampleLine(message)`, the very locale string printed, through `ns:FormatMessage`; `Kit.PrintedLine` isn't needed, since that helper already wraps the line in one color and closes it. `ns.ExampleItemLink(itemId, registryName)` gives it a real quality-colored link (`ns.EXAMPLE_JUNK_ITEM_ID` for Auto-Vend; for Quest Item Alerts the flavor's lowest quest-item id, looked up once per session). Auto-Repair's line prints a fixed sample cost (`EXAMPLE_COST`).
 - `Kit.StatusLine` states a cross-feature coupling and hides on nil; `Kit.WarningLine` flags a wrong state (no junk kind checked).
 - The layout grid is Options-Kit's (`Kit.ROW_WIDTH` and the rest, also published as `ns.OPTIONS_*`); only `ns.OPTIONS_PROMOTE_WIDTH` stays in `Data/Data.lua`. A captioned control is `Kit.Label` + control with `name = ""`; `Kit.SubLabelRow` indents a gated control. Gated settings are hidden, never greyed. Tint's switch-plus-picker line is a `README-Notes.md` exception.
 - **List panels:** `ns.BuildCharacterListTree` (tree keyed by scope, not position; All Characters, blank row, characters with a list plus the played one, class-colored via `ns:GetCharacterDisplayName`). Every scope's pane is built on each rebuild, so each rebuild walks the bags once per scope for the picker.
@@ -335,8 +361,8 @@ Magic-Eraser/
 ### Diagnostic Tools (`Diagnostics/Manifests.lua`)
 
 - The framework is shared and copied whole; only `Manifests.lua` is this add-on's. The framework's Display Context report (`Diagnostics/Settings-Reports.lua`) reads this add-on's mini-map wiring by name: `ns.dataBrokerObject` (and its `OnClick`), `LibDBIcon:GetMinimapButton(ADDON_NAME)` and that its `db` is `ns.db.profile.minimap`, the raw `_G[ns.SAVED_VARIABLES_NAME]` profile and `global.minimap`, `ns.ShowMenu`, `ns.RunButtonClick`, `ns.IsMenuShown`, `ns.FEATURES` (its "More Features rows" count includes Auto-Vend), and the menu frame name in `UISpecialFrames`.
-- `ns.DIAGNOSTIC_API_CHECKS`: a row per API called or guarded, the menu's reads included. Modern/legacy pairs list **both halves**; a `[FAIL]` on one half shows which branch the client took. No `BankFrame` row: nothing reads it.
-- `ns:BuildEraserContextReport` and `ns:BuildMerchantBankContextReport`: probes; bag counts come from file-local `TallyContainers`, which applies `ns:IsIgnored` then `ns:GetItemDeleteReason` and requests nothing. The Eraser Context also calls `ns:FindItemToDelete`, which on an invalid cache rebuilds it and may request item data and schedule a retry. Quest gates print the race, class and (for a bitless race) side bits. `TINT_BAG_ADDONS` mirrors `TINT_ADAPTERS` by folder to flag loaded-but-unhooked bag add-ons; `BINDING_NAMES` mirrors `Bindings.xml`.
+- `ns.DIAGNOSTIC_API_CHECKS`: a row per API called or guarded, the menu's reads included. Modern/legacy pairs list **both halves**; a `[FAIL]` on one half shows which branch the client took. The item tooltips' two routes are listed the same way, Tooltip-Kit's reads included. No `BankFrame` row: nothing reads it.
+- `ns:BuildEraserContextReport` and `ns:BuildMerchantBankContextReport`: probes; bag counts come from file-local `TallyContainers`, which applies `ns:IsIgnored` then `ns:GetItemDeleteReason` and requests nothing. The Eraser Context also calls `ns:FindItemToDelete`, which on an invalid cache rebuilds it and may request item data and schedule a retry. Quest gates print the race, class and (for a bitless race) side bits. The Eraser Context names the item tooltips' route (`ItemTooltipRoute`); the Merchant & Bank Context has an Auto-Repair block ending in a "Would repair now" verdict that copies `ns:RepairAtMerchant`'s gates. `TINT_BAG_ADDONS` mirrors `TINT_ADAPTERS` by folder to flag loaded-but-unhooked bag add-ons; `BINDING_NAMES` mirrors `Bindings.xml`.
 - `ns.DIAGNOSTIC_NAME_LOOKUPS`: every GlobalStrings label shown or matched (`UiLabel` rows, `GOLD_AMOUNT` included), the built crafted and Skip Typing DELETE patterns, and `ns.EXAMPLE_JUNK_ITEM_ID`.
 - `ns.DIAGNOSTIC_DATA_SOURCES`: one Validate Data report per data file; `label` is the file's table-name part. Each entry holds a `sources` list (`table`, `kind` `"item"` or `"quest"`, `rowId` or `collect`, `dataColumns`); Quest-Items and Quest-Starting-Items carry an item source and a quest source. The `Game-IDs` entry names a single constant: the framework's validator reads a number as a one-row table keyed by its own name (`RowValue` gives the id).
 - Probes read state through accessors the features expose for this (`ns:GetScanRetryState`, `ns:GetAutoVendState`, `ns:GetBankMoveBudget`, `ns:IsBankRetrieving`, `ns:IsBankOpen`, `ns:GetBagWarningState`, `ns:GetPlayerQuestBits`, `ns:GetCraftedLinePattern`, `ns:GetManualDeleteInstructionPattern`, `ns:CountAnnouncedQuestStarters`).
@@ -345,7 +371,8 @@ Magic-Eraser/
 
 - `enUS.lua` alone passes the default flag to `NewLocale`. Never reuse a retired key name.
 - `%s%s` in `CONFIRM_ERASE`, `ERASED_ITEM`, `SOLD_ITEM`, `QUEST_ITEM_READY`, `QUEST_STARTER_UNAVAILABLE` is one unit: link, then `" xN"` or empty.
-- Counts and money arrive pre-formatted (`ns:FormatCommaNumber`, `ns:FormatCurrency`) as `%s`; the raw `%d`s (`BAGS_FULL_NUDGE`, `OPTIONS_BANK_CUSHION_NOTE`) never get commas.
+- Money has two formats from one `MoneyParts` split: `ns:FormatCurrency` for chat and example lines (colored coin letters), `ns:FormatCoins` for the menu (coin icons at line height).
+- Counts and money arrive pre-formatted (`ns:FormatCommaNumber`, `ns:FormatCurrency`) as `%s`; the raw `%d`s (`BAGS_FULL_NUDGE`, `BAGS_FULL_JUNK`, `OPTIONS_BANK_CUSHION_NOTE`) never get commas.
 - Count of one has its own key (`*_ONE`, `*_ONE_ITEM`, `*_ONE_SLOT`, `BAGS_FULL` for zero).
 - Links shown without brackets: `ns:StripLinkBrackets`, applied by the menu, the popup and `ns:GetItemDisplayName`; the options' list rows and picker strip their own through `Kit.ItemName`. Chat lines from `ns:PrintMessage` and the options' example lines keep them.
 - Menu-Kit's toggle words come from the add-on (`Kit.SetToggleText(L["MENU_ON"], L["MENU_OFF"])`); the kit's own defaults are English fallbacks.
@@ -360,7 +387,10 @@ Magic-Eraser/
 - **New junk kind:** a reason from `GetRuleDeleteReason` + `ns.DELETE_PRIORITY` + `ns.ERASE_KINDS` + `junkKinds` default + two locale keys.
 - **New data table or constant:** a file in all seven `Data/{Game}/` folders (empty where it has no rows, with the `ns.IS_DISCOVERY` guard in Vanilla and Discovery) + each TOC's folder lines + `ns.DIAGNOSTIC_DATA_SOURCES` + the Eraser Context `Databases:` line for a table.
 - **Changed data row:** the same id in every folder where it's true; Validate Data on each client.
-- **New menu click or click-named row:** a `CLICKS` entry + its `MENU_CLICK_*` key + the row through `ClickRow`.
+- **New menu action:** an `ActionRow(label, run)` in `BuildMainEntries` + its label key; never a button click.
+- **Changing Auto-Repair's gates:** `ns:RepairAtMerchant` + the Merchant & Bank Context's "Would repair now" verdict (`Manifests.lua`), same order.
+- **New junk kind or Protect List scope, for the tooltips:** `KIND_LABELS` reads `ns.ERASE_KINDS` itself; a new list scope needs a `ProtectedBy` line and its `TOOLTIP_PROTECTED_*` key.
+- **Tooltip-Kit refresh that changes its route pick:** `ItemTooltipRoute` and the tooltip API rows in `Manifests.lua`.
 - **Renaming a mini-map symbol** (`ns.dataBrokerObject`, `ns.ShowMenu`, `ns.RunButtonClick`, `ns.IsMenuShown`, `ns.FEATURES`, the menu's frame name, the LibDBIcon name): `Diagnostics/Settings-Reports.lua`'s Display Context reads each.
 - **New bag add-on for the tint:** `TINT_ADAPTERS` + `TINT_BAG_ADDONS` + `.luacheckrc` `read_globals` + `OPTIONS_ENABLE_TINT_DESCRIPTION`.
 - **New GlobalStrings label:** its read + a `UiLabel` row in `ns.DIAGNOSTIC_NAME_LOOKUPS` + `.luacheckrc` `read_globals`.
@@ -382,11 +412,10 @@ Magic-Eraser/
 
 ### Migration Chain
 
-All three run on the raw table in `ns:OnPlayerLogin`, before `AceDB:New`, in this order:
+Both run on the raw table in `ns:OnPlayerLogin`, before `AceDB:New`, in this order:
 
 1. `ns:MigrateSavedVariables` (`Migrations.lua`): `MigrateToVersion2` if `global.storageVersion` is below 2: per-character profiles collapse onto Default, lists move to `char`, every `global` key `DATABASE_DEFAULTS.profile` names moves into Default, old `safetyEnabled` becomes `eraseConfirmEnabled`. Stamps `STORAGE_VERSION` (a table at any version below it is restamped); a fresh install is created stamped, without migrating. `storageVersion` is stored, not inferred, because an all-defaults one-off profile is stored empty.
 2. `MoveMinimapToProfiles` (`Core.lua`), only while `global.minimap` exists: copies it into Default and every profile `profiles` or `profileKeys` names (creating empty ones as needed; a profile with its own is left alone), then clears it from `global`. Keys on `global.minimap`, not `storageVersion`, and sits in `Core.lua` so it outlives `Migrations.lua`'s date. On a pre-version-2 table step 1 has already moved `global.minimap` into Default only (`minimap` is a profile default), so this step finds nothing.
-3. `ns:MigrateRetiredTooltipSwitch` (`Migrations.lua`): clears `tooltipWarningEnabled` from every profile and `global`. No marker. Expires before the file it lives in.
 
 Each step's `MIGRATION (remove after …)` date is on its code and its call; `Migrations.lua`'s TOC line carries the file's latest date.
 
@@ -412,7 +441,7 @@ Each step's `MIGRATION (remove after …)` date is on its code and its call; `Mi
 - **Keying a quest-item row to the granting quest**: rows fire on the first completed listed quest, so the item is erased while still needed. Follow the data file's How We Got the Data rule.
 - **Treating a 0 race or class bit as "matches nothing"**: every gated starter would read as dead-end junk. A bitless race gates by side; a bitless class never gates.
 - **Editing one flavor folder**: each folder is a complete copy; check the id in every folder.
-- **Hand-writing a bag range**: looping `0, 4` misses WoW Forever's reagent bag, and adding `Enum.BagIndex.ReagentBag` unconditionally takes Classic Era and TBC's first bank bag. Walk `ns.CARRIED_BAGS`, test `ns.IS_CARRIED_BAG` / `ns.IS_BANK_BAG`. Only `ns:CountFreeBagSlots` stops at `ns.LAST_BAG_INDEX`. Options-Kit's Add from Bags list is the kit's and adds `ReagentBag` whenever the enum exists.
+- **Hand-writing a bag range**: looping `0, 4` misses WoW Forever's reagent bag, and adding `Enum.BagIndex.ReagentBag` unconditionally takes Classic Era and TBC's first bank bag. Walk `ns.CARRIED_BAGS`, test `ns.IS_CARRIED_BAG` / `ns.IS_BANK_BAG`. Only `ns:CountFreeBagSlots` stops at `ns.LAST_BAG_INDEX`. Options-Kit's Add from Bags list is the kit's and adds `ReagentBag` whenever the enum exists; Tooltip-Kit's carried range is its own too (`NUM_BAG_SLOTS + NUM_REAGENTBAG_SLOTS`).
 - **Treating no container data as zero free**: mid-loading-screen every bag reads nil. `ns:CountFreeBagSlots` returns nil; callers skip.
 - **Refreshing straight from `BAG_UPDATE_DELAYED`**: it bursts. Use the `updatePending` debounce.
 - **Doing protected bag work in combat**: defer it the way `ProcessBagUpdate` does, behind `refreshAfterCombat`.
@@ -425,8 +454,8 @@ Each step's `MIGRATION (remove after …)` date is on its code and its call; `Mi
 - **Reading `MerchantFrame` or `MailFrame` as the only open signal**: a UI that hides them loses Auto-Vend's combat resume and the bag-space hold. The same Baganator lesson; prefer an event flag when adding a new read.
 - **Requesting a Baganator redraw on every repaint**: it rebuilds every button. Only after bag updates, tint on, out of combat.
 - **Writing fields onto bag-window buttons**: taints them. Use a weak-keyed table (`paintedButtons`, `baganatorButtons`).
-- **Editing `Features/Menu-Kit.lua` for a Magic Eraser need**: it is the shared kit, copied unchanged into every add-on with a menu. Work around it in `Minimap-Menu.lua`, as `ApplyHoverIcons` does.
-- **Writing a menu row's click label by hand, or a click handler outside `CLICKS`**: the row and the button drift apart. One `CLICKS` entry drives both.
+- **Editing `Features/Menu-Kit.lua` for a Magic Eraser need**: it is the shared kit, copied unchanged into every add-on with a menu. Work around it in `Minimap-Menu.lua`.
+- **Giving the mini-map button Right-Click, or any click but Left**: deliberate. Players' hands know Right-Click as Protect; every job lives on a menu row, and the button only opens, holds and closes the menu.
 - **Moving the Clutter Report above the Lowest-Value Item**: its totals come from that scan; drawn first it reads zeros.
 - **Testing menu hover with `IsMouseOver`**: a controller's virtual cursor doesn't report there, so the menu closes under it. Use `Kit.IsCursorOver`.
 - **Calling `ns:ClearIgnoreList` from a click**: skips the confirmation that guards a stray click under the item rows. Clicks go through `ns:ConfirmClearIgnoreList`.
@@ -439,6 +468,8 @@ Each step's `MIGRATION (remove after …)` date is on its code and its call; `Mi
 - **Mutating the AceDBOptions table**: its `args` are shared with every Ace3 add-on's Profiles panel.
 - **A feature with its own event frame**: escapes the Event Log.
 - **Calling `ns:PrintMessage` from the vend path**: ignores the chat-report setting. Use `PrintVendMessage`.
+- **Reading the tooltip's verdict as the hovered stack's**: `cachedJunkReasons` is keyed by item id, so one junk stack marks every stack of it. Per-stack checks (crafted, cap) aren't re-run for the hovered copy.
+- **Letting Auto-Repair spend guild funds or repair what it can afford**: `RepairAllItems(false)` and the full-cost gate are deliberate; it never leaves the player broke or half repaired.
 - **A setting in `global`, or a list in `profile`**: the setting escapes Reset Profile and one-off profiles; the list would be shared by everyone on Default.
 - **An `apply` on a feature whose `store` isn't the profile**: the kit's write is skipped and `WriteThen` writes `ns.db.profile`.
 - **Inferring the seed from an empty list**: only `eraseListSeeded` tells cleared from never seeded. Restore clears it first; Clear List sets it.

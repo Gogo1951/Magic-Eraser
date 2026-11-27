@@ -30,6 +30,8 @@ L["CONFIRM_ERASE"] = "Erase %s%s?"
 L["BAGS_FULL"] = "Your bags are full!"
 L["BAGS_FULL_NUDGE"] = "Your bags are nearly full. You have %d slots remaining."
 L["BAGS_FULL_NUDGE_ONE"] = "Your bags are nearly full. You have 1 slot remaining."
+L["BAGS_FULL_JUNK"] = "Your bags are full, but you have %d slots full of junk."
+L["BAGS_FULL_JUNK_ONE"] = "Your bags are full, but you have 1 slot full of junk."
 L["CURSOR_TOO_FAST"] = "Slow down! You're clicking faster than the game can erase items."
 L["ERASE_CANDIDATE_CHANGED"] =
 	"That item changed before it could be erased, so nothing was erased. Check the mini-map button and try again."
@@ -44,6 +46,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "Sold %s items (1 bag slot), worth %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "Sold 1 item (1 bag slot), worth %s."
 L["AUTO_VEND_SHIFT_HINT"] = "Hold Shift when opening a merchant to skip Auto-Vend."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "Auto-Vend will sell once combat ends."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "Repaired your gear for %s."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "Pulled %s items (%s bag slots) out of your bank, worth %s."
@@ -71,11 +76,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 Item)"
 L["CLUTTER_SLOTS"] = "%s Bag Slots"
 L["CLUTTER_SLOTS_ONE"] = "1 Bag Slot"
 L["NO_VALUE"] = "No Value"
-L["MENU_CLICK_LEFT"] = "Left-Click"
-L["MENU_CLICK_RIGHT"] = "Right-Click"
-L["MENU_CLICK_MIDDLE"] = "Middle-Click"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + Right-Click"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + Middle-Click"
 L["MENU_TOGGLE"] = "Toggle"
 L["ACTION_ERASE"] = "Erase"
 L["ACTION_PROTECT"] = "Protect"
@@ -88,6 +88,16 @@ L["MENU_MORE_FEATURES"] = "More Features"
 L["MENU_FEATURE_COUNT_ON"] = "%d On"
 L["MENU_FEATURE_COUNT_OFF"] = "%d Off"
 L["MENU_UNPROTECT_HINT"] = "Click to remove it from your Protect List."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "Junk"
+L["TOOLTIP_PROTECTED"] = "Protected"
+L["TOOLTIP_ERASED_NEXT"] = "Erased Next"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "This Character's List"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "All Characters List"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -120,7 +130,7 @@ L["SAMPLE_EXAMPLE"] = "Example"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant."
+	"Delete and auto-sell junk to free up bag space. Erase completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays from the mini-map menu, sell the rest at your next merchant, and auto-repair your gear."
 L["OPTIONS_ENABLE_WELCOME"] = "Enable Welcome Message"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "Prints a one-line welcome with the version in chat each time you log in."
 L["OPTIONS_ENABLE_MINIMAP"] = "Enable Mini-map Button"
@@ -135,7 +145,7 @@ L["OPTIONS_KEY_BINDINGS_HEADER"] = "Key Bindings"
 L["OPTIONS_KEY_SET"] = "Set Key"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "Opens the game's key binding list, where Magic Eraser has its own section."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Erases your Lowest-Value Item, same as a left-click on the mini-map button. There's no preview before a keypress, so bind it somewhere you won't hit by accident."
+	"Erases your Lowest-Value Item, same as the Erase row in the mini-map menu. There's no preview before a keypress, so bind it somewhere you won't hit by accident."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protects the item under your mouse on this character, wherever you see it: bags, bank, merchant or loot window. If it was on this character's Erase List, it comes off."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -179,7 +189,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] = "Each click erases the cheapest junk in your bags, one stack at a time."
+L["TAB_ERASING_DESCRIPTION"] = "Each Erase takes the cheapest junk in your bags, one stack at a time."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"FYI: Nearly anything erased by mistake can still be recovered through Blizzard's Item Restoration service!"
 
@@ -267,6 +277,11 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Turns Bank Retrieval on or off. It never pulls more than your free bag slots can hold."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Leaves %d bag slots free, because Bag-Space Warnings are on."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Leaves 1 bag slot free, because Bag-Space Warnings are on."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "Auto-Repair"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"Repairs your gear when you talk to a merchant who can, with your own gold. If you can't cover the whole bill, it leaves your gear alone. Hold Shift as the merchant opens to skip it."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "Enable Auto-Repair"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] = "Turns Auto-Repair on or off. Each repair says in chat what it cost."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -303,6 +318,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Turns the chat countdown o
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Free-Slot Threshold"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"How many free slots start the countdown. While warnings are on, Bank Retrieval also leaves this many slots free."
+L["OPTIONS_TOOLTIPS_HEADER"] = "Junk Item Tooltips"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"Adds a line to the tooltip of each item in your bags saying why Magic Eraser would erase it, or which Protect List keeps it safe."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Enable Junk Item Tooltips"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Turns the Magic Eraser lines in item tooltips on or off."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

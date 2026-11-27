@@ -10,32 +10,16 @@ local sellQueue = {}
 local isSelling = false
 local sellIndex = 0
 
---[[
-    Set when a vend pass is deferred because we are in combat (UseContainerItem
-    is protected). ns:ResumeDeferredVend resumes it once combat ends.
-]]
-
 local vendPending = false
 
--- Bounded retry for cold item-data misses; reset on each pass start (StartPass).
 local MAX_SCAN_RETRIES = 5
 local scanRetries = 0
 
---[[
-    After a sell pass finishes we re-scan and run another pass, because the
-    server silently drops some UseContainerItem sells when many arrive in quick
-    succession (leaving one or two junk items behind on large batches). Each
-    re-scan rebuilds the queue from the live bag state, so only items that did
-    not actually sell get re-queued. Bounded so a genuinely unsellable-but-
-    flagged item can never loop forever; reset on each pass start (StartPass),
-    which is a merchant opening or the pass resuming after combat, so a
-    combat-deferred visit gets a full run of passes rather than a spent one.
-]]
+-- The server drops some bulk sells, so passes repeat from live bags, capped so an unsellable item can't loop.
 
 local MAX_VEND_PASSES = 4
 local vendPasses = 0
 
--- Where a pass stands, for the Diagnostic Tools Merchant & Bank Context.
 function ns:GetAutoVendState()
 	return isSelling, vendPending, vendPasses, MAX_VEND_PASSES
 end
@@ -43,59 +27,27 @@ end
 local CLOSE_CONFIRM_SECONDS = 0.4
 
 --[[
-    Bumped at every visit boundary -- BeginVisit when a merchant opens, and
-    ns:OnMerchantClosed when one closes. Every timer a pass schedules carries the
-    generation it was created under and drops out once a newer one exists, so
-    closing and reopening a merchant mid-pass cannot leave the old chain walking
-    the new visit's queue. isSelling alone would not catch it: the second visit
-    sets that flag back to true and the stale timer would sail straight through.
-    Bank-Retrieval.lua guards its own chains the same way with passGeneration.
+    Every timer carries the generation it started under and drops out once it's
+    stale. isSelling alone can't: a reopened merchant sets it true again.
 ]]
 
 local visitGeneration = 0
 
---[[
-    Slots already announced this merchant visit. A retry pass can re-sell a slot
-    whose first UseContainerItem was silently dropped, but the player only needs
-    to hear about that sale once. Wiped per visit in BeginVisit -- never per
-    pass, and never on the combat resume, which continues the same visit rather
-    than opening a new one.
-]]
+-- Per visit, never per pass: a retry can re-sell a slot, and the player hears it once.
 
 local announcedSales = {}
 
---[[
-    Attempted-but-unconfirmed sales, keyed bag:slot:itemId -> the data needed to
-    announce the sale later (count, value, link). ProcessSellQueue fills this;
-    ConfirmSales drains it as items are confirmed gone from their slots. Visit
-    scoped alongside announcedSales, which is what lets a sale attempted just
-    before combat interrupted the pass still be confirmed and announced once the
-    pass restarts.
-]]
+-- Visit-scoped, so a sale attempted just before combat still confirms after the resume.
 
 local pendingSales = {}
 
---[[
-    Per-visit totals for the closing summary, and the per-item sale lines
-    Every Sale in Chat prints under it. Both are accrued for every newly
-    announced sale whichever chat report is chosen, so changing the dropdown
-    mid-visit still produces a correct close: the report chosen when the
-    merchant closes decides whether the sale lines print. summarySlots counts
-    one per sale (each sold stack empties one bag slot). Visit scoped alongside
-    announcedSales, and flushed in OnMerchantClosed.
-]]
+-- Accrued whatever the chat report, so changing it mid-visit still closes right.
 
 local saleLines = {}
 
 local summaryCount = 0
 local summarySlots = 0
 local summaryValue = 0
-
---[[
-    Single guard for all Auto-Vend chat output. No Chat Report silences the
-    deferred-combat notice, the per-item sale lines, and the
-    per-visit summary line alike.
-]]
 
 local function PrintVendMessage(message)
 	if ns.db and ns.db.profile.autoVendMessagesEnabled then
@@ -108,26 +60,14 @@ end
 --------------------------------------------------------------------------------
 
 --[[
-    A sale is only real once the item actually leaves its slot. UseContainerItem
-    is optimistic: a merchant that cannot complete the transaction -- e.g. a
-    "dead" corpse vendor that still opens a merchant frame -- accepts the call
-    silently, so announcing at send time would report phantom sales. Instead
-    ProcessSellQueue records each attempt in pendingSales and we confirm here:
-    any slot that no longer holds the attempted item has sold, and is announced
-    and counted exactly once. An item still sitting in its slot did not sell --
-    it stays pending for a later pass, and an unsellable-but-flagged item is
-    simply never announced.
-
-    Runs at the top of each ScanAndVend re-scan (0.3s after a pass -- long enough
-    for the sell round-trip to empty the slot) and once more shortly after the
-    merchant window closes, on the deferred flush in ns:OnMerchantClosed.
+    UseContainerItem is optimistic (a dead vendor accepts it silently), so a
+    sale counts only once its slot no longer holds the item.
 ]]
 
 local function ConfirmSales()
 	for saleKey, sale in pairs(pendingSales) do
 		local currentItemInfo = GetContainerItemInfo(sale.bag, sale.slot)
 		if not currentItemInfo or currentItemInfo.itemID ~= sale.itemId then
-			-- Slot no longer holds the attempted item: the sale went through.
 			pendingSales[saleKey] = nil
 			if not announcedSales[saleKey] then
 				announcedSales[saleKey] = true
@@ -148,19 +88,10 @@ end
 -- Queue Processor
 --------------------------------------------------------------------------------
 
---[[
-    Forward declaration: ProcessSellQueue re-scans between passes, but the scanner
-    is defined below it.
-]]
-
 local ScanAndVend
 
 local function ProcessSellQueue(generation)
-	--[[
-	    A newer visit owns sellQueue now, so a stale tick returns without
-	    touching it -- the wipe below would empty the queue the live pass is
-	    still working through.
-	]]
+	-- A stale tick must not touch sellQueue: the wipe below would empty the live pass's queue.
 
 	if generation ~= visitGeneration then
 		return
@@ -170,20 +101,12 @@ local function ProcessSellQueue(generation)
 		isSelling = false
 	end
 
-	-- Stop if we are done, the merchant window was closed, or Auto-Vend was switched off
 	if not isSelling then
 		wipe(sellQueue)
 		return
 	end
 
-	--[[
-        UseContainerItem below is protected and forbidden in combat. If we
-        entered combat mid-queue, stop now; ns:ResumeDeferredVend starts a fresh
-        pass once combat ends, rebuilding the queue from live bag state
-        because slots may have shifted. Only the queue is dropped: pendingSales
-        keeps the already-attempted sales so the resumed pass can still confirm
-        and announce them.
-    ]]
+	-- UseContainerItem is protected. Only the queue drops; pendingSales still confirms after the resume.
 
 	if InCombatLockdown() then
 		isSelling = false
@@ -196,12 +119,6 @@ local function ProcessSellQueue(generation)
 	end
 
 	sellIndex = sellIndex + 1
-
-	--[[
-        If we have reached the end of the queue, re-scan and run another pass to
-        catch any sells the server silently dropped. If nothing sellable remains
-        (the common case) ScanAndVend stops cleanly; the pass cap prevents a loop.
-    ]]
 
 	if sellIndex > #sellQueue then
 		if vendPasses < MAX_VEND_PASSES then
@@ -218,19 +135,12 @@ local function ProcessSellQueue(generation)
 
 	local item = sellQueue[sellIndex]
 
-	-- Double-check the slot before selling to ensure items have not shifted
 	local currentItemInfo = GetContainerItemInfo(item.bag, item.slot)
 
 	if currentItemInfo and currentItemInfo.itemID == item.itemId and not ns:IsIgnored(item.itemId) then
 		UseContainerItem(item.bag, item.slot)
 
-		--[[
-		    Record the attempt but do not announce yet: ConfirmSales counts this
-		    sale only once it sees the item leave the slot, so a merchant that
-		    silently accepts the call without buying (a dead corpse vendor) never
-		    produces a phantom "Sold" line. Skip a slot already confirmed on an
-		    earlier pass; a re-attempt of a still-present item just refreshes it.
-		]]
+		-- Recorded, not announced: ConfirmSales counts it once the slot empties.
 		local saleKey = string.format("%d:%d:%d", item.bag, item.slot, item.itemId)
 		if not announcedSales[saleKey] then
 			pendingSales[saleKey] = {
@@ -263,11 +173,6 @@ function ScanAndVend(generation)
 		return
 	end
 
-	--[[
-	    Confirm the previous pass before rebuilding the queue. This runs 0.3s
-	    after that pass's last UseContainerItem (the hand-off below), long enough
-	    for sold slots to have emptied.
-	]]
 	ConfirmSales()
 
 	local isDataMissing = false
@@ -325,13 +230,7 @@ function ScanAndVend(generation)
 	end
 end
 
---[[
-    Open a visit: clear the sale accounting the visit owns. MERCHANT_SHOW starts
-    a visit whether or not a pass can run right now, so this fires even when the
-    pass is deferred to the end of combat -- otherwise the resumed pass would
-    inherit the previous merchant's announced slots. The generation bump retires
-    every timer still pending from the previous visit.
-]]
+-- Runs even when combat defers the pass, so the resume never inherits the last merchant's books.
 local function BeginVisit()
 	visitGeneration = visitGeneration + 1
 	wipe(announcedSales)
@@ -342,17 +241,7 @@ local function BeginVisit()
 	summaryValue = 0
 end
 
---[[
-    Everything a fresh pass needs and nothing the visit owns, so a pass can be
-    restarted mid-visit without disturbing the books. That is what lets a sale
-    attempted moments before combat interrupted us survive: it is still sitting
-    in pendingSales, and the ConfirmSales at the top of the resumed ScanAndVend
-    is what finally announces and counts it.
-
-    The pass runs under the visit generation live at this moment, and every timer
-    it schedules carries that value. A combat resume is the same visit, so it
-    picks up the same generation.
-]]
+-- Nothing the visit owns, so the combat resume restarts a pass without touching the books.
 local function StartPass()
 	isSelling = true
 	sellIndex = 0
@@ -367,36 +256,18 @@ end
 -- Event Handlers
 --------------------------------------------------------------------------------
 
---[[
-    Registered and dispatched by Core's central event frame (see ns.EVENT_NAMES
-    in Core.lua). This file owns the merchant handlers and has no event frame of
-    its own, so the diagnostics event log -- which taps the one dispatcher --
-    captures MERCHANT_SHOW and MERCHANT_CLOSED too.
-]]
-
-function ns:OnMerchantShow()
+function ns:VendAtMerchant()
 	if not (ns.db and ns.db.profile.autoVendEnabled) then
 		return
 	end
 
-	--[[
-        Holding Shift as the merchant opens skips Auto-Vend for this visit, for
-        the times you want to buy back, repair or sell by hand. Returning before
-        BeginVisit leaves nothing to sell and no pending vend, so a combat end
-        mid-visit resumes nothing and the close flush finds no summary to print.
-    ]]
+	-- Shift skips the visit. Returning before BeginVisit leaves nothing to resume or flush.
 
 	if IsShiftKeyDown() then
 		return
 	end
 
 	BeginVisit()
-
-	--[[
-        Vendoring relies on UseContainerItem, a protected call the client blocks
-        in combat. If the merchant opened during combat, defer the whole pass
-        until combat ends rather than tripping ADDON_ACTION_FORBIDDEN.
-    ]]
 
 	if InCombatLockdown() then
 		if not vendPending then
@@ -410,12 +281,7 @@ function ns:OnMerchantShow()
 end
 
 function ns:OnMerchantClosed()
-	--[[
-	    Closing ends the visit, so bump first: every timer the pass left pending
-	    carries the old generation and retires here rather than waking up inside
-	    the next visit. The flush below captures the bumped value, so it still
-	    runs unless a new visit has begun by the time it fires.
-	]]
+	-- Bump first so pending timers retire; the flush captures the new value.
 
 	visitGeneration = visitGeneration + 1
 
@@ -423,15 +289,7 @@ function ns:OnMerchantClosed()
 	vendPending = false
 	wipe(sellQueue)
 
-	--[[
-	    Final confirmation, deferred so the last sells have time to leave their
-	    slots. A pass that hit the retry cap, or whose last sells landed after the
-	    final re-scan, can still have entries in pendingSales; reading those slots
-	    the instant the window closes would check them before the bags update and
-	    drop real sales from the count. A dead merchant's never-sold items are
-	    still in their slots, so they confirm nothing and stay silent. The
-	    generation check drops this flush when a new visit has already begun.
-	]]
+	-- Deferred: read at the instant of closing, the last sells' slots haven't emptied yet.
 	local generation = visitGeneration
 	C_Timer.After(CLOSE_CONFIRM_SECONDS, function()
 		if generation ~= visitGeneration then
@@ -440,15 +298,7 @@ function ns:OnMerchantClosed()
 
 		ConfirmSales()
 
-		--[[
-		    The per-visit summary prints one line whenever anything sold, under
-		    both chat reports: Summary in Chat shows it alone, and Every Sale in
-		    Chat shows it first, with the per-item lines held until now and
-		    printed beneath it, so the visit reads as one block, total on top.
-		    This deferred flush is the flush point. Routed through
-		    PrintVendMessage so No Chat Report silences it like all other vend
-		    output.
-		]]
+		-- Summary first, then the held sale lines under Every Sale, so the visit reads total on top.
 		if summaryCount > 0 then
 			local message
 			if summaryCount == 1 then
@@ -467,7 +317,6 @@ function ns:OnMerchantClosed()
 					ns:FormatCurrency(summaryValue)
 				)
 			end
-			-- Every visit that sells says how to skip the next one (see ns:OnMerchantShow).
 			PrintVendMessage(message .. " " .. L["AUTO_VEND_SHIFT_HINT"])
 			if not (ns.db and ns.db.profile.autoVendSummaryEnabled) then
 				for _, line in ipairs(saleLines) do
@@ -481,25 +330,11 @@ function ns:OnMerchantClosed()
 		summaryValue = 0
 		wipe(pendingSales)
 
-		--[[
-		    Bag-space warnings are suppressed while the merchant window is open
-		    (see ProcessBagUpdate in Core), since selling churns free slots.
-		    Re-check here so the warning reflects where the bags landed after this
-		    visit.
-		]]
 		ns:CheckBagsFullNudge()
 	end)
 end
 
---[[
-    Called from Core's PLAYER_REGEN_ENABLED handler. Selling is deferred while in
-    combat (UseContainerItem is protected), so once combat ends we resume the
-    deferred pass -- but only if the merchant window is still open. Runs on every
-    combat end, so the vendPending guard keeps it free when nothing is waiting.
-
-    A pass, not a visit: the merchant window never closed, so the sales already
-    attempted are still this visit's and are still owed an announcement.
-]]
+-- A pass, not a visit: the window never closed, so attempted sales are still owed their lines.
 function ns:ResumeDeferredVend()
 	if not vendPending then
 		return

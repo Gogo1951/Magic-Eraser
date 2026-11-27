@@ -12,26 +12,12 @@ local GetItemQualityColor = C_Item.GetItemQualityColor
 --------------------------------------------------------------------------------
 
 --[[
-    The mini-map button's menu, drawn by Menu-Kit (Features/Menu-Kit.lua), in the
-    order the old tooltip used: the Lowest-Value Item and its Erase and Protect
-    rows (or, with clean bags, the congratulation and its hint as one message),
-    the Auto-Vend block, the Clutter Report (only while there is clutter), this
-    character's Protect List, the More Features label (its switches open in a
-    flyout beside it), and the Options row.
     The Protect List sits last of the reports because it is the only one whose
-    length varies, so nothing above it moves as it grows.
-
-    Hovering the button opens it, and moving into it keeps it open; it closes a
-    moment after the cursor leaves both. Every row is a plain click, so a
-    controller's cursor reaches all of it, and the button keeps every click it
-    had, each named on the row that does the same job (Button Clicks, below).
-
-    The menu shows only what this character can use right now: no Erase or
-    Protect rows with clean bags, no Protect List while it is empty. The options
-    panel still shows every setting.
+    length varies, so nothing above it moves as it grows. Every row is a plain
+    click, so a controller's cursor reaches all of it.
 ]]
 
-local HOVER_CLOSE_DELAY = 0.4
+local HOVER_CLOSE_DELAY = 0.5
 local CLICK_CLOSE_DELAY = 1.0
 local MENU_GAP = 2 -- From the button's corner to the menu's
 local LIST_MAX = 8 -- Protect List rows before the "%d more" note
@@ -39,7 +25,6 @@ local LOADING_RETRY = 0.5 -- Seconds before redrawing rows still waiting on item
 
 local menu = Kit.CreatePanel(ADDON_NAME .. "Menu", UIParent)
 
--- Escape closes it, as it does any game menu.
 table.insert(UISpecialFrames, menu:GetName())
 
 -- The More Features flyout, a child of the menu so it closes and hides with it.
@@ -51,6 +36,7 @@ Kit.SetToggleText(L["MENU_ON"], L["MENU_OFF"])
 local state = {
 	anchor = nil,
 	closeDelay = HOVER_CLOSE_DELAY,
+	held = false,
 	flyoutKey = nil,
 	idle = 0,
 	openLeft = true,
@@ -62,7 +48,6 @@ local state = {
 -- Helpers
 --------------------------------------------------------------------------------
 
--- An option's caption and tooltip, drawn the way the options panel draws them.
 local function OptionTooltip(name, desc)
 	return function(tooltip)
 		tooltip:SetText(name, 1, 0.82, 0, 1, true)
@@ -72,19 +57,17 @@ local function OptionTooltip(name, desc)
 	end
 end
 
--- An item's own tooltip, as hovering it in the bags shows it.
 local function ItemTooltip(itemId)
 	return function(tooltip)
 		tooltip:SetItemByID(itemId)
 	end
 end
 
--- Every row click and button click ends here: the menu and any open options page redraw.
+-- Every row click ends here: the menu and any open options page redraw.
 local function AfterChange()
 	ns.RefreshSettings()
 end
 
--- The right side of a feature's title: On in green, Off in gray.
 local function OnOff(enabled)
 	if enabled then
 		return L["MENU_ON"], "ON"
@@ -92,7 +75,6 @@ local function OnOff(enabled)
 	return L["MENU_OFF"], "MUTED"
 end
 
--- An icon at line height, then the text.
 local function WithIcon(icon, text)
 	return format("|T%s:0|t %s", icon or ns.DEFAULT_ICON, text)
 end
@@ -101,12 +83,16 @@ end
 -- Button Clicks
 --------------------------------------------------------------------------------
 
---[[
-    Protects the item a Left-Click would erase, onto this character's list,
-    exactly as the Add Hovered Item to Protect List binding does: add-only, off
-    this character's Erase List if it was there, and one chat line saying which
-    (Features/Key-Bindings.lua).
-]]
+-- Left-Click only: players' hands know Right-Click as Protect, so every other job lives on a row.
+function ns.RunButtonClick(button, anchor)
+	if button ~= "LeftButton" then
+		return false
+	end
+	ns.ToggleMenu(anchor)
+	return true
+end
+
+-- Same path and chat line as the Add Hovered Item to Protect List binding.
 local function ProtectLowestValueItem()
 	local item = ns:FindItemToDelete()
 	if not item then
@@ -118,85 +104,34 @@ local function ProtectLowestValueItem()
 	end
 end
 
---[[
-    One table, both ways: the button's OnClick looks the click up here, and the
-    row that does the same job names the click on its right, so a row never names
-    a click that does something else. Left-Click runs the eraser even with clean
-    bags, which prints the congratulation, as it always has.
-]]
-local CLICKS = {
-	erase = {
-		button = "LeftButton",
-		shift = false,
-		name = "MENU_CLICK_LEFT",
-		run = function()
-			ns:RunEraser()
-		end,
-	},
-	protect = {
-		button = "RightButton",
-		shift = false,
-		name = "MENU_CLICK_RIGHT",
-		run = ProtectLowestValueItem,
-	},
-	clear = {
-		button = "MiddleButton",
-		shift = false,
-		name = "MENU_CLICK_MIDDLE",
-		run = function()
-			ns:ConfirmClearIgnoreList()
-		end,
-	},
-	autoVend = {
-		button = "RightButton",
-		shift = true,
-		name = "MENU_CLICK_SHIFT_RIGHT",
-		run = function()
-			ns.db.profile.autoVendEnabled = not ns.db.profile.autoVendEnabled
-		end,
-	},
-	options = {
-		button = "MiddleButton",
-		shift = true,
-		name = "MENU_CLICK_SHIFT_MIDDLE",
-		run = function()
-			ns.HideMenu()
-			ns:OpenOptionsPanel()
-		end,
-	},
-}
-
--- Runs the click's job and redraws the menu and any open options page; false when the click has none.
-function ns.RunButtonClick(button)
-	local shift = IsShiftKeyDown() and true or false
-	for _, click in pairs(CLICKS) do
-		if click.button == button and click.shift == shift then
-			if not ns.db and click ~= CLICKS.options then
-				return true
-			end
-			click.run()
-			AfterChange()
-			return true
-		end
-	end
-	return false
-end
-
--- An action row: blue, naming its button click on the right in gray.
-local function ClickRow(label, clickKey, tooltip)
-	local click = CLICKS[clickKey]
+local function ActionRow(label, run, tooltip)
 	return {
 		kind = "action",
 		left = label,
 		leftColor = "INFO",
-		right = L[click.name],
-		rightColor = "MUTED",
 		tooltip = tooltip,
 		onClick = function()
-			click.run()
+			run()
 			AfterChange()
 		end,
 	}
+end
+
+local function RunEraser()
+	ns:RunEraser()
+end
+
+local function ToggleAutoVend()
+	ns.db.profile.autoVendEnabled = not ns.db.profile.autoVendEnabled
+end
+
+local function ClearProtectList()
+	ns:ConfirmClearIgnoreList()
+end
+
+local function OpenOptions()
+	ns.HideMenu()
+	ns:OpenOptionsPanel()
 end
 
 --------------------------------------------------------------------------------
@@ -218,7 +153,7 @@ local function AddLowestValueItem(entries, item)
 	end
 	local right, rightColor = L["NO_VALUE"], "MUTED"
 	if item.value > 0 then
-		right, rightColor = ns:FormatCurrency(item.value), "TEXT"
+		right, rightColor = ns:FormatCoins(item.value), "TEXT"
 	end
 	entries[#entries + 1] = {
 		kind = "item",
@@ -228,26 +163,21 @@ local function AddLowestValueItem(entries, item)
 		tooltip = ItemTooltip(item.itemId),
 	}
 
-	entries[#entries + 1] = ClickRow(L["ACTION_ERASE"], "erase")
-	entries[#entries + 1] = ClickRow(L["ACTION_PROTECT"], "protect")
+	entries[#entries + 1] = ActionRow(L["ACTION_ERASE"], RunEraser)
+	entries[#entries + 1] = ActionRow(L["ACTION_PROTECT"], ProtectLowestValueItem)
 end
 
 local function AddAutoVend(entries)
 	local right, rightColor = OnOff(ns.db.profile.autoVendEnabled)
 	entries[#entries + 1] = { kind = "status", left = L["AUTO_VEND"], right = right, rightColor = rightColor }
 	entries[#entries + 1] = { kind = "description", left = L["AUTO_VEND_DESCRIPTION"] }
-	entries[#entries + 1] = ClickRow(
+	entries[#entries + 1] = ActionRow(
 		L["MENU_TOGGLE"],
-		"autoVend",
+		ToggleAutoVend,
 		OptionTooltip(L["OPTIONS_ENABLE_AUTO_VEND"], L["OPTIONS_ENABLE_AUTO_VEND_DESCRIPTION"])
 	)
 end
 
---[[
-    The haul's slots, items and value, only while there is clutter to count.
-    With clean bags there's no report: the congratulation and its hint at the
-    top of the menu already say so.
-]]
 local function AddClutterReport(entries, item)
 	if not item then
 		return
@@ -263,16 +193,11 @@ local function AddClutterReport(entries, item)
 	entries[#entries + 1] = {
 		kind = "value",
 		left = GetColor("TEXT") .. slotsLabel .. "|r " .. GetColor("MUTED") .. itemsLabel .. "|r",
-		right = ns:FormatCurrency(value),
+		right = ns:FormatCoins(value),
 	}
 end
 
---[[
-    A Protect List row: click it to take the item off this character's list,
-    with one chat line saying so. The delete icon on its right shows only while
-    the row is hovered (ApplyHoverIcons, below), but it is always part of the
-    row, so the menu is drawn wide enough for it and nothing shifts on hover.
-]]
+-- The remove icon shows only on hover, but is always measured, so nothing shifts.
 local REMOVE_ICON = "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:0|t"
 
 local function UnprotectRow(itemId, left, leftColor, label)
@@ -298,12 +223,7 @@ local function UnprotectRow(itemId, left, leftColor, label)
 	}
 end
 
---[[
-    This character's Protect List only, sorted by name, which is what keeps
-    Clear Protect List honest: it clears exactly what is listed here and never
-    touches the account-wide list. Items the client hasn't cached yet show as
-    Loading ID rows, and the menu redraws shortly to fill them in.
-]]
+-- This character's list only, so Clear Protect List clears exactly what is shown.
 local function ProtectListRows()
 	local ignoreList = ns:GetIgnoreList()
 	local named, loading = {}, {}
@@ -334,7 +254,6 @@ local function ProtectListRows()
 	return rows, #loading > 0
 end
 
--- The first LIST_MAX rows, then a note saying how many more there are.
 local function AddList(entries, rows)
 	for index = 1, math.min(#rows, LIST_MAX) do
 		entries[#entries + 1] = rows[index]
@@ -351,7 +270,7 @@ local function AddProtectList(entries)
 	end
 	entries[#entries + 1] = { kind = "status", left = L["TAB_PROTECT_LIST"] }
 	AddList(entries, rows)
-	entries[#entries + 1] = ClickRow(L["ACTION_CLEAR_PROTECT_LIST"], "clear")
+	entries[#entries + 1] = ActionRow(L["ACTION_CLEAR_PROTECT_LIST"], ClearProtectList)
 	return isLoading
 end
 
@@ -362,13 +281,6 @@ end
 -- Each flyout's rows by its submenu key; a submenu row opens the flyout its key names.
 local FLYOUTS = {}
 
---[[
-    More Features: every feature on the options' main page that isn't a block
-    above, one On/Off row each, in the main page's order, with its switch's
-    caption and description as the tooltip (ns.FEATURES, Options/Options-Utilities.lua).
-    They live in a flyout so the main menu stays short; its label counts how
-    many are on and off, so the main menu still says where they stand.
-]]
 local function MoreFeatures()
 	local features = {}
 	for _, feature in ipairs(ns.FEATURES or {}) do
@@ -441,7 +353,7 @@ local function BuildMainEntries()
 
 	entries[#entries + 1] = { kind = "spacer" }
 	entries[#entries + 1] = { kind = "separator" }
-	entries[#entries + 1] = ClickRow(L["MENU_OPTIONS"], "options")
+	entries[#entries + 1] = ActionRow(L["MENU_OPTIONS"], OpenOptions)
 	return entries, isLoading
 end
 
@@ -449,14 +361,7 @@ end
 -- Drawing & Placement
 --------------------------------------------------------------------------------
 
---[[
-    Right-side text that shows only while its row is hovered, for entries
-    marked rightOnHover. Menu-Kit draws every row's right side and is shared
-    unchanged between add-ons, so this works around it rather than in it: each
-    pooled row gets one pair of hooks the first time it is seen, and after every
-    draw the marked rows hide that text unless the cursor is already on them.
-    The kit has measured the text by then, so the menu keeps its width.
-]]
+-- Repeats on the main menu's pooled rows what Menu-Kit v2 already does for rightOnHover entries.
 local function ShowHoverText(row)
 	if row.entry and row.entry.rightOnHover then
 		row.right:Show()
@@ -482,10 +387,6 @@ local function ApplyHoverIcons()
 	end
 end
 
---[[
-    The flyout beside its label, its first row level with the label, on the side
-    the menu opened toward. The label keeps its highlight while it's open.
-]]
 local function PositionFlyout(row)
 	flyout:ClearAllPoints()
 	if state.openLeft then
@@ -584,6 +485,7 @@ end)
 menu:SetScript("OnHide", function()
 	state.flyoutKey = nil
 	state.anchor = nil
+	state.held = false
 	flyout:Hide()
 	if ns.IsMenuFrame(GameTooltip:GetOwner()) then
 		GameTooltip:Hide()
@@ -594,11 +496,7 @@ end)
 -- Public API
 --------------------------------------------------------------------------------
 
---[[
-    Opens the menu from a launcher: the mini-map button, or any LDB display's
-    plugin. how is "hover" or "click"; a click keeps it open a little longer once
-    the cursor leaves. A launcher already showing the menu keeps its place.
-]]
+-- how is "hover" or "click"; a click holds it and waits longer to close.
 function ns.ShowMenu(anchor, how)
 	if not ns.db or not anchor then
 		return
@@ -607,11 +505,13 @@ function ns.ShowMenu(anchor, how)
 	if not reopen then
 		state.closeDelay = HOVER_CLOSE_DELAY
 		state.flyoutKey = nil
+		state.held = false
 	end
 	state.anchor = anchor
 	state.idle = 0
 	if how == "click" then
 		state.closeDelay = CLICK_CLOSE_DELAY
+		state.held = true
 	end
 	if not reopen then
 		PositionMenu(anchor)
@@ -624,7 +524,15 @@ function ns.HideMenu()
 	menu:Hide()
 end
 
--- Redraws the menu in place while it is open; a no-op otherwise.
+-- A hover-opened menu isn't held, so the click after a hover holds it instead of closing it.
+function ns.ToggleMenu(anchor)
+	if menu:IsShown() and state.anchor == anchor and state.held then
+		menu:Hide()
+		return
+	end
+	ns.ShowMenu(anchor, "click")
+end
+
 function ns.RefreshMenu()
 	Render()
 end
@@ -633,7 +541,6 @@ function ns.IsMenuShown()
 	return menu:IsShown()
 end
 
--- True for the menu, its flyout, and anything inside them.
 function ns.IsMenuFrame(frame)
 	return frame ~= nil and Kit.IsInside(frame, menu)
 end

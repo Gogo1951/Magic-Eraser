@@ -11,18 +11,7 @@ end
 -- Junk Item Tint Section
 --------------------------------------------------------------------------------
 
---[[
-    A fragment of the Alerts & Tints panel rather than a panel of its own: it
-    adds its widgets to the args table ns.BuildAlertsTintsOptions hands it, and
-    its order numbers are what place the section on that panel. See
-    Features/Tint-Junk.lua for the behavior these settings drive. Its switch is
-    also in the root panel's Features section.
-
-    The switch and the color share one line, laid out by Kit.Pairs
-    like the root panel's switches, and the color hides with the switch off.
-    Both repaint the bags at once, so the player sees each change land on an
-    open bag window.
-]]
+-- Switch and color on one line: a README-Notes.md exception.
 function ns.OnTintJunkChanged()
 	ns:RefreshTints()
 end

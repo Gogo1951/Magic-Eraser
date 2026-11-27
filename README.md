@@ -1,6 +1,6 @@
 # Magic Eraser
 
-Delete and auto-sell junk to free up bag space. One click of the mini-map button clears completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays, and the rest sells itself at your next merchant.
+Delete and auto-sell junk to free up bag space. Erase completed quest items, outgrown food, drink and ammo, vendor trash, white gear, and grays from the mini-map menu, sell the rest at your next merchant, and auto-repair your gear.
 
 **TL;DR:** For anyone whose bags are always full. It tosses the junk, keeps what you need, and Marie Kondo would be so proud!
 
@@ -8,7 +8,7 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 <img width="800" src="https://github.com/user-attachments/assets/1b3091e3-79b3-443d-8fff-824e322aae3a" />
 
-* **One Click, One Free Slot** // The mini-map button wears the icon of your cheapest junk. Click it, or press your key, and it's gone.
+* **One Click, One Free Slot** // The mini-map button wears the icon of your cheapest junk. Hover it and pick Erase, or press your key, and it's gone.
 * **Knows What's Junk** // Completed quest items, quest starters you can never take, outgrown food, drink and ammo, white gear, and grays.
 * **Your Lists Win** // Anything on your Erase List always goes, and anything on your Protect List always stays. Pick which kinds of junk count, too.
 * **Safety First** // Never touches green-or-better gear or quest items you still need, and nothing is erased in combat.
@@ -18,8 +18,9 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 <img width="800" alt="README-Infographic-Alerts-Tints" src="https://github.com/user-attachments/assets/c94eb0ee-48bd-4f47-98ea-94601f4ec13d" />
 
 * **Spot Junk at a Glance** // A tint marks the junk in your bags and bank, in Baganator, Bagnon, AdiBags, ArkInventory, BetterBags and ElvUI too.
+* **Know Why It's Junk** // Item tooltips say why something counts as junk, or which Protect List keeps it safe.
 * **Quest Leftovers Called Out** // Chat tells you the moment a quest item is safe to toss.
-* **Never Caught Full** // Turn on a countdown in chat as your last few bag slots fill up.
+* **Never Caught Full** // Turn on a countdown in chat as your last few bag slots fill up, and see how many are only junk.
 * **Your Colors, Your Call** // Pick your own tint color, or switch any alert off.
 
 ### Merchant & Bank
@@ -28,7 +29,8 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 * **Junk Sells Itself** // Open any merchant and your junk is sold, with one line in chat saying what it made.
 * **Bank Junk Comes Home** // Junk hiding in your bank hops back into your bags to sell with the rest.
-* **Skip a Visit** // Hold Shift as you open a merchant to keep everything that time, or switch either one off for good.
+* **Repairs Too, If You Like** // Auto-Repair starts off. Turn it on and any merchant who can fixes your gear with your own gold.
+* **Skip a Visit** // Hold Shift as you open a merchant to skip it all that time, or switch any of them off for good.
 
 ### Skip Typing DELETE
 
@@ -41,7 +43,7 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 1. Install the add-on, ideally using [CurseForge](https://www.curseforge.com/wow/addons/magic-eraser) or [Wago](https://addons.wago.io/addons/magic-eraser).
 2. Type `/eraser`, or pick Magic Eraser Options in the mini-map menu, to open the Options Interface.
-3. Hover the mini-map button to see your cheapest junk, then left-click to erase it.
+3. Hover the mini-map button to see your cheapest junk, then pick Erase.
 4. Visit a merchant, and the rest sells itself.
 5. _"But wait, there's more bag space!"_
 
@@ -49,14 +51,11 @@ Delete and auto-sell junk to free up bag space. One click of the mini-map button
 
 ### Mini-map Button
 
-<img width="260" src="https://github.com/user-attachments/assets/5f911dc9-a80e-4363-a38a-1357c25524cf" />
-
 | Action | Effect |
 | --- | --- |
-| Hover | Opens the mini-map menu |
-| Left-Click | Erases your cheapest junk |
+| Hover or Left-Click | Opens the mini-map menu |
 
-The menu shows what's next and what it's worth, a Clutter Report of the bag slots still tied up in junk, your Protect List, and a quick switch for every feature.
+The menu shows your cheapest junk with Erase and Protect beside it, a Clutter Report of the bag slots still tied up in junk, your Protect List, and a quick switch for every feature.
 
 ### Good to Know
 

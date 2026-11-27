@@ -7,45 +7,11 @@ local Kit = ns.OptionsKit
 --------------------------------------------------------------------------------
 
 --[[
-    Every ignore list on the account, one scope per list. childGroups = "tree"
-    splits the panel in two: the tree on the left is the scope list (the
-    account-wide Global list, then the characters), and the pane on the right is
-    the selected scope's items. Each scope group closes over its own scope key,
-    so the add box and the row buttons in a pane always act on the list the
-    player is looking at, including another character's.
-
-    Registered as a builder function rather than a built table (see
-    Options/Options.lua): the rows here are the ignore lists themselves, so
-    AceConfig re-invokes this on every open and every NotifyChange and the panel
-    is always current.
-
-    The tree comes from ns.BuildCharacterListTree, shared with the Erase List
-    panel, and the rows from Kit.ItemList, the shared builder every
-    player-managed item list renders through, so a list adds and removes the same
-    way here as in any other panel. A pane spends Kit.TREE_ROW_WIDTH
-    rather than the full row width, because the tree sidebar takes its share of
-    the panel first.
-
-    There is no drop target. The game closes the bags and the bank when the
-    options interface opens, so there is no way to have an item on the cursor and
-    this panel in front of you at the same time. The Add from Bags picker stands
-    in for it, listing what the player carries; typing or shift-clicking an id
-    into the add box covers everything else.
-
-    Players see this as the Protect List. The code keeps the Ignore List name
-    (ignoreList, ns:IsIgnored, the IgnoreList registry key and the binding's
-    name attribute), because renaming saved keys would cost every player their
-    list and every bound key.
+    Players see the Protect List; saved keys and the binding keep the Ignore
+    List name, since renaming them would cost every player their list and keys.
 ]]
 
---[[
-    Promote, not copy. Only the account-wide add is issued here:
-    ns:SetIgnoredInScope clears a newly globalized item off every character's
-    list itself, so the row leaves this pane, leaves any other character who
-    happened to hold the same item, and turns up under Global instead. Protection
-    only ever widens doing it this way, because the global list already covers
-    everyone it just left.
-]]
+-- Promote, not copy: the global list already covers everyone the item leaves.
 local function PromoteColumn()
 	return {
 		type = "execute",
@@ -105,7 +71,6 @@ end
 
 function ns.BuildIgnoreListOptions()
 	return ns.BuildCharacterListTree({
-		-- The page title names its parent, as every sub-panel's does (Kit.SubPanelTitle); the Settings tree shows the plain name.
 		name = Kit.SubPanelTitle(L["TAB_ERASING"], L["TAB_PROTECT_LIST"]),
 		description = L["OPTIONS_PROTECT_DESCRIPTION"],
 		getListForScope = function(scopeKey)

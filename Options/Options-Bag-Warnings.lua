@@ -15,26 +15,11 @@ end
 -- Bag-Space Warnings Section
 --------------------------------------------------------------------------------
 
---[[
-    A fragment of the Alerts & Tints panel rather than a panel of its own: it
-    adds its widgets to the args table ns.BuildAlertsTintsOptions hands it,
-    and its order numbers are what place the section on that panel. See
-    Features/Bag-Warnings.lua for the behavior these settings drive. Its switch
-    is also in the root panel's Features section.
-
-    The threshold is a sub-option of the warnings toggle, and Bank Retrieval
-    reads it as a cushion only while that toggle is on -- see GetMoveBudget in
-    Features/Bank-Retrieval.lua, which is why a hidden slider never holds back a
-    visible feature. Bank Retrieval's own section says so while it applies.
-
-    Toggling or moving the threshold ends in ns.RefreshSettings, which repaints
-    Merchant & Bank, so that line is right the next time the player opens it.
-]]
+-- Bank Retrieval reads the threshold only while warnings are on, so a hidden slider never holds it back.
 function ns.BuildBagWarningsOptions(args)
 	Kit.Section(args, "BagsFull", 30, L["OPTIONS_BAGS_FULL_HEADER"], L["OPTIONS_BAGS_FULL_DESCRIPTION"])
 	args.toggleBagsFullNudge = Kit.FeatureSwitch("bagsFullNudgeEnabled", 35)
 
-	-- A sub-option: a silver caption beside a slider in the control column, indented under its switch.
 	args.rowBagsFullThreshold = Kit.SubLabelRow(36, BagsFullOff, L["OPTIONS_BAGS_FULL_THRESHOLD"], {
 		type = "range",
 		desc = L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"],

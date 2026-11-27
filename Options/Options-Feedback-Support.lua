@@ -4,20 +4,10 @@ local Kit = ns.OptionsKit
 
 local GetColor = ns.GetColor
 
---[[
-    The four link rows split ns.OPTIONS_ROW_WIDTH unevenly: their labels are one
-    short word, while the box beside them holds a full URL the player is meant to
-    select and copy. The label takes 0.6 and the box takes the rest of the row,
-    the remaining width the guide gives a read-only URL input, so the row still
-    ends where every other row on the panel ends.
-]]
 local LINK_LABEL_WIDTH = 0.6
 local LINK_URL_WIDTH = ns.OPTIONS_ROW_WIDTH - LINK_LABEL_WIDTH
 
---[[
-    Each link, in the order it is listed: { captionKey, linkKey }. The URLs live
-    in ns.LINKS (Data/Data.lua).
-]]
+-- { captionKey, linkKey }
 local LINKS = {
 	{ "OPTIONS_DISCORD", "DISCORD" },
 	{ "OPTIONS_CURSEFORGE", "CURSEFORGE" },
@@ -25,7 +15,6 @@ local LINKS = {
 	{ "OPTIONS_GITHUB", "GITHUB" },
 }
 
--- The Help Magic Eraser Level Up note, one paragraph per entry, a blank line between each.
 local LEVEL_UP_PARAGRAPHS = {
 	"OPTIONS_LEVEL_UP_INTRO",
 	"OPTIONS_LEVEL_UP_WAYS",
@@ -40,14 +29,7 @@ local LEVEL_UP_PARAGRAPHS = {
 -- Feedback & Support Panel
 --------------------------------------------------------------------------------
 
---[[
-    The Help Magic Eraser Level Up note, then the Feedback & Support Links
-    section: a read-only box per link, and how to copy one. The version line
-    closes the page. The group's name is the page's title, drawn when the page
-    opens; the tree still lists it as Feedback & Support, the name it is
-    registered under. Registered directly above Diagnostic Tools (see
-    Options/Options.lua).
-]]
+-- The group's name is the page title; the tree lists it by its registered name.
 function ns.BuildFeedbackSupportOptions()
 	local args = {}
 	local order = 1

@@ -9,12 +9,6 @@ local GetItemSpell = C_Item.GetItemSpell
 local GetItemStats = ns.GetItemStats
 local ipairs = ipairs
 
---[[
-    What counts as junk: the verdict the eraser, the junk tint, Auto-Vend,
-    Bank Retrieval and the quest alerts all share. Features/Eraser.lua finds and
-    erases the next item; this file only answers whether an item qualifies.
-]]
-
 --------------------------------------------------------------------------------
 -- Quest State
 --------------------------------------------------------------------------------
@@ -24,26 +18,9 @@ function ns:IsQuestCompleted(questId)
 end
 
 --[[
-    A quest-starting item is spent for one of two reasons, and the second needs
-    no quest state at all: either the quest it hands out is already flagged
-    complete, or this character's race or class can never take that quest, which
-    makes the item dead weight from the moment it drops. A Goldshire Gift
-    Voucher on a Tauren is the cheap case, a Paladin-only Tome of Divinity on a
-    Rogue the other.
-
-    The first reason gives way when the item also has a row in
-    ALLOWED_DELETE_QUEST_ITEMS: that row is keyed to the last quest that still
-    needs the item, which can come after the one it starts. Ensorcelled
-    Parchment starts 551 but is carried on to 554.
-
-    Masks come from quest_template and are omitted from the data when the quest
-    is unrestricted, so a nil or 0 mask always means "no gate here" rather than
-    "nobody qualifies".
-
-    A race or class with no bit in Data/Data.lua must never read as shut out
-    of every gated quest. A race without one (WoW Forever's Skyborne) is gated
-    by faction alone: only a mask naming none of its side's races, an
-    other-faction quest, keeps it out. A class without one is never gated.
+    A quest-item row overrides "quest complete": it is keyed to a later quest
+    (Ensorcelled Parchment starts 551, is carried to 554). A nil or 0 mask
+    means no gate. A bitless race gates by side alone; a bitless class never.
 ]]
 local playerRaceBit, playerClassBit, playerSideBits
 
@@ -61,11 +38,6 @@ local function GetPlayerBits()
 	return playerRaceBit, playerClassBit, playerSideBits
 end
 
---[[
-    The bits the quest-starter gate compares, for the Diagnostic Tools Eraser
-    Context. The third, the player's side, is set only for a race with no bit
-    of its own.
-]]
 function ns:GetPlayerQuestBits()
 	return GetPlayerBits()
 end
@@ -103,21 +75,7 @@ end
 -- Evaluation
 --------------------------------------------------------------------------------
 
---[[
-    The player level at which a consumable counts as outgrown. Normally ten
-    levels past the item's own use level; the starter food and drink usable below
-    level 5 are the exception, and go at 5 flat rather than lingering in the bags
-    until 11 -- by 5 the player has already replaced them.
-
-    The use level is read from the flavor folder's Consumables file
-    ([itemId] = { useLevel }), never from the item info's requiredLevel: static
-    data answers on a cold item cache and does not shift between client
-    versions (Style Guide → DATA).
-
-    No row carries a zone: zone-limited food such as the Arathi Basin and
-    Warsong Gulch rations is outgrown by level like any other food, and a
-    zone-limited quest item goes when its quest does.
-]]
+-- The use level comes from the data row, never requiredLevel, which is nil on a cold cache.
 local CONSUMABLE_OUTGROWN_DELTA = 10
 local CONSUMABLE_STARTER_LEVEL = 5
 
@@ -128,28 +86,10 @@ local function GetConsumableEraseLevel(useLevel)
 	return useLevel + CONSUMABLE_OUTGROWN_DELTA
 end
 
---[[
-    Meat and fish a cooking recipe uses outgrow the same way food does, ten
-    levels on (five flat for the lowest), from the level in the flavor
-    folder's Meat-Fish file ([itemId] = { level }): the use level for raw fish
-    you can eat as caught, the item level for meat you can only cook. Their
-    own kind, unchecked by default, so a fisher or cook keeps what they gather.
-]]
+-- Their own kind, unchecked by default, so a fisher or cook keeps what they gather.
 local GetMeatFishEraseLevel = GetConsumableEraseLevel
 
---[[
-    The player level at which an arrow or bullet counts as outgrown: the moment
-    the player can use a better kind a vendor sells, with no ten-level wait the
-    way food has. A hunter buys the new tier on the spot, so the old stack is
-    dead weight from that level on. Where nothing a vendor sells is better, as
-    with Jagged Arrows on Classic Era, there is no such level and the row is
-    never junk.
-
-    The level comes from the flavor folder's Ammo file
-    ([itemId] = { useLevel, nextTierLevel }), for the same cold-cache reason
-    as the consumable use level. The use level is carried for Validate Data
-    and is not part of the rule.
-]]
+-- No wait like food's: a hunter buys the next tier on the spot. No next tier, never junk.
 local function GetAmmoEraseLevel(nextTierLevel)
 	return nextTierLevel
 end
@@ -163,14 +103,7 @@ function ns:NoteLevelUp(level)
 	end
 end
 
---[[
-    Consumable and ammo eligibility is gated on the player's level (see
-    GetConsumableEraseLevel and GetAmmoEraseLevel above), so leveling up can
-    newly qualify outgrown food or ammo, and a ding brings no bag update. The
-    rescan uses the event's own level, because UnitLevel may not be updated yet
-    when the event fires. A ding in combat waits for combat to end, as a bag
-    update does.
-]]
+-- A ding brings no bag update, so it rescans itself, with the event's level.
 function ns:OnPlayerLevelUp(level)
 	ns:NoteLevelUp(level)
 	ns:RefreshWhenOutOfCombat()
@@ -182,44 +115,10 @@ function ns:GetJunkRulesLevel()
 end
 
 --[[
-    White gear is decided by rule, the way grays are, rather than looked up in a
-    list: a white weapon that deals damage, or a white piece of worn armor that
-    carries armor. The rule reads the client the player is on, so it covers
-    whites a world DB doesn't know and items whose quality differs between
-    clients, with no rows to maintain.
-
-    Every check fails toward keeping. An item the rule cannot place is kept, and
-    so is anything that looks like more than trash:
-
-      - Subclasses are allowlists, so one a later client adds or repurposes is
-        kept rather than erased: armor subclass 5 is the unused Buckler in the
-        WotLK DB and Cosmetic on modern clients. Weapon subclass 14 holds the
-        profession tools and 20 the fishing poles; armor subclass 0 holds rings,
-        necks, trinkets, off-hand frills, shirts and tabards.
-      - Shirt and tabard slots are vanity whatever subclass they carry.
-      - An item level of 0, or none at all, is kept as unreadable. Item level
-        1 is not a keep signal: every Classic starter boot and the Worn
-        Wooden Shield and Buckler sit there. The ilvl-1 whites worth keeping
-        (Black Tuxedo, Dress Shoes, the Fire Festival crown and mantle) are
-        in ns.KEEP_EQUIPMENT with the rest of the formal wear.
-      - Quest binding or an on-use spell (Borrowed Broom) marks an item as
-        something other than trash.
-      - The weapon has to deal damage and the armor has to carry armor, read
-        through GetItemStats. That is what separates worn gear from costume
-        pieces with none.
-
-    What no structural signal can see is ns.KEEP_EQUIPMENT, in the flavor
-    folder's Equipment file: formal wear with real armor values, an Equip:
-    effect such as the Lucky Fishing Hat's (GetItemSpell reports Use: spells
-    only), and whites a quest takes back at turn-in. A player who wants a kept
-    item gone lists it; the Erase List is checked ahead of every rule.
-
-    The verdict depends only on static item data, so it is worked out once per
-    item id and remembered for the session: every scan asks again (the eraser,
-    Auto-Vend, Bank Retrieval and each tint repaint), and GetItemStats builds
-    a new table on every call.
-    A read the item cache cannot answer yet is not remembered, so the item is
-    asked about again rather than settled as kept.
+    Every check fails toward keeping. Subclasses are allowlists, so one a later
+    client repurposes (armor 5 is Cosmetic on modern clients) is kept. Item
+    level 1 is not a keep signal; ns.KEEP_EQUIPMENT holds what no structural
+    signal can see. Cached per id for the session; a cold read isn't cached.
 ]]
 local ITEM_CLASS_WEAPON = 2
 local ITEM_CLASS_ARMOR = 4
@@ -305,23 +204,8 @@ local function IsWhiteGearTrash(itemId)
 end
 
 --[[
-    Crafted gear is the white-gear rule's match that someone made with a
-    profession: the stack's own tooltip carries the client's <Made by %s>
-    line (ITEM_CREATED_BY). Low tailoring, leatherworking and blacksmithing
-    gear is white, so without this split a Linen Cloak made for an alt reads
-    as trash and sells the moment the crafter opens a vendor for more thread.
-    The "crafted" kind is unchecked by default, so that gear is kept.
-
-    The line belongs to one copy, not to the item id, so it is read off the
-    bag slot (ns.GetSlotTooltipLines) on every ask rather than remembered: the
-    same slot can hold a crafted copy one moment and a looted one the next.
-    Only items the white-gear rule already took are read, which is a handful
-    per scan. The pattern comes from the client's own string, so every locale
-    matches with no strings of ours.
-
-    Every failure keeps the item: no pattern, no slot, a read that throws, or
-    a tooltip that came back empty answers nil, and the rule then names no
-    reason at all, so the item is kept until a later scan can read it.
+    The <Made by> line belongs to one copy, so it is read off the slot every
+    time, never cached by id. Every failure answers nil and keeps the item.
 ]]
 local CREATED_BY_PATTERN
 do
@@ -333,7 +217,6 @@ do
 	end
 end
 
--- The pattern the crafted check matches, for the Diagnostic Tools Eraser Context.
 function ns:GetCraftedLinePattern()
 	return CREATED_BY_PATTERN
 end
@@ -359,14 +242,6 @@ end
 -- Junk Kinds
 --------------------------------------------------------------------------------
 
---[[
-    Whether the player counts one kind as junk, from the Erasing panel's
-    checkboxes: see ns.ERASE_KINDS in Data/Data.lua. An Erase List entry has no
-    checkbox and is always junk. A kind with no saved answer takes its default
-    from Data/Default-Settings.lua, which is junk for every kind but "crafted"
-    and "meatFish",
-    and anything else unreadable counts as junk.
-]]
 local DEFAULT_JUNK_KINDS = ns.DATABASE_DEFAULTS.profile.junkKinds
 
 function ns:IsJunkKind(deleteReason)
@@ -381,25 +256,8 @@ function ns:IsJunkKind(deleteReason)
 	return isJunk ~= false
 end
 
---[[
-    The rules half of the verdict. ns:GetItemDeleteReason below drops the kinds
-    the player unchecked, so this only ever answers what the curated data and
-    the gray and white-gear rules say.
-]]
 local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
-	--[[
-	    The Erase List first, and outside the chain below rather than a branch in
-	    it: a listed item is the player's own instruction, so it matches whatever
-	    its rarity and whatever the curated databases do or do not say about it.
-	    That is the entire point of the list. A white trade good that isn't meat
-	    or fish matches no branch below -- not quest, not consumable, not ammo,
-	    not equipment, and the gray fallback needs rarity 0 -- so this is the only
-	    way one can ever be erased.
-
-	    The Ignore List still wins, and not by a check here. All three scanners
-	    gate on ns:IsIgnored before calling this, so an ignored item never
-	    reaches this line at all.
-	]]
+	-- No protection check here: every scanner gates on ns:IsIgnored before calling.
 	if ns:IsOnEraseList(itemId) then
 		return "manual"
 	end
@@ -411,14 +269,7 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	local meatFishDatabase = ns.ALLOWED_DELETE_MEAT_FISH or {}
 	local ammoDatabase = ns.ALLOWED_DELETE_AMMO or {}
 
-	--[[
-	    Starters are checked alongside quest items rather than after them: most
-	    of them appear in both tables, and only the starter entry carries the
-	    race and class masks, so an elseif here would shadow the gate that makes
-	    the wrong-faction case erasable at all. Either table matching also stops
-	    the item falling through to the white-gear and gray rules below, which is
-	    what keeps a quest item of either quality safe until its quest is done.
-	]]
+	-- One branch for both tables: only the starter row carries the masks, so an elseif would shadow them.
 	if questStarterDatabase[itemId] or questItemDatabase[itemId] then
 		local starterReason = ns:GetQuestStarterReason(itemId)
 		if starterReason then
@@ -457,16 +308,7 @@ local function GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	return nil
 end
 
---[[
-    The verdict every scanner, the junk tint and Auto-Vend share. A kind the
-    player unchecked is not junk anywhere, so it drops out here rather than at
-    each caller: never erased, never sold, never pulled from the bank, and
-    never tinted in the bags.
-
-    bag and slot name the container slot the item sits in. Only the crafted
-    check reads them, and a white weapon or armor piece asked about without
-    them is kept, since nothing else can tell a crafted copy from a looted one.
-]]
+-- Without bag and slot every white weapon and armor piece is kept: the crafted check needs them.
 function ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	local deleteReason = GetRuleDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	if deleteReason and not ns:IsJunkKind(deleteReason) then
@@ -475,12 +317,7 @@ function ns:GetItemDeleteReason(itemId, rarity, sellPrice, bag, slot)
 	return deleteReason
 end
 
---[[
-    The cap in gold, always one of ns.VALUE_CAP_CHOICES. A saved amount the
-    dropdown doesn't offer, such as 0, reads as the smallest choice at or above
-    it (the largest if none is), so the dropdown never shows blank and the cap
-    the eraser uses is the one it shows.
-]]
+-- Snapped to a choice, so the dropdown never shows blank and the cap used is the one shown.
 function ns:GetValueCapGold()
 	local saved = (ns.db and ns.db.profile.valueCapGold) or 0
 	for _, gold in ipairs(ns.VALUE_CAP_CHOICES) do
@@ -492,25 +329,8 @@ function ns:GetValueCapGold()
 end
 
 --[[
-    Maximum Value to Erase. Off by default; switched on, anything worth more than
-    the cap stops being an erase candidate, so it is never picked by the mini-map
-    button, never counted in the Clutter Report, and never tinted in the bags.
-
-    Judged on the stack's total value rather than the unit price, because the
-    stack is what the eraser would actually destroy -- forty grays at two silver
-    each is exactly the pile worth guarding, and each one alone never looks like
-    much.
-
-    Auto-Vend and Bank Retrieval deliberately do not consult this. The cap exists
-    to stop the player losing gold, and selling an over-cap stack hands them that
-    gold instead, so the two features that move an item rather than destroy it
-    keep working on it.
-
-    An Erase List entry is never capped either, which is why the delete reason is
-    passed in. Everything else the cap guards is the add-on picking an item out by
-    rule, and a rule can be wrong about what the player values; a listed item is
-    not a guess. Capping one would leave the player watching a list they built do
-    nothing, with no tint in the bags and no message in chat to say why.
+    Stack value, since the stack is what gets destroyed. Auto-Vend and Bank
+    Retrieval skip it (selling pays), and an Erase List entry is never capped.
 ]]
 function ns:IsOverValueCap(totalValue, deleteReason)
 	if deleteReason == "manual" then

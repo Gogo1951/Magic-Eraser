@@ -1,5 +1,7 @@
 local _, ns = ...
 
+-- luacheck: read globals TooltipDataProcessor
+
 local GetClientHeader = ns.GetDiagnosticClientHeader
 local CountKeys = ns.CountDiagnosticKeys
 local TooltipLines = ns.DiagnosticTooltipLines
@@ -520,6 +522,82 @@ ns.DIAGNOSTIC_API_CHECKS = {
 		end,
 	},
 	--[[
+	    The item tooltips' two routes, picked by Tooltip-Kit at login: the
+	    tooltip-data post-call where GameTooltip has no OnTooltipSetItem script
+	    (its bag check reads the slot's GetBagID), else a hook on
+	    GameTooltip:SetBagItem that reads the slot's item. Missing both, no
+	    tooltip ever gets a block. Like the pairs above, one half failing is the
+	    report naming the route.
+	]]
+	{
+		"TooltipDataProcessor.AddTooltipPostCall",
+		function()
+			return type(TooltipDataProcessor) == "table" and type(TooltipDataProcessor.AddTooltipPostCall) == "function"
+		end,
+	},
+	{
+		"Enum.TooltipDataType.Item",
+		function()
+			return type(Enum) == "table" and type(Enum.TooltipDataType) == "table" and Enum.TooltipDataType.Item ~= nil
+		end,
+	},
+	{
+		"GameTooltip OnTooltipSetItem script (legacy)",
+		function()
+			if not (type(GameTooltip) == "table" and type(GameTooltip.HasScript) == "function") then
+				return false
+			end
+			return GameTooltip:HasScript("OnTooltipSetItem") and true or false
+		end,
+	},
+	{
+		"GameTooltip.SetBagItem (legacy)",
+		function()
+			return type(GameTooltip) == "table" and type(GameTooltip.SetBagItem) == "function"
+		end,
+	},
+	{
+		"C_Container.GetContainerItemID",
+		function()
+			return type(C_Container) == "table" and type(C_Container.GetContainerItemID) == "function"
+		end,
+	},
+	{
+		"C_Container.GetContainerItemLink",
+		function()
+			return type(C_Container) == "table" and type(C_Container.GetContainerItemLink) == "function"
+		end,
+	},
+	--[[
+	    Auto-Repair's reads and its one call: whether this merchant repairs,
+	    the cost of fixing everything, and your money to cover it. Missing any,
+	    a merchant visit repairs nothing and says nothing.
+	]]
+	{
+		"CanMerchantRepair",
+		function()
+			return type(CanMerchantRepair) == "function"
+		end,
+	},
+	{
+		"GetRepairAllCost",
+		function()
+			return type(GetRepairAllCost) == "function"
+		end,
+	},
+	{
+		"RepairAllItems",
+		function()
+			return type(RepairAllItems) == "function"
+		end,
+	},
+	{
+		"GetMoney",
+		function()
+			return type(GetMoney) == "function"
+		end,
+	},
+	--[[
 	    Auto-Vend and the bag-space warning read whether these windows are open,
 	    and a window a client names differently reads as closed, so the feature
 	    waiting on it never runs. The bank needs no row: Bank Retrieval, the
@@ -724,6 +802,32 @@ local function CraftedSlotsLine(label, tally)
 	)
 end
 
+--[[
+    The route Tooltip-Kit takes for the item tooltips, read the way its
+    UsesTooltipData picks one at login (Features/Tooltip-Kit.lua): tooltip data
+    where GameTooltip has no OnTooltipSetItem script, else the SetBagItem hook.
+    NONE means no carried item ever shows a block, whatever the switch says.
+]]
+local function ItemTooltipRoute()
+	if type(GameTooltip) ~= "table" then
+		return "NONE (no GameTooltip)"
+	end
+	local hasScript = GameTooltip.HasScript and GameTooltip:HasScript("OnTooltipSetItem")
+	if
+		type(TooltipDataProcessor) == "table"
+		and type(TooltipDataProcessor.AddTooltipPostCall) == "function"
+		and type(Enum) == "table"
+		and Enum.TooltipDataType ~= nil
+		and not hasScript
+	then
+		return "tooltip data (TooltipDataProcessor)"
+	end
+	if GameTooltip.SetBagItem then
+		return "bag slot hook (GameTooltip:SetBagItem)"
+	end
+	return "NONE (no route, so no block shows)"
+end
+
 -- The flagged count per reason, in the Erasing panel's order with Erase List entries first.
 local function ReasonBreakdown(tally)
 	local parts = { "manual=" .. (tally.reasons.manual or 0) }
@@ -737,7 +841,8 @@ end
     The state most likely to explain a "nothing gets erased" report: the player
     context the rules read (level, combat, and the race and class bits the
     quest-starter gate compares), the profile every switch is read from, every
-    switch that can quiet a feature, whether the white-gear rule has its two
+    switch that can quiet a feature, the route the item tooltips hook in by,
+    whether the white-gear rule has its two
     reads and the crafted check its pattern, the key bindings, which bag windows the junk tint hooked and which
     loaded bag add-ons it didn't, where /eraser goes,
     what the bags hold by verdict, the crafted check's reading of every white
@@ -799,6 +904,8 @@ function ns:BuildEraserContextReport()
 			tint.a
 		)
 		lines[#lines + 1] = "  Quest item alerts: " .. OnOff(profile.questAlertsEnabled)
+		lines[#lines + 1] =
+			string.format("  Item tooltips: %s, through %s", OnOff(profile.tooltipsEnabled), ItemTooltipRoute())
 		lines[#lines + 1] = string.format(
 			"  Manual Delete: auto-fill %s, no-value only %s",
 			OnOff(profile.manualDeleteAutoFillEnabled),
@@ -929,8 +1036,10 @@ end
 
 --[[
     The state behind a "Bank Retrieval moved nothing", "the bag warning never
-    fires" or "Auto-Vend stopped" report: each feature's switches, the window
-    it waits on, the Shift key that skips a merchant visit, the pass it may
+    fires", "Auto-Vend stopped" or "Auto-Repair didn't repair" report: each
+    feature's switches, the window it waits on, the Shift key that skips a
+    merchant visit, whether this merchant repairs and the cost against your
+    money, the pass it may
     have in flight, what each would act on right now, the crafted check's
     reading of the bank's white gear, the free bag slots both bag features budget from, the move budget
     left after the warning threshold, and the warning's baseline and
@@ -954,7 +1063,7 @@ function ns:BuildMerchantBankContextReport()
 	lines[#lines + 1] = "  Enabled: " .. YesNo(profile.autoVendEnabled)
 	lines[#lines + 1] = "  Chat report: " .. ChatReport(profile)
 	lines[#lines + 1] = "  Merchant window open: " .. WindowOpen(MerchantFrame)
-	-- Shift held as the merchant opens skips that visit (ns:OnMerchantShow).
+	-- Shift held as the merchant opens skips that visit (ns:VendAtMerchant).
 	lines[#lines + 1] = "  Shift held now: " .. YesNo(IsShiftKeyDown())
 	lines[#lines + 1] = "  Selling: " .. YesNo(selling)
 	lines[#lines + 1] = "  Waiting for combat to end: " .. YesNo(vendPending)
@@ -967,6 +1076,37 @@ function ns:BuildMerchantBankContextReport()
 		bags.noPrice,
 		bags.loading
 	)
+
+	lines[#lines + 1] = ""
+	lines[#lines + 1] = "Auto-Repair:"
+	lines[#lines + 1] = "  Enabled: " .. YesNo(profile.autoRepairEnabled)
+	local merchantRepairs = type(CanMerchantRepair) == "function" and CanMerchantRepair() and true or false
+	local repairCost, canRepair
+	if type(GetRepairAllCost) == "function" then
+		repairCost, canRepair = GetRepairAllCost()
+	end
+	local money = type(GetMoney) == "function" and GetMoney() or nil
+	lines[#lines + 1] = "  Merchant repairs: " .. YesNo(merchantRepairs)
+	lines[#lines + 1] = string.format(
+		"  Repair cost now: %s copper (anything to repair: %s), your money: %s copper",
+		tostring(repairCost),
+		YesNo(canRepair),
+		tostring(money)
+	)
+	-- The same gates, in the same order, as ns:RepairAtMerchant.
+	local repairVerdict = "yes"
+	if not profile.autoRepairEnabled then
+		repairVerdict = "no (off)"
+	elseif IsShiftKeyDown() then
+		repairVerdict = "no (Shift held)"
+	elseif not merchantRepairs then
+		repairVerdict = "no (no repairing merchant open)"
+	elseif not (canRepair and repairCost and repairCost > 0) then
+		repairVerdict = "no (nothing to repair)"
+	elseif not (money and repairCost <= money) then
+		repairVerdict = "no (short of the full cost)"
+	end
+	lines[#lines + 1] = "  Would repair now: " .. repairVerdict
 
 	lines[#lines + 1] = ""
 	lines[#lines + 1] = "Bank Retrieval:"

@@ -11,46 +11,20 @@ local GetTime = GetTime
 -- Bag-Space Warnings
 --------------------------------------------------------------------------------
 
---[[
-    Free-slot count at the last check, and the baseline every warning is measured
-    against: the countdown prints only when the count is lower than this reading,
-    so freeing a slot inside the warning zone stays quiet and a repeated
-    BAG_UPDATE_DELAYED for one purchase reads the same count twice and says
-    nothing. Runtime-only.
-
-    Primed at login to the free count we log in with via ns:SeedBagSpaceBaseline
-    (from Core's OnPlayerLogin), so the login-time BAG_UPDATE_DELAYED burst is
-    "already known" and does not warn about bag space you arrived with -- only a
-    slot lost while playing does.
-]]
+-- The warning fires only on a drop below this reading; seeded at login.
 local lastSeenFree = nil
 
---[[
-    Bag-space warnings stay quiet until GetTime() reaches this deadline, set on
-    every PLAYER_ENTERING_WORLD (see ns:OnPlayerEnteringWorld). Secondary to the
-    unknown-vs-zero guard in ns:CountFreeBagSlots: it simply keeps the check idle
-    for a moment after each loading screen, while the client repopulates the
-    containers.
-]]
+-- Idle until this time after each loading screen, while the containers repopulate.
 local BAG_SETTLE_SECONDS = 2
 local bagWarningsHeldUntil = 0
 
--- The baseline and the hold deadline, for the Diagnostic Tools Merchant & Bank Context.
 function ns:GetBagWarningState()
 	return lastSeenFree, bagWarningsHeldUntil
 end
 
 --[[
-    A merchant, mailbox or bank visit is exactly when bags churn hardest --
-    selling junk and pulling items out of the bank move whole stacks, buying and
-    looting mail fill slots back up -- so the countdown would fire a burst of
-    noise that is stale the moment the window closes. We suppress it while any of
-    those windows is open and re-check once on close, so the warning reflects
-    where the bags actually landed. The merchant and mailbox are checked live,
-    so a missed SHOW event cannot wedge the hold; the bank uses the event flag
-    from ns:IsBankOpen, because a bag add-on such as Baganator keeps BankFrame
-    hidden while its own bank window is open. ProcessBagUpdate in
-    Core gates the nudge on this, so it is exposed on ns.
+    Bags churn hardest at these windows, so the warning holds until they close.
+    The bank reads ns:IsBankOpen, not BankFrame, which Baganator keeps hidden.
 ]]
 function ns:IsBagWindowOpen()
 	return (MerchantFrame and MerchantFrame:IsShown())
@@ -59,45 +33,30 @@ function ns:IsBagWindowOpen()
 		or false
 end
 
---[[
-    Seed the bag-space warning baseline with the free count we log in with, so the
-    login-time BAG_UPDATE_DELAYED burst is treated as "already known" and does not
-    fire a warning on load -- only a slot lost while playing does. Called from
-    ns:OnPlayerLogin in Core. A nil count (containers not ready) simply leaves the
-    baseline unset, which is the same state we start in: the first real reading
-    takes it and the countdown measures drops from there.
-]]
 function ns:SeedBagSpaceBaseline()
 	lastSeenFree = ns:CountFreeBagSlots()
 end
 
---[[
-    Hold the warning briefly on every PLAYER_ENTERING_WORLD -- loading-screen zone
-    change, initial login, or /reload -- so the container repopulation that
-    follows is never mistaken for slots lost in play. A fresh deadline each time
-    means rapid back-to-back loading screens just extend the hold.
-]]
 function ns:OnPlayerEnteringWorld()
 	bagWarningsHeldUntil = GetTime() + BAG_SETTLE_SECONDS
 end
 
+-- Full bags name the slots junk holds, so an Erase is the obvious next move.
+local function FullMessage()
+	ns:FindItemToDelete()
+	local junkSlots = ns:GetReclaimSummary()
+	if junkSlots == 1 then
+		return L["BAGS_FULL_JUNK_ONE"]
+	elseif junkSlots > 1 then
+		return string.format(L["BAGS_FULL_JUNK"], junkSlots)
+	end
+	return L["BAGS_FULL"]
+end
+
 --[[
-    Bag-space warning. Purely a free-space alert -- it never deletes and does not
-    care whether there is anything erasable. Shared by the debounced bag update
-    (which gates it on no bag window being open) and the merchant, mailbox and
-    bank close handlers (which fire it once the churn has settled).
-
-    It warns on a drop and only on a drop: the count has to be lower than the
-    previous reading and at or below the threshold. Freeing a slot inside the
-    warning zone is therefore silent, which is what keeps a "nearly full" line
-    from landing at the moment the player made room, and opening and closing a
-    window without touching the bags stays quiet for the same reason.
-
-    The baseline is taken before the remaining guards, the enable switch
-    included, so a tick that prints nothing -- warnings off, held after a
-    loading screen, or above the threshold -- still tracks the bags and cannot
-    leave a stale reading behind for a later check to measure a phantom drop
-    against.
+    Warns only on a drop at or under the threshold, so making room is silent.
+    The baseline updates before every other guard, so a silent tick can't leave
+    a stale reading for a phantom drop later.
 ]]
 function ns:CheckBagsFullNudge()
 	local free = ns:CountFreeBagSlots()
@@ -128,7 +87,7 @@ function ns:CheckBagsFullNudge()
 
 	local message
 	if free == 0 then
-		message = L["BAGS_FULL"]
+		message = FullMessage()
 	elseif free == 1 then
 		message = L["BAGS_FULL_NUDGE_ONE"]
 	else
@@ -137,12 +96,6 @@ function ns:CheckBagsFullNudge()
 	ns:PrintMessage(message)
 end
 
---[[
-    Closing the mailbox is the counterpart to the merchant-close nudge in
-    Auto-Vend's OnMerchantClosed: bag-space warnings are held while the window is
-    open (see ProcessBagUpdate in Core), so re-check once it closes to warn if
-    looting mail left the bags at or below the threshold.
-]]
 function ns:OnMailClosed()
 	ns:CheckBagsFullNudge()
 end

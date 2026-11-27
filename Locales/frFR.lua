@@ -31,6 +31,8 @@ L["CONFIRM_ERASE"] = "Supprimer %s%s ?"
 L["BAGS_FULL"] = "Vos sacs sont pleins !"
 L["BAGS_FULL_NUDGE"] = "Vos sacs sont presque pleins. Il vous reste %d emplacements."
 L["BAGS_FULL_NUDGE_ONE"] = "Vos sacs sont presque pleins. Il vous reste 1 emplacement."
+L["BAGS_FULL_JUNK"] = "Vos sacs sont pleins, mais %d emplacements sont occupés par du rebut."
+L["BAGS_FULL_JUNK_ONE"] = "Vos sacs sont pleins, mais 1 emplacement est occupé par du rebut."
 L["CURSOR_TOO_FAST"] = "Doucement ! Vous cliquez plus vite que le jeu ne peut supprimer les objets."
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Cet objet a changé avant de pouvoir être supprimé, rien n'a donc été supprimé. Vérifiez le bouton de la minicarte et réessayez."
@@ -47,6 +49,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "%s objets (1 emplacement de sac) vendus, valeur %s
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 objet (1 emplacement de sac) vendu, valeur %s."
 L["AUTO_VEND_SHIFT_HINT"] = "Maintenez Maj en ouvrant un marchand pour ignorer la Vente auto."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La Vente auto s'effectuera à la fin du combat."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "Votre équipement a été réparé pour %s."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s objets (%s emplacements de sac) retirés de votre banque, valeur %s."
@@ -75,11 +80,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 objet)"
 L["CLUTTER_SLOTS"] = "%s emplacements de sac"
 L["CLUTTER_SLOTS_ONE"] = "1 emplacement de sac"
 L["NO_VALUE"] = "Aucune valeur"
-L["MENU_CLICK_LEFT"] = "Clic gauche"
-L["MENU_CLICK_RIGHT"] = "Clic droit"
-L["MENU_CLICK_MIDDLE"] = "Clic central"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Maj + Clic droit"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Maj + Clic central"
 L["MENU_TOGGLE"] = "Basculer"
 L["ACTION_ERASE"] = "Supprimer"
 L["ACTION_PROTECT"] = "Protéger"
@@ -92,6 +92,16 @@ L["MENU_MORE_FEATURES"] = "Autres fonctionnalités"
 L["MENU_FEATURE_COUNT_ON"] = "%d activées"
 L["MENU_FEATURE_COUNT_OFF"] = "%d désactivées"
 L["MENU_UNPROTECT_HINT"] = "Cliquez pour le retirer de votre Liste de protection."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "Rebut"
+L["TOOLTIP_PROTECTED"] = "Protégé"
+L["TOOLTIP_ERASED_NEXT"] = "Prochain à supprimer"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "Liste de ce personnage"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "Liste de tous les personnages"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -125,7 +135,7 @@ L["SAMPLE_EXAMPLE"] = "Exemple"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Supprimez et vendez automatiquement le rebut pour libérer de la place dans vos sacs. Un clic sur le bouton de la minicarte élimine les objets de quêtes terminées, la nourriture, les boissons et les munitions dépassées, la camelote de vendeur, l'équipement blanc et les objets gris, et le reste se vend tout seul chez votre prochain marchand."
+	"Supprimez et vendez automatiquement le rebut pour libérer de la place dans vos sacs. Supprimez les objets de quêtes terminées, la nourriture, les boissons et les munitions dépassées, la camelote de vendeur, l'équipement blanc et les objets gris depuis le menu de la minicarte, vendez le reste chez votre prochain marchand et réparez votre équipement automatiquement."
 L["OPTIONS_ENABLE_WELCOME"] = "Activer le message de bienvenue"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Affiche dans la discussion un message de bienvenue d'une ligne, avec la version, à chaque connexion."
@@ -141,7 +151,7 @@ L["OPTIONS_KEY_BINDINGS_HEADER"] = "Raccourcis clavier"
 L["OPTIONS_KEY_SET"] = "Assigner une touche"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "Ouvre la liste des raccourcis clavier du jeu, où Magic Eraser a sa propre section."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Supprime votre Objet de plus faible valeur, comme un clic gauche sur le bouton de la minicarte. Il n'y a aucun aperçu avant d'appuyer sur la touche, alors choisissez-en une que vous ne toucherez pas par accident."
+	"Supprime votre Objet de plus faible valeur, comme la ligne Supprimer du menu de la minicarte. Il n'y a aucun aperçu avant d'appuyer sur la touche, alors choisissez-en une que vous ne toucherez pas par accident."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protège l'objet sous votre souris sur ce personnage, où que vous le voyiez : sacs, banque, marchand ou fenêtre de butin. S'il était sur la Liste de suppression de ce personnage, il en est retiré."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -185,7 +195,7 @@ L["OPTIONS_VERSION"] = "Version %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] = "Chaque clic supprime le rebut le moins cher de vos sacs, une pile à la fois."
+L["TAB_ERASING_DESCRIPTION"] = "Chaque Supprimer retire le rebut le moins cher de vos sacs, une pile à la fois."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"Bon à savoir : presque tout objet supprimé par erreur peut encore être récupéré via le service de Restauration d'objets de Blizzard !"
 
@@ -279,6 +289,12 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Laisse %d emplacements de sac libres, car les Alertes d'espace de sac sont activées."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] =
 	"Laisse 1 emplacement de sac libre, car les Alertes d'espace de sac sont activées."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "Réparation auto"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"Répare votre équipement avec votre propre or quand vous parlez à un marchand qui peut le faire. Si vous ne pouvez pas payer toute la facture, votre équipement n'est pas touché. Maintenez Maj à l'ouverture du marchand pour l'ignorer."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "Activer la Réparation auto"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"Active ou désactive la Réparation auto. Chaque réparation indique dans le chat ce qu'elle a coûté."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -315,6 +331,12 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Active ou désactive le d�
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Seuil d'emplacements libres"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Nombre d'emplacements libres qui déclenche le décompte. Tant que les alertes sont activées, la Récupération à la banque laisse aussi ce nombre d'emplacements libres."
+L["OPTIONS_TOOLTIPS_HEADER"] = "Infobulles des rebuts"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"Ajoute une ligne à l'infobulle de chaque objet de vos sacs indiquant pourquoi Magic Eraser le supprimerait, ou quelle Liste de protection le garde en sécurité."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Activer les infobulles des rebuts"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] =
+	"Active ou désactive les lignes de Magic Eraser dans les infobulles des objets."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

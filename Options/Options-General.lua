@@ -8,15 +8,7 @@ local Kit = ns.OptionsKit
 -- Key Bindings
 --------------------------------------------------------------------------------
 
---[[
-    A binding cannot be set from an AceConfig panel, so each row shows the key
-    the player bound, or a muted Not Bound, and a Set Key button that opens the
-    game's Key Bindings list through ns:OpenKeyBindings (Features/Key-Bindings.lua),
-    which tries each route the clients use and prints where to look if none
-    works. The binding names come from Bindings.xml's name attributes; the
-    captions are the same BINDING_* strings the Key Bindings list prints.
-    ns:OnUpdateBindings repaints this panel when the player changes a key.
-]]
+-- AceConfig can't set a binding, so Set Key opens the game's list. Names match Bindings.xml.
 local KEY_BINDINGS = {
 	-- { bindingName, captionKey, descKey }
 	{ "MAGICERASER_ERASE", "BINDING_ERASE", "OPTIONS_KEY_BINDING_ERASE_DESCRIPTION" },
@@ -38,10 +30,6 @@ local function GetBindingStatus(bindingName)
 	return GetColor("TEXT") .. text .. "|r"
 end
 
---[[
-    Each binding is its row (caption, key, Set Key), its description under it,
-    and a blank line before the next, so the three read as separate entries.
-]]
 local function AddKeyBindingRows(args, startOrder)
 	local order = startOrder
 
@@ -92,14 +80,6 @@ end
 -- General Panel
 --------------------------------------------------------------------------------
 
---[[
-    The root panel, in the order every Gogo1951 add-on's root panel uses: the
-    pitch, the Welcome Message and Mini-map Button switches, a Features section
-    with every feature's switch, Key Bindings, then /Commands. The links and
-    the version line have their own Feedback & Support page. Each
-    feature's full settings live on its own page under this one. The mini-map
-    clicks are named on the menu's rows, so they aren't repeated here.
-]]
 function ns.BuildGeneralOptions()
 	local args = {
 		descIntro = Kit.Desc(L["OPTIONS_DESCRIPTION"], 1),

@@ -7,19 +7,12 @@ local Kit = ns.OptionsKit
 -- Alerts & Tints Panel
 --------------------------------------------------------------------------------
 
---[[
-    What Magic Eraser tells the player on its own, none of which changes what
-    gets erased: the junk tint in the bags at 10, quest item alerts at 20, and
-    the bag-space countdown at 30. Every one of them has its switch here and
-    again in the root panel's Features section.
-
-    Registered as its builder function (Kit.RegisterPanel), so every repaint
-    rebuilds it.
-]]
+-- Nothing here changes what gets erased.
 local ALERTS_SECTIONS = {
 	"BuildTintJunkOptions",
 	"BuildQuestItemAlertsOptions",
 	"BuildBagWarningsOptions",
+	"BuildItemTooltipsOptions",
 }
 
 function ns.BuildAlertsTintsOptions()

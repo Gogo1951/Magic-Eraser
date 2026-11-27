@@ -32,6 +32,8 @@ L["CONFIRM_ERASE"] = "Eliminare %s%s?"
 L["BAGS_FULL"] = "Le tue borse sono piene!"
 L["BAGS_FULL_NUDGE"] = "Le tue borse sono quasi piene. Ti restano %d slot."
 L["BAGS_FULL_NUDGE_ONE"] = "Le tue borse sono quasi piene. Ti resta 1 slot."
+L["BAGS_FULL_JUNK"] = "Le tue borse sono piene, ma hai %d slot occupati da spazzatura."
+L["BAGS_FULL_JUNK_ONE"] = "Le tue borse sono piene, ma hai 1 slot occupato da spazzatura."
 L["CURSOR_TOO_FAST"] = "Piano! Stai cliccando più velocemente di quanto il gioco possa eliminare gli oggetti."
 L["ERASE_CANDIDATE_CHANGED"] =
 	"Quell'oggetto è cambiato prima di poter essere eliminato, quindi non è stato eliminato nulla. Controlla il pulsante della minimappa e riprova."
@@ -47,6 +49,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "%s oggetti (1 slot borsa) venduti, valore %s."
 L["SOLD_SUMMARY_ONE_ITEM"] = "1 oggetto (1 slot borsa) venduto, valore %s."
 L["AUTO_VEND_SHIFT_HINT"] = "Tieni premuto Maiusc mentre apri un mercante per saltare la Vendita automatica."
 L["AUTO_VEND_COMBAT_DEFERRED"] = "La Vendita automatica venderà al termine del combattimento."
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "Equipaggiamento riparato per %s."
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "%s oggetti (%s slot borse) prelevati dalla tua banca, valore %s."
@@ -74,11 +79,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 oggetto)"
 L["CLUTTER_SLOTS"] = "%s slot borse"
 L["CLUTTER_SLOTS_ONE"] = "1 slot borsa"
 L["NO_VALUE"] = "Nessun valore"
-L["MENU_CLICK_LEFT"] = "Clic sinistro"
-L["MENU_CLICK_RIGHT"] = "Clic destro"
-L["MENU_CLICK_MIDDLE"] = "Clic centrale"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Maiusc + Clic destro"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Maiusc + Clic centrale"
 L["MENU_TOGGLE"] = "Attiva/Disattiva"
 L["ACTION_ERASE"] = "Elimina"
 L["ACTION_PROTECT"] = "Proteggi"
@@ -91,6 +91,16 @@ L["MENU_MORE_FEATURES"] = "Altre funzionalità"
 L["MENU_FEATURE_COUNT_ON"] = "%d attive"
 L["MENU_FEATURE_COUNT_OFF"] = "%d disattivate"
 L["MENU_UNPROTECT_HINT"] = "Clicca per rimuoverlo dalla tua Lista protetti."
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "Spazzatura"
+L["TOOLTIP_PROTECTED"] = "Protetto"
+L["TOOLTIP_ERASED_NEXT"] = "Prossimo da eliminare"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "Lista di questo personaggio"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "Lista di tutti i personaggi"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -124,7 +134,7 @@ L["SAMPLE_EXAMPLE"] = "Esempio"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"Elimina e vendi automaticamente la spazzatura per liberare spazio nelle borse. Un clic sul pulsante della minimappa rimuove oggetti di missioni completate, cibo, bevande e munizioni ormai superati, spazzatura da mercante, equipaggiamento bianco e oggetti grigi, e il resto si vende da solo dal prossimo mercante."
+	"Elimina e vendi automaticamente la spazzatura per liberare spazio nelle borse. Elimina oggetti di missioni completate, cibo, bevande e munizioni ormai superati, spazzatura da mercante, equipaggiamento bianco e oggetti grigi dal menu della minimappa, vendi il resto dal prossimo mercante e ripara automaticamente il tuo equipaggiamento."
 L["OPTIONS_ENABLE_WELCOME"] = "Abilita messaggio di benvenuto"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] =
 	"Mostra in chat un messaggio di benvenuto di una riga con la versione ogni volta che accedi."
@@ -141,7 +151,7 @@ L["OPTIONS_KEY_SET"] = "Assegna tasto"
 L["OPTIONS_KEY_SET_DESCRIPTION"] =
 	"Apre l'elenco delle assegnazioni tasti del gioco, dove Magic Eraser ha una sua sezione."
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"Elimina il tuo Oggetto di minor valore, come un clic sinistro sul pulsante della minimappa. Non c'è anteprima prima di premere il tasto, quindi assegnalo a un tasto che non premeresti per sbaglio."
+	"Elimina il tuo Oggetto di minor valore, come la riga Elimina nel menu della minimappa. Non c'è anteprima prima di premere il tasto, quindi assegnalo a un tasto che non premeresti per sbaglio."
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"Protegge l'oggetto sotto il mouse su questo personaggio, ovunque tu lo veda: borse, banca, mercante o finestra del bottino. Se era nella Lista eliminazione di questo personaggio, viene tolto da lì."
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -185,7 +195,8 @@ L["OPTIONS_VERSION"] = "Versione %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] = "Ogni clic elimina la spazzatura di minor valore nelle tue borse, una pila alla volta."
+L["TAB_ERASING_DESCRIPTION"] =
+	"Ogni Elimina rimuove la spazzatura di minor valore nelle tue borse, una pila alla volta."
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"Nota: quasi tutto ciò che elimini per errore può ancora essere recuperato tramite il servizio di Ripristino oggetti di Blizzard!"
 
@@ -276,6 +287,12 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"Attiva o disattiva il Prelievo dalla banca. Non preleva mai più di quanto possano contenere i tuoi slot borse liberi."
 L["OPTIONS_BANK_CUSHION_NOTE"] = "Lascia liberi %d slot borse, perché gli Avvisi di spazio nelle borse sono attivi."
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "Lascia libero 1 slot borsa, perché gli Avvisi di spazio nelle borse sono attivi."
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "Riparazione automatica"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"Ripara il tuo equipaggiamento con il tuo oro quando parli con un mercante che può farlo. Se non puoi pagare tutto il conto, il tuo equipaggiamento resta com'è. Tieni premuto Maiusc mentre apri il mercante per saltarla."
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "Abilita Riparazione automatica"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"Attiva o disattiva la Riparazione automatica. Ogni riparazione indica in chat quanto è costata."
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -312,6 +329,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "Attiva o disattiva il cont
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "Soglia di slot liberi"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"Quanti slot liberi fanno partire il conto alla rovescia. Mentre gli avvisi sono attivi, anche il Prelievo dalla banca lascia liberi altrettanti slot."
+L["OPTIONS_TOOLTIPS_HEADER"] = "Tooltip degli oggetti spazzatura"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"Aggiunge una riga al tooltip di ogni oggetto nelle tue borse che dice perché Magic Eraser lo eliminerebbe, o quale Lista protetti lo tiene al sicuro."
+L["OPTIONS_ENABLE_TOOLTIPS"] = "Abilita tooltip degli oggetti spazzatura"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "Attiva o disattiva le righe di Magic Eraser nei tooltip degli oggetti."
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

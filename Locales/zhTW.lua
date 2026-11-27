@@ -30,6 +30,8 @@ L["CONFIRM_ERASE"] = "刪除 %s%s？"
 L["BAGS_FULL"] = "你的背包已滿！"
 L["BAGS_FULL_NUDGE"] = "你的背包快滿了。還剩 %d 個背包空格。"
 L["BAGS_FULL_NUDGE_ONE"] = "你的背包快滿了。還剩 1 個背包空格。"
+L["BAGS_FULL_JUNK"] = "你的背包已滿，但有 %d 個背包空格裝著雜物。"
+L["BAGS_FULL_JUNK_ONE"] = "你的背包已滿，但有 1 個背包空格裝著雜物。"
 L["CURSOR_TOO_FAST"] = "慢一點！你的點擊速度超過了遊戲刪除物品的速度。"
 L["ERASE_CANDIDATE_CHANGED"] =
 	"該物品在刪除前發生了變化，因此沒有刪除任何東西。請查看小地圖按鈕後再試一次。"
@@ -45,6 +47,9 @@ L["SOLD_SUMMARY_ONE_SLOT"] = "已出售 %s 件物品（1 個背包空格），�
 L["SOLD_SUMMARY_ONE_ITEM"] = "已出售 1 件物品（1 個背包空格），價值 %s。"
 L["AUTO_VEND_SHIFT_HINT"] = "開啟商人時按住 Shift 可略過自動售賣。"
 L["AUTO_VEND_COMBAT_DEFERRED"] = "戰鬥結束後，自動售賣就會開始出售。"
+
+-- Auto-Repair
+L["REPAIRED_GEAR"] = "修理裝備花費了 %s。"
 
 -- Bank Retrieval
 L["BANK_RETRIEVED"] = "已從你的銀行取出 %s 件物品（%s 個背包空格），價值 %s。"
@@ -72,11 +77,6 @@ L["CLUTTER_ITEMS_ONE"] = "(1 件物品)"
 L["CLUTTER_SLOTS"] = "%s 個背包空格"
 L["CLUTTER_SLOTS_ONE"] = "1 個背包空格"
 L["NO_VALUE"] = "無價值"
-L["MENU_CLICK_LEFT"] = "左鍵點擊"
-L["MENU_CLICK_RIGHT"] = "右鍵點擊"
-L["MENU_CLICK_MIDDLE"] = "中鍵點擊"
-L["MENU_CLICK_SHIFT_RIGHT"] = "Shift + 右鍵點擊"
-L["MENU_CLICK_SHIFT_MIDDLE"] = "Shift + 中鍵點擊"
 L["MENU_TOGGLE"] = "切換"
 L["ACTION_ERASE"] = "刪除"
 L["ACTION_PROTECT"] = "保護"
@@ -89,6 +89,16 @@ L["MENU_MORE_FEATURES"] = "更多功能"
 L["MENU_FEATURE_COUNT_ON"] = "%d 項開啟"
 L["MENU_FEATURE_COUNT_OFF"] = "%d 項關閉"
 L["MENU_UNPROTECT_HINT"] = "點擊即可將它從你的保護清單中移除。"
+
+--------------------------------------------------------------------------------
+-- Item Tooltips
+--------------------------------------------------------------------------------
+
+L["TOOLTIP_JUNK"] = "雜物"
+L["TOOLTIP_PROTECTED"] = "已保護"
+L["TOOLTIP_ERASED_NEXT"] = "下一個刪除"
+L["TOOLTIP_PROTECTED_CHARACTER"] = "本角色的清單"
+L["TOOLTIP_PROTECTED_GLOBAL"] = "所有角色的清單"
 
 --------------------------------------------------------------------------------
 -- Key Bindings
@@ -121,7 +131,7 @@ L["SAMPLE_EXAMPLE"] = "範例"
 --------------------------------------------------------------------------------
 
 L["OPTIONS_DESCRIPTION"] =
-	"刪除並自動售賣雜物，騰出背包空間。點擊一下小地圖按鈕，即可清理已完成任務的物品、已經用不上的食物、飲料和彈藥、只能賣給商人的廢品、白色裝備和灰色物品，其餘物品會在你下次遇到商人時自動賣掉。"
+	"刪除並自動售賣雜物，騰出背包空間。透過小地圖選單刪除已完成任務的物品、已經用不上的食物、飲料和彈藥、只能賣給商人的廢品、白色裝備和灰色物品，其餘物品在下次遇到商人時賣掉，還能自動修理裝備。"
 L["OPTIONS_ENABLE_WELCOME"] = "啟用歡迎訊息"
 L["OPTIONS_ENABLE_WELCOME_DESCRIPTION"] = "每次登入時，在聊天框顯示一行附帶版本號的歡迎訊息。"
 L["OPTIONS_ENABLE_MINIMAP"] = "啟用小地圖按鈕"
@@ -136,7 +146,7 @@ L["OPTIONS_KEY_BINDINGS_HEADER"] = "按鍵設定"
 L["OPTIONS_KEY_SET"] = "設定按鍵"
 L["OPTIONS_KEY_SET_DESCRIPTION"] = "開啟遊戲的按鍵設定清單，Magic Eraser 在其中有自己的分類。"
 L["OPTIONS_KEY_BINDING_ERASE_DESCRIPTION"] =
-	"刪除你的最低價值物品，效果等同左鍵點擊小地圖按鈕。按下按鍵前不會有預覽，所以請設定在不會誤按的按鍵上。"
+	'刪除你的最低價值物品，效果等同小地圖選單中的"刪除"一行。按下按鍵前不會有預覽，所以請設定在不會誤按的按鍵上。'
 L["OPTIONS_KEY_BINDING_PROTECT_DESCRIPTION"] =
 	"在此角色上保護滑鼠指向的物品，無論它出現在哪裡：背包、銀行、商人或拾取視窗。如果它在此角色的刪除清單中，會從中移除。"
 L["OPTIONS_KEY_BINDING_ERASE_LIST_DESCRIPTION"] =
@@ -180,7 +190,7 @@ L["OPTIONS_VERSION"] = "版本 %s"
 -- Options: Erasing Panel
 --------------------------------------------------------------------------------
 
-L["TAB_ERASING_DESCRIPTION"] = "每次點擊都會刪除背包中最便宜的雜物，一次一個堆疊。"
+L["TAB_ERASING_DESCRIPTION"] = "每次刪除都會移除背包中最便宜的雜物，一次一個堆疊。"
 L["TAB_ERASING_RESTORE_NOTE"] =
 	"附註：幾乎所有誤刪的物品，仍可透過暴雪的物品恢復服務找回！"
 
@@ -271,6 +281,12 @@ L["OPTIONS_ENABLE_BANK_RETRIEVAL_DESCRIPTION"] =
 	"開啟或關閉銀行取回。取出的數量絕不會超過你的背包空格所能容納的量。"
 L["OPTIONS_BANK_CUSHION_NOTE"] = "由於背包空間警告已開啟，會保留 %d 個背包空格。"
 L["OPTIONS_BANK_CUSHION_NOTE_ONE"] = "由於背包空間警告已開啟，會保留 1 個背包空格。"
+L["OPTIONS_AUTO_REPAIR_HEADER"] = "自動修理"
+L["OPTIONS_AUTO_REPAIR_DESCRIPTION"] =
+	"與能修理的商人交談時，用你自己的金幣修理裝備。如果你付不起全部費用，裝備維持原樣。開啟商人時按住 Shift 可略過。"
+L["OPTIONS_ENABLE_AUTO_REPAIR"] = "啟用自動修理"
+L["OPTIONS_ENABLE_AUTO_REPAIR_DESCRIPTION"] =
+	"開啟或關閉自動修理。每次修理都會在聊天框中告訴你花了多少。"
 
 --------------------------------------------------------------------------------
 -- Options: Alerts & Tints Panel
@@ -305,6 +321,11 @@ L["OPTIONS_ENABLE_BAGS_FULL_WARNINGS_DESCRIPTION"] = "開啟或關閉聊天框�
 L["OPTIONS_BAGS_FULL_THRESHOLD"] = "空格閾值"
 L["OPTIONS_BAGS_FULL_THRESHOLD_DESCRIPTION"] =
 	"剩下多少空格時開始倒數。警告開啟時，銀行取回也會保留這麼多空格。"
+L["OPTIONS_TOOLTIPS_HEADER"] = "雜物物品提示"
+L["OPTIONS_TOOLTIPS_DESCRIPTION"] =
+	"在背包中每件物品的滑鼠提示裡加一行，說明 Magic Eraser 為什麼會刪除它，或是哪個保護清單在保護它。"
+L["OPTIONS_ENABLE_TOOLTIPS"] = "啟用雜物物品提示"
+L["OPTIONS_ENABLE_TOOLTIPS_DESCRIPTION"] = "開啟或關閉物品提示中的 Magic Eraser 行。"
 
 --------------------------------------------------------------------------------
 -- Options: Item Lists

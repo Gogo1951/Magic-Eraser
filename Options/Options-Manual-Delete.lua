@@ -9,15 +9,7 @@ local Kit = ns.OptionsKit
 -- Skip Typing DELETE Section
 --------------------------------------------------------------------------------
 
---[[
-    A fragment of the Erasing panel rather than a panel of its own: it adds its
-    widgets to the args table ns.BuildErasingOptions hands it, and its order
-    numbers are what place the section on that panel.
-
-    This is the client's own delete prompt, not the eraser's -- see
-    Features/Manual-Delete.lua, which owns the behavior and explains why the two
-    are separate sections.
-]]
+-- The client's own delete prompt, not the eraser's: a separate section on purpose.
 function ns.BuildManualDeleteOptions(args)
 	Kit.Section(
 		args,
@@ -27,11 +19,6 @@ function ns.BuildManualDeleteOptions(args)
 		format(L["OPTIONS_MANUAL_DELETE_PROMPT_DESCRIPTION"], DELETE_ITEM_CONFIRM_STRING or "", ITEM_QUALITY3_DESC)
 	)
 
-	--[[
-	    The switch and its scope share one line (Kit.ToggleRow), the same shape
-	    as Maximum Value to Erase. The dropdown hides while the switch is off: a
-	    setting for a feature that is not running is not shown at all.
-	]]
 	args.rowManualDelete = Kit.ToggleRow(45, Kit.FeatureSwitch("manualDeleteAutoFillEnabled"), {
 		control = {
 			type = "select",
