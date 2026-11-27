@@ -6,7 +6,7 @@ Delete and auto-sell junk to free up bag space. Erase completed quest items, out
 
 ### Erasing
 
-<img width="800" src="https://github.com/user-attachments/assets/1b3091e3-79b3-443d-8fff-824e322aae3a" />
+<img width="800" alt="README-Infographic-Erasing" src="https://github.com/user-attachments/assets/5f6b57bf-deb4-40f5-9b9a-b8246c59c4af" />
 
 * **One Click, One Free Slot** // The mini-map button wears the icon of your cheapest junk. Hover it and pick Erase, or press your key, and it's gone.
 * **Knows What's Junk** // Completed quest items, quest starters you can never take, outgrown food, drink and ammo, white gear, and grays.
